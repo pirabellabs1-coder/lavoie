@@ -1391,3 +1391,52 @@ select option { background: var(--white); }
   border-color: rgba(200,168,75,0.3);
   box-shadow: 0 8px 32px rgba(7,16,60,0.08);
 }
+
+/* ═══════════════════════════════════════════════════════
+   GRILLES RESPONSIVES — utilitaires réutilisables
+   (remplacent les gridTemplateColumns inline non responsifs)
+   ═══════════════════════════════════════════════════════ */
+.rg-2, .rg-3, .rg-4, .rg-5, .rg-img,
+.rg-split, .rg-split-bias, .rg-split-2-1, .rg-split-fixed, .rg-split-auto {
+  display: grid;
+}
+.rg-2 { grid-template-columns: repeat(2, 1fr); }
+.rg-3 { grid-template-columns: repeat(3, 1fr); }
+.rg-4 { grid-template-columns: repeat(4, 1fr); }
+.rg-5 { grid-template-columns: repeat(5, 1fr); }
+.rg-img { grid-template-columns: repeat(4, 1fr); }
+.rg-split { grid-template-columns: 1fr 1fr; }
+.rg-split-bias { grid-template-columns: 1.4fr 1fr; }
+.rg-split-2-1 { grid-template-columns: 2fr 1fr; }
+.rg-split-fixed { grid-template-columns: 180px 1fr; }
+.rg-split-auto { grid-template-columns: 1fr auto; }
+
+/* Timeline (page Domoina) */
+.timeline-item { display: grid; grid-template-columns: 180px 1fr; gap: 60px; }
+
+/* Tablette : 4 et 5 colonnes → 2 */
+@media (max-width: 1024px) {
+  .rg-4, .rg-5 { grid-template-columns: repeat(2, 1fr); }
+}
+/* Splits de contenu (gros écarts) → 1 colonne plus tôt */
+@media (max-width: 900px) {
+  .rg-split, .rg-split-bias, .rg-split-2-1, .rg-split-fixed {
+    grid-template-columns: 1fr;
+  }
+}
+/* Mobile : tout en 1 colonne (images de galerie restent en 2) */
+@media (max-width: 768px) {
+  .rg-2, .rg-3, .rg-4, .rg-5, .rg-split-auto { grid-template-columns: 1fr; }
+  .rg-img { grid-template-columns: repeat(2, 1fr); }
+  /* Carte "Le plus choisi" : on retire le décalage/ombre une fois empilée */
+  .offre-pop { transform: none !important; box-shadow: none !important; }
+  /* Image de l'article à la une : bordure droite → bordure basse */
+  .blog-featured-img { border-right: 0 !important; border-bottom: 1px solid var(--line); }
+  /* Padding des conteneurs larges réduit sur mobile */
+  .contact-form { padding: 28px !important; }
+  /* Timeline : empilée, sans rail vertical ni puce */
+  .timeline { padding-left: 0 !important; }
+  .timeline-line, .timeline-dot { display: none; }
+  .timeline-item { grid-template-columns: 1fr; gap: 6px; }
+  .timeline-year { text-align: left !important; padding-right: 0 !important; }
+}

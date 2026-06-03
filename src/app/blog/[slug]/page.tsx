@@ -136,7 +136,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           </div>
 
           {/* NAVIGATION */}
-          <div style={{ marginTop: 48, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div className="rg-2" style={{ marginTop: 48, gap: 12 }}>
             <Link href="/blog" style={{ padding: "20px 24px", border: "1px solid var(--line)", display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                 <path d="M15 8H2M7 3L2 8l5 5" stroke="var(--gold)" strokeWidth="1.2" />

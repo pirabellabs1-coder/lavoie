@@ -61,7 +61,7 @@ export default function CentreHut() {
       {/* HERO */}
       <section className="page-hero" style={{ background: "var(--navy)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 100, alignItems: "center" }}>
+          <div className="rg-split" style={{ gap: 100, alignItems: "center" }}>
             <div>
               <Eyebrow style={{ marginBottom: 32, color: "var(--gold)" }}>Le lieu · Sarthe, France</Eyebrow>
               <h1 className="display" style={{ fontSize: "clamp(32px, 4vw, 64px)", margin: "0 0 24px", lineHeight: 1.05, color: "var(--white)" }}>
@@ -90,7 +90,7 @@ export default function CentreHut() {
       {/* GALERIE */}
       <section style={{ background: "var(--navy)", padding: "4px 16px 16px" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 8 }}>
+          <div className="rg-split-2-1" style={{ gap: 8 }}>
             <Placeholder
             mark="02"
             style={{ aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)" }}
@@ -115,7 +115,7 @@ export default function CentreHut() {
               />
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginTop: 8 }}>
+          <div className="rg-img" style={{ gap: 8, marginTop: 8 }}>
             <Placeholder
               mark="05"
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
@@ -151,7 +151,7 @@ export default function CentreHut() {
       {/* DESCRIPTION + INFOS */}
       <section className="section" style={{ background: "var(--white)" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+          <div className="rg-split" style={{ gap: 80, alignItems: "start" }}>
 
             <div>
               <Eyebrow style={{ marginBottom: 28 }}>Un lieu unique</Eyebrow>
@@ -215,9 +215,9 @@ export default function CentreHut() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: "1px solid var(--line)" }}>
+          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
             {espaces.map((e, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 36px", borderRight: i < 2 ? "1px solid var(--line)" : 0, background: "var(--white)" }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 36px", background: "var(--white)" }}>
                 <div style={{ width: 48, height: 48, border: "1px solid var(--gold)", display: "grid", placeItems: "center", marginBottom: 28, color: "var(--gold)", fontSize: 22 }}>
                   {e.glyph}
                 </div>

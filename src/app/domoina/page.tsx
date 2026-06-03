@@ -54,6 +54,33 @@ const timeline = [
   { year: "2022", title: "500 accompagnements", body: "Cap symbolique des cinq cents personnes accompagnées. Lancement de la communauté alumni." },
 ];
 
+const certifications = [
+  {
+    titre: "Médecine Traditionnelle Chinoise",
+    annee: "2008",
+    lieu: "F.N.M.T.C.",
+    detail:
+      "Diplôme National (D.N.M.T.C.) — orientation Acupuncture & Moxibustion. Diplômée en Acupuncture Traditionnelle Chinoise (D.A.T.C.).",
+    img: "/diplome-1.jpg",
+  },
+  {
+    titre: "Sexothérapeute Sexogestalt",
+    annee: "2016",
+    lieu: "Formation & Prépapsy · Dr C. Gellman",
+    detail:
+      "160 h de théorie et de pratique + 100 h de supervision. Sexopathologie, thérapie de couple, santé et épanouissement de la vie sexuelle.",
+    img: "/diplome-3.jpg",
+  },
+  {
+    titre: "Access Bars® · Access Consciousness®",
+    annee: "2016",
+    lieu: "Certified Access Facilitator",
+    detail:
+      "Certificat de complétion du Bars Course — pratique de libération des mémoires et des schémas limitants.",
+    img: "/diplome-2.jpg",
+  },
+];
+
 export default function DomoinaPage() {
   return (
     <div className="page-fade">
@@ -61,7 +88,7 @@ export default function DomoinaPage() {
       {/* HERO */}
       <section className="page-hero" style={{ background: "var(--white)", borderBottom: "1px solid var(--line)" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 100, alignItems: "center" }}>
+          <div className="rg-split" style={{ gap: 100, alignItems: "center" }}>
             <div>
               <Eyebrow style={{ marginBottom: 32 }}>La fondatrice · Guide initiatique</Eyebrow>
               <h1 className="display" style={{ fontSize: "clamp(36px, 4.5vw, 72px)", margin: "0 0 24px", lineHeight: 1.05 }}>
@@ -78,9 +105,10 @@ export default function DomoinaPage() {
             </div>
             <Placeholder
               mark="01"
-              style={{ aspectRatio: "3/4" }}
-              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=900&q=80&auto=format&fit=crop"
-              alt="Portrait de Domoina — guide initiatique"
+              style={{ aspectRatio: "3/4", background: "var(--paper-alt)" }}
+              src="/domoina.jpg"
+              alt="Portrait de Domoina Bockomba — guide initiatique"
+              objectPosition="top center"
               sizes="(max-width: 768px) 100vw, 45vw"
             />
           </div>
@@ -151,9 +179,9 @@ export default function DomoinaPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: "1px solid rgba(255,255,255,0.15)" }}>
+          <div className="rg-3" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
             {valeurs.map((v, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "50px 40px", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.15)" : 0 }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "50px 40px", background: "var(--navy)" }}>
                 <span className="card-num" style={{ fontSize: 16 }}>{v.num}</span>
                 <h3 className="display" style={{ fontSize: 38, color: "var(--white)", margin: "24px 0 24px", lineHeight: 1.1 }}>{v.title}</h3>
                 <hr className="filet" style={{ marginBottom: 24 }} />
@@ -178,17 +206,66 @@ export default function DomoinaPage() {
             </p>
           </div>
 
-          <div style={{ position: "relative", paddingLeft: 80 }}>
-            <div style={{ position: "absolute", left: 100, top: 12, bottom: 12, width: 1, background: "var(--line)" }} />
+          <div className="timeline" style={{ position: "relative", paddingLeft: 80 }}>
+            <div className="timeline-line" style={{ position: "absolute", left: 100, top: 12, bottom: 12, width: 1, background: "var(--line)" }} />
             {timeline.map((t, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 4)} style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 60, paddingBottom: 56, position: "relative" }}>
-                <div style={{ textAlign: "right", paddingRight: 60, position: "relative" }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i % 4)} className="timeline-item" style={{ paddingBottom: 56, position: "relative" }}>
+                <div className="timeline-year" style={{ textAlign: "right", paddingRight: 60, position: "relative" }}>
                   <p className="num" style={{ fontSize: 44, color: "var(--gold)", margin: 0, lineHeight: 1 }}>{t.year}</p>
-                  <div style={{ position: "absolute", right: -3, top: 18, width: 7, height: 7, borderRadius: "50%", background: "var(--navy)", border: "2px solid var(--paper)" }} />
+                  <div className="timeline-dot" style={{ position: "absolute", right: -3, top: 18, width: 7, height: 7, borderRadius: "50%", background: "var(--navy)", border: "2px solid var(--paper)" }} />
                 </div>
                 <div style={{ paddingTop: 6 }}>
                   <h4 className="display" style={{ fontSize: 28, color: "var(--navy)", margin: "0 0 12px", lineHeight: 1.2 }}>{t.title}</h4>
                   <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "var(--mute)", margin: 0, maxWidth: 540 }}>{t.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FORMATIONS & CERTIFICATIONS */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <Eyebrow style={{ marginBottom: 24 }}>Formations &amp; certifications</Eyebrow>
+              <h2>Un socle<br /><em className="display-italic">certifié.</em></h2>
+            </div>
+            <p>
+              Au-delà de la voie initiatique, Domoina s&apos;appuie sur des formations
+              certifiantes&nbsp;: médecine traditionnelle chinoise, sexothérapie clinique
+              et pratiques de libération.
+            </p>
+          </div>
+
+          <div className="rg-3" style={{ gap: 24 }}>
+            {certifications.map((c, i) => (
+              <div
+                key={i}
+                data-reveal=""
+                data-reveal-delay={String(i)}
+                className="card-hover"
+                style={{ background: "var(--white)", border: "1px solid var(--line)", display: "flex", flexDirection: "column" }}
+              >
+                <div style={{ borderBottom: "1px solid var(--line)", background: "var(--paper-alt)" }}>
+                  <Placeholder
+                    style={{ aspectRatio: "4/3" }}
+                    src={c.img}
+                    alt={`Certification de Domoina : ${c.titre}`}
+                    objectFit="contain"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div style={{ padding: "26px 28px 30px", display: "flex", flexDirection: "column", flex: 1 }}>
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 10.5, letterSpacing: ".14em", textTransform: "uppercase", color: "var(--gold)", margin: "0 0 12px", fontWeight: 500 }}>
+                    {c.annee} · {c.lieu}
+                  </p>
+                  <h3 className="display" style={{ fontSize: 22, color: "var(--navy)", margin: "0 0 12px", lineHeight: 1.2 }}>
+                    {c.titre}
+                  </h3>
+                  <hr className="filet" style={{ marginBottom: 16 }} />
+                  <p style={{ fontSize: 13.5, lineHeight: 1.65, color: "var(--mute)", margin: 0 }}>{c.detail}</p>
                 </div>
               </div>
             ))}

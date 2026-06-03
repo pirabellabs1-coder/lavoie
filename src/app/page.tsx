@@ -727,9 +727,10 @@ export default function Home() {
             <div data-reveal="" style={{ position: "relative" }} className="img-zoom">
               <Placeholder
                 mark="02"
-                style={{ aspectRatio: "4/5" }}
-                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80&auto=format&fit=crop"
-                alt="Portrait de Domoina, guide initiatique"
+                style={{ aspectRatio: "4/5", background: "var(--paper-alt)" }}
+                src="/domoina.jpg"
+                alt="Portrait de Domoina Bockomba, guide initiatique"
+                objectPosition="top center"
                 sizes="(max-width: 768px) 100vw, 40vw"
               />
               {/* Gold badge overlay */}

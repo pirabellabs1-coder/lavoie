@@ -129,8 +129,8 @@ export default function Blog() {
       {/* ARTICLE FEATURED */}
       <section style={{ background: "var(--white)", padding: "56px 0 0" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", border: "1px solid var(--line)", marginBottom: 0 }}>
-            <div style={{ background: "var(--paper)", display: "grid", placeItems: "center", minHeight: 320, borderRight: "1px solid var(--line)" }}>
+          <div className="rg-2" style={{ border: "1px solid var(--line)", marginBottom: 0 }}>
+            <div className="blog-featured-img" style={{ background: "var(--paper)", display: "grid", placeItems: "center", minHeight: 320, borderRight: "1px solid var(--line)" }}>
               <div style={{ textAlign: "center" }}>
                 <span style={{ fontSize: 64, color: "var(--gold)", lineHeight: 1 }}>✦</span>
                 <p className="small" style={{ fontSize: 10.5, letterSpacing: ".2em", textTransform: "uppercase", color: "var(--mute)", margin: "12px 0 0", fontFamily: "var(--mono)" }}>
@@ -161,9 +161,9 @@ export default function Blog() {
       {/* GRILLE ARTICLES */}
       <section className="section" style={{ background: "var(--white)", paddingTop: 0 }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: "1px solid var(--line)", borderTop: 0 }}>
+          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)", borderTop: 0 }}>
             {articles.slice(1).map((a, i) => (
-              <div key={i} style={{ borderRight: i !== 2 && i !== 4 ? "1px solid var(--line)" : 0, borderBottom: i < 3 ? "1px solid var(--line)" : 0, display: "flex", flexDirection: "column" }}>
+              <div key={i} style={{ background: "var(--white)", display: "flex", flexDirection: "column" }}>
                 <div style={{ aspectRatio: "16/9", background: "var(--paper)", display: "grid", placeItems: "center", borderBottom: "1px solid var(--line)" }}>
                   <span style={{ fontSize: 32, color: "var(--gold)" }}>✦</span>
                 </div>

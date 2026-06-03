@@ -137,9 +137,9 @@ export default function OffreGoldPage() {
       {/* OFFRES */}
       <section className="section" style={{ paddingTop: 80 }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0 }}>
+          <div className="rg-3" style={{ gap: 0 }}>
             {offres.map((o, i) => (
-              <div key={i} style={{
+              <div key={i} className={o.featured ? "offre-pop" : undefined} style={{
                 background: o.featured ? "var(--navy)" : "var(--white)",
                 color: o.featured ? "var(--white)" : "var(--navy-ink)",
                 padding: "56px 40px 48px",
@@ -192,9 +192,9 @@ export default function OffreGoldPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0, border: "1px solid var(--line)" }}>
+          <div className="rg-4" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
             {garanties.map((g, i) => (
-              <div key={i} style={{ padding: "32px 28px", borderRight: (i + 1) % 4 !== 0 ? "1px solid var(--line)" : 0, borderBottom: i < 4 ? "1px solid var(--line)" : 0, background: "var(--white)", transition: "background .3s" }}>
+              <div key={i} style={{ padding: "32px 28px", background: "var(--white)", transition: "background .3s" }}>
                 <div style={{ width: 28, height: 28, border: "1px solid var(--gold)", display: "grid", placeItems: "center", marginBottom: 20, color: "var(--gold)", fontSize: 14 }}>✦</div>
                 <h4 style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "var(--navy)", margin: "0 0 8px" }}>{g.t}</h4>
                 <p className="small muted" style={{ margin: 0, lineHeight: 1.55, fontSize: 12.5 }}>{g.b}</p>

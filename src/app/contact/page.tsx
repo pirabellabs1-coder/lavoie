@@ -103,17 +103,17 @@ export default function ContactPage() {
       {/* FORM + INFOS */}
       <section className="section" style={{ paddingTop: 100 }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 80, alignItems: "start" }}>
+          <div className="rg-split-bias" style={{ gap: 80, alignItems: "start" }}>
 
             {/* FORM */}
-            <form onSubmit={onSubmit} style={{ background: "var(--white)", padding: 56, border: "1px solid var(--line)" }}>
+            <form onSubmit={onSubmit} className="contact-form" style={{ background: "var(--white)", padding: 56, border: "1px solid var(--line)" }}>
               <Eyebrow style={{ marginBottom: 28 }}>Formulaire confidentiel</Eyebrow>
               <h2 className="display" style={{ fontSize: 36, margin: "0 0 40px", lineHeight: 1.15 }}>
                 Vos coordonnées,<br />
                 <em className="display-italic" style={{ color: "var(--gold)", fontSize: 32 }}>votre intention.</em>
               </h2>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+              <div className="rg-2" style={{ gap: 20, marginBottom: 20 }}>
                 <div className="field">
                   <label>Prénom *</label>
                   <input required type="text" value={form.prenom} onChange={set("prenom")} placeholder="Marie" />
@@ -124,7 +124,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+              <div className="rg-2" style={{ gap: 20, marginBottom: 20 }}>
                 <div className="field">
                   <label>Email *</label>
                   <input required type="email" value={form.email} onChange={set("email")} placeholder="m.dupont@email.com" />

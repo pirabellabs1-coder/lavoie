@@ -93,12 +93,10 @@ export default function CadreDeontologique() {
       {/* PRINCIPES */}
       <section className="section">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 0, border: "1px solid var(--line)", marginBottom: 80 }}>
+          <div className="rg-2" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)", marginBottom: 80 }}>
             {principes.map((p, i) => (
               <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{
                 padding: "44px 40px",
-                borderRight: i % 2 === 0 ? "1px solid var(--line)" : 0,
-                borderBottom: i < 2 ? "1px solid var(--line)" : 0,
                 background: "var(--white)",
               }}>
                 <div style={{ width: 40, height: 40, border: "1px solid var(--gold)", display: "grid", placeItems: "center", marginBottom: 24, color: "var(--gold)", fontSize: 18 }}>

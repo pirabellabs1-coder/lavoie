@@ -99,9 +99,9 @@ export default function MethodesPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0, border: "1px solid var(--line)" }}>
+          <div className="rg-4" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
             {aimePhases.map((p, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 32px", borderRight: i < 3 ? "1px solid var(--line)" : 0, background: i % 2 === 0 ? "var(--white)" : "var(--paper)", position: "relative", overflow: "hidden" }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 32px", background: i % 2 === 0 ? "var(--white)" : "var(--paper)", position: "relative", overflow: "hidden" }}>
                 <span className="display" style={{ fontSize: 200, color: "rgba(7,16,60,0.06)", position: "absolute", top: -30, right: 12, lineHeight: 1, fontWeight: 400, pointerEvents: "none" }}>
                   {p.letter}
                 </span>
@@ -121,7 +121,7 @@ export default function MethodesPage() {
       {/* V.I.E. */}
       <section id="vie" className="section" style={{ background: "var(--navy)", color: "var(--white)" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 80, alignItems: "center" }}>
+          <div className="rg-split" style={{ gap: 80, alignItems: "center" }}>
             <div>
               <p className="card-num" style={{ fontSize: 16, marginBottom: 16, color: "var(--gold)" }}>Méthode II.</p>
               <h2 className="display" style={{ fontSize: 56, margin: "0 0 8px", color: "var(--white)", lineHeight: 1.05 }}>V.I.E.</h2>
@@ -150,9 +150,9 @@ export default function MethodesPage() {
             <p className="eyebrow" style={{ color: "var(--gold)", marginBottom: 40 }}>
               <span className="dot" />Les cinq piliers<span className="dot" />
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 0, border: "1px solid rgba(255,255,255,0.15)" }}>
+            <div className="rg-5" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
               {viePillars.map((v, i) => (
-                <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "32px 24px", borderRight: i < 4 ? "1px solid rgba(255,255,255,0.15)" : 0 }}>
+                <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "32px 24px", background: "var(--navy)" }}>
                   <span className="card-num" style={{ fontSize: 12 }}>0{i + 1}.</span>
                   <h4 className="display" style={{ fontSize: 24, color: "var(--white)", margin: "14px 0 16px", lineHeight: 1.15 }}>{v.t}</h4>
                   <hr className="filet" style={{ marginBottom: 18, width: 40 }} />
@@ -178,7 +178,7 @@ export default function MethodesPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0 }}>
+          <div className="rg-4" style={{ gap: 0 }}>
             {saisons.map((s, i) => (
               <div key={i} style={{ padding: "56px 32px", background: s.isGold ? "var(--gold)" : "var(--navy)", color: s.isGold ? "var(--navy-ink)" : "var(--white)", position: "relative", minHeight: 360, display: "flex", flexDirection: "column" }}>
                 <p className="card-num" style={{ fontSize: 13, marginBottom: 12, color: s.isGold ? "var(--navy)" : "var(--gold)" }}>

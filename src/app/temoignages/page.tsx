@@ -149,13 +149,11 @@ export default function Temoignages() {
       {/* GRILLE */}
       <section className="section" style={{ background: "var(--navy)" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: "1px solid rgba(255,255,255,0.15)" }}>
+          <div className="rg-3" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
             {temoignages.map((t, i) => (
               <div key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{
                 padding: "40px 32px",
-                borderRight: (i + 1) % 3 !== 0 ? "1px solid rgba(255,255,255,0.15)" : 0,
-                borderBottom: i < 3 ? "1px solid rgba(255,255,255,0.15)" : 0,
-                transition: "background .3s",
+                background: "var(--navy)",
               }}>
                 <div style={{ display: "flex", gap: 3, marginBottom: 20 }}>
                   {Array.from({ length: 5 }).map((_, j) => (

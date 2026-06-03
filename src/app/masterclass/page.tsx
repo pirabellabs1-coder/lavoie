@@ -119,7 +119,7 @@ export default function Masterclass() {
           <div style={{ display: "grid", gap: 0, border: "1px solid var(--line)" }}>
             {masterclasses.map((m, i) => (
               <div key={i} style={{ padding: "44px 48px", borderBottom: i < masterclasses.length - 1 ? "1px solid var(--line)" : 0 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 40, alignItems: "start" }}>
+                <div className="rg-split-auto" style={{ gap: 40, alignItems: "start" }}>
                   <div>
                     <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
                       <span className="pill pill-gold">{m.tag}</span>
@@ -127,7 +127,7 @@ export default function Masterclass() {
                     </div>
                     <h3 className="display" style={{ fontSize: 28, color: "var(--navy)", margin: "0 0 14px", lineHeight: 1.2 }}>{m.titre}</h3>
                     <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--mute)", margin: "0 0 20px" }}>{m.description}</p>
-                    <div style={{ display: "flex", gap: 28 }}>
+                    <div style={{ display: "flex", gap: 28, flexWrap: "wrap", rowGap: 8 }}>
                       <span style={{ fontSize: 12, fontFamily: "var(--sans)", color: "var(--mute)", letterSpacing: ".05em" }}>
                         📅 {m.date} · {m.heure}
                       </span>
@@ -163,9 +163,9 @@ export default function Masterclass() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, border: "1px solid var(--line)" }}>
+          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
             {replays.map((r, i) => (
-              <div key={i} style={{ background: "var(--white)", borderRight: i < 2 ? "1px solid var(--line)" : 0, overflow: "hidden" }}>
+              <div key={i} style={{ background: "var(--white)", overflow: "hidden" }}>
                 {/* Thumbnail */}
                 <div style={{ aspectRatio: "16/9", background: "var(--navy)", display: "grid", placeItems: "center", position: "relative" }}>
                   <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--gold)", display: "grid", placeItems: "center" }}>

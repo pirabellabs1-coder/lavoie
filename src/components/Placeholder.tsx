@@ -9,9 +9,11 @@ interface PlaceholderProps {
   src?: string;
   alt?: string;
   sizes?: string;
+  objectFit?: "cover" | "contain";
+  objectPosition?: string;
 }
 
-export default function Placeholder({ label, mark, style, className, src, alt, sizes }: PlaceholderProps) {
+export default function Placeholder({ label, mark, style, className, src, alt, sizes, objectFit, objectPosition }: PlaceholderProps) {
   return (
     <div className={`ph${className ? " " + className : ""}`} style={style}>
       {src ? (
@@ -19,7 +21,7 @@ export default function Placeholder({ label, mark, style, className, src, alt, s
           src={src}
           alt={alt || label || ""}
           fill
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: objectFit || "cover", objectPosition: objectPosition || "center" }}
           sizes={sizes || "(max-width: 768px) 100vw, 50vw"}
         />
       ) : (
