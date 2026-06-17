@@ -28,13 +28,12 @@ const offres = [
     tag: "Niveau I",
     title: "Immersion Essence",
     duration: "3 mois",
-    pitch: "Pour explorer. Un premier engagement court, dense, qui pose l'axe.",
+    pitch: "Pour leaders, dirigeants et entrepreneurs en quête de sens profond. Une expérience immersive sur 3 mois, au-delà du développement personnel classique.",
     bullets: [
-      "2 stages immersifs de 3 jours au Centre HUT",
-      "Séances individuelles hebdomadaires (12 séances)",
-      "Ligne WhatsApp privée avec Domoina",
-      "Bibliothèque numérique de ressources initiatiques",
-      "Bilan d'axe en fin de parcours",
+      "2 stages immersifs au Centre HUT",
+      "1 séance individuelle / semaine",
+      "Un cercle d'intimité sur WhatsApp (3 mois)",
+      "Hébergement et restauration non inclus",
     ],
   },
   {
@@ -42,29 +41,25 @@ const offres = [
     title: "Immersion Expansion",
     duration: "6 mois",
     featured: true,
-    pitch: "Le format choisi par 6 personnes sur 10. La profondeur d'un cycle.",
+    pitch: "Programme d'expansion intérieure et de réalignement stratégique sur 6 mois. Pour ceux qui ressentent que leur réussite ne peut plus se mesurer uniquement à l'extérieur.",
     bullets: [
-      "Tout le programme Immersion Essence",
-      "3 stages immersifs saisonniers (Hiver · Printemps · Été)",
-      "Séances individuelles hebdomadaires (24 séances)",
-      "Coaching de groupe mensuel en cercle restreint",
-      "Voyage initiatique optionnel (Maroc · Japon)",
-      "Accès à la communauté alumni",
+      "Tout le contenu de l'Immersion Essence",
+      "3 stages immersifs au Centre HUT",
+      "2 sessions de coaching de groupe par mois",
+      "1 voyage initiatique (optionnel)",
     ],
   },
   {
     tag: "Niveau III",
     title: "Immersion Royale",
     duration: "9 — 12 mois",
-    pitch: "Pour celles et ceux qui choisissent la transformation totale.",
+    pitch: "Une mutation souveraine. Une incarnation radicale. Programme initiatique de 9 à 12 mois pour dirigeants prêts à redevenir pleinement eux-mêmes.",
     bullets: [
-      "Accompagnement individuel illimité",
-      "4 stages saisonniers complets au Centre HUT",
-      "Accès direct à Domoina 7j/7",
-      "Suite privative au Centre HUT (10 nuitées)",
-      "3 voyages initiatiques internationaux",
-      "Programme entièrement sur mesure",
-      "Cercle Royal — six personnes par an, maximum",
+      "Accompagnement individuel illimité pendant 12 mois",
+      "4 stages immersifs au Centre HUT (1 par saison)",
+      "Accès direct à Domoïna en privé (WhatsApp 7j/7)",
+      "Suite privative & conciergerie lors des immersions",
+      "3 Voyages Initiatiques d'exception (optionnels)",
     ],
   },
 ];
@@ -118,25 +113,32 @@ export default function OffreGoldPage() {
       <section className="page-hero" style={{ background: "var(--white)", borderBottom: "1px solid var(--line)" }}>
         <div className="container">
           <div style={{ textAlign: "center", maxWidth: 920, margin: "0 auto" }}>
-            <Eyebrow style={{ marginBottom: 32 }}>Offre signature · Trois niveaux</Eyebrow>
-            <h1 className="display" style={{ fontSize: "clamp(32px, 4vw, 64px)", margin: "0 0 28px", lineHeight: 1.05 }}>
-              L&apos;Offre <em className="display-italic" style={{ color: "var(--gold)" }}>Gold</em>
+            <Eyebrow style={{ marginBottom: 32 }}>Programmes premium</Eyebrow>
+            <h1 className="display" style={{ fontSize: "clamp(28px, 3.4vw, 52px)", margin: "0 0 28px", lineHeight: 1.12 }}>
+              Et si votre crise intérieure n&apos;était pas une chute…{" "}
+              <em className="display-italic" style={{ color: "var(--gold)" }}>mais une ascension déguisée&nbsp;?</em>
             </h1>
-            <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 17, color: "var(--navy)", margin: "0 0 36px", fontWeight: 300 }}>
-              Accompagnement premium · 3, 6, 9 ou 12 mois.
-            </p>
             <hr className="filet" style={{ margin: "0 auto 32px" }} />
-            <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--mute)", maxWidth: 620, margin: "0 auto" }}>
-              Trois portes vers le même horizon. Le niveau adapté est défini ensemble lors de l&apos;appel découverte —
-              il n&apos;y a pas d&apos;entrée meilleure qu&apos;une autre.
+            <p style={{ fontSize: 17, lineHeight: 1.75, color: "var(--mute)", maxWidth: 660, margin: "0 auto 36px" }}>
+              Un accompagnement rare, réservé aux entrepreneurs accomplis qui sentent qu&apos;il est
+              temps d&apos;honorer une autre forme de puissance&nbsp;: plus libre, plus incarnée, plus essentielle.
             </p>
+            <Link href="/contact" className="btn btn-primary">
+              Réserver un appel confidentiel <Arrow />
+            </Link>
           </div>
         </div>
       </section>
 
       {/* OFFRES */}
-      <section className="section" style={{ paddingTop: 80 }}>
+      <section id="offres" className="section" style={{ paddingTop: 80 }}>
         <div className="container">
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <Eyebrow style={{ marginBottom: 20 }}>Choisissez votre voyage</Eyebrow>
+            <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 560, margin: "0 auto" }}>
+              Chaque programme est une porte vers une transformation unique et profonde.
+            </p>
+          </div>
           <div className="rg-3" style={{ gap: 0 }}>
             {offres.map((o, i) => (
               <div key={i} className={o.featured ? "offre-pop" : undefined} style={{
@@ -172,6 +174,33 @@ export default function OffreGoldPage() {
                 <Link href="/contact" className={o.featured ? "btn btn-gold" : "btn btn-ghost"} style={{ width: "100%", justifyContent: "center" }}>
                   Réserver mon appel <Arrow />
                 </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* LA SOLUTION PROFONDE */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container-narrow">
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Eyebrow>Au-delà du coaching</Eyebrow>
+            <h2 className="display" style={{ fontSize: 40, margin: "24px 0 0", lineHeight: 1.1 }}>
+              La solution profonde<br /><em className="display-italic">pour retrouver le sens.</em>
+            </h2>
+          </div>
+          <div className="rg-2" style={{ gap: 16 }}>
+            {[
+              "Explorer vos blessures invisibles pour en faire des ressources",
+              "Reconnecter à votre énergie vitale, émotionnelle et créatrice",
+              "Vous recentrer sur l'essentiel, avec clarté, paix et puissance intérieure",
+              "Un espace sécurisé, confidentiel et profondément transformateur",
+              "Accompagnement sur mesure adapté à votre saison intérieure",
+              "Un chemin de bascule, pas une méthode standard",
+            ].map((s, i) => (
+              <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "20px 24px", background: "var(--white)", border: "1px solid var(--line)" }}>
+                <span style={{ color: "var(--gold)", flexShrink: 0, fontSize: 15, marginTop: 2 }}>✓</span>
+                <span style={{ fontSize: 15.5, lineHeight: 1.6, color: "var(--navy-ink)" }}>{s}</span>
               </div>
             ))}
           </div>
@@ -239,16 +268,23 @@ export default function OffreGoldPage() {
       {/* CTA */}
       <section className="section-tight" style={{ background: "var(--navy)", color: "var(--white)", textAlign: "center" }}>
         <div className="container-narrow">
-          <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>Premier pas</Eyebrow>
-          <h3 className="display" style={{ fontSize: 56, margin: "0 0 24px", color: "var(--white)", lineHeight: 1.05 }}>
-            Le bon niveau pour vous —<br /><em className="display-italic" style={{ color: "var(--gold)" }}>se découvre ensemble.</em>
+          <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>L&apos;Offre Gold est faite pour vous</Eyebrow>
+          <h3 className="display" style={{ fontSize: 48, margin: "0 0 24px", color: "var(--white)", lineHeight: 1.08 }}>
+            Si ces mots résonnent,<br /><em className="display-italic" style={{ color: "var(--gold)" }}>franchissez le seuil.</em>
           </h3>
-          <p style={{ fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.72)", maxWidth: 560, margin: "0 auto 36px" }}>
-            Trente minutes pour comprendre où vous en êtes, et envisager la juste porte d&apos;entrée.
+          <p style={{ fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.72)", maxWidth: 620, margin: "0 auto 36px" }}>
+            Vous avez tout essayé pour retrouver de l&apos;élan — coaching, retraites, stratégies… mais
+            rien n&apos;a réellement transformé ce qui se joue en profondeur. Réservez votre appel
+            confidentiel pour identifier le parcours parfaitement adapté à votre situation.
           </p>
-          <Link href="/contact" className="btn btn-gold">
-            Réserver mon appel offert <Arrow />
-          </Link>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link href="/contact" className="btn btn-gold">
+              Réserver un appel confidentiel <Arrow />
+            </Link>
+            <Link href="#offres" className="btn btn-ghost-white">
+              Voir le comparatif
+            </Link>
+          </div>
         </div>
       </section>
 

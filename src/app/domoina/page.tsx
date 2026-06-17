@@ -3,9 +3,9 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 
 export const metadata: Metadata = {
-  title: "Domoina — Guide initiatique & thérapeute",
+  title: "Domoïna Ramiadana — Thérapeute initiatique",
   description:
-    "Quinze ans de pratique, trois méthodes propriétaires, cinq cents personnes accompagnées. Découvrez le parcours de Domoina, fondatrice de La Voie 2 la Conscience.",
+    "Domoïna Ramiadana, thérapeute initiatique et guide des dirigeants en quête d'excellence. Plus de 20 ans d'accompagnement holistique. Fondatrice du Centre HUT et de La Voie 2 la Conscience.",
   alternates: { canonical: "/domoina" },
 };
 
@@ -27,21 +27,30 @@ function Eyebrow({ children, style }: { children: React.ReactNode; style?: React
   );
 }
 
-const valeurs = [
+const piliers = [
   {
     num: "I.",
-    title: "Bienveillance radicale",
-    body: "Aucun jugement, aucune complaisance. Une présence qui accueille ce qui est, et qui ne renonce pas à ce qui pourrait devenir.",
+    title: "Le Parcours AIME",
+    sub: "Accompagnement Initiatique Mental et Émotionnel",
+    body: "Un voyage structuré pour une véritable transmutation intérieure : Bilan, Plongée, Libération, Souveraineté.",
   },
   {
     num: "II.",
-    title: "L'eau comme maître",
-    body: "L'eau enseigne la patience, la mémoire, l'adaptation. Elle est le matériau, le médium et le miroir du travail initiatique.",
+    title: "Le Cycle des Saisons",
+    sub: "La boussole du vivant",
+    body: "Automne (lâcher-prise), Hiver (racines profondes), Printemps (élan de vie), Été (rayonnement).",
   },
   {
     num: "III.",
-    title: "Enracinement & élévation",
-    body: "Pas d'envol sans ancrage. Pas d'ancrage sans verticalité. Toute transformation profonde se joue dans cette double tension.",
+    title: "La Méthode Ki-Zola",
+    sub: "Approche sensorielle & énergétique dans l'Eau",
+    body: "Une écoute des cinq éléments — eau, feu, terre, air, éther — pratiquée dans l'élément Eau.",
+  },
+  {
+    num: "IV.",
+    title: "La V.I.E.",
+    sub: "Voie Initiatique de l'Eau",
+    body: "Purification et renaissance par l'élément Eau, libération des empreintes émotionnelles.",
   },
 ];
 
@@ -50,7 +59,7 @@ const timeline = [
   { year: "2011", title: "Recherche sur l'eau", body: "Trois années de recherche personnelle sur les traditions rituelles de l'eau — du Japon au Maroc." },
   { year: "2014", title: "Création de V.I.E.", body: "Codification de la Voie Initiatique de l'Eau. Premières cohortes restreintes de huit personnes." },
   { year: "2017", title: "Ouverture du Centre HUT", body: "Acquisition et restauration du domaine de 1 100 hectares en Sarthe. Premier stage immersif." },
-  { year: "2019", title: "Méthode AIME", body: "Formalisation du parcours signature en quatre phases — Accepter, Intégrer, Manifester, Élever." },
+  { year: "2019", title: "Parcours AIME", body: "Formalisation du parcours signature en quatre phases — Bilan, Plongée, Libération, Souveraineté." },
   { year: "2022", title: "500 accompagnements", body: "Cap symbolique des cinq cents personnes accompagnées. Lancement de la communauté alumni." },
 ];
 
@@ -90,24 +99,24 @@ export default function DomoinaPage() {
         <div className="container">
           <div className="rg-split" style={{ gap: 100, alignItems: "center" }}>
             <div>
-              <Eyebrow style={{ marginBottom: 32 }}>La fondatrice · Guide initiatique</Eyebrow>
-              <h1 className="display" style={{ fontSize: "clamp(36px, 4.5vw, 72px)", margin: "0 0 24px", lineHeight: 1.05 }}>
-                Domoina
+              <Eyebrow style={{ marginBottom: 32 }}>La fondatrice · Thérapeute initiatique</Eyebrow>
+              <h1 className="display" style={{ fontSize: "clamp(34px, 4.2vw, 64px)", margin: "0 0 24px", lineHeight: 1.05 }}>
+                Domoïna Ramiadana
               </h1>
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 17, color: "var(--navy)", margin: "0 0 32px", fontWeight: 300 }}>
-                Guide initiatique &amp; thérapeute.
+                Thérapeute initiatique des dirigeants en quête d&apos;excellence.
               </p>
               <hr className="filet" style={{ marginBottom: 32 }} />
               <p style={{ fontSize: 18, lineHeight: 1.7, color: "var(--navy-ink)", maxWidth: 480 }}>
-                Quinze ans de pratique. Trois méthodes propriétaires. Cinq cents personnes accompagnées.
-                Une promesse, toujours la même&nbsp;: vous ramener à votre essence.
+                J&apos;accompagne les dirigeants à succès à transformer leurs blessures originelles
+                et leurs schémas de compensation en leur zone d&apos;Excellence Authentique Unique (E.A.U.).
               </p>
             </div>
             <Placeholder
               mark="01"
               style={{ aspectRatio: "3/4", background: "var(--paper-alt)" }}
               src="/domoina.jpg"
-              alt="Portrait de Domoina Bockomba — guide initiatique"
+              alt="Portrait de Domoïna Ramiadana — thérapeute initiatique"
               objectPosition="top center"
               sizes="(max-width: 768px) 100vw, 45vw"
             />
@@ -119,39 +128,40 @@ export default function DomoinaPage() {
       <section className="section">
         <div className="container-narrow">
           <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <Eyebrow>Le parcours</Eyebrow>
+            <Eyebrow>Qui suis-je&nbsp;?</Eyebrow>
             <h2 className="display" style={{ fontSize: 36, margin: "24px 0 0", lineHeight: 1.1 }}>
-              <em className="display-italic">Une vocation</em> qui<br />n&apos;a pas eu d&apos;autre choix.
+              Une guide au service de<br /><em className="display-italic">votre transformation consciente.</em>
             </h2>
           </div>
 
           <div style={{ display: "grid", gap: 28 }}>
             <p style={{ fontFamily: "var(--serif)", fontSize: 22, lineHeight: 1.55, color: "var(--navy)", margin: 0 }}>
-              <span style={{ fontSize: 64, float: "left", lineHeight: 0.85, marginRight: 12, color: "var(--gold)" }}>D</span>
-              omoina a grandi entre deux îles, deux langues, deux héritages. De son enfance,
-              elle a gardé le sens du rituel et l&apos;attention donnée à ce qui ne se dit pas.
-              De sa formation occidentale en psychologie clinique, la rigueur clinique du regard.
+              <span style={{ fontSize: 64, float: "left", lineHeight: 0.85, marginRight: 12, color: "var(--gold)" }}>J</span>
+              e suis Domoïna Ramiadana, thérapeute initiatique et guide pour leaders et dirigeants
+              à succès en quête de sens. Formatrice, fondatrice du Centre Holistique UnTout (HUT)
+              et de La Voie 2 la Conscience, créatrice du Parcours AIME et du Cycle des Saisons.
             </p>
             <p style={{ fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)", margin: 0 }}>
-              Sa pratique s&apos;est construite à l&apos;endroit où ces deux mondes se rencontrent —
-              entre la science initiatique et la sagesse ancestrale, entre le cabinet et le sanctuaire,
-              entre le mot juste et le silence qui le précède.
+              J&apos;accompagne les dirigeants à succès à transformer leurs blessures originelles et
+              leurs schémas de compensation en zone d&apos;<strong style={{ fontWeight: 500 }}>Excellence
+              Authentique Unique</strong> (E.A.U.), grâce à une voie initiatique unissant les Lois du
+              Vivant, la sagesse ancestrale et la puissance transformatrice de l&apos;Eau.
             </p>
             <p style={{ fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)", margin: 0 }}>
-              En 2014, elle codifie la <strong style={{ fontWeight: 500 }}>Voie Initiatique de l&apos;Eau</strong> —
-              fruit de trois années de recherche sur les traditions rituelles aquatiques. En 2017,
-              elle ouvre le <strong style={{ fontWeight: 500 }}>Centre HUT</strong>, sanctuaire de 1&nbsp;100 hectares en Sarthe,
-              destiné aux stages immersifs.
+              Nombre d&apos;entrepreneurs, dirigeants et leaders à succès vivent, derrière les apparences
+              de réussite, une crise silencieuse&nbsp;: surcharge mentale, perte de sens, épuisement,
+              ou simplement une impression de vide existentiel — malgré tout ce qu&apos;ils ont construit.
             </p>
             <p style={{ fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)", margin: 0 }}>
-              Aujourd&apos;hui, plus de cinq cents personnes — dirigeants, cadres supérieurs, thérapeutes —
-              ont traversé l&apos;une de ses Immersions. Sa pratique reste volontairement restreinte&nbsp;:
-              une cohorte limitée, un accompagnement long, un engagement total.
+              Avec plus de <strong style={{ fontWeight: 500 }}>20 ans d&apos;expérience</strong> dans
+              l&apos;accompagnement holistique, je me consacre aujourd&apos;hui à aider ces dirigeants à
+              retrouver leur clarté, leur légitimité, leur puissance et leur Vision Intérieure Propre
+              (V.I.P.), en revenant à leur zone d&apos;E.A.U.
             </p>
           </div>
 
           <div style={{ display: "flex", justifyContent: "center", marginTop: 56, gap: 60, flexWrap: "wrap" }}>
-            {[{ n: "15", label: "Années de pratique" }, { n: "3", label: "Méthodes propriétaires" }, { n: "500+", label: "Accompagnements" }].map((s, i) => (
+            {[{ n: "20+", label: "Années d'expérience" }, { n: "500+", label: "Vies transformées" }, { n: "4", label: "Piliers" }].map((s, i) => (
               <div key={i} style={{ textAlign: "center" }}>
                 <p className="num" style={{ fontSize: 56, color: "var(--navy)", margin: 0 }}>{s.n}</p>
                 <p className="small muted" style={{ letterSpacing: ".16em", textTransform: "uppercase", margin: "4px 0 0", fontSize: 10.5 }}>{s.label}</p>
@@ -161,30 +171,62 @@ export default function DomoinaPage() {
         </div>
       </section>
 
+      {/* CE QUE VOUS GAGNEZ */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container-narrow">
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Eyebrow>Mon expertise</Eyebrow>
+            <h2 className="display" style={{ fontSize: 36, margin: "24px 0 20px", lineHeight: 1.1 }}>
+              Ce que vous <em className="display-italic">gagnez.</em>
+            </h2>
+            <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--mute)", maxWidth: 620, margin: "0 auto" }}>
+              J&apos;aide chaque dirigeant·e à transformer ses blessures, souvent inconscientes, en
+              leviers de croissance — en intégrant toutes les dimensions de l&apos;être&nbsp;: physique,
+              énergétique, émotionnelle et mentale.
+            </p>
+          </div>
+          <ul style={{ listStyle: "none", padding: 0, margin: "0 auto", maxWidth: 680 }}>
+            {[
+              "Une vision claire de votre mission et de vos priorités",
+              "Une libération des blocages inconscients ou transgénérationnels",
+              "Une connexion à votre énergie vitale (sexuelle et créatrice)",
+              "Une productivité consciente, sans vous cramer",
+              "Une réussite qui a du sens, au-delà du succès extérieur",
+            ].map((g, i) => (
+              <li key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "18px 0", borderBottom: "1px solid var(--line)" }}>
+                <span style={{ color: "var(--gold)", flexShrink: 0, fontSize: 14, marginTop: 3 }}>✦</span>
+                <span style={{ fontSize: 16.5, lineHeight: 1.6, color: "var(--navy-ink)" }}>{g}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       <hr className="filet-gold-full" />
 
-      {/* VALEURS */}
+      {/* LES 4 PILIERS */}
       <section className="section" style={{ background: "var(--navy)", color: "var(--white)" }}>
         <div className="container">
           <div className="section-head">
             <div>
-              <Eyebrow style={{ color: "var(--gold)" }}>Trois principes</Eyebrow>
+              <Eyebrow style={{ color: "var(--gold)" }}>Quatre piliers</Eyebrow>
               <h2 style={{ color: "var(--white)", marginTop: 24 }}>
-                <em className="display-italic" style={{ color: "var(--gold)" }}>Les valeurs</em><br />de la pratique.
+                <em className="display-italic" style={{ color: "var(--gold)" }}>Les 4 piliers</em><br />de mon approche.
               </h2>
             </div>
             <p style={{ color: "rgba(255,255,255,0.72)" }}>
-              Trois principes qui guident chaque rencontre, chaque rituel, chaque silence.
-              Ils ne se discutent pas — ils s&apos;éprouvent.
+              Mon chemin allie spiritualité vivante, thérapies traditionnelles et sciences
+              initiatiques — pour transformer la blessure en levier de croissance.
             </p>
           </div>
 
-          <div className="rg-3" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
-            {valeurs.map((v, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "50px 40px", background: "var(--navy)" }}>
+          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
+            {piliers.map((v, i) => (
+              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "var(--navy)" }}>
                 <span className="card-num" style={{ fontSize: 16 }}>{v.num}</span>
-                <h3 className="display" style={{ fontSize: 38, color: "var(--white)", margin: "24px 0 24px", lineHeight: 1.1 }}>{v.title}</h3>
-                <hr className="filet" style={{ marginBottom: 24 }} />
+                <h3 className="display" style={{ fontSize: 32, color: "var(--white)", margin: "20px 0 6px", lineHeight: 1.1 }}>{v.title}</h3>
+                <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15, color: "var(--gold)", margin: "0 0 20px" }}>{v.sub}</p>
+                <hr className="filet" style={{ marginBottom: 20 }} />
                 <p style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.78)", margin: 0 }}>{v.body}</p>
               </div>
             ))}
@@ -276,16 +318,23 @@ export default function DomoinaPage() {
       {/* CTA */}
       <section className="section-tight" style={{ background: "var(--white)", borderTop: "3px solid var(--gold)", borderBottom: "1px solid var(--line)" }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
-          <Eyebrow style={{ marginBottom: 24 }}>Premier pas</Eyebrow>
+          <Eyebrow style={{ marginBottom: 24 }}>Envie d&apos;aller plus loin&nbsp;?</Eyebrow>
           <h3 className="display" style={{ fontSize: 36, margin: "0 0 24px", lineHeight: 1.1 }}>
-            Rencontrer Domoina,<br /><em className="display-italic">trente minutes.</em>
+            La transformation consciente<br /><em className="display-italic">débute dès à présent.</em>
           </h3>
-          <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--mute)", maxWidth: 560, margin: "0 auto 36px" }}>
-            Un appel découverte de trente minutes, offert et sans engagement. C&apos;est ainsi que tout commence.
+          <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--mute)", maxWidth: 580, margin: "0 auto 36px" }}>
+            La véritable réussite s&apos;enracine dans l&apos;équilibre entre ce que vous réalisez et ce
+            que vous êtes profondément. Si ces mots résonnent, sachez que vous n&apos;êtes pas
+            seul·e&nbsp;: La Voie 2 la Conscience existe pour vous accompagner.
           </p>
-          <Link href="/contact" className="btn btn-primary">
-            Réserver un appel découverte <Arrow />
-          </Link>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link href="/contact" className="btn btn-primary">
+              Je suis prêt·e à me transformer <Arrow />
+            </Link>
+            <Link href="/offre-gold" className="btn btn-ghost">
+              Découvrir les programmes
+            </Link>
+          </div>
         </div>
       </section>
 

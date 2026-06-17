@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Masterclass — Formations & ateliers de transformation",
+  title: "Challenge offert — De la Blessure Originelle à l'Équilibre de Vie",
   description:
-    "Masterclasses en ligne et en présentiel animées par Domoina. Plongez dans les méthodes AIME, V.I.E. et Cycle des Saisons à travers des formations intensives.",
+    "Un challenge gratuit 100% en ligne sur 3 jours pour dirigeants : mettre en lumière ta blessure originelle et retrouver l'équilibre entre réussite et vie personnelle. Animé par Domoïna Ramiadana.",
   alternates: { canonical: "/masterclass" },
 };
 
@@ -26,167 +26,169 @@ function Eyebrow({ children, style }: { children: React.ReactNode; style?: React
   );
 }
 
-const masterclasses = [
+const stats = [
+  { n: "3", label: "Jours intensifs" },
+  { n: "5h30", label: "De contenu" },
+  { n: "+300", label: "Dirigeants accompagnés" },
+];
+
+const situations = [
+  { t: "Tensions dans ton couple", b: "Tu donnes tout au travail, mais ta relation de couple s'effrite en silence." },
+  { t: "Distance avec ta famille", b: "Tes enfants grandissent sans toi. Tu es présent physiquement et absent émotionnellement." },
+  { t: "Fatigue profonde", b: "Malgré ta réussite, tu ressens une fatigue qui ne part jamais, même après les vacances." },
+  { t: "Mode survie-performance", b: "Toujours faire plus, tenir, contrôler… Tu fonctionnes en pilote automatique." },
+  { t: "Addictions compensatoires", b: "Travail excessif, contrôle, sport intensif, alcool… Des refuges pour éviter de ressentir." },
+  { t: "Sentiment de vide", b: "Tu as tout réussi sur le papier, mais quelque chose manque profondément." },
+];
+
+const jours = [
   {
-    type: "En ligne",
-    titre: "Les 5 Blessures Originelles : les reconnaître et les transformer",
-    description: "Une masterclass intense de 3h pour identifier vos blessures fondamentales et entamer le chemin de leur transformation. Théorie, pratique et exercices en direct.",
-    date: "15 juin 2026",
-    heure: "14h – 17h",
-    places: "25 places",
-    prix: "197 €",
-    tag: "Parcours AIME",
+    jour: "01",
+    duree: "Jour 1 — 1h30 de masterclass",
+    titre: "Comprendre ta blessure originelle",
+    desc: "Découvre comment ta blessure originelle dirige en silence ta vie et tes réussites, et comment elle t'entraîne dans des formes de compensation (travail, contrôle, addictions…).",
+    points: ["Identification de ta blessure profonde", "Compréhension de ses mécanismes", "Prise de conscience des compensations"],
   },
   {
-    type: "En ligne",
-    titre: "Introduction à la Voie Initiatique de l'Eau",
-    description: "Découvrez les fondements de la méthode V.I.E., son ancrage scientifique et ancestral, et les premières pratiques que vous pouvez intégrer chez vous dès ce soir.",
-    date: "2 juillet 2026",
-    heure: "18h30 – 20h30",
-    places: "40 places",
-    prix: "97 €",
-    tag: "Méthode V.I.E.",
+    jour: "02",
+    duree: "Jour 2 — 2h d'atelier",
+    titre: "Cartographier tes schémas",
+    desc: "Cartographie tes schémas de compensation et commence à transformer cette blessure en boussole intérieure, pour te rapprocher de qui tu es vraiment — au-delà des masques et des rôles.",
+    points: ["Cartographie de tes schémas", "Transformation de la blessure en boussole", "Reconnexion à ton authenticité"],
   },
   {
-    type: "Présentiel",
-    titre: "Journée Immersive : Cycle des Saisons — L'Été",
-    description: "Une journée entière au Centre HUT pour explorer l'énergie de l'été — expansion, action, rayonnement. Pratiques en nature, méditations guidées et partages en groupe.",
-    date: "19 juillet 2026",
-    heure: "9h – 18h",
-    places: "12 places",
-    prix: "350 €",
-    tag: "Cycle des Saisons",
+    jour: "03",
+    duree: "Jour 3 — 2h d'atelier",
+    titre: "Poser les premiers ajustements",
+    desc: "Pose les premiers ajustements concrets dans les différents domaines de ta vie, afin de sortir du mode « survie–performance » et retrouver plus d'équilibre dans ta vie de couple, familiale et professionnelle.",
+    points: ["3 à 5 ajustements concrets", "Plan d'action personnalisé", "Début de rééquilibrage de vie"],
   },
 ];
 
-const replays = [
-  {
-    titre: "Leadership et blessures : comment votre passé dirige votre équipe",
-    duree: "2h 45min",
-    date: "Mars 2026",
-    tag: "Leadership",
-    prix: "47 €",
-  },
-  {
-    titre: "L'eau et la mémoire émotionnelle : une approche scientifique",
-    duree: "1h 30min",
-    date: "Février 2026",
-    tag: "Méthode V.I.E.",
-    prix: "37 €",
-  },
-  {
-    titre: "Hiver intérieur : s'autoriser le repos pour mieux renaître",
-    duree: "2h 10min",
-    date: "Janvier 2026",
-    tag: "Cycle des Saisons",
-    prix: "37 €",
-  },
+const obtenir = [
+  "Une compréhension plus claire de ta blessure originelle et de la manière dont elle influence tes choix, tes relations et tes réussites.",
+  "Une cartographie simple de tes schémas de compensation : là où tu sur-travailles, sur-contrôles, te coupes de toi-même ou te réfugies dans des addictions.",
+  "Une vision plus lucide de l'impact de ces schémas sur ta vie de couple, ta vie de famille et ta relation à toi-même.",
+  "3 à 5 ajustements concrets à mettre en place pour sortir du mode « survie–performance » et remettre de l'équilibre dans les différents domaines de ta vie.",
 ];
 
-export default function Masterclass() {
+const temoignages = [
+  { name: "Nora Hachelaf", quote: "Domoïna est une thérapeute que je recommande vivement. Dès notre première rencontre, j'ai été frappée par son écoute attentive et sa capacité à déceler ce qui se passe réellement." },
+  { name: "Nkodia Bervette", quote: "Le travail amorcé avec Domoïna m'a permis d'accéder à une part de ma mémoire qui m'empêchait pourtant d'avancer correctement dans mon quotidien. J'ai pu constater les progrès réalisés au fil des séances individuelles." },
+  { name: "Bernard Joly", quote: "J'ai eu l'occasion de travailler avec Domoïna pour un problème que j'avais au dos. Dès la 1ʳᵉ séance j'ai été surpris du résultat, car cela faisait plusieurs mois que je ne dormais plus la nuit." },
+  { name: "Ariel Zoalguidas", quote: "Faire le lien entre ce que je ne vois pas mais qui se manifeste et ce que je connais ou ce que je vis… ça n'a pas de prix ! J'ai appris à me comprendre et j'en apprends encore tous les jours." },
+];
+
+const bioStats = [
+  { n: "+300", label: "Dirigeants accompagnés" },
+  { n: "15+", label: "Années d'expérience" },
+  { n: "98%", label: "Taux de satisfaction" },
+];
+
+const inscription = [
+  { t: "100% offert", b: "Aucun paiement requis. Accès complet aux 3 jours." },
+  { t: "5h30 de contenu", b: "Masterclass + ateliers pratiques sur 3 jours." },
+  { t: "Données protégées", b: "Tes informations restent strictement confidentielles." },
+];
+
+export default function MasterclassChallenge() {
   return (
     <div className="page-fade">
 
       {/* HERO */}
       <section className="page-hero" style={{ background: "var(--navy)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
-          <Eyebrow style={{ marginBottom: 32, color: "var(--gold)" }}>Formations · Ateliers</Eyebrow>
-          <h1 className="display" style={{ fontSize: "clamp(32px, 4vw, 64px)", margin: "0 0 28px", lineHeight: 1.05, color: "var(--white)" }}>
-            Master<em className="display-italic" style={{ color: "var(--gold)" }}>class.</em>
+          <Eyebrow style={{ marginBottom: 32, color: "var(--gold)" }}>
+            Challenge offert · 100% en ligne · 3 jours
+          </Eyebrow>
+          <h1 className="display" style={{ fontSize: "clamp(32px, 4.4vw, 68px)", margin: "0 0 24px", lineHeight: 1.05, color: "var(--white)" }}>
+            De la Blessure Originelle<br />
+            <em className="display-italic" style={{ color: "var(--gold)" }}>à l&apos;Équilibre de Vie.</em>
           </h1>
-          <hr className="filet" style={{ margin: "0 auto 32px" }} />
-          <p style={{ fontSize: 18, lineHeight: 1.7, color: "rgba(255,255,255,0.72)", maxWidth: 560, margin: "0 auto" }}>
-            Des formations intenses pour approfondir les méthodes de Domoina,
-            en ligne ou au cœur du Centre HUT.
+          <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "rgba(255,255,255,0.9)", margin: "0 0 20px" }}>
+            Tu as réussi. Mais à quel prix&nbsp;?
           </p>
-        </div>
-      </section>
+          <p style={{ fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.7)", maxWidth: 600, margin: "0 auto 40px" }}>
+            Ce challenge 100% en ligne est pour toi si tu sens que ta vie personnelle paie
+            le prix de ta réussite extérieure.
+          </p>
+          <Link href="/contact" className="btn btn-gold btn-lg">
+            Je m&apos;inscris gratuitement <Arrow />
+          </Link>
 
-      {/* MASTERCLASSES À VENIR */}
-      <section className="section" style={{ background: "var(--white)" }}>
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <Eyebrow style={{ marginBottom: 24 }}>Prochaines sessions</Eyebrow>
-              <h2>Masterclass<br /><em className="display-italic">à venir.</em></h2>
-            </div>
-            <p>
-              Trois formats, trois profondeurs. Chaque masterclass est conçue pour
-              être une expérience complète en elle-même.
-            </p>
-          </div>
-
-          <div style={{ display: "grid", gap: 0, border: "1px solid var(--line)" }}>
-            {masterclasses.map((m, i) => (
-              <div key={i} style={{ padding: "44px 48px", borderBottom: i < masterclasses.length - 1 ? "1px solid var(--line)" : 0 }}>
-                <div className="rg-split-auto" style={{ gap: 40, alignItems: "start" }}>
-                  <div>
-                    <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-                      <span className="pill pill-gold">{m.tag}</span>
-                      <span className="pill">{m.type}</span>
-                    </div>
-                    <h3 className="display" style={{ fontSize: 28, color: "var(--navy)", margin: "0 0 14px", lineHeight: 1.2 }}>{m.titre}</h3>
-                    <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--mute)", margin: "0 0 20px" }}>{m.description}</p>
-                    <div style={{ display: "flex", gap: 28, flexWrap: "wrap", rowGap: 8 }}>
-                      <span style={{ fontSize: 12, fontFamily: "var(--sans)", color: "var(--mute)", letterSpacing: ".05em" }}>
-                        📅 {m.date} · {m.heure}
-                      </span>
-                      <span style={{ fontSize: 12, fontFamily: "var(--sans)", color: "var(--mute)", letterSpacing: ".05em" }}>
-                        ◉ {m.places}
-                      </span>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right", flexShrink: 0 }}>
-                    <p className="num" style={{ fontSize: 40, color: "var(--navy)", margin: "0 0 16px" }}>{m.prix}</p>
-                    <Link href="/contact" className="btn btn-primary">
-                      S&apos;inscrire <Arrow />
-                    </Link>
-                  </div>
-                </div>
+          <div style={{ display: "flex", justifyContent: "center", gap: 56, flexWrap: "wrap", marginTop: 56 }}>
+            {stats.map((s, i) => (
+              <div key={i} style={{ textAlign: "center" }}>
+                <p className="stat-n" style={{ fontSize: 44, color: "var(--gold)", margin: 0 }}>{s.n}</p>
+                <p style={{ fontFamily: "var(--sans)", fontSize: 10.5, letterSpacing: ".16em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", margin: "4px 0 0" }}>{s.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* REPLAYS */}
-      <section className="section" style={{ background: "var(--paper)" }}>
+      {/* SITUATIONS */}
+      <section className="section" style={{ background: "var(--white)" }}>
         <div className="container">
-          <div className="section-head">
-            <div>
-              <Eyebrow style={{ marginBottom: 24 }}>Disponibles maintenant</Eyebrow>
-              <h2>Replays des<br /><em className="display-italic">masterclass.</em></h2>
-            </div>
-            <p>
-              Revivez les sessions passées à votre rythme. Accès illimité après achat,
-              contenu de même niveau que les sessions en direct.
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <Eyebrow>Te reconnais-tu&nbsp;?</Eyebrow>
+            <h2 className="display" style={{ fontSize: 40, margin: "24px 0 16px", lineHeight: 1.1 }}>
+              Te reconnais-tu dans <em className="display-italic">ces situations&nbsp;?</em>
+            </h2>
+            <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 600, margin: "0 auto" }}>
+              Tu as «&nbsp;réussi&nbsp;» sur le papier. Mais ta vie personnelle paie le prix de cette réussite extérieure.
             </p>
           </div>
 
           <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
-            {replays.map((r, i) => (
-              <div key={i} style={{ background: "var(--white)", overflow: "hidden" }}>
-                {/* Thumbnail */}
-                <div style={{ aspectRatio: "16/9", background: "var(--navy)", display: "grid", placeItems: "center", position: "relative" }}>
-                  <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--gold)", display: "grid", placeItems: "center" }}>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M5 3l12 7-12 7V3z" fill="var(--navy-ink)" />
-                    </svg>
-                  </div>
-                  <span style={{ position: "absolute", bottom: 12, right: 12, fontSize: 11, fontFamily: "var(--sans)", background: "rgba(14,26,74,0.85)", color: "var(--white)", padding: "4px 8px" }}>
-                    {r.duree}
-                  </span>
+            {situations.map((s, i) => (
+              <div key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{ padding: "36px 32px", background: "var(--white)" }}>
+                <div style={{ width: 30, height: 30, border: "1px solid var(--gold)", borderRadius: "50%", display: "grid", placeItems: "center", color: "var(--gold)", fontSize: 14, marginBottom: 18 }}>✕</div>
+                <h3 className="display" style={{ fontSize: 22, color: "var(--navy)", margin: "0 0 12px", lineHeight: 1.2 }}>{s.t}</h3>
+                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--mute)", margin: 0 }}>{s.b}</p>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ textAlign: "center", marginTop: 48, fontFamily: "var(--serif)", fontStyle: "italic", fontSize: "clamp(20px, 2.4vw, 30px)", color: "var(--navy)", lineHeight: 1.4 }}>
+            Tout cela a une origine commune&nbsp;: <span style={{ color: "var(--gold)" }}>ta blessure originelle.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* PROGRAMME */}
+      <section className="section" style={{ background: "var(--navy)", color: "var(--white)" }}>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>Programme du challenge</Eyebrow>
+              <h2 style={{ color: "var(--white)" }}>
+                3 jours pour<br /><em className="display-italic" style={{ color: "var(--gold)" }}>transformer ta vie.</em>
+              </h2>
+            </div>
+            <p style={{ color: "rgba(255,255,255,0.72)" }}>
+              Un parcours progressif et intense pour mettre en lumière ta blessure originelle et
+              commencer à retrouver l&apos;équilibre dans ta vie de couple, familiale et professionnelle.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gap: 16 }}>
+            {jours.map((j, i) => (
+              <div key={i} data-reveal="" data-reveal-delay={String(i)} className="rg-split-fixed" style={{ gap: 40, padding: "40px 44px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", alignItems: "start" }}>
+                <div>
+                  <p className="display" style={{ fontSize: 64, color: "rgba(200,168,75,0.45)", margin: 0, lineHeight: 1 }}>{j.jour}</p>
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)", margin: "12px 0 0" }}>{j.duree}</p>
                 </div>
-                <div style={{ padding: "28px 28px 32px" }}>
-                  <span className="pill pill-gold" style={{ marginBottom: 16, display: "inline-block" }}>{r.tag}</span>
-                  <h3 className="display" style={{ fontSize: 22, color: "var(--navy)", margin: "0 0 20px", lineHeight: 1.25 }}>{r.titre}</h3>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 16, borderTop: "1px solid var(--line)" }}>
-                    <span style={{ fontSize: 12, color: "var(--mute)", fontFamily: "var(--sans)" }}>{r.date}</span>
-                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                      <span className="display" style={{ fontSize: 24, color: "var(--navy)" }}>{r.prix}</span>
-                      <Link href="/contact" className="btn btn-ghost" style={{ padding: "8px 16px", fontSize: 12 }}>Acheter</Link>
-                    </div>
-                  </div>
+                <div>
+                  <h3 className="display" style={{ fontSize: 28, color: "var(--white)", margin: "0 0 14px", lineHeight: 1.2 }}>{j.titre}</h3>
+                  <p style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.72)", margin: "0 0 22px" }}>{j.desc}</p>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                    {j.points.map((p, k) => (
+                      <li key={k} style={{ display: "flex", gap: 12, fontSize: 14, color: "rgba(255,255,255,0.85)" }}>
+                        <span style={{ color: "var(--gold)", flexShrink: 0 }}>✦</span>{p}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             ))}
@@ -194,20 +196,139 @@ export default function Masterclass() {
         </div>
       </section>
 
-      {/* CTA SUR MESURE */}
-      <section className="section-tight" style={{ background: "var(--navy)", textAlign: "center" }}>
+      {/* CE QUE TU VAS OBTENIR */}
+      <section className="section" style={{ background: "var(--paper)" }}>
         <div className="container-narrow">
-          <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>Sur mesure</Eyebrow>
-          <h3 className="display" style={{ fontSize: 36, margin: "0 0 24px", color: "var(--white)", lineHeight: 1.1 }}>
-            Une formation pour<br /><em className="display-italic" style={{ color: "var(--gold)" }}>votre équipe ?</em>
-          </h3>
-          <p style={{ fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.72)", maxWidth: 520, margin: "0 auto 36px" }}>
-            Domoina propose des masterclass et ateliers sur mesure pour les entreprises.
-            Contactez-nous pour en discuter.
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Eyebrow>Ce que tu vas obtenir</Eyebrow>
+            <h2 className="display" style={{ fontSize: 40, margin: "24px 0 0", lineHeight: 1.1 }}>
+              À l&apos;issue de <em className="display-italic">ces 3 jours.</em>
+            </h2>
+          </div>
+          <ul style={{ listStyle: "none", padding: 0, margin: "0 auto 44px", maxWidth: 720 }}>
+            {obtenir.map((o, i) => (
+              <li key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "20px 0", borderBottom: "1px solid var(--line)" }}>
+                <span style={{ width: 26, height: 26, borderRadius: "50%", background: "var(--gold)", color: "var(--navy-ink)", display: "grid", placeItems: "center", flexShrink: 0, fontSize: 13, marginTop: 2 }}>✓</span>
+                <span style={{ fontSize: 16, lineHeight: 1.65, color: "var(--navy-ink)" }}>{o}</span>
+              </li>
+            ))}
+          </ul>
+          <div style={{ textAlign: "center" }}>
+            <Link href="/contact" className="btn btn-primary btn-lg">
+              Je veux ces résultats <Arrow />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* QUI SUIS-JE */}
+      <section className="section" style={{ background: "var(--white)" }}>
+        <div className="container-narrow">
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <Eyebrow>Qui suis-je&nbsp;?</Eyebrow>
+            <h2 className="display" style={{ fontSize: 36, margin: "24px 0 8px", lineHeight: 1.1 }}>
+              Domoïna Ramiadana
+            </h2>
+            <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 16, color: "var(--gold)", margin: 0 }}>
+              Guide initiatique des dirigeants, cadres et thérapeutes en quête d&apos;excellence.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gap: 22, maxWidth: 720, margin: "0 auto" }}>
+            <p style={{ fontFamily: "var(--serif)", fontSize: 20, lineHeight: 1.55, color: "var(--navy)", margin: 0 }}>
+              Mon intention n&apos;est pas de t&apos;aider à «&nbsp;performer plus&nbsp;», mais à revenir à l&apos;essentiel.
+            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)", margin: 0 }}>
+              J&apos;accompagne des dirigeants, cadres, entrepreneurs et thérapeutes qui ont déjà réussi à
+              «&nbsp;tout cocher&nbsp;» à l&apos;extérieur… mais qui sentent que quelque chose se fissure à l&apos;intérieur&nbsp;:
+              une fatigue qui ne passe plus, des tensions dans le couple ou la famille, le sentiment de vivre
+              en pilote automatique — et parfois des mécanismes d&apos;évitement ou d&apos;addiction qu&apos;ils ne s&apos;expliquent pas.
+            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)", margin: 0 }}>
+              Mon travail consiste à t&apos;aider à mettre en lumière et à commencer à guérir ta blessure
+              originelle — cette blessure profonde qui a façonné qui tu es et tes talents, mais qui, tant
+              qu&apos;elle n&apos;est pas apaisée, t&apos;entraîne dans des mécanismes de compensation qui déséquilibrent ta vie.
+            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--mute)", margin: 0 }}>
+              Quand cette blessure commence à être reconnue et apaisée, les compensations se relâchent,
+              les masques tombent, l&apos;équilibre se réinstalle. Le rayonnement dans ton activité et ton
+              leadership devient alors une conséquence de cet équilibre — et non un objectif à atteindre
+              coûte que coûte.
+            </p>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center", gap: 60, flexWrap: "wrap", marginTop: 52 }}>
+            {bioStats.map((s, i) => (
+              <div key={i} style={{ textAlign: "center" }}>
+                <p className="num" style={{ fontSize: 52, color: "var(--navy)", margin: 0 }}>{s.n}</p>
+                <p className="small muted" style={{ letterSpacing: ".16em", textTransform: "uppercase", margin: "4px 0 0", fontSize: 10.5 }}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TÉMOIGNAGES */}
+      <section className="section" style={{ background: "var(--navy)" }}>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>Témoignages clients</Eyebrow>
+              <h2 style={{ color: "var(--white)" }}>
+                Ils en parlent<br /><em className="display-italic" style={{ color: "var(--gold)" }}>mieux que nous.</em>
+              </h2>
+            </div>
+            <p style={{ color: "rgba(255,255,255,0.58)" }}>
+              Des avis vérifiés de celles et ceux qui ont cheminé avec Domoïna.
+            </p>
+          </div>
+
+          <div className="rg-2" style={{ gap: 16 }}>
+            {temoignages.map((t, i) => (
+              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} className="testi-dark" style={{ display: "flex", flexDirection: "column" }}>
+                <p style={{ fontFamily: "var(--serif)", fontSize: 16, lineHeight: 1.65, color: "rgba(255,255,255,0.88)", fontStyle: "italic", margin: "26px 0 22px", flexGrow: 1 }}>
+                  {t.quote}
+                </p>
+                <hr style={{ height: 1, background: "rgba(255,255,255,0.1)", border: 0, marginBottom: 16 }} />
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(200,168,75,0.2)", color: "var(--gold)", display: "grid", placeItems: "center", fontFamily: "var(--serif)", fontSize: 16, flexShrink: 0 }}>
+                    {t.name.charAt(0)}
+                  </span>
+                  <span style={{ fontWeight: 500, fontSize: 13.5, color: "var(--white)", fontFamily: "var(--sans)" }}>{t.name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* INSCRIPTION */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container-narrow" style={{ textAlign: "center" }}>
+          <Eyebrow style={{ marginBottom: 24 }}>Inscris-toi · c&apos;est offert</Eyebrow>
+          <h2 className="display" style={{ fontSize: "clamp(30px, 3.4vw, 52px)", margin: "0 0 20px", lineHeight: 1.05 }}>
+            Rejoins le challenge<br /><em className="display-italic">et commence ta transformation.</em>
+          </h2>
+          <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--mute)", maxWidth: 540, margin: "0 auto 44px" }}>
+            Trois jours pour amorcer un vrai changement — sans paiement, sans engagement.
           </p>
-          <Link href="/contact" className="btn btn-gold">
-            Discuter d&apos;un projet <Arrow />
+
+          <div className="rg-3" style={{ gap: 16, marginBottom: 44 }}>
+            {inscription.map((g, i) => (
+              <div key={i} style={{ background: "var(--white)", border: "1px solid var(--line)", padding: "32px 24px" }}>
+                <div style={{ width: 30, height: 30, border: "1px solid var(--gold)", display: "grid", placeItems: "center", color: "var(--gold)", fontSize: 14, margin: "0 auto 18px" }}>✦</div>
+                <h3 style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "var(--navy)", margin: "0 0 8px" }}>{g.t}</h3>
+                <p className="small muted" style={{ margin: 0, lineHeight: 1.55, fontSize: 12.5 }}>{g.b}</p>
+              </div>
+            ))}
+          </div>
+
+          <Link href="/contact" className="btn btn-gold btn-lg">
+            Je rejoins le challenge gratuit <Arrow />
           </Link>
+          <p className="small" style={{ margin: "16px 0 0", color: "var(--mute)", fontSize: 11.5, letterSpacing: ".08em" }}>
+            Challenge 100% offert · Places limitées
+          </p>
         </div>
       </section>
 

@@ -24,21 +24,21 @@ export default function Footer() {
             <span className="dot" style={{ background: "var(--navy)" }} />
           </p>
           <h3>
-            Il ne manque qu&apos;une conversation
+            Prêt à commencer votre voyage
             <br />
-            <em style={{ fontWeight: 300 }}>pour que tout commence.</em>
+            <em style={{ fontWeight: 300 }}>vers l&apos;éveil&nbsp;?</em>
           </h3>
           <p
             style={{
-              maxWidth: 520,
+              maxWidth: 560,
               margin: "0 auto 36px",
               fontSize: 15.5,
               lineHeight: 1.72,
               color: "rgba(14,26,74,0.7)",
             }}
           >
-            Un premier appel de trente minutes, offert et sans engagement. Pour comprendre
-            où vous en êtes — et envisager ensemble le chemin qui vous correspond.
+            Réservez votre appel découverte offert avec Domoina et découvrez comment
+            La Voie 2 la Conscience peut transformer votre vie.
           </p>
           <Link href="/contact" className="btn btn-primary">
             Réserver mon appel offert <Arrow />
@@ -53,7 +53,7 @@ export default function Footer() {
               color: "rgba(14,26,74,0.45)",
             }}
           >
-            30 minutes · Gratuit · Réponse sous 24h
+            Sans engagement · Réponse sous 24h
           </p>
         </div>
       </div>
@@ -98,8 +98,7 @@ export default function Footer() {
                 </small>
               </Link>
               <p>
-                Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs
-                et thérapeutes en quête d&apos;une transformation profonde.
+                Transformez vos blessures en Excellence Authentique Unique.
               </p>
               <div className="social">
                 <a href="#" title="Instagram" aria-label="Instagram">IG</a>

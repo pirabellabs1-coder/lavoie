@@ -1,15 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/site";
-
-// Articles du blog (slugs alignés sur src/app/blog/page.tsx)
-const BLOG_SLUGS = [
-  "blessures-originelles-transformation",
-  "eau-element-guerison",
-  "diriger-authenticite",
-  "cycle-saisons-rythmes-naturels",
-  "parcours-aime-comment-ca-fonctionne",
-  "burnout-opportunite-renaissance",
-];
+import { ARTICLE_SLUGS as BLOG_SLUGS } from "@/lib/articles";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

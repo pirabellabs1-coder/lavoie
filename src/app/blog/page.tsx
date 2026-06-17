@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ARTICLES as articles } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "Blog — Articles & réflexions sur la transformation",
@@ -25,57 +26,6 @@ function Eyebrow({ children, style }: { children: React.ReactNode; style?: React
     </p>
   );
 }
-
-const articles = [
-  {
-    slug: "blessures-originelles-transformation",
-    categorie: "Transformation",
-    titre: "Pourquoi vos blessures sont vos plus grands atouts",
-    extrait: "Ce que nous croyons devoir cacher — nos failles, nos peurs, nos blessures originelles — est souvent la source de notre puissance la plus profonde. Voici comment opérer ce retournement fondamental.",
-    date: "12 mai 2026",
-    lecture: "8 min",
-  },
-  {
-    slug: "eau-element-guerison",
-    categorie: "Méthode V.I.E.",
-    titre: "L'eau comme élément de guérison : ce que la science dit",
-    extrait: "De la mémoire de l'eau aux études sur l'hydrothérapie, les preuves scientifiques s'accumulent autour de la puissance thérapeutique de l'eau. Découvrez les fondements de la méthode V.I.E.",
-    date: "28 avril 2026",
-    lecture: "12 min",
-  },
-  {
-    slug: "diriger-authenticite",
-    categorie: "Leadership",
-    titre: "Diriger avec authenticité : la nouvelle compétence du XXIe siècle",
-    extrait: "Les dirigeants les plus efficaces ne sont pas ceux qui ont le plus de certitudes, mais ceux qui ont le courage d'être profondément eux-mêmes. Une réflexion sur l'authenticité comme puissance.",
-    date: "14 avril 2026",
-    lecture: "10 min",
-  },
-  {
-    slug: "cycle-saisons-rythmes-naturels",
-    categorie: "Cycle des Saisons",
-    titre: "Retrouver ses rythmes naturels dans un monde qui s'accélère",
-    extrait: "Nous vivons en décalage permanent avec nos cycles naturels. Cette rupture est à l'origine de nombreux épuisements et pertes de sens. Le Cycle des Saisons propose un autre rapport au temps.",
-    date: "1er avril 2026",
-    lecture: "7 min",
-  },
-  {
-    slug: "parcours-aime-comment-ca-fonctionne",
-    categorie: "Méthode AIME",
-    titre: "Le Parcours AIME : comment fonctionne la transformation en 4 phases",
-    extrait: "Accepter, Intégrer, Manifester, Élever. Derrière ces quatre mots se cache une architecture précise de la transformation. Plongée dans les mécanismes du Parcours AIME.",
-    date: "15 mars 2026",
-    lecture: "9 min",
-  },
-  {
-    slug: "burnout-opportunite-renaissance",
-    categorie: "Transformation",
-    titre: "Le burnout comme porte d'entrée vers une vie plus vraie",
-    extrait: "Souvent vécu comme une catastrophe, le burnout peut être un signal fondamental du vivant : « Ce chemin n'est plus le tien. » Comment traverser l'effondrement pour accéder à la renaissance.",
-    date: "5 mars 2026",
-    lecture: "11 min",
-  },
-];
 
 const categories = ["Tous", "Transformation", "Leadership", "Méthode V.I.E.", "Méthode AIME", "Cycle des Saisons"];
 

@@ -51,8 +51,7 @@ function Eyebrow({
 const stats = [
   { n: "500+", label: "Vies transformées" },
   { n: "15+",  label: "Années d'expérience" },
-  { n: "100%", label: "Engagement · Présence" },
-  { n: "4.9",  label: "142 avis Google ★★★★★" },
+  { n: "100%", label: "Engagement" },
 ];
 
 const pourQui = [
@@ -86,28 +85,28 @@ const methodes = [
   {
     num: "I.",
     tag: "Parcours signature",
-    title: "AIME",
-    sub: "Accepter · Intégrer · Manifester · Élever",
+    title: "Le Parcours AIME",
+    sub: "Accompagnement Initiatique Mental et Émotionnel",
     body:
-      "Quatre phases pour traverser ce qui doit l'être, digérer le passé, et faire émerger l'excellence authentique qui vous habite.",
+      "La méthode pour la guérison de la blessure originelle : Accepter, Intégrer, Manifester, Élever votre Excellence Authentique Unique.",
     href: "/methodes",
   },
   {
     num: "II.",
     tag: "Voie de l'eau",
-    title: "V.I.E.",
+    title: "La V.I.E.",
     sub: "Voie Initiatique de l'Eau",
     body:
-      "Purification, immersions rituelles, travail respiratoire et mémoire de l'eau. Une pratique somatique fondée sur quinze ans de recherche.",
+      "Purification et renaissance par l'élément Eau. L'eau comme mémoire vivante et transformatrice. Rituels de passage pour dirigeants.",
     href: "/methodes",
   },
   {
     num: "III.",
     tag: "Rythme naturel",
-    title: "Cycle des Saisons",
-    sub: "Hiver · Printemps · Été · Automne",
+    title: "Le Cycle des Saisons",
+    sub: "Automne · Hiver · Printemps · Été",
     body:
-      "Un accompagnement qui suit le rythme du vivant — repos, éveil, expansion, lâcher-prise — pour une transformation soutenable et enracinée.",
+      "Une boussole vivante qui accompagne chaque transformation intérieure au rythme des saisons.",
     href: "/methodes",
   },
 ];
@@ -118,11 +117,13 @@ const offres = [
     title: "Immersion Essence",
     duration: "3 mois",
     featured: false,
+    desc:
+      "Pour leaders, dirigeants et entrepreneurs en quête de sens profond. Une expérience immersive sur 3 mois, au-delà du développement personnel classique.",
     bullets: [
       "2 stages immersifs au Centre HUT",
-      "Séances individuelles hebdomadaires",
-      "Ligne WhatsApp privée avec Domoina",
-      "Bibliothèque de ressources initiatiques",
+      "1 séance individuelle / semaine",
+      "Un cercle d'intimité sur WhatsApp (3 mois)",
+      "Hébergement et restauration non inclus",
     ],
   },
   {
@@ -130,12 +131,13 @@ const offres = [
     title: "Immersion Expansion",
     duration: "6 mois",
     featured: true,
+    desc:
+      "Programme d'expansion intérieure et de réalignement stratégique sur 6 mois. Pour ceux qui ressentent que leur réussite ne peut plus se mesurer uniquement à l'extérieur.",
     bullets: [
-      "Tout le programme Essence",
-      "3 stages immersifs saisonniers",
-      "Coaching de groupe mensuel",
-      "Voyage initiatique optionnel",
-      "Accès à la communauté alumni",
+      "Tout le contenu de l'Immersion Essence",
+      "3 stages immersifs au Centre HUT",
+      "2 sessions de coaching de groupe par mois",
+      "1 voyage initiatique (optionnel)",
     ],
   },
   {
@@ -143,13 +145,14 @@ const offres = [
     title: "Immersion Royale",
     duration: "9 — 12 mois",
     featured: false,
+    desc:
+      "Une mutation souveraine. Une incarnation radicale. Programme initiatique de 9 à 12 mois pour dirigeants prêts à redevenir pleinement eux-mêmes.",
     bullets: [
-      "Accompagnement illimité",
-      "4 stages saisonniers complets",
-      "Accès direct à Domoina 7j/7",
-      "Suite privative au Centre HUT",
-      "3 voyages initiatiques internationaux",
-      "Programme entièrement sur mesure",
+      "Accompagnement individuel illimité pendant 12 mois",
+      "4 stages immersifs au Centre HUT (1 par saison)",
+      "Accès direct à Domoïna en privé (WhatsApp 7j/7)",
+      "Suite privative & conciergerie lors des immersions",
+      "3 Voyages Initiatiques d'exception (optionnels)",
     ],
   },
 ];
@@ -215,50 +218,47 @@ const voyages = [
 const temoignages = [
   {
     quote:
-      "J'ai dirigé une entreprise de 400 personnes pendant vingt ans. Ce que Domoina m'a permis de rencontrer en moi — il n'y avait pas de mot pour ça avant. Il y en a maintenant.",
-    name: "Élisabeth M.",
-    role: "CEO · Groupe industriel",
-    program: "Immersion Royale · 12 mois",
+      "Le travail amorcé avec Domoïna m'a permis d'accéder à une part de ma mémoire qui m'empêchait pourtant d'avancer correctement dans mon quotidien. J'ai pu constater les progrès réalisés au fil des séances individuelles.",
+    name: "Nkodia Bervette",
+    source: "Avis Google vérifié",
   },
   {
     quote:
-      "Je pensais venir chercher des outils. Je suis repartie avec un axe. Le travail avec l'eau a changé quelque chose de très ancien que je portais.",
-    name: "Caroline V.",
-    role: "Thérapeute · Cabinet privé",
-    program: "Immersion Expansion · 6 mois",
+      "Cela fait maintenant 4 ans que je chemine avec le CDS au sein de LV2C, j'apprends, je comprends et je commence à intégrer les enseignements que je reçois. Aujourd'hui, je suis en capacité d'affirmer que la Voie Initiatique avec laquelle j'avance est profondément transformatrice.",
+    name: "Sandrine Jeanne",
+    source: "Avis Google vérifié",
   },
   {
     quote:
-      "La discrétion, l'exigence, cette présence qui ne juge jamais. Trois mois plus tard, mes équipes ont remarqué avant moi que quelque chose s'était dénoué.",
-    name: "Vincent L.",
-    role: "Directeur financier · Cotée",
-    program: "Immersion Essence · 3 mois",
+      "J'ai connu Domoïna via une amie pour une problématique bien précise. En découvrant son travail, j'étais loin de penser que l'accompagnement de groupe serait autant bénéfique. À aucun moment je n'aurais imaginé recevoir des miroirs à travers les autres participants.",
+    name: "Mireille Tamarin",
+    source: "Avis Google vérifié",
   },
 ];
 
 const journal = [
   {
-    cat: "Méthode",
-    title: "L'eau comme matière initiatique : pourquoi nous immergeons.",
+    cat: "Méthode V.I.E.",
+    title: "L'eau comme élément de guérison : ce que la science dit.",
     date: "Avril 2026",
-    read: "7 min",
-    slug: "eau-matiere-initiatique",
+    read: "12 min",
+    slug: "eau-element-guerison",
     img: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=800&q=80&auto=format&fit=crop",
   },
   {
-    cat: "Témoignage",
-    title: "Trois dirigeants racontent leur Immersion Royale, un an après.",
-    date: "Mars 2026",
-    read: "12 min",
-    slug: "immersion-royale-temoignages",
+    cat: "Leadership",
+    title: "Diriger avec authenticité : la nouvelle compétence du XXIe siècle.",
+    date: "Avril 2026",
+    read: "10 min",
+    slug: "diriger-authenticite",
     img: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=80&auto=format&fit=crop",
   },
   {
-    cat: "Pratique",
-    title: "Le Cycle des Saisons : entrer dans l'hiver intérieur sans le craindre.",
-    date: "Février 2026",
-    read: "5 min",
-    slug: "cycle-saisons-hiver",
+    cat: "Cycle des Saisons",
+    title: "Retrouver ses rythmes naturels dans un monde qui s'accélère.",
+    date: "Avril 2026",
+    read: "7 min",
+    slug: "cycle-saisons-rythmes-naturels",
     img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&auto=format&fit=crop",
   },
 ];
@@ -275,6 +275,7 @@ export default function Home() {
           01 · HERO — Full-bleed cinematic
           ══════════════════════════════════════════════════════ */}
       <section
+        className="hero-home"
         style={{
           position: "relative",
           height: "100svh",
@@ -315,6 +316,7 @@ export default function Home() {
 
         {/* ── Content anchored bottom-left ── */}
         <div
+          className="hero-home-content"
           style={{
             position: "absolute",
             inset: 0,
@@ -351,7 +353,7 @@ export default function Home() {
                   boxShadow: "0 0 10px rgba(200,168,75,0.8)",
                 }}
               />
-              Cohorte 2026 — Inscriptions ouvertes
+              Domoïna · Guide initiatique
             </p>
 
             {/* H1 — large Cormorant Garamond serif */}
@@ -359,29 +361,22 @@ export default function Home() {
               className="mega"
               data-reveal=""
               style={{
-                fontSize: "clamp(52px, 7.5vw, 118px)",
+                fontSize: "clamp(28px, 3.7vw, 54px)",
                 color: "var(--white)",
                 margin: 0,
-                lineHeight: 0.9,
+                lineHeight: 1.1,
                 fontWeight: 300,
+                letterSpacing: "-0.01em",
+                maxWidth: 860,
               }}
             >
-              Vous avez tout construit.
-            </h1>
-            <h1
-              className="mega"
-              data-reveal=""
-              data-reveal-delay="1"
-              style={{
-                fontSize: "clamp(52px, 7.5vw, 118px)",
-                color: "var(--gold)",
-                fontStyle: "italic",
-                fontWeight: 300,
-                margin: "0 0 40px",
-                lineHeight: 0.92,
-              }}
-            >
-              Il reste l&apos;essentiel.
+              Guide initiatique pour dirigeants, cadres et thérapeutes{" "}
+              <em
+                className="display-italic"
+                style={{ color: "var(--gold)", fontWeight: 300 }}
+              >
+                en quête de sens et d&apos;équilibre.
+              </em>
             </h1>
 
             {/* Divider */}
@@ -390,7 +385,7 @@ export default function Home() {
                 width: 56,
                 height: 1,
                 background: "linear-gradient(90deg, rgba(200,168,75,0.8), transparent)",
-                marginBottom: 28,
+                margin: "36px 0 28px",
               }}
             />
 
@@ -400,39 +395,44 @@ export default function Home() {
               data-reveal-delay="2"
               style={{
                 fontFamily: "var(--sans)",
-                fontSize: "clamp(14px, 1.2vw, 17px)",
-                lineHeight: 1.75,
-                maxWidth: 480,
+                fontSize: "clamp(14px, 1.2vw, 16.5px)",
+                lineHeight: 1.8,
+                maxWidth: 640,
                 margin: "0 0 44px",
-                color: "rgba(255,255,255,0.68)",
+                color: "rgba(255,255,255,0.72)",
               }}
             >
-              Pour les dirigeants, cadres supérieurs et thérapeutes qui ont bâti{" "}
-              <em style={{ fontFamily: "var(--serif)", color: "rgba(255,255,255,0.92)" }}>
-                tout l&apos;extérieur
+              J&apos;accompagne les dirigeants, cadres et thérapeutes à transformer leurs
+              blessures originelles — traumatismes conscients ou inconscients — ainsi que leurs
+              schémas de compensation en leur{" "}
+              <em style={{ fontFamily: "var(--serif)", color: "rgba(255,255,255,0.95)" }}>
+                zone d&apos;Excellence Authentique Unique (E.A.U.)
               </em>
-              {" "}— et qui sentent qu&apos;un autre chantier commence.
+              , grâce à une méthode fondée sur 3 axes — la science initiatique, la sagesse
+              ancestrale et la puissance transformatrice de l&apos;Eau — et 4 piliers.
             </p>
 
             {/* CTAs */}
-            <div
-              data-reveal=""
-              data-reveal-delay="3"
-              style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}
-            >
-              <Link href="/contact" className="btn btn-gold btn-lg">
-                Réserver mon appel offert <Arrow />
-              </Link>
-              <Link href="/offre-gold" className="btn btn-ghost-white">
-                Voir l&apos;Offre Gold
-              </Link>
+            <div data-reveal="" data-reveal-delay="3">
+              <div
+                className="hero-cta-row"
+                style={{ display: "inline-flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}
+              >
+                <Link href="/contact" className="btn btn-gold btn-lg">
+                  Réserver un appel <Arrow />
+                </Link>
+                <Link href="/domoina" className="btn btn-ghost-white">
+                  Découverte Domoïna
+                </Link>
+              </div>
               <span
                 style={{
+                  display: "block",
+                  marginTop: 18,
                   fontFamily: "var(--sans)",
                   fontSize: 10.5,
                   letterSpacing: ".1em",
                   color: "rgba(255,255,255,0.28)",
-                  marginLeft: 4,
                 }}
               >
                 Appel offert · Sans engagement
@@ -516,6 +516,7 @@ export default function Home() {
           MARQUEE
           ══════════════════════════════════════════════════════ */}
       <Marquee
+        duration={80}
         items={[
           "Bienveillance radicale",
           "L'Eau comme maître",
@@ -575,10 +576,10 @@ export default function Home() {
           03 · MANIFESTE
           ══════════════════════════════════════════════════════ */}
       <section style={{ background: "var(--paper)", padding: "140px 0", position: "relative" }}>
-        <span className="section-num">03 — Manifeste</span>
+        <span className="section-num">03 — La Voie 2 la Conscience</span>
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <Eyebrow centered style={{ marginBottom: 36 }}>
-            Manifeste
+            La Voie 2 la Conscience
           </Eyebrow>
           <p
             data-reveal=""
@@ -591,24 +592,25 @@ export default function Home() {
               color: "var(--navy-ink)",
             }}
           >
-            Nous ne croyons pas aux{" "}
-            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>raccourcis.</em>
-            {" "}Nous ne vendons ni techniques ni promesses pré-emballées.
-            Nous accompagnons une traversée —{" "}
-            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>la vôtre.</em>
-            {" "}Avec la lenteur, la rigueur et la profondeur qu&apos;elle exige.
+            Un espace sacré dédié à votre transformation intérieure et à{" "}
+            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>
+              l&apos;éveil de votre plein potentiel.
+            </em>
           </p>
-          <hr className="filet" style={{ margin: "52px auto 22px" }} />
+          <hr className="filet" style={{ margin: "44px auto 28px" }} />
           <p
             style={{
-              fontFamily: "var(--serif)",
-              fontStyle: "italic",
-              fontSize: 17,
-              color: "var(--mute)",
-              margin: 0,
+              fontSize: 16,
+              lineHeight: 1.85,
+              color: "var(--navy-ink)",
+              margin: "0 auto",
+              maxWidth: 620,
             }}
           >
-            — Domoina, fondatrice
+            La Voie 2 la Conscience est née d&apos;une vision profonde : créer un pont entre le
+            monde matériel et spirituel, permettant à chaque âme de retrouver sa véritable essence.
+            Fondée par Domoina, guide spirituelle reconnue, notre approche allie sagesse ancestrale
+            et techniques modernes pour vous accompagner dans votre voyage de transformation.
           </p>
         </div>
       </section>
@@ -1038,10 +1040,14 @@ export default function Home() {
                       fontStyle: "italic",
                       fontSize: 20,
                       color: o.featured ? "var(--gold)" : "rgba(200,168,75,0.75)",
-                      margin: "0 0 28px",
+                      margin: "0 0 18px",
                     }}
                   >
                     {o.duration}
+                  </p>
+
+                  <p style={{ fontSize: 13.5, lineHeight: 1.7, color: "rgba(255,255,255,0.7)", margin: "0 0 24px" }}>
+                    {o.desc}
                   </p>
 
                   <hr style={{ height: 1, background: "rgba(255,255,255,0.1)", border: 0, marginBottom: 24 }} />
@@ -1153,22 +1159,27 @@ export default function Home() {
 
             {/* Copy */}
             <div data-reveal="" data-reveal-delay="1">
-              <Eyebrow style={{ marginBottom: 24 }}>Le sanctuaire</Eyebrow>
+              <Eyebrow style={{ marginBottom: 24 }}>Un sanctuaire de reconnexion à soi</Eyebrow>
               <h2
                 className="display"
                 style={{ fontSize: "clamp(28px,3vw,46px)", margin: "0 0 24px", lineHeight: 1.05 }}
               >
-                Centre HUT,
+                Le Centre HUT,
                 <br />
                 <em style={{ fontWeight: 300 }}>1&nbsp;100 hectares</em>
                 <br />
-                de silence.
+                de nature vibrante.
               </h2>
               <hr className="filet" style={{ marginBottom: 28 }} />
-              <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--navy-ink)", margin: "0 0 32px" }}>
-                Niché en Sarthe, à deux heures de Paris, le Centre HUT est le lieu où s&apos;incarnent
-                les stages immersifs. Onze cents hectares de forêts, d&apos;eaux vives et de clairières
-                pensés pour la lenteur, le rituel et l&apos;écoute profonde.
+              <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--navy-ink)", margin: "0 0 22px" }}>
+                Vous n&apos;y venez pas par hasard. Il y a des lieux qui marquent une étape&nbsp;:
+                HUT en fait partie. Ce centre ne vous accueille pas, il vous reconnaît — et vous
+                offre le cadre juste pour aller là où vous n&apos;êtes encore jamais allé.
+              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.78, color: "var(--mute)", margin: "0 0 32px" }}>
+                À deux heures de Paris, niché dans une nature vibrante et préservée, le Centre HUT
+                est un espace vivant, pensé comme un cocon initiatique pour vos processus de
+                guérison, de transformation et de renaissance.
               </p>
               <div
                 style={{
@@ -1305,16 +1316,15 @@ export default function Home() {
             <div>
               <Eyebrow gold style={{ marginBottom: 24 }}>Témoignages</Eyebrow>
               <h2 style={{ color: "var(--white)" }}>
-                Ce qui se dit,
+                Ceux que j&apos;accompagne
                 <br />
                 <em className="display-italic" style={{ color: "var(--gold)" }}>
-                  à voix basse.
+                  témoignent.
                 </em>
               </h2>
             </div>
             <p style={{ color: "rgba(255,255,255,0.58)" }}>
-              Quelques mots parmi les cinq cents personnes accompagnées. Les noms ont été
-              abrégés à leur demande — la discrétion est notre première promesse.
+              Des avis Google vérifiés de celles et ceux qui cheminent avec La Voie 2 la Conscience.
             </p>
           </div>
 
@@ -1342,11 +1352,8 @@ export default function Home() {
                   {t.quote}
                 </p>
                 <hr style={{ height: 1, background: "rgba(255,255,255,0.1)", border: 0, marginBottom: 16 }} />
-                <p style={{ margin: "0 0 3px", fontWeight: 500, fontSize: 13.5, color: "var(--white)", fontFamily: "var(--sans)" }}>
+                <p style={{ margin: "0 0 6px", fontWeight: 500, fontSize: 13.5, color: "var(--white)", fontFamily: "var(--sans)" }}>
                   {t.name}
-                </p>
-                <p style={{ margin: "0 0 8px", fontSize: 12, color: "rgba(255,255,255,0.45)", fontFamily: "var(--sans)" }}>
-                  {t.role}
                 </p>
                 <p
                   style={{
@@ -1356,9 +1363,13 @@ export default function Home() {
                     letterSpacing: ".1em",
                     textTransform: "uppercase",
                     color: "var(--gold)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
                   }}
                 >
-                  {t.program}
+                  <span style={{ fontSize: 11 }}>★★★★★</span>
+                  {t.source}
                 </p>
               </div>
             ))}

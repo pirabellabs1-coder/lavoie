@@ -887,7 +887,7 @@ select option { background: var(--white); }
   display: flex;
   gap: 64px;
   white-space: nowrap;
-  animation: marqueeAnim 55s linear infinite;
+  animation: marqueeAnim var(--marquee-duration, 60s) linear infinite;
   width: max-content;
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
@@ -1140,11 +1140,25 @@ select option { background: var(--white); }
   .nav-mobile { display: none !important; }
 }
 
-/* Reduced motion */
+/* Reduced motion — correctif : limiter aussi les répétitions, sinon les
+   animations en boucle infinie (marquee) tournent à 0.01ms × ∞ = illisibles. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Contenus à révélation : visibles par défaut (sinon ils restent à
+     opacity:0 si le JS de révélation ne s'exécute pas — ex. mouvement réduit). */
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  /* Bandeau décoratif : défilement lent volontaire conservé même en mouvement
+     réduit (on réaffirme nom + durée + répétitions pour battre la règle globale). */
+  .marquee .marquee-track {
+    animation-name: marqueeAnim !important;
+    animation-duration: var(--marquee-duration, 60s) !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: infinite !important;
   }
 }
 
@@ -1439,4 +1453,28 @@ select option { background: var(--white); }
   .timeline-line, .timeline-dot { display: none; }
   .timeline-item { grid-template-columns: 1fr; gap: 6px; }
   .timeline-year { text-align: left !important; padding-right: 0 !important; }
+
+  /* Hero accueil : sur mobile, laisser grandir au-delà de l'écran
+     (contenu ancré en bas + titre long = coupé sous la navbar sinon) */
+  .hero-home { height: auto !important; min-height: 100svh; overflow: visible; }
+  .hero-home .hero-home-content {
+    position: static !important;
+    justify-content: flex-start;
+    padding: 104px 0 56px;
+  }
+}
+
+/* Hero accueil — PC : titre, description et CTAs centrés (desktop only) */
+@media (min-width: 769px) {
+  .hero-home-content .container { text-align: center !important; }
+  .hero-home-content .container > h1,
+  .hero-home-content .container > p {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .hero-home-content .container > div {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .hero-home-content .hero-cta-row { justify-content: center; }
 }
