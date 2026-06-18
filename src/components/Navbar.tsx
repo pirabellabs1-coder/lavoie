@@ -13,7 +13,7 @@ const nav: NavItem[] = [
     label: "L'approche",
     children: [
       { href: "/methodes", label: "Méthodes", desc: "AIME · V.I.E. · Cycle des Saisons" },
-      { href: "/centre-hut", label: "Centre HUT", desc: "Le sanctuaire · 1 100 hectares" },
+      { href: "/centre-hut", label: "Centre HUT", desc: "Le sanctuaire de reconnexion" },
     ],
   },
   {

@@ -67,7 +67,7 @@ const offres = [
 const garanties = [
   { t: "Confidentialité absolue", b: "NDA signé · cohorte restreinte · discrétion sur le lieu" },
   { t: "Éthique de pratique", b: "Charte signée · supervision externe · droit de retrait" },
-  { t: "Accès au Centre HUT", b: "1 100 hectares · stages immersifs · suites privatives" },
+  { t: "Accès au Centre HUT", b: "Sanctuaire en Sarthe · stages immersifs · suites privatives" },
   { t: "Suivi entre les sessions", b: "Ligne WhatsApp · réponses sous 24h · présence réelle" },
   { t: "Bibliothèque initiatique", b: "Audio · textes · pratiques guidées · accès à vie" },
   { t: "Cercle alumni", b: "Réunions trimestrielles · réseau confidentiel · entraide" },
@@ -86,7 +86,7 @@ const faqs = [
   },
   {
     q: "Où se passent les stages immersifs ?",
-    a: "Tous les stages se déroulent au Centre HUT, sanctuaire de 1 100 hectares situé en Sarthe — à deux heures de Paris en voiture ou en train. Les suites privatives sont incluses dans les niveaux Expansion et Royale.",
+    a: "Tous les stages se déroulent au Centre HUT, sanctuaire situé en Sarthe — à deux heures de Paris en voiture ou en train. Les suites privatives sont incluses dans les niveaux Expansion et Royale.",
   },
   {
     q: "Peut-on suivre l'accompagnement à distance ?",

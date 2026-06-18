@@ -808,7 +808,7 @@ export default function Home() {
               <p style={{ fontSize: 15.5, lineHeight: 1.78, color: "var(--mute)", margin: "0 0 36px" }}>
                 Quinze ans à accompagner celles et ceux qui ont tout réussi à l&apos;extérieur —
                 et pour qui la vie intérieure réclame enfin sa part. Trois méthodes propriétaires.
-                Un sanctuaire de 1&nbsp;100 hectares. Une promesse : l&apos;Excellence Authentique Unique.
+                Un sanctuaire en pleine nature. Une promesse : l&apos;Excellence Authentique Unique.
               </p>
               <Link href="/domoina" className="link-underline">
                 Lire son parcours <Arrow />
@@ -1128,29 +1128,26 @@ export default function Home() {
             <div data-reveal="">
               <div className="img-zoom" style={{ marginBottom: 12 }}>
                 <Placeholder
-                  mark="03"
                   style={{ aspectRatio: "14/10" }}
-                  src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=1400&q=80&auto=format&fit=crop"
-                  alt="Centre HUT — forêt et domaine en Sarthe"
+                  src="/hut-jardin-zen.png"
+                  alt="Jardin zen du Centre HUT au crépuscule — bassin, lavandes et olivier"
                   sizes="(max-width: 768px) 100vw, 55vw"
                 />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div className="img-zoom">
                   <Placeholder
-                    mark="04"
                     style={{ aspectRatio: "4/3" }}
-                    src="https://images.unsplash.com/photo-1540206395-68808572332f?w=700&q=80&auto=format&fit=crop"
-                    alt="Bassin sacré — pratiques V.I.E. au Centre HUT"
+                    src="/hut-terrasse.png"
+                    alt="Terrasse et bâtisse en pierre du Centre HUT"
                     sizes="(max-width: 768px) 50vw, 27vw"
                   />
                 </div>
                 <div className="img-zoom">
                   <Placeholder
-                    mark="05"
                     style={{ aspectRatio: "4/3" }}
-                    src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&q=80&auto=format&fit=crop"
-                    alt="Suite privative du Centre HUT"
+                    src="/hut-salle.png"
+                    alt="Salle à manger conviviale du Centre HUT"
                     sizes="(max-width: 768px) 50vw, 27vw"
                   />
                 </div>
@@ -1166,9 +1163,9 @@ export default function Home() {
               >
                 Le Centre HUT,
                 <br />
-                <em style={{ fontWeight: 300 }}>1&nbsp;100 hectares</em>
+                <em style={{ fontWeight: 300 }}>un sanctuaire</em>
                 <br />
-                de nature vibrante.
+                de reconnexion à soi.
               </h2>
               <hr className="filet" style={{ marginBottom: 28 }} />
               <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--navy-ink)", margin: "0 0 22px" }}>
@@ -1184,14 +1181,13 @@ export default function Home() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
+                  gridTemplateColumns: "1fr 1fr",
                   gap: 16,
                   paddingTop: 28,
                   borderTop: "1px solid var(--line)",
                 }}
               >
                 {[
-                  { n: "1 100", label: "Hectares" },
                   { n: "2h", label: "de Paris" },
                   { n: "8", label: "Personnes max" },
                 ].map((s, i) => (

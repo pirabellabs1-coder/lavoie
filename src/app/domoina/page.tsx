@@ -58,36 +58,9 @@ const timeline = [
   { year: "2008", title: "Début de la pratique", body: "Premières années d'accompagnement en thérapie individuelle, formation continue en science initiatique." },
   { year: "2011", title: "Recherche sur l'eau", body: "Trois années de recherche personnelle sur les traditions rituelles de l'eau — du Japon au Maroc." },
   { year: "2014", title: "Création de V.I.E.", body: "Codification de la Voie Initiatique de l'Eau. Premières cohortes restreintes de huit personnes." },
-  { year: "2017", title: "Ouverture du Centre HUT", body: "Acquisition et restauration du domaine de 1 100 hectares en Sarthe. Premier stage immersif." },
+  { year: "2017", title: "Ouverture du Centre HUT", body: "Acquisition et restauration du domaine en Sarthe. Premier stage immersif." },
   { year: "2019", title: "Parcours AIME", body: "Formalisation du parcours signature en quatre phases — Bilan, Plongée, Libération, Souveraineté." },
   { year: "2022", title: "500 accompagnements", body: "Cap symbolique des cinq cents personnes accompagnées. Lancement de la communauté alumni." },
-];
-
-const certifications = [
-  {
-    titre: "Médecine Traditionnelle Chinoise",
-    annee: "2008",
-    lieu: "F.N.M.T.C.",
-    detail:
-      "Diplôme National (D.N.M.T.C.) — orientation Acupuncture & Moxibustion. Diplômée en Acupuncture Traditionnelle Chinoise (D.A.T.C.).",
-    img: "/diplome-1.jpg",
-  },
-  {
-    titre: "Sexothérapeute Sexogestalt",
-    annee: "2016",
-    lieu: "Formation & Prépapsy · Dr C. Gellman",
-    detail:
-      "160 h de théorie et de pratique + 100 h de supervision. Sexopathologie, thérapie de couple, santé et épanouissement de la vie sexuelle.",
-    img: "/diplome-3.jpg",
-  },
-  {
-    titre: "Access Bars® · Access Consciousness®",
-    annee: "2016",
-    lieu: "Certified Access Facilitator",
-    detail:
-      "Certificat de complétion du Bars Course — pratique de libération des mémoires et des schémas limitants.",
-    img: "/diplome-2.jpg",
-  },
 ];
 
 export default function DomoinaPage() {
@@ -266,52 +239,26 @@ export default function DomoinaPage() {
         </div>
       </section>
 
-      {/* FORMATIONS & CERTIFICATIONS */}
+      {/* PARCOURS & FORMATIONS — renvoi LinkedIn */}
       <section className="section" style={{ background: "var(--paper)" }}>
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <Eyebrow style={{ marginBottom: 24 }}>Formations &amp; certifications</Eyebrow>
-              <h2>Un socle<br /><em className="display-italic">certifié.</em></h2>
-            </div>
-            <p>
-              Au-delà de la voie initiatique, Domoina s&apos;appuie sur des formations
-              certifiantes&nbsp;: médecine traditionnelle chinoise, sexothérapie clinique
-              et pratiques de libération.
-            </p>
-          </div>
-
-          <div className="rg-3" style={{ gap: 24 }}>
-            {certifications.map((c, i) => (
-              <div
-                key={i}
-                data-reveal=""
-                data-reveal-delay={String(i)}
-                className="card-hover"
-                style={{ background: "var(--white)", border: "1px solid var(--line)", display: "flex", flexDirection: "column" }}
-              >
-                <div style={{ borderBottom: "1px solid var(--line)", background: "var(--paper-alt)" }}>
-                  <Placeholder
-                    style={{ aspectRatio: "4/3" }}
-                    src={c.img}
-                    alt={`Certification de Domoina : ${c.titre}`}
-                    objectFit="contain"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div style={{ padding: "26px 28px 30px", display: "flex", flexDirection: "column", flex: 1 }}>
-                  <p style={{ fontFamily: "var(--sans)", fontSize: 10.5, letterSpacing: ".14em", textTransform: "uppercase", color: "var(--gold)", margin: "0 0 12px", fontWeight: 500 }}>
-                    {c.annee} · {c.lieu}
-                  </p>
-                  <h3 className="display" style={{ fontSize: 22, color: "var(--navy)", margin: "0 0 12px", lineHeight: 1.2 }}>
-                    {c.titre}
-                  </h3>
-                  <hr className="filet" style={{ marginBottom: 16 }} />
-                  <p style={{ fontSize: 13.5, lineHeight: 1.65, color: "var(--mute)", margin: 0 }}>{c.detail}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="container-narrow" style={{ textAlign: "center" }}>
+          <Eyebrow style={{ marginBottom: 24 }}>Parcours &amp; formations</Eyebrow>
+          <h2 className="display" style={{ fontSize: 36, margin: "0 0 20px", lineHeight: 1.1 }}>
+            Un parcours <em className="display-italic">pluriel.</em>
+          </h2>
+          <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--mute)", maxWidth: 600, margin: "0 auto 36px" }}>
+            Au-delà de la voie initiatique, mon chemin s&apos;appuie sur de nombreuses formations,
+            certifications et expériences. Vous en trouverez le détail complet — mon CV, mon parcours
+            et mes accréditations — sur mon profil LinkedIn.
+          </p>
+          <a
+            href="https://www.linkedin.com/in/domoina-ramiadana"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+          >
+            Voir mon parcours sur LinkedIn <Arrow />
+          </a>
         </div>
       </section>
 

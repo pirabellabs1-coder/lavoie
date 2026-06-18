@@ -5,7 +5,7 @@ import Placeholder from "@/components/Placeholder";
 export const metadata: Metadata = {
   title: "Centre HUT — Sanctuaire de transformation en Sarthe",
   description:
-    "Découvrez le Centre HUT, 1 100 hectares de nature préservée en Sarthe. Un lieu hors du temps pour vos stages immersifs et retraites de transformation.",
+    "Découvrez le Centre HUT, un sanctuaire de nature préservée en Sarthe. Un lieu hors du temps pour vos stages immersifs et retraites de transformation.",
   alternates: { canonical: "/centre-hut" },
 };
 
@@ -31,7 +31,7 @@ const espaces = [
   {
     glyph: "❧",
     nom: "La Forêt Initiatique",
-    description: "Des sentiers balisés à travers 800 hectares de forêt dense, pour les marches méditatives et les cérémonies en nature.",
+    description: "Des sentiers balisés à travers une forêt dense, pour les marches méditatives et les cérémonies en nature.",
   },
   {
     glyph: "〜",
@@ -46,7 +46,7 @@ const espaces = [
 ];
 
 const infos = [
-  { label: "Surface", valeur: "1 100 hectares" },
+  { label: "Cadre", valeur: "Domaine en pleine nature" },
   { label: "Localisation", valeur: "Rouperroux-le-Coquet, Sarthe (72)" },
   { label: "Distance Paris", valeur: "2 heures (TGV Le Mans + transfert)" },
   { label: "Hébergement", valeur: "Suites privées & dortoirs qualitatifs" },
@@ -69,7 +69,7 @@ export default function CentreHut() {
               </h1>
               <hr className="filet" style={{ marginBottom: 32 }} />
               <p style={{ fontSize: 18, lineHeight: 1.7, color: "rgba(255,255,255,0.75)", maxWidth: 480 }}>
-                Un sanctuaire de 1 100 hectares où silence, présence et beauté
+                Un sanctuaire en pleine nature où silence, présence et beauté
                 créent les conditions idéales de la transformation.
               </p>
               <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", margin: "16px 0 0", fontFamily: "var(--sans)", letterSpacing: ".05em" }}>
@@ -162,8 +162,8 @@ export default function CentreHut() {
               <div style={{ display: "grid", gap: 20 }}>
                 <p style={{ fontSize: 17, lineHeight: 1.8, color: "var(--navy-ink)", margin: 0 }}>
                   Le Centre HUT n&apos;est pas un simple lieu d&apos;hébergement. C&apos;est un organisme vivant,
-                  un partenaire de la transformation. Ses 1 100 hectares de nature préservée en Sarthe
-                  vibrent d&apos;une énergie particulière, propice au lâcher-prise et à la reconnexion profonde.
+                  un partenaire de la transformation. Sa nature préservée, en Sarthe,
+                  vibre d&apos;une énergie particulière, propice au lâcher-prise et à la reconnexion profonde.
                 </p>
                 <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--mute)", margin: 0 }}>
                   Ici, le temps s&apos;arrête. Les téléphones s&apos;éteignent. Les écrans disparaissent.

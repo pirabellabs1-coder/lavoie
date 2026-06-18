@@ -43,10 +43,10 @@ const viePillars = [
 ];
 
 const saisons = [
-  { season: "Hiver", sub: "Repos · Introspection", isGold: false, body: "Le temps du retrait, de la nuit longue, de la racine. On ralentit, on écoute, on laisse venir.", glyph: "❄" },
-  { season: "Printemps", sub: "Éveil · Intention", isGold: true, body: "Le temps du jaillissement. Ce qui a mûri sous terre commence à sortir. On formule, on engage.", glyph: "✿" },
-  { season: "Été", sub: "Action · Expansion", isGold: false, body: "Le temps de la pleine lumière, du déploiement, de l'incarnation. On agit avec ampleur.", glyph: "☀" },
-  { season: "Automne", sub: "Récolte · Lâcher-prise", isGold: true, body: "Le temps du discernement. On garde, on rend, on dépose. On prépare à nouveau l'hiver.", glyph: "❦" },
+  { season: "Automne", sub: "Lâcher-prise", isGold: false, body: "Le temps du discernement et du dépôt : on récolte, on rend, on laisse partir ce qui doit l'être.", glyph: "❦" },
+  { season: "Hiver", sub: "Racines profondes", isGold: true, body: "Le temps du retrait et de la nuit longue : on descend vers la racine, on écoute, on se régénère.", glyph: "❄" },
+  { season: "Printemps", sub: "Élan de vie", isGold: false, body: "Le temps du jaillissement : ce qui a mûri sous terre se déploie. On formule, on s'engage.", glyph: "✿" },
+  { season: "Été", sub: "Rayonnement", isGold: true, body: "Le temps de la pleine lumière : incarnation, ampleur et rayonnement de ce qui est devenu juste.", glyph: "☀" },
 ];
 
 export default function MethodesPage() {

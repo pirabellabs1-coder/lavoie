@@ -1171,10 +1171,10 @@ select option { background: var(--white); }
 }
 .hero-image-panel { display: block; }
 
-/* Stats: 4-col desktop, 2-col mobile */
+/* Stats: 3 colonnes (3 chiffres) — centré */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* 3-col grids (méthodes, voyages, temoignages, journal) */
@@ -1255,11 +1255,6 @@ select option { background: var(--white); }
   .masterclass-grid { grid-template-columns: 1fr; gap: 48px; }
   .newsletter-grid { grid-template-columns: 1fr; gap: 48px; }
   .four-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .stats-grid > *:nth-child(1),
-  .stats-grid > *:nth-child(3) { border-left: 0 !important; }
-  .stats-grid > *:nth-child(3),
-  .stats-grid > *:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.12); }
   .presse-grid { grid-template-columns: repeat(3, 1fr); }
   .presse-grid > *:nth-child(n+4) { border-top: 1px solid var(--line); }
 }
