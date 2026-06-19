@@ -77,10 +77,9 @@ export default function CentreHut() {
               </p>
             </div>
             <Placeholder
-              mark="01"
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.15)" }}
-              src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&q=80&auto=format&fit=crop"
-              alt="Centre HUT — vue aérienne, Sarthe"
+              src="/hut-jardin-zen.png"
+              alt="Jardin zen du Centre HUT au crépuscule"
               sizes="(max-width: 768px) 100vw, 45vw"
             />
           </div>
@@ -92,56 +91,50 @@ export default function CentreHut() {
         <div className="container">
           <div className="rg-split-2-1" style={{ gap: 8 }}>
             <Placeholder
-            mark="02"
             style={{ aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)" }}
-            src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=1200&q=80&auto=format&fit=crop&crop=center"
-            alt="Centre HUT — vue principale du domaine"
+            src="/hut-terrasse.png"
+            alt="Terrasse et bâtisse en pierre du Centre HUT"
             sizes="(max-width: 768px) 100vw, 66vw"
           />
             <div style={{ display: "grid", gap: 8 }}>
               <Placeholder
-                mark="03"
                 style={{ aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)" }}
-                src="https://images.unsplash.com/photo-1540206395-68808572332f?w=600&q=80&auto=format&fit=crop"
-                alt="Bassin sacré du Centre HUT"
+                src="/hut-salle.png"
+                alt="Salle à manger conviviale du Centre HUT"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
               <Placeholder
-                mark="04"
                 style={{ aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)" }}
-                src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80&auto=format&fit=crop"
-                alt="Suite privative du Centre HUT"
+                src="/hut-chambre.png"
+                alt="Chambre du Centre HUT"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
           </div>
           <div className="rg-img" style={{ gap: 8, marginTop: 8 }}>
             <Placeholder
-              mark="05"
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80&auto=format&fit=crop"
-              alt="Forêt initiatique du Centre HUT"
+              src="/hut-salle.png"
+              alt="Salle à manger du Centre HUT"
+              objectPosition="center"
               sizes="25vw"
             />
             <Placeholder
-              mark="06"
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80&auto=format&fit=crop"
-              alt="Espace de silence — méditation au Centre HUT"
+              src="/hut-chambre.png"
+              alt="Chambre du Centre HUT"
               sizes="25vw"
             />
             <Placeholder
-              mark="07"
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&q=80&auto=format&fit=crop"
-              alt="Cuisine biologique du Centre HUT"
+              src="/hut-terrasse.png"
+              alt="Terrasse en pierre du Centre HUT"
               sizes="25vw"
             />
             <Placeholder
-              mark="08"
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&q=80&auto=format&fit=crop"
-              alt="Vue nocturne du Centre HUT"
+              src="/hut-jardin-zen.png"
+              alt="Jardin zen du Centre HUT"
               sizes="25vw"
             />
           </div>
