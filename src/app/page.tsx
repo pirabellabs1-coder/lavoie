@@ -338,7 +338,7 @@ export default function Home() {
                   boxShadow: "0 0 10px rgba(200,168,75,0.8)",
                 }}
               />
-              Domoïna · Guide initiatique
+              Dirigeants · Cadres · Thérapeutes
             </p>
 
             {/* H1 — large Cormorant Garamond serif */}
@@ -355,12 +355,12 @@ export default function Home() {
                 maxWidth: 860,
               }}
             >
-              Guide initiatique pour dirigeants, cadres et thérapeutes{" "}
+              De l&apos;épuisement à l&apos;équilibre,{" "}
               <em
                 className="display-italic"
                 style={{ color: "var(--gold)", fontWeight: 300 }}
               >
-                en quête de sens et d&apos;équilibre.
+                dans votre vie, votre couple, votre famille.
               </em>
             </h1>
 
@@ -383,19 +383,41 @@ export default function Home() {
                 fontSize: "clamp(14px, 1.2vw, 16.5px)",
                 lineHeight: 1.8,
                 maxWidth: 640,
-                margin: "0 0 44px",
+                margin: "0 0 30px",
                 color: "rgba(255,255,255,0.72)",
               }}
             >
-              J&apos;accompagne les dirigeants, cadres et thérapeutes à transformer leurs
-              blessures originelles — traumatismes conscients ou inconscients — ainsi que leurs
-              schémas de compensation en leur{" "}
+              J&apos;aide les dirigeants et entrepreneurs qui{" "}
               <em style={{ fontFamily: "var(--serif)", color: "rgba(255,255,255,0.95)" }}>
-                zone d&apos;Excellence Authentique Unique (E.A.U.)
+                réussissent extérieurement mais s&apos;épuisent intérieurement
               </em>
-              , grâce à une méthode fondée sur 3 axes — la science initiatique, la sagesse
-              ancestrale et la puissance transformatrice de l&apos;Eau — et 4 piliers.
+              {" "}à sortir des schémas de suradaptation et d&apos;auto-sabotage — pour retrouver
+              clarté, énergie et équilibre intérieur.
             </p>
+
+            {/* Promesses (bandeau LinkedIn) */}
+            <div
+              data-reveal=""
+              data-reveal-delay="2"
+              className="hero-cta-row"
+              style={{ display: "inline-flex", gap: 8, flexWrap: "wrap", margin: "0 0 40px" }}
+            >
+              {["Dépasser vos blocages", "Transformer votre stress", "Retrouver un mieux-être émotionnel"].map((t) => (
+                <span
+                  key={t}
+                  style={{
+                    fontFamily: "var(--sans)",
+                    fontSize: 11,
+                    letterSpacing: ".04em",
+                    padding: "7px 14px",
+                    border: "1px solid rgba(255,255,255,0.22)",
+                    color: "rgba(255,255,255,0.82)",
+                  }}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
 
             {/* CTAs */}
             <div data-reveal="" data-reveal-delay="3">
