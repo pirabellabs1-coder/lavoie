@@ -54,15 +54,6 @@ const piliers = [
   },
 ];
 
-const timeline = [
-  { year: "2008", title: "Début de la pratique", body: "Premières années d'accompagnement en thérapie individuelle, formation continue en science initiatique." },
-  { year: "2011", title: "Recherche sur l'eau", body: "Trois années de recherche personnelle sur les traditions rituelles de l'eau — du Japon au Maroc." },
-  { year: "2014", title: "Création de V.I.E.", body: "Codification de la Voie Initiatique de l'Eau. Premières cohortes restreintes de huit personnes." },
-  { year: "2017", title: "Ouverture du Centre HUT", body: "Acquisition et restauration du domaine en Sarthe. Premier stage immersif." },
-  { year: "2019", title: "Parcours AIME", body: "Formalisation du parcours signature en quatre phases — Accueillir, Identifier, Métamorphoser, Émerger." },
-  { year: "2022", title: "500 accompagnements", body: "Cap symbolique des cinq cents personnes accompagnées. Lancement de la communauté alumni." },
-];
-
 export default function DomoinaPage() {
   return (
     <div className="page-fade">
@@ -207,49 +198,17 @@ export default function DomoinaPage() {
         </div>
       </section>
 
-      {/* TIMELINE */}
-      <section className="section">
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <Eyebrow style={{ marginBottom: 24 }}>Chronologie</Eyebrow>
-              <h2>2008 — 2022,<br /><em className="display-italic">les jalons.</em></h2>
-            </div>
-            <p>
-              Quinze années de construction patiente. Pas de virage spectaculaire — la lente fidélité
-              d&apos;un travail qui se laisse approfondir par le temps.
-            </p>
-          </div>
-
-          <div className="timeline" style={{ position: "relative", paddingLeft: 80 }}>
-            <div className="timeline-line" style={{ position: "absolute", left: 100, top: 12, bottom: 12, width: 1, background: "var(--line)" }} />
-            {timeline.map((t, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 4)} className="timeline-item" style={{ paddingBottom: 56, position: "relative" }}>
-                <div className="timeline-year" style={{ textAlign: "right", paddingRight: 60, position: "relative" }}>
-                  <p className="num" style={{ fontSize: 44, color: "var(--gold)", margin: 0, lineHeight: 1 }}>{t.year}</p>
-                  <div className="timeline-dot" style={{ position: "absolute", right: -3, top: 18, width: 7, height: 7, borderRadius: "50%", background: "var(--navy)", border: "2px solid var(--paper)" }} />
-                </div>
-                <div style={{ paddingTop: 6 }}>
-                  <h4 className="display" style={{ fontSize: 28, color: "var(--navy)", margin: "0 0 12px", lineHeight: 1.2 }}>{t.title}</h4>
-                  <p style={{ fontSize: 15.5, lineHeight: 1.75, color: "var(--mute)", margin: 0, maxWidth: 540 }}>{t.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* PARCOURS & FORMATIONS — renvoi LinkedIn */}
       <section className="section" style={{ background: "var(--paper)" }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <Eyebrow style={{ marginBottom: 24 }}>Parcours &amp; formations</Eyebrow>
           <h2 className="display" style={{ fontSize: 36, margin: "0 0 20px", lineHeight: 1.1 }}>
-            Un parcours <em className="display-italic">pluriel.</em>
+            Un parcours <em className="display-italic">pluridisciplinaire.</em>
           </h2>
           <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--mute)", maxWidth: 600, margin: "0 auto 36px" }}>
-            Au-delà de la voie initiatique, mon chemin s&apos;appuie sur de nombreuses formations,
-            certifications et expériences. Vous en trouverez le détail complet — mon CV, mon parcours
-            et mes accréditations — sur mon profil LinkedIn.
+            Au-delà de la voie initiatique, mon chemin s&apos;appuie sur de nombreuses traditions,
+            formations, certifications et expériences. Vous en trouverez le détail complet — mon CV,
+            mon parcours et mes accréditations — sur mon profil LinkedIn.
           </p>
           <a
             href="https://www.linkedin.com/in/domoina-ramiadana"
