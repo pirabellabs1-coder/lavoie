@@ -32,7 +32,7 @@ const piliers = [
     num: "I.",
     title: "Le Parcours AIME",
     sub: "Accompagnement Initiatique Mental et Émotionnel",
-    body: "Un voyage structuré pour une véritable transmutation intérieure : Bilan, Plongée, Libération, Souveraineté.",
+    body: "Un voyage structuré pour une véritable transmutation intérieure : Accueillir, Identifier, Métamorphoser, Émerger.",
   },
   {
     num: "II.",
@@ -59,7 +59,7 @@ const timeline = [
   { year: "2011", title: "Recherche sur l'eau", body: "Trois années de recherche personnelle sur les traditions rituelles de l'eau — du Japon au Maroc." },
   { year: "2014", title: "Création de V.I.E.", body: "Codification de la Voie Initiatique de l'Eau. Premières cohortes restreintes de huit personnes." },
   { year: "2017", title: "Ouverture du Centre HUT", body: "Acquisition et restauration du domaine en Sarthe. Premier stage immersif." },
-  { year: "2019", title: "Parcours AIME", body: "Formalisation du parcours signature en quatre phases — Bilan, Plongée, Libération, Souveraineté." },
+  { year: "2019", title: "Parcours AIME", body: "Formalisation du parcours signature en quatre phases — Accueillir, Identifier, Métamorphoser, Émerger." },
   { year: "2022", title: "500 accompagnements", body: "Cap symbolique des cinq cents personnes accompagnées. Lancement de la communauté alumni." },
 ];
 

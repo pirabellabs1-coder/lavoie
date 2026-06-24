@@ -89,7 +89,7 @@ const methodes = [
     title: "Le Parcours AIME",
     sub: "Accompagnement Initiatique Mental et Émotionnel",
     body:
-      "La méthode pour la guérison de la blessure originelle : Accepter, Intégrer, Manifester, Élever votre Excellence Authentique Unique.",
+      "La méthode pour la guérison de la blessure originelle : Accueillir, Identifier, Métamorphoser, Émerger — vers votre Excellence Authentique Unique.",
     href: "/methodes",
   },
   {

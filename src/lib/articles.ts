@@ -94,7 +94,7 @@ export const ARTICLES: Article[] = [
       { k: "h2", t: "Le Parcours AIME : un chemin concret" },
       {
         k: "p",
-        t: "C’est de cette conviction que le Parcours AIME est né : **Accepter, Intégrer, Manifester, Élever**. Pas une approche théorique, mais un chemin vécu, corporel, qui engage l’être entier.",
+        t: "C’est de cette conviction que le Parcours AIME est né : **Accueillir, Identifier, Métamorphoser, Émerger**. Pas une approche théorique, mais un chemin vécu, corporel, qui engage l’être entier.",
       },
       {
         k: "p",
@@ -256,40 +256,40 @@ export const ARTICLES: Article[] = [
     titreLead: "Le Parcours AIME : comment fonctionne la transformation",
     titreAccent: "en 4 phases.",
     extrait:
-      "Accepter, Intégrer, Manifester, Élever. Derrière ces quatre mots se cache une architecture précise de la transformation. Plongée dans les mécanismes du Parcours AIME.",
+      "Accueillir, Identifier, Métamorphoser, Émerger. Derrière ces quatre mots se cache une architecture précise de la transformation. Plongée dans les mécanismes du Parcours AIME.",
     date: "15 mars 2026",
     dateISO: "2026-03-15",
     lecture: "9 min",
     lede:
-      "Accepter, Intégrer, Manifester, Élever. Derrière ces quatre mots se cache une architecture précise de la transformation.",
+      "Accueillir, Identifier, Métamorphoser, Émerger. Derrière ces quatre mots se cache une architecture précise de la transformation.",
     content: [
       {
         k: "p",
-        t: "Beaucoup d’approches de développement personnel proposent de « passer à l’action » sans avoir traversé ce qui précède l’action. On veut manifester avant d’avoir intégré, élever avant d’avoir accepté. Le Parcours AIME suit l’ordre du vivant — chaque phase autorise la suivante.",
+        t: "Beaucoup d’approches de développement personnel proposent de « passer à l’action » sans avoir traversé ce qui précède l’action. On veut métamorphoser avant d’avoir identifié, émerger avant d’avoir accueilli. Le Parcours AIME suit l’ordre du vivant — chaque phase autorise la suivante.",
       },
-      { k: "h2", t: "A — Accepter" },
+      { k: "h2", t: "A — Accueillir" },
       {
         k: "p",
-        t: "Tout commence par le courage de voir ce qui est, sans le fuir ni l’embellir. Accepter n’est ni approuver ni se résigner : c’est cesser de dépenser son énergie à nier la réalité. Ce premier pas, le plus inconfortable, libère déjà une force considérable.",
+        t: "Tout commence par le courage d’accueillir ce qui est présent, sans le fuir ni l’embellir. Accueillir n’est ni approuver ni se résigner : c’est cesser de dépenser son énergie à nier la réalité. Ce premier pas, le plus inconfortable, libère déjà une force considérable.",
       },
-      { k: "h2", t: "I — Intégrer" },
+      { k: "h2", t: "I — Identifier" },
       {
         k: "p",
-        t: "Ce qui est accepté doit ensuite être digéré. L’intégration est un travail du corps autant que de l’esprit : c’est là que l’eau, le souffle et le temps long font leur œuvre. On ne pense pas une blessure pour la résoudre ; on la traverse.",
+        t: "Vient ensuite le temps d’identifier les mécanismes à l’œuvre : schémas de compensation, loyautés invisibles, blessures héritées des lignées. Mettre en lumière l’inconscient, c’est déjà commencer à s’en libérer.",
       },
-      { k: "h2", t: "M — Manifester" },
+      { k: "h2", t: "M — Métamorphoser" },
       {
         k: "p",
-        t: "Vient alors le moment de créer consciemment. Non plus depuis la compensation ou la peur, mais depuis un centre clarifié. Ce que l’on manifeste à cette étape porte une autre qualité : c’est juste, sobre, durable.",
+        t: "C’est le cœur du travail : transformer la blessure en ressource. Ce qui faisait souffrir se mue en force, en finesse, en intuition. La métamorphose n’efface pas le passé — elle le met au service du vivant.",
       },
-      { k: "h2", t: "É — Élever" },
+      { k: "h2", t: "É — Émerger" },
       {
         k: "p",
-        t: "Enfin, ce qui a été traversé se met au service de plus grand que soi. Élever, c’est transmettre, rayonner, redonner. La transformation cesse d’être un projet personnel pour devenir une contribution.",
+        t: "Enfin, émerger : incarner, au quotidien et dans ses relations, une nouvelle manière d’être. Ce qui a été traversé cesse d’être un projet personnel pour devenir une présence, une contribution.",
       },
       {
         k: "quote",
-        t: "On ne s’élève jamais en sautant les étapes. On s’élève en les traversant.",
+        t: "On n’émerge jamais en sautant les étapes. On émerge en les traversant.",
       },
       {
         k: "p",

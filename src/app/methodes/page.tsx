@@ -28,10 +28,10 @@ function Eyebrow({ children, style }: { children: React.ReactNode; style?: React
 }
 
 const aimePhases = [
-  { letter: "A", word: "Accepter", sub: "Reconnaître ce qui est", body: "La première phase ne demande rien d'autre que de regarder. Sans réparer, sans projeter, sans rien vouloir d'autre que de voir ce qui se présente — tel quel." },
-  { letter: "I", word: "Intégrer", sub: "Digérer le passé", body: "Ce que la vie a déposé — les héritages, les chocs, les loyautés invisibles — demande à être traversé, nommé, intégré. Le travail rituel et somatique soutient ce passage." },
-  { letter: "M", word: "Manifester", sub: "Créer consciemment", body: "À mesure que l'axe se redresse, la capacité de manifester s'affine. Non plus produire pour combler, mais créer depuis l'essence — projets, liens, structures." },
-  { letter: "E", word: "Élever", sub: "Rayonner son excellence", body: "La dernière phase n'est pas une arrivée mais une mise en circulation. Ce qui a été dénoué se met à servir — d'autres, plus grand que soi." },
+  { letter: "A", word: "Accueillir", sub: "Reconnaître ce qui est présent", body: "La première phase ne demande qu'une chose : accueillir ce qui est là, sans le fuir ni vouloir le réparer. Regarder en face ce qui se présente — tel quel." },
+  { letter: "I", word: "Identifier", sub: "Mettre en lumière les mécanismes inconscients", body: "On met en lumière les schémas, les loyautés invisibles et les stratégies de compensation héritées. Ce qui agissait dans l'ombre devient enfin visible." },
+  { letter: "M", word: "Métamorphoser", sub: "Transformer les blessures en ressources", body: "Le cœur du travail : transmuter la blessure en levier. Ce qui faisait souffrir se mue en force, en finesse, en ressource au service de la vie." },
+  { letter: "É", word: "Émerger", sub: "Incarner une nouvelle manière d'être", body: "La dernière phase n'est pas une arrivée mais une naissance : incarner, au quotidien et dans ses relations, une manière d'être plus juste et plus vivante." },
 ];
 
 const viePillars = [
