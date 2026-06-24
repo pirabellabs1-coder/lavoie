@@ -3,6 +3,7 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import Marquee from "@/components/Marquee";
 import NewsletterForm from "@/components/NewsletterForm";
+import HeroSilk from "@/components/HeroSilk";
 
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
@@ -283,33 +284,17 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Full-bleed background image */}
-        <Placeholder
-          style={{ position: "absolute", inset: 0 }}
-          src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1800&q=90&auto=format&fit=crop"
-          alt="Présence et transformation — La Voie 2 la Conscience"
-          sizes="100vw"
-        />
+        {/* Fond bleu marine + drapé de soie blanc (façon tissu sur mannequin) */}
+        <HeroSilk />
 
-        {/* Bottom gradient — main text legibility */}
+        {/* Voile bas — lisibilité du texte par-dessus le drapé */}
         <div
           aria-hidden="true"
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to top, rgba(7,16,60,0.98) 0%, rgba(7,16,60,0.82) 30%, rgba(7,16,60,0.3) 65%, rgba(7,16,60,0.05) 100%)",
-            zIndex: 1,
-          }}
-        />
-        {/* Left scrim — contrast behind headline */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(110deg, rgba(7,16,60,0.55) 0%, rgba(7,16,60,0.15) 50%, transparent 100%)",
+              "linear-gradient(to top, rgba(7,16,60,0.96) 0%, rgba(7,16,60,0.72) 28%, rgba(7,16,60,0.22) 60%, rgba(7,16,60,0) 100%)",
             zIndex: 1,
           }}
         />
