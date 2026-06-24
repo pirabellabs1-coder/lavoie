@@ -12,7 +12,7 @@ const nav: NavItem[] = [
   {
     label: "L'approche",
     children: [
-      { href: "/methodes", label: "Méthodes", desc: "AIME · V.I.E. · Cycle des Saisons" },
+      { href: "/methodes", label: "Mon approche", desc: "3 fondements · 4 piliers · Zone d'E.A.U." },
       { href: "/centre-hut", label: "Centre HUT", desc: "Le sanctuaire de reconnexion" },
     ],
   },

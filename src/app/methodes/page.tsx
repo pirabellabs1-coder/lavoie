@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Placeholder from "@/components/Placeholder";
 
 export const metadata: Metadata = {
-  title: "Les Méthodes — AIME, V.I.E., Cycle des Saisons",
+  title: "Mon Approche — 3 fondements, 4 piliers, la Zone d'E.A.U.",
   description:
-    "Trois méthodes propriétaires codifiées sur quinze ans : AIME, la Voie Initiatique de l'Eau et le Cycle des Saisons.",
+    "L'approche de Domoïna Ramiadana : trois fondements (science initiatique, sagesse ancestrale, puissance de l'eau), quatre piliers (A.I.M.E., Cycle des Saisons, Ki-Zola, V.I.E.) et la Zone d'Excellence Authentique Unique.",
   alternates: { canonical: "/methodes" },
 };
 
@@ -27,19 +26,59 @@ function Eyebrow({ children, style }: { children: React.ReactNode; style?: React
   );
 }
 
-const aimePhases = [
-  { letter: "A", word: "Accueillir", sub: "Reconnaître ce qui est présent", body: "La première phase ne demande qu'une chose : accueillir ce qui est là, sans le fuir ni vouloir le réparer. Regarder en face ce qui se présente — tel quel." },
-  { letter: "I", word: "Identifier", sub: "Mettre en lumière les mécanismes inconscients", body: "On met en lumière les schémas, les loyautés invisibles et les stratégies de compensation héritées. Ce qui agissait dans l'ombre devient enfin visible." },
-  { letter: "M", word: "Métamorphoser", sub: "Transformer les blessures en ressources", body: "Le cœur du travail : transmuter la blessure en levier. Ce qui faisait souffrir se mue en force, en finesse, en ressource au service de la vie." },
-  { letter: "É", word: "Émerger", sub: "Incarner une nouvelle manière d'être", body: "La dernière phase n'est pas une arrivée mais une naissance : incarner, au quotidien et dans ses relations, une manière d'être plus juste et plus vivante." },
+const fondements = [
+  {
+    num: "01",
+    titre: "La Science Initiatique",
+    role: "La compréhension",
+    body: "Elle reconnaît qu'il existe des principes et des lois universelles du Vivant, qui agissent que nous les connaissions ou non. Lorsqu'elles sont transgressées — souvent dès l'enfance, ou à travers les blessures héritées de nos lignées — nous développons des stratégies de survie. Elles deviennent parfois nos talents ; mais derrière la performance se cache souvent une blessure qui cherche encore à être reconnue. La science initiatique rend visible l'invisible, pour retrouver cohérence, sens et liberté intérieure.",
+  },
+  {
+    num: "02",
+    titre: "La Sagesse Ancestrale",
+    role: "L'ancrage",
+    body: "Elle honore les savoirs transmis de génération en génération. Non pas des croyances, mais des connaissances éprouvées du corps, du lien, du rythme, de la nature et de la guérison. Bien avant les approches modernes, les peuples observaient les cycles du Vivant pour traverser les grandes étapes de l'existence. Cette sagesse nous rappelle que nous faisons partie d'un ensemble plus vaste, et que certaines réponses se trouvent dans la relation au Vivant lui-même.",
+  },
+  {
+    num: "03",
+    titre: "La Puissance Transformatrice de l'Eau",
+    role: "La transformation",
+    body: "L'eau est un élément vivant. Elle garde la mémoire. Elle révèle. Elle transforme. Depuis toujours, elle accompagne les grands passages de la vie : la naissance, les rituels de purification, les initiations, les renaissances. Elle permet au corps de relâcher ce que le mental ne peut parfois ni comprendre ni résoudre. Dans mon approche, l'eau n'est pas seulement un outil : elle est une alliée de la transformation.",
+  },
 ];
 
-const viePillars = [
-  { t: "Purification", b: "Rituels d'eau hérités de plusieurs traditions — Japon, Maroc, Madagascar — adaptés au contexte contemporain." },
-  { t: "Immersions rituelles", b: "Bains rituels en source naturelle au Centre HUT, encadrés et préparés selon un protocole précis." },
-  { t: "Travail respiratoire", b: "Pranayama, holotropie douce, apnée méditative — la respiration comme pont entre corps et conscience." },
-  { t: "Mémoire de l'eau", b: "Travail symbolique et somatique sur la mémoire portée par l'eau — héritages, lignées, archives corporelles." },
-  { t: "Méditation aquatique", b: "Pratiques contemplatives en immersion partielle — flottaison, écoute, présence prolongée à l'élément." },
+const piliers = [
+  {
+    num: "I",
+    titre: "Le Parcours A.I.M.E.",
+    sub: "Accueillir · Identifier · Métamorphoser · Émerger",
+    body: "La structure fondamentale du processus thérapeutique et initiatique — un voyage en quatre phases pour une véritable transmutation intérieure.",
+  },
+  {
+    num: "II",
+    titre: "Le Cycle des Saisons",
+    sub: "Automne · Hiver · Printemps · Été",
+    body: "Vivre en harmonie avec les rythmes naturels et reconnaître les étapes de son propre processus. Non plus lutter contre la vie, mais apprendre à coopérer avec elle.",
+  },
+  {
+    num: "III",
+    titre: "La Méthode Ki-Zola",
+    sub: "Harmonisation émotionnelle & énergétique",
+    body: "Une approche d'harmonisation émotionnelle, énergétique et relationnelle, qui restaure la circulation du Vivant dans les différentes dimensions de l'être et nourrit l'autonomie intérieure.",
+  },
+  {
+    num: "IV",
+    titre: "La V.I.E.",
+    sub: "Voie Initiatique de l'Eau",
+    body: "L'eau comme espace thérapeutique, symbolique et initiatique. Elle accompagne les passages de vie, les libérations émotionnelles profondes et les processus de renaissance intérieure.",
+  },
+];
+
+const aimePhases = [
+  { letter: "A", word: "Accueillir", sub: "Reconnaître ce qui est présent", body: "Accueillir ce qui est là, sans le fuir ni vouloir le réparer. Regarder en face ce qui se présente — tel quel." },
+  { letter: "I", word: "Identifier", sub: "Mettre en lumière les mécanismes inconscients", body: "Rendre visibles les schémas, les loyautés invisibles et les stratégies de compensation héritées." },
+  { letter: "M", word: "Métamorphoser", sub: "Transformer les blessures en ressources", body: "Le cœur du travail : transmuter la blessure en levier. Ce qui faisait souffrir devient force et finesse." },
+  { letter: "É", word: "Émerger", sub: "Incarner une nouvelle manière d'être", body: "Non pas une arrivée, mais une naissance : incarner, au quotidien et dans ses relations, une manière d'être plus juste." },
 ];
 
 const saisons = [
@@ -49,52 +88,136 @@ const saisons = [
   { season: "Été", sub: "Rayonnement", isGold: true, body: "Le temps de la pleine lumière : incarnation, ampleur et rayonnement de ce qui est devenu juste.", glyph: "☀" },
 ];
 
-export default function MethodesPage() {
+const eauPromesses = [
+  "L'être et l'action sont alignés",
+  "Les talents naturels peuvent pleinement s'exprimer",
+  "La réussite retrouve du sens",
+  "La personne cesse de survivre pour commencer à vivre pleinement",
+];
+
+const relations = [
+  "à soi",
+  "au couple",
+  "à la famille",
+  "aux collaborateurs",
+  "aux clients",
+  "au Vivant",
+];
+
+export default function ApprochePage() {
   return (
     <div className="page-fade">
 
       {/* HERO */}
       <section className="page-hero" style={{ background: "var(--white)", borderBottom: "1px solid var(--line)" }}>
         <div className="container">
-          <div style={{ textAlign: "center", maxWidth: 980, margin: "0 auto" }}>
-            <Eyebrow style={{ marginBottom: 32 }}>Trois méthodes propriétaires</Eyebrow>
+          <div style={{ textAlign: "center", maxWidth: 920, margin: "0 auto" }}>
+            <Eyebrow style={{ marginBottom: 32 }}>Mon approche</Eyebrow>
             <h1 className="display" style={{ fontSize: "clamp(32px, 4vw, 64px)", margin: "0 0 28px", lineHeight: 1.05 }}>
-              Les <em className="display-italic">Méthodes.</em>
+              Mon <em className="display-italic">Approche.</em>
             </h1>
             <hr className="filet" style={{ margin: "0 auto 32px" }} />
-            <p style={{ fontSize: 18, lineHeight: 1.7, color: "var(--navy-ink)", maxWidth: 660, margin: "0 auto" }}>
-              Trois constructions distinctes, complémentaires, codifiées sur quinze ans de pratique.
-              Elles se combinent au sein des Immersions Gold — jamais ne se substituent au temps long du vivant.
+            <p style={{ fontFamily: "var(--serif)", fontSize: "clamp(20px, 2.2vw, 26px)", lineHeight: 1.5, color: "var(--navy)", maxWidth: 720, margin: "0 auto 24px", fontWeight: 300, fontStyle: "italic" }}>
+              «&nbsp;Pourquoi certaines personnes réussissent extérieurement, mais continuent
+              de souffrir intérieurement&nbsp;?&nbsp;»
+            </p>
+            <p style={{ fontSize: 17, lineHeight: 1.8, color: "var(--navy-ink)", maxWidth: 640, margin: "0 auto" }}>
+              Depuis plus de vingt ans, j&apos;explore cette question. Au fil de mes recherches,
+              de mes accompagnements et de mes propres traversées, une évidence s&apos;est imposée :
+              la transformation durable ne peut reposer sur une seule approche. Elle réunit la
+              compréhension, l&apos;expérience et la transformation. C&apos;est ainsi qu&apos;est née
+              La Voie 2 la Conscience.
             </p>
             <div style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 56, flexWrap: "wrap" }}>
-              <a href="#aime" className="pill">I · AIME</a>
-              <a href="#vie" className="pill">II · V.I.E.</a>
-              <a href="#cycle" className="pill">III · Cycle des Saisons</a>
+              <a href="#fondements" className="pill">Niveau 1 · 3 fondements</a>
+              <a href="#piliers" className="pill">Niveau 2 · 4 piliers</a>
+              <a href="#eau" className="pill">Niveau 3 · Zone d&apos;E.A.U.</a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* AIME */}
-      <section id="aime" className="section">
+      {/* NIVEAU 1 — LES 3 FONDEMENTS */}
+      <section id="fondements" className="section">
         <div className="container">
           <div className="section-head">
             <div>
-              <p className="card-num" style={{ fontSize: 16, marginBottom: 16 }}>Méthode I.</p>
-              <h2 style={{ fontSize: 88 }}>AIME</h2>
-              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 24, color: "var(--navy)", margin: "12px 0 0", fontWeight: 300 }}>
-                Le parcours signature en quatre phases.
+              <Eyebrow style={{ marginBottom: 24 }}>Niveau 1 · Le socle</Eyebrow>
+              <h2>Les 3 fondements<br /><em className="display-italic">de mon approche.</em></h2>
+            </div>
+            <p>
+              Trois axes qui ne se remplacent pas&nbsp;: ils se complètent. Ensemble, ils
+              constituent le socle sur lequel repose l&apos;ensemble de mon travail.
+            </p>
+          </div>
+
+          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+            {fondements.map((f, i) => (
+              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 36px", background: "var(--white)", display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
+                  <span className="card-num" style={{ fontSize: 15 }}>{f.num}</span>
+                  <span className="pill" style={{ borderColor: "rgba(200,168,75,0.4)", color: "var(--gold)" }}>{f.role}</span>
+                </div>
+                <h3 className="display" style={{ fontSize: 26, color: "var(--navy)", margin: "0 0 20px", lineHeight: 1.2 }}>{f.titre}</h3>
+                <hr className="filet" style={{ marginBottom: 22 }} />
+                <p style={{ fontSize: 14.5, lineHeight: 1.78, color: "var(--navy-ink)", margin: 0 }}>{f.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <hr className="filet-gold-full" />
+
+      {/* NIVEAU 2 — LES 4 PILIERS */}
+      <section id="piliers" className="section" style={{ background: "var(--navy)", color: "var(--white)" }}>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <Eyebrow style={{ color: "var(--gold)", marginBottom: 24 }}>Niveau 2 · Comment</Eyebrow>
+              <h2 style={{ color: "var(--white)" }}>Les 4 piliers<br /><em className="display-italic" style={{ color: "var(--gold)" }}>de transformation.</em></h2>
+            </div>
+            <p style={{ color: "rgba(255,255,255,0.72)" }}>
+              Ces trois fondements donnent naissance à quatre piliers complémentaires — les
+              principaux chemins d&apos;accompagnement. Une même intention&nbsp;: permettre à chacun de
+              retrouver son alignement profond et sa juste place dans le Vivant.
+            </p>
+          </div>
+
+          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
+            {piliers.map((p, i) => (
+              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "var(--navy)" }}>
+                <span className="card-num" style={{ fontSize: 16 }}>{p.num}</span>
+                <h3 className="display" style={{ fontSize: 30, color: "var(--white)", margin: "18px 0 6px", lineHeight: 1.15 }}>{p.titre}</h3>
+                <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15, color: "var(--gold)", margin: "0 0 20px" }}>{p.sub}</p>
+                <hr className="filet" style={{ marginBottom: 20 }} />
+                <p style={{ fontSize: 14.5, lineHeight: 1.72, color: "rgba(255,255,255,0.78)", margin: 0 }}>{p.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* DÉTAIL — A.I.M.E. */}
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="card-num" style={{ fontSize: 16, marginBottom: 16 }}>Pilier I.</p>
+              <h2 style={{ fontSize: "clamp(48px, 7vw, 88px)" }}>A.I.M.E.</h2>
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 22, color: "var(--navy)", margin: "12px 0 0", fontWeight: 300 }}>
+                Le parcours signature, en quatre phases.
               </p>
             </div>
             <div>
               <hr className="filet" style={{ marginBottom: 24 }} />
               <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--navy-ink)", margin: 0 }}>
-                <strong style={{ fontWeight: 500 }}>A</strong>ccepter ·{" "}
-                <strong style={{ fontWeight: 500 }}>I</strong>ntégrer ·{" "}
-                <strong style={{ fontWeight: 500 }}>M</strong>anifester ·{" "}
-                <strong style={{ fontWeight: 500 }}>É</strong>lever.
-                Quatre phases qui ne se sautent pas, qui ne se forcent pas, et qui ne reviennent
-                jamais au même point après les avoir traversées.
+                <strong style={{ fontWeight: 500 }}>A</strong>ccueillir ·{" "}
+                <strong style={{ fontWeight: 500 }}>I</strong>dentifier ·{" "}
+                <strong style={{ fontWeight: 500 }}>M</strong>étamorphoser ·{" "}
+                <strong style={{ fontWeight: 500 }}>É</strong>merger. Quatre phases qui ne se sautent
+                pas, qui ne se forcent pas, et dont on ne revient jamais au même point après les
+                avoir traversées.
               </p>
             </div>
           </div>
@@ -106,8 +229,8 @@ export default function MethodesPage() {
                   {p.letter}
                 </span>
                 <p className="card-num" style={{ fontSize: 14, marginBottom: 8 }}>Phase {i + 1}/4</p>
-                <h3 className="display" style={{ fontSize: 38, color: "var(--navy)", margin: "12px 0 4px", position: "relative" }}>{p.word}</h3>
-                <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15, color: "var(--gold)", margin: "0 0 24px", position: "relative" }}>{p.sub}</p>
+                <h3 className="display" style={{ fontSize: 34, color: "var(--navy)", margin: "12px 0 4px", position: "relative" }}>{p.word}</h3>
+                <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 14.5, color: "var(--gold)", margin: "0 0 24px", position: "relative", lineHeight: 1.4 }}>{p.sub}</p>
                 <hr className="filet" style={{ marginBottom: 20 }} />
                 <p style={{ fontSize: 14, lineHeight: 1.65, color: "var(--navy-ink)", margin: 0, position: "relative" }}>{p.body}</p>
               </div>
@@ -118,63 +241,18 @@ export default function MethodesPage() {
 
       <hr className="filet-gold-full" />
 
-      {/* V.I.E. */}
-      <section id="vie" className="section" style={{ background: "var(--navy)", color: "var(--white)" }}>
-        <div className="container">
-          <div className="rg-split" style={{ gap: 80, alignItems: "center" }}>
-            <div>
-              <p className="card-num" style={{ fontSize: 16, marginBottom: 16, color: "var(--gold)" }}>Méthode II.</p>
-              <h2 className="display" style={{ fontSize: 56, margin: "0 0 8px", color: "var(--white)", lineHeight: 1.05 }}>V.I.E.</h2>
-              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 17, color: "var(--gold)", margin: "0 0 32px", fontWeight: 300 }}>
-                Voie Initiatique de l&apos;Eau.
-              </p>
-              <hr className="filet" style={{ marginBottom: 28 }} />
-              <p style={{ fontSize: 16.5, lineHeight: 1.75, color: "rgba(255,255,255,0.85)", margin: "0 0 22px" }}>
-                Codifiée en 2014 après trois années de recherche sur les traditions rituelles aquatiques.
-                Une pratique fondée sur le pouvoir transformateur de l&apos;eau — médium ancestral, médiateur clinique, miroir somatique.
-              </p>
-              <p style={{ fontSize: 16.5, lineHeight: 1.75, color: "rgba(255,255,255,0.7)", margin: 0 }}>
-                Cinq piliers, jamais isolés, toujours tissés ensemble dans la durée d&apos;une Immersion.
-              </p>
-            </div>
-            <Placeholder
-              mark="01"
-              style={{ aspectRatio: "5/6", border: "1px solid rgba(255,255,255,0.15)" }}
-              src="https://images.unsplash.com/photo-1540206395-68808572332f?w=900&q=80&auto=format&fit=crop"
-              alt="Voie Initiatique de l'Eau — rituel au Centre HUT"
-              sizes="(max-width: 768px) 100vw, 45vw"
-            />
-          </div>
-
-          <div style={{ marginTop: 80 }}>
-            <p className="eyebrow" style={{ color: "var(--gold)", marginBottom: 40 }}>
-              <span className="dot" />Les cinq piliers<span className="dot" />
-            </p>
-            <div className="rg-5" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
-              {viePillars.map((v, i) => (
-                <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "32px 24px", background: "var(--navy)" }}>
-                  <span className="card-num" style={{ fontSize: 12 }}>0{i + 1}.</span>
-                  <h4 className="display" style={{ fontSize: 24, color: "var(--white)", margin: "14px 0 16px", lineHeight: 1.15 }}>{v.t}</h4>
-                  <hr className="filet" style={{ marginBottom: 18, width: 40 }} />
-                  <p style={{ fontSize: 13.5, lineHeight: 1.65, color: "rgba(255,255,255,0.72)", margin: 0 }}>{v.b}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CYCLE DES SAISONS */}
-      <section id="cycle" className="section" style={{ background: "var(--paper)" }}>
+      {/* DÉTAIL — CYCLE DES SAISONS */}
+      <section className="section" style={{ background: "var(--paper)" }}>
         <div className="container">
           <div className="section-head">
             <div>
-              <p className="card-num" style={{ fontSize: 16, marginBottom: 16 }}>Méthode III.</p>
+              <p className="card-num" style={{ fontSize: 16, marginBottom: 16 }}>Pilier II.</p>
               <h2>Cycle des<br /><em className="display-italic">Saisons.</em></h2>
             </div>
             <p>
-              Un accompagnement qui suit le rythme du vivant. Quatre temps, quatre qualités d&apos;énergie,
-              quatre modes d&apos;être. Pas de progression linéaire — un cycle, qui repasse, qui s&apos;approfondit.
+              Vivre en harmonie avec les rythmes naturels. À travers l&apos;Automne, l&apos;Hiver, le
+              Printemps et l&apos;Été, on apprend à reconnaître les étapes de son propre processus —
+              non plus lutter contre la vie, mais coopérer avec elle.
             </p>
           </div>
 
@@ -197,16 +275,171 @@ export default function MethodesPage() {
         </div>
       </section>
 
+      {/* AU CŒUR DE V2C — SYNTHÈSE */}
+      <section className="section" style={{ background: "var(--white)" }}>
+        <div className="container">
+          <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 64px" }}>
+            <Eyebrow style={{ marginBottom: 24 }}>Au cœur de La Voie 2 la Conscience</Eyebrow>
+            <h2 className="display" style={{ fontSize: "clamp(28px, 3vw, 44px)", margin: 0, lineHeight: 1.12 }}>
+              Un <em className="display-italic">écosystème</em> cohérent.
+            </h2>
+          </div>
+
+          <div className="rg-2" style={{ gap: 24 }}>
+            <div className="card" style={{ background: "var(--paper)" }}>
+              <p className="card-num" style={{ fontSize: 14, marginBottom: 14 }}>Les 3 fondements</p>
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--navy)", margin: "0 0 22px", lineHeight: 1.4 }}>
+                «&nbsp;Sur quoi repose cette approche&nbsp;?&nbsp;»
+              </p>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {[
+                  ["La Science Initiatique", "la compréhension"],
+                  ["La Sagesse Ancestrale", "l'ancrage"],
+                  ["La Puissance de l'Eau", "la transformation"],
+                ].map(([t, r], j) => (
+                  <li key={j} style={{ display: "flex", justifyContent: "space-between", gap: 16, padding: "12px 0", borderBottom: j < 2 ? "1px solid var(--line)" : 0 }}>
+                    <span style={{ fontSize: 15, color: "var(--navy-ink)" }}>{t}</span>
+                    <span style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--gold)", whiteSpace: "nowrap" }}>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="card" style={{ background: "var(--navy)", border: "1px solid var(--navy)" }}>
+              <p className="card-num" style={{ fontSize: 14, marginBottom: 14 }}>Les 4 piliers</p>
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--white)", margin: "0 0 22px", lineHeight: 1.4 }}>
+                «&nbsp;Comment cette transformation est-elle vécue&nbsp;?&nbsp;»
+              </p>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {["Le Parcours A.I.M.E.", "Le Cycle des Saisons", "La Méthode Ki-Zola", "La V.I.E."].map((t, j) => (
+                  <li key={j} style={{ display: "flex", gap: 12, padding: "11px 0", borderBottom: j < 3 ? "1px solid rgba(255,255,255,0.12)" : 0, fontSize: 15, color: "rgba(255,255,255,0.85)" }}>
+                    <span style={{ color: "var(--gold)", flexShrink: 0 }}>✦</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <p style={{ textAlign: "center", fontSize: 16.5, lineHeight: 1.8, color: "var(--mute)", maxWidth: 640, margin: "48px auto 0" }}>
+            Ensemble, ils forment un écosystème cohérent au service de l&apos;éveil de la conscience,
+            de la restauration du lien au Vivant et de l&apos;incarnation de sa véritable nature.
+          </p>
+        </div>
+      </section>
+
+      {/* NIVEAU 3 — LA ZONE D'E.A.U. */}
+      <section id="eau" className="section noise" style={{ background: "var(--navy-ink)", color: "var(--white)", position: "relative" }}>
+        <div className="container">
+          <div className="rg-split" style={{ gap: 80, alignItems: "center" }}>
+            <div>
+              <Eyebrow style={{ color: "var(--gold)", marginBottom: 24 }}>Niveau 3 · Vers quoi</Eyebrow>
+              <h2 className="display" style={{ fontSize: "clamp(40px, 5vw, 72px)", color: "var(--white)", margin: "0 0 8px", lineHeight: 1 }}>
+                La Zone<br /><em className="display-italic" style={{ color: "var(--gold)" }}>d&apos;E.A.U.</em>
+              </h2>
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 18, color: "var(--gold)", margin: "12px 0 28px", fontWeight: 300 }}>
+                Excellence Authentique Unique.
+              </p>
+              <hr className="filet" style={{ marginBottom: 28 }} />
+              <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", margin: 0 }}>
+                L&apos;intention ultime de cette démarche est d&apos;accompagner chacun vers sa Zone
+                d&apos;E.A.U. — cet espace intérieur où l&apos;âme cesse d&apos;être en exil, et commence
+                véritablement à agir.
+              </p>
+            </div>
+
+            <div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {eauPromesses.map((g, i) => (
+                  <li key={i} data-reveal="" data-reveal-delay={String(i)} style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "20px 0", borderBottom: i < eauPromesses.length - 1 ? "1px solid rgba(255,255,255,0.12)" : 0 }}>
+                    <span style={{ color: "var(--gold)", flexShrink: 0, fontSize: 14, marginTop: 4 }}>✦</span>
+                    <span style={{ fontSize: 17, lineHeight: 1.55, color: "rgba(255,255,255,0.9)" }}>{g}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* À QUI S'ADRESSE */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container-narrow">
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <Eyebrow style={{ marginBottom: 24 }}>Pour qui</Eyebrow>
+            <h2 className="display" style={{ fontSize: "clamp(28px, 3vw, 44px)", margin: 0, lineHeight: 1.12 }}>
+              À qui s&apos;adresse<br /><em className="display-italic">cet accompagnement&nbsp;?</em>
+            </h2>
+          </div>
+
+          <div style={{ display: "grid", gap: 24, fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)" }}>
+            <p style={{ margin: 0 }}>
+              La Voie 2 la Conscience s&apos;adresse principalement aux <strong style={{ fontWeight: 500 }}>dirigeants,
+              entrepreneurs, cadres, thérapeutes</strong> et professionnels de l&apos;accompagnement qui
+              ressentent l&apos;appel d&apos;une transformation intérieure profonde. À celles et ceux qui
+              ont construit, développé une expertise, porté des responsabilités — mais qui perçoivent
+              aujourd&apos;hui qu&apos;une autre dimension de leur existence cherche à émerger.
+            </p>
+            <p style={{ margin: 0 }}>
+              Des personnes qui, malgré leur réussite extérieure, ressentent parfois une perte de
+              sens, une fatigue intérieure, un sentiment de décalage, ou l&apos;intuition qu&apos;il existe
+              une manière plus profonde, plus alignée et plus vivante d&apos;habiter leur vie.
+            </p>
+            <p style={{ margin: 0 }}>
+              Cet accompagnement est destiné à celles et ceux qui sont ouverts à une dimension
+              spirituelle de l&apos;existence, au-delà de toute religion, de tout dogme ou de tout
+              système de croyance. <strong style={{ fontWeight: 500 }}>Je ne propose pas une religion.
+              Je ne cherche pas à convaincre. Je propose un chemin d&apos;expérience</strong> — une voie
+              qui invite chacun à explorer la conscience, le sens, la relation et le Vivant à travers
+              son expérience directe.
+            </p>
+          </div>
+
+          <blockquote style={{ margin: "44px 0", padding: "28px 36px", borderLeft: "3px solid var(--gold)", background: "var(--white)" }}>
+            <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: "clamp(18px, 2vw, 23px)", color: "var(--navy)", margin: 0, lineHeight: 1.5 }}>
+              «&nbsp;La relation est le lieu où la spiritualité cesse d&apos;être une idée pour devenir
+              une expérience vivante.&nbsp;»
+            </p>
+          </blockquote>
+
+          <div style={{ display: "grid", gap: 24, fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)" }}>
+            <p style={{ margin: 0 }}>
+              Une spiritualité vivante et incarnée trouve sa véritable profondeur lorsqu&apos;elle
+              s&apos;incarne dans la vie quotidienne et dans nos relations&nbsp;:
+            </p>
+            <ul style={{ display: "flex", flexWrap: "wrap", gap: 10, listStyle: "none", padding: 0, margin: 0 }}>
+              {relations.map((r, i) => (
+                <li key={i} className="pill" style={{ borderColor: "rgba(200,168,75,0.4)", color: "var(--navy)" }}>
+                  La relation {r}
+                </li>
+              ))}
+            </ul>
+            <p style={{ margin: "8px 0 0", fontFamily: "var(--serif)", fontSize: 19, color: "var(--navy)", lineHeight: 1.6 }}>
+              Car ce n&apos;est pas ce que nous savons qui transforme notre existence&nbsp;: c&apos;est ce
+              que nous sommes capables d&apos;incarner.
+            </p>
+            <p style={{ margin: 0 }}>
+              Si vous êtes dirigeant, entrepreneur, cadre ou thérapeute, et que vous ressentez
+              l&apos;appel d&apos;une démarche qui relie conscience, spiritualité incarnée et transformation
+              concrète de votre vie, alors vous êtes probablement au bon endroit.
+            </p>
+            <p style={{ margin: 0, fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 21, color: "var(--gold)" }}>
+              Bienvenue sur La Voie 2 la Conscience.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="section-tight" style={{ background: "var(--white)", textAlign: "center", borderTop: "3px solid var(--gold)" }}>
         <div className="container-narrow">
-          <Eyebrow style={{ marginBottom: 24 }}>Les méthodes s&apos;incarnent dans l&apos;Offre Gold</Eyebrow>
+          <Eyebrow style={{ marginBottom: 24 }}>L&apos;approche s&apos;incarne dans l&apos;Offre Gold</Eyebrow>
           <h3 className="display" style={{ fontSize: 36, margin: "0 0 24px", lineHeight: 1.1 }}>
-            Lire l&apos;offre<br /><em className="display-italic">qui les met en œuvre.</em>
+            Lire l&apos;offre<br /><em className="display-italic">qui la met en œuvre.</em>
           </h3>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--mute)", maxWidth: 560, margin: "0 auto 36px" }}>
-            Trois niveaux d&apos;accompagnement — Essence, Expansion, Royale — qui mobilisent
-            AIME, V.I.E. et le Cycle des Saisons selon votre rythme.
+            Trois niveaux d&apos;accompagnement — Essence, Expansion, Royale — qui mobilisent les
+            quatre piliers selon votre rythme et votre saison intérieure.
           </p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/offre-gold" className="btn btn-primary">Découvrir l&apos;Offre Gold <Arrow /></Link>
