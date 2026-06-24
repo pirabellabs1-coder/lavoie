@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Challenge offert — De la Blessure Originelle à l'Équilibre de Vie",
   description:
-    "Un challenge gratuit 100% en ligne sur 3 jours pour dirigeants : mettre en lumière ta blessure originelle et retrouver l'équilibre entre réussite et vie personnelle. Animé par Domoïna Ramiadana.",
+    "Un challenge gratuit 100% en ligne sur 3 jours pour dirigeants : mettre en lumière votre blessure originelle et retrouver l'équilibre entre réussite et vie personnelle. Animé par Domoïna Ramiadana.",
   alternates: { canonical: "/masterclass" },
 };
 
@@ -33,43 +33,43 @@ const stats = [
 ];
 
 const situations = [
-  { t: "Tensions dans ton couple", b: "Tu donnes tout au travail, mais ta relation de couple s'effrite en silence." },
-  { t: "Distance avec ta famille", b: "Tes enfants grandissent sans toi. Tu es présent physiquement et absent émotionnellement." },
-  { t: "Fatigue profonde", b: "Malgré ta réussite, tu ressens une fatigue qui ne part jamais, même après les vacances." },
-  { t: "Mode survie-performance", b: "Toujours faire plus, tenir, contrôler… Tu fonctionnes en pilote automatique." },
+  { t: "Tensions dans votre couple", b: "Vous donnez tout au travail, mais votre relation de couple s'effrite en silence." },
+  { t: "Distance avec votre famille", b: "Vos enfants grandissent sans vous. Vous êtes présent physiquement et absent émotionnellement." },
+  { t: "Fatigue profonde", b: "Malgré votre réussite, vous ressentez une fatigue qui ne part jamais, même après les vacances." },
+  { t: "Mode survie-performance", b: "Toujours faire plus, tenir, contrôler… Vous fonctionnez en pilote automatique." },
   { t: "Addictions compensatoires", b: "Travail excessif, contrôle, sport intensif, alcool… Des refuges pour éviter de ressentir." },
-  { t: "Sentiment de vide", b: "Tu as tout réussi sur le papier, mais quelque chose manque profondément." },
+  { t: "Sentiment de vide", b: "Vous avez tout réussi sur le papier, mais quelque chose manque profondément." },
 ];
 
 const jours = [
   {
     jour: "01",
     duree: "Jour 1 — 1h30 de masterclass",
-    titre: "Comprendre ta blessure originelle",
-    desc: "Découvre comment ta blessure originelle dirige en silence ta vie et tes réussites, et comment elle t'entraîne dans des formes de compensation (travail, contrôle, addictions…).",
-    points: ["Identification de ta blessure profonde", "Compréhension de ses mécanismes", "Prise de conscience des compensations"],
+    titre: "Comprendre votre blessure originelle",
+    desc: "Découvrez comment votre blessure originelle dirige en silence votre vie et vos réussites, et comment elle vous entraîne dans des formes de compensation (travail, contrôle, addictions…).",
+    points: ["Identification de votre blessure profonde", "Compréhension de ses mécanismes", "Prise de conscience des compensations"],
   },
   {
     jour: "02",
     duree: "Jour 2 — 2h d'atelier",
-    titre: "Cartographier tes schémas",
-    desc: "Cartographie tes schémas de compensation et commence à transformer cette blessure en boussole intérieure, pour te rapprocher de qui tu es vraiment — au-delà des masques et des rôles.",
-    points: ["Cartographie de tes schémas", "Transformation de la blessure en boussole", "Reconnexion à ton authenticité"],
+    titre: "Cartographier vos schémas",
+    desc: "Cartographiez vos schémas de compensation et commencez à transformer cette blessure en boussole intérieure, pour vous rapprocher de qui vous êtes vraiment — au-delà des masques et des rôles.",
+    points: ["Cartographie de vos schémas", "Transformation de la blessure en boussole", "Reconnexion à votre authenticité"],
   },
   {
     jour: "03",
     duree: "Jour 3 — 2h d'atelier",
     titre: "Poser les premiers ajustements",
-    desc: "Pose les premiers ajustements concrets dans les différents domaines de ta vie, afin de sortir du mode « survie–performance » et retrouver plus d'équilibre dans ta vie de couple, familiale et professionnelle.",
+    desc: "Posez les premiers ajustements concrets dans les différents domaines de votre vie, afin de sortir du mode « survie–performance » et retrouver plus d'équilibre dans votre vie de couple, familiale et professionnelle.",
     points: ["3 à 5 ajustements concrets", "Plan d'action personnalisé", "Début de rééquilibrage de vie"],
   },
 ];
 
 const obtenir = [
-  "Une compréhension plus claire de ta blessure originelle et de la manière dont elle influence tes choix, tes relations et tes réussites.",
-  "Une cartographie simple de tes schémas de compensation : là où tu sur-travailles, sur-contrôles, te coupes de toi-même ou te réfugies dans des addictions.",
-  "Une vision plus lucide de l'impact de ces schémas sur ta vie de couple, ta vie de famille et ta relation à toi-même.",
-  "3 à 5 ajustements concrets à mettre en place pour sortir du mode « survie–performance » et remettre de l'équilibre dans les différents domaines de ta vie.",
+  "Une compréhension plus claire de votre blessure originelle et de la manière dont elle influence vos choix, vos relations et vos réussites.",
+  "Une cartographie simple de vos schémas de compensation : là où vous sur-travaillez, sur-contrôlez, vous coupez de vous-même ou vous réfugiez dans des addictions.",
+  "Une vision plus lucide de l'impact de ces schémas sur votre vie de couple, votre vie de famille et votre relation à vous-même.",
+  "3 à 5 ajustements concrets à mettre en place pour sortir du mode « survie–performance » et remettre de l'équilibre dans les différents domaines de votre vie.",
 ];
 
 const temoignages = [
@@ -88,7 +88,7 @@ const bioStats = [
 const inscription = [
   { t: "100% offert", b: "Aucun paiement requis. Accès complet aux 3 jours." },
   { t: "5h30 de contenu", b: "Masterclass + ateliers pratiques sur 3 jours." },
-  { t: "Données protégées", b: "Tes informations restent strictement confidentielles." },
+  { t: "Données protégées", b: "Vos informations restent strictement confidentielles." },
 ];
 
 export default function MasterclassChallenge() {
@@ -106,11 +106,11 @@ export default function MasterclassChallenge() {
             <em className="display-italic" style={{ color: "var(--gold)" }}>à l&apos;Équilibre de Vie.</em>
           </h1>
           <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "rgba(255,255,255,0.9)", margin: "0 0 20px" }}>
-            Tu as réussi. Mais à quel prix&nbsp;?
+            Vous avez réussi. Mais à quel prix&nbsp;?
           </p>
           <p style={{ fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.7)", maxWidth: 600, margin: "0 auto 40px" }}>
-            Ce challenge 100% en ligne est pour toi si tu sens que ta vie personnelle paie
-            le prix de ta réussite extérieure.
+            Ce challenge 100% en ligne est pour vous si vous sentez que votre vie personnelle paie
+            le prix de votre réussite extérieure.
           </p>
           <Link href="/contact" className="btn btn-gold btn-lg">
             Je m&apos;inscris gratuitement <Arrow />
@@ -131,12 +131,12 @@ export default function MasterclassChallenge() {
       <section className="section" style={{ background: "var(--white)" }}>
         <div className="container">
           <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <Eyebrow>Te reconnais-tu&nbsp;?</Eyebrow>
+            <Eyebrow>Vous reconnaissez-vous&nbsp;?</Eyebrow>
             <h2 className="display" style={{ fontSize: 40, margin: "24px 0 16px", lineHeight: 1.1 }}>
-              Te reconnais-tu dans <em className="display-italic">ces situations&nbsp;?</em>
+              Vous reconnaissez-vous dans <em className="display-italic">ces situations&nbsp;?</em>
             </h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 600, margin: "0 auto" }}>
-              Tu as «&nbsp;réussi&nbsp;» sur le papier. Mais ta vie personnelle paie le prix de cette réussite extérieure.
+              Vous avez «&nbsp;réussi&nbsp;» sur le papier. Mais votre vie personnelle paie le prix de cette réussite extérieure.
             </p>
           </div>
 
@@ -151,7 +151,7 @@ export default function MasterclassChallenge() {
           </div>
 
           <p style={{ textAlign: "center", marginTop: 48, fontFamily: "var(--serif)", fontStyle: "italic", fontSize: "clamp(20px, 2.4vw, 30px)", color: "var(--navy)", lineHeight: 1.4 }}>
-            Tout cela a une origine commune&nbsp;: <span style={{ color: "var(--gold)" }}>ta blessure originelle.</span>
+            Tout cela a une origine commune&nbsp;: <span style={{ color: "var(--gold)" }}>votre blessure originelle.</span>
           </p>
         </div>
       </section>
@@ -163,12 +163,12 @@ export default function MasterclassChallenge() {
             <div>
               <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>Programme du challenge</Eyebrow>
               <h2 style={{ color: "var(--white)" }}>
-                3 jours pour<br /><em className="display-italic" style={{ color: "var(--gold)" }}>transformer ta vie.</em>
+                3 jours pour<br /><em className="display-italic" style={{ color: "var(--gold)" }}>transformer votre vie.</em>
               </h2>
             </div>
             <p style={{ color: "rgba(255,255,255,0.72)" }}>
-              Un parcours progressif et intense pour mettre en lumière ta blessure originelle et
-              commencer à retrouver l&apos;équilibre dans ta vie de couple, familiale et professionnelle.
+              Un parcours progressif et intense pour mettre en lumière votre blessure originelle et
+              commencer à retrouver l&apos;équilibre dans votre vie de couple, familiale et professionnelle.
             </p>
           </div>
 
@@ -200,7 +200,7 @@ export default function MasterclassChallenge() {
       <section className="section" style={{ background: "var(--paper)" }}>
         <div className="container-narrow">
           <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <Eyebrow>Ce que tu vas obtenir</Eyebrow>
+            <Eyebrow>Ce que vous allez obtenir</Eyebrow>
             <h2 className="display" style={{ fontSize: 40, margin: "24px 0 0", lineHeight: 1.1 }}>
               À l&apos;issue de <em className="display-italic">ces 3 jours.</em>
             </h2>
@@ -236,7 +236,7 @@ export default function MasterclassChallenge() {
 
           <div style={{ display: "grid", gap: 22, maxWidth: 720, margin: "0 auto" }}>
             <p style={{ fontFamily: "var(--serif)", fontSize: 20, lineHeight: 1.55, color: "var(--navy)", margin: 0 }}>
-              Mon intention n&apos;est pas de t&apos;aider à «&nbsp;performer plus&nbsp;», mais à revenir à l&apos;essentiel.
+              Mon intention n&apos;est pas de vous aider à «&nbsp;performer plus&nbsp;», mais à revenir à l&apos;essentiel.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)", margin: 0 }}>
               J&apos;accompagne des dirigeants, cadres, entrepreneurs et thérapeutes qui ont déjà réussi à
@@ -245,13 +245,13 @@ export default function MasterclassChallenge() {
               en pilote automatique — et parfois des mécanismes d&apos;évitement ou d&apos;addiction qu&apos;ils ne s&apos;expliquent pas.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)", margin: 0 }}>
-              Mon travail consiste à t&apos;aider à mettre en lumière et à commencer à guérir ta blessure
-              originelle — cette blessure profonde qui a façonné qui tu es et tes talents, mais qui, tant
-              qu&apos;elle n&apos;est pas apaisée, t&apos;entraîne dans des mécanismes de compensation qui déséquilibrent ta vie.
+              Mon travail consiste à vous aider à mettre en lumière et à commencer à guérir votre blessure
+              originelle — cette blessure profonde qui a façonné qui vous êtes et vos talents, mais qui, tant
+              qu&apos;elle n&apos;est pas apaisée, vous entraîne dans des mécanismes de compensation qui déséquilibrent votre vie.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--mute)", margin: 0 }}>
               Quand cette blessure commence à être reconnue et apaisée, les compensations se relâchent,
-              les masques tombent, l&apos;équilibre se réinstalle. Le rayonnement dans ton activité et ton
+              les masques tombent, l&apos;équilibre se réinstalle. Le rayonnement dans votre activité et votre
               leadership devient alors une conséquence de cet équilibre — et non un objectif à atteindre
               coûte que coûte.
             </p>
@@ -305,9 +305,9 @@ export default function MasterclassChallenge() {
       {/* INSCRIPTION */}
       <section className="section" style={{ background: "var(--paper)" }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
-          <Eyebrow style={{ marginBottom: 24 }}>Inscris-toi · c&apos;est offert</Eyebrow>
+          <Eyebrow style={{ marginBottom: 24 }}>Inscrivez-vous · c&apos;est offert</Eyebrow>
           <h2 className="display" style={{ fontSize: "clamp(30px, 3.4vw, 52px)", margin: "0 0 20px", lineHeight: 1.05 }}>
-            Rejoins le challenge<br /><em className="display-italic">et commence ta transformation.</em>
+            Rejoignez le challenge<br /><em className="display-italic">et commencez votre transformation.</em>
           </h2>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--mute)", maxWidth: 540, margin: "0 auto 44px" }}>
             Trois jours pour amorcer un vrai changement — sans paiement, sans engagement.
