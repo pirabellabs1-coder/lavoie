@@ -24,21 +24,22 @@ export default function Footer() {
             <span className="dot" style={{ background: "var(--navy)" }} />
           </p>
           <h3>
-            Prêt à commencer votre voyage
+            Et si votre prochaine réussite
             <br />
-            <em style={{ fontWeight: 300 }}>vers l&apos;éveil&nbsp;?</em>
+            <em style={{ fontWeight: 300 }}>était intérieure&nbsp;?</em>
           </h3>
           <p
             style={{
-              maxWidth: 560,
+              maxWidth: 580,
               margin: "0 auto 36px",
               fontSize: 15.5,
               lineHeight: 1.72,
               color: "rgba(14,26,74,0.7)",
             }}
           >
-            Réservez votre appel découverte offert avec Domoina et découvrez comment
-            La Voie 2 la Conscience peut transformer votre vie.
+            Une spiritualité qui ne se contemple pas&nbsp;: elle s&apos;incarne dans vos relations —
+            professionnelles, familiales, amoureuses. Réservez votre appel découverte offert
+            avec Domoïna.
           </p>
           <Link href="/contact" className="btn btn-primary">
             Réserver mon appel offert <Arrow />

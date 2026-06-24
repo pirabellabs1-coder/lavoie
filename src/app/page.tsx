@@ -622,6 +622,37 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ══════════════════════════════════════════════════════
+          PARTI PRIS — une spiritualité incarnée dans la relation
+          ══════════════════════════════════════════════════════ */}
+      <section className="section noise" style={{ background: "var(--navy-ink)", color: "var(--white)", position: "relative" }}>
+        <span className="section-num" style={{ color: "var(--gold)" }}>Notre parti pris</span>
+        <div className="container-narrow" style={{ textAlign: "center" }}>
+          <p className="eyebrow" style={{ justifyContent: "center", color: "var(--gold)", margin: "0 0 36px" }}>
+            <span className="dot" />Une autre manière de vivre le spirituel<span className="dot" />
+          </p>
+          <p
+            data-reveal=""
+            className="mega"
+            style={{ fontSize: "clamp(24px,3vw,46px)", lineHeight: 1.22, margin: 0, fontWeight: 300, color: "var(--white)" }}
+          >
+            Ici, la spiritualité ne se contemple pas&nbsp;:{" "}
+            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elle s&apos;incarne.</em>
+            {" "}Elle se vit, et se mesure à votre capacité à habiter vos relations —
+            professionnelles, familiales, amoureuses — de manière consciente.
+          </p>
+          <hr className="filet" style={{ margin: "44px auto 28px" }} />
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.72)", maxWidth: 640, margin: "0 auto 36px" }}>
+            Ni religion, ni développement personnel&nbsp;: un accompagnement spirituel et initiatique
+            pensé pour les dirigeants, entrepreneurs et cadres qui ont déjà réussi — et qui sentent
+            qu&apos;une autre dimension d&apos;eux-mêmes cherche à s&apos;incarner.
+          </p>
+          <Link href="/methodes" className="btn btn-gold">
+            Découvrir mon approche <Arrow />
+          </Link>
+        </div>
+      </section>
+
       <hr className="filet-gold-full" />
 
       {/* ══════════════════════════════════════════════════════
