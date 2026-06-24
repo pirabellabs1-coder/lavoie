@@ -88,49 +88,61 @@ export default function DomoinaPage() {
         </div>
       </section>
 
-      {/* BIOGRAPHY */}
+      {/* BIOGRAPHY — 2 colonnes : texte + portrait */}
       <section className="section">
-        <div className="container-narrow">
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <Eyebrow>Qui suis-je&nbsp;?</Eyebrow>
-            <h2 className="display" style={{ fontSize: 36, margin: "24px 0 0", lineHeight: 1.1 }}>
-              Une guide au service de<br /><em className="display-italic">votre transformation consciente.</em>
-            </h2>
-          </div>
+        <div className="container">
+          <div className="rg-split-bias" style={{ alignItems: "start", gap: "clamp(40px, 6vw, 80px)" }}>
+            {/* Texte */}
+            <div>
+              <Eyebrow style={{ marginBottom: 24 }}>Qui suis-je&nbsp;?</Eyebrow>
+              <h2 className="display" style={{ fontSize: "clamp(28px, 3vw, 42px)", margin: "0 0 28px", lineHeight: 1.12 }}>
+                Une guide au service de <em className="display-italic">votre transformation consciente.</em>
+              </h2>
+              <hr className="filet" style={{ marginBottom: 28 }} />
 
-          <div style={{ display: "grid", gap: 28 }}>
-            <p style={{ fontFamily: "var(--serif)", fontSize: 22, lineHeight: 1.55, color: "var(--navy)", margin: 0 }}>
-              <span style={{ fontSize: 64, float: "left", lineHeight: 0.85, marginRight: 12, color: "var(--gold)" }}>J</span>
-              e suis Domoïna Ramiadana, thérapeute initiatique et guide pour leaders et dirigeants
-              à succès en quête de sens. Formatrice, fondatrice du Centre Holistique UnTout (HUT)
-              et de La Voie 2 la Conscience, créatrice du Parcours AIME et du Cycle des Saisons.
-            </p>
-            <p style={{ fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)", margin: 0 }}>
-              J&apos;accompagne les dirigeants à succès à transformer leurs blessures originelles et
-              leurs schémas de compensation en zone d&apos;<strong style={{ fontWeight: 500 }}>Excellence
-              Authentique Unique</strong> (E.A.U.), grâce à une voie initiatique unissant les Lois du
-              Vivant, la sagesse ancestrale et la puissance transformatrice de l&apos;Eau.
-            </p>
-            <p style={{ fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)", margin: 0 }}>
-              Nombre d&apos;entrepreneurs, dirigeants et leaders à succès vivent, derrière les apparences
-              de réussite, une crise silencieuse&nbsp;: surcharge mentale, perte de sens, épuisement,
-              ou simplement une impression de vide existentiel — malgré tout ce qu&apos;ils ont construit.
-            </p>
-            <p style={{ fontSize: 16.5, lineHeight: 1.85, color: "var(--navy-ink)", margin: 0 }}>
-              Avec plus de <strong style={{ fontWeight: 500 }}>20 ans d&apos;expérience</strong> dans
-              l&apos;accompagnement holistique, je me consacre aujourd&apos;hui à aider ces dirigeants à
-              retrouver leur clarté, leur légitimité, leur puissance et leur Vision Intérieure Propre
-              (V.I.P.), en revenant à leur zone d&apos;E.A.U.
-            </p>
-          </div>
+              <p style={{ fontFamily: "var(--serif)", fontSize: 20, lineHeight: 1.55, color: "var(--navy)", margin: "0 0 22px" }}>
+                <span style={{ fontSize: 60, float: "left", lineHeight: 0.85, marginRight: 12, color: "var(--gold)" }}>J</span>
+                e suis Domoïna Ramiadana, thérapeute initiatique et guide pour leaders et dirigeants
+                à succès en quête de sens. Formatrice, fondatrice du Centre Holistique UnTout (HUT)
+                et de La Voie 2 la Conscience, créatrice du Parcours AIME et du Cycle des Saisons.
+              </p>
+              <p style={{ fontSize: 15.5, lineHeight: 1.82, color: "var(--navy-ink)", margin: "0 0 18px" }}>
+                J&apos;accompagne les dirigeants à succès à transformer leurs blessures originelles et
+                leurs schémas de compensation en zone d&apos;<strong style={{ fontWeight: 500 }}>Excellence
+                Authentique Unique</strong> (E.A.U.), grâce à une voie initiatique unissant les Lois du
+                Vivant, la sagesse ancestrale et la puissance transformatrice de l&apos;Eau.
+              </p>
+              <p style={{ fontSize: 15.5, lineHeight: 1.82, color: "var(--navy-ink)", margin: "0 0 18px" }}>
+                Nombre d&apos;entrepreneurs, dirigeants et leaders à succès vivent, derrière les apparences
+                de réussite, une crise silencieuse&nbsp;: surcharge mentale, perte de sens, épuisement,
+                ou simplement une impression de vide existentiel — malgré tout ce qu&apos;ils ont construit.
+              </p>
+              <p style={{ fontSize: 15.5, lineHeight: 1.82, color: "var(--navy-ink)", margin: 0 }}>
+                Avec plus de <strong style={{ fontWeight: 500 }}>20 ans d&apos;expérience</strong> dans
+                l&apos;accompagnement holistique, je me consacre aujourd&apos;hui à aider ces dirigeants à
+                retrouver leur clarté, leur légitimité, leur puissance et leur Vision Intérieure Propre
+                (V.I.P.), en revenant à leur zone d&apos;E.A.U.
+              </p>
 
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 56, gap: 60, flexWrap: "wrap" }}>
-            {[{ n: "20+", label: "Années d'expérience" }, { n: "500+", label: "Vies transformées" }, { n: "4", label: "Piliers" }].map((s, i) => (
-              <div key={i} style={{ textAlign: "center" }}>
-                <p className="num" style={{ fontSize: 56, color: "var(--navy)", margin: 0 }}>{s.n}</p>
-                <p className="small muted" style={{ letterSpacing: ".16em", textTransform: "uppercase", margin: "4px 0 0", fontSize: 10.5 }}>{s.label}</p>
+              <div style={{ display: "flex", gap: 48, flexWrap: "wrap", marginTop: 40, paddingTop: 28, borderTop: "1px solid var(--line)" }}>
+                {[{ n: "20+", label: "Années d'expérience" }, { n: "500+", label: "Vies transformées" }, { n: "4", label: "Piliers" }].map((s, i) => (
+                  <div key={i}>
+                    <p className="num" style={{ fontSize: 48, color: "var(--navy)", margin: 0 }}>{s.n}</p>
+                    <p className="small muted" style={{ letterSpacing: ".16em", textTransform: "uppercase", margin: "4px 0 0", fontSize: 10.5 }}>{s.label}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Image d'ambiance (à remplacer par la photo de ton choix) */}
+            <div className="img-zoom" style={{ position: "relative" }}>
+              <Placeholder
+                style={{ aspectRatio: "4/5", border: "1px solid var(--line)" }}
+                src="/hut-jardin-zen.png"
+                alt="Eau, nature et silence — l'esprit de l'accompagnement"
+                sizes="(max-width: 900px) 100vw, 45vw"
+              />
+            </div>
           </div>
         </div>
       </section>
