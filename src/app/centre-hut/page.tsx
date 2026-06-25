@@ -30,13 +30,18 @@ function Eyebrow({ children, style }: { children: React.ReactNode; style?: React
 const espaces = [
   {
     glyph: "❧",
-    nom: "La Forêt Initiatique",
-    description: "Des sentiers balisés à travers une forêt dense, pour les marches méditatives et les cérémonies en nature.",
+    nom: "La Microforêt de charme",
+    description: "Une microforêt constituée de charmes — un véritable espace de charme pour méditer, se reposer et profiter de la fraîcheur du lieu, surtout en été.",
   },
   {
     glyph: "〜",
-    nom: "Le Bassin Sacré",
-    description: "Source d'eau naturelle aménagée pour les pratiques V.I.E. — purification, immersion et travail énergétique par l'eau.",
+    nom: "L'Étang",
+    description: "Autour du Centre HUT, un étang peuplé de poissons abrite tout un écosystème aquatique vivant — un point d'eau naturel propice au calme et à la contemplation.",
+  },
+  {
+    glyph: "≈",
+    nom: "La Piscine",
+    description: "Une piscine dédiée à la purification, à l'immersion et au travail énergétique par l'eau — au cœur de la méthode Ki-Zola.",
   },
   {
     glyph: "✦",
@@ -208,10 +213,10 @@ export default function CentreHut() {
             </p>
           </div>
 
-          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+          <div className="rg-2" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
             {espaces.map((e, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 36px", background: "var(--white)" }}>
-                <div style={{ width: 48, height: 48, border: "1px solid var(--gold)", display: "grid", placeItems: "center", marginBottom: 28, color: "var(--gold)", fontSize: 22 }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "48px 36px", background: "var(--white)" }}>
+                <div style={{ width: 48, height: 48, border: "1px solid var(--blue)", display: "grid", placeItems: "center", marginBottom: 28, color: "var(--blue)", fontSize: 22 }}>
                   {e.glyph}
                 </div>
                 <h3 className="display" style={{ fontSize: 28, color: "var(--navy)", margin: "0 0 16px", lineHeight: 1.2 }}>{e.nom}</h3>

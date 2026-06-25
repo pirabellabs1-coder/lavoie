@@ -65,13 +65,13 @@ const offres = [
 ];
 
 const garanties = [
-  { t: "Confidentialité absolue", b: "NDA signé · cohorte restreinte · discrétion sur le lieu" },
+  { t: "Confidentialité absolue", b: "Engagement de confidentialité signé · groupe restreint · discrétion sur le lieu" },
   { t: "Éthique de pratique", b: "Charte signée · supervision externe · droit de retrait" },
   { t: "Accès au Centre HUT", b: "Sanctuaire en Sarthe · stages immersifs · suites privatives" },
   { t: "Suivi entre les sessions", b: "Ligne WhatsApp · réponses sous 24h · présence réelle" },
   { t: "Bibliothèque initiatique", b: "Audio · textes · pratiques guidées · accès à vie" },
-  { t: "Cercle alumni", b: "Réunions trimestrielles · réseau confidentiel · entraide" },
-  { t: "Garantie de fit", b: "Appel découverte · audit d'alignement · pas de pression" },
+  { t: "Communauté & entraide", b: "Retrouvailles trimestrielles · réseau bienveillant · soutien entre accompagnés" },
+  { t: "Aucune pression", b: "Appel découverte offert · on s'assure ensemble que c'est le bon moment · vous restez libre" },
   { t: "Modalités de paiement", b: "3, 6, ou 12 fois sans frais · facilités étudiées au cas par cas" },
 ];
 
