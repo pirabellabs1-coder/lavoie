@@ -28,6 +28,7 @@ const nav: NavItem[] = [
     children: [
       { href: "/temoignages", label: "Témoignages", desc: "500+ vies transformées" },
       { href: "/blog", label: "Blog", desc: "Réflexions & pratiques" },
+      { href: "/cadre-deontologique", label: "Cadre déontologique", desc: "Charte éthique & engagement" },
     ],
   },
   { href: "/contact", label: "Contact" },

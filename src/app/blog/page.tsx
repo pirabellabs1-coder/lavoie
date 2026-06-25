@@ -48,7 +48,7 @@ export default function Blog() {
       </section>
 
       {/* FILTRES */}
-      <div style={{ position: "sticky", top: 0, zIndex: 30, background: "var(--navy)", borderBottom: "1px solid rgba(200,168,75,0.15)", padding: "14px 0" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 30, background: "#0f1d6e", borderBottom: "1px solid rgba(255,255,255,0.15)", padding: "14px 0" }}>
         <div className="container">
           <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 2 }}>
             {categories.map((cat) => (

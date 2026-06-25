@@ -3,7 +3,6 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import Marquee from "@/components/Marquee";
 import NewsletterForm from "@/components/NewsletterForm";
-import HeroSilk from "@/components/HeroSilk";
 
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
@@ -276,83 +275,66 @@ export default function Home() {
           01 · HERO — Full-bleed cinematic
           ══════════════════════════════════════════════════════ */}
       <section
-        className="hero-home"
+        className="sec-blue"
         style={{
           position: "relative",
-          height: "100svh",
-          minHeight: 680,
           overflow: "hidden",
+          background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)",
         }}
       >
-        {/* Fond bleu marine + drapé de soie blanc (façon tissu sur mannequin) */}
-        <HeroSilk />
-
-        {/* Voile bas — lisibilité du texte par-dessus le drapé */}
+        {/* Halo lumineux (haut) */}
         <div
           aria-hidden="true"
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to top, rgba(7,16,60,0.96) 0%, rgba(7,16,60,0.72) 28%, rgba(7,16,60,0.22) 60%, rgba(7,16,60,0) 100%)",
-            zIndex: 1,
+              "radial-gradient(100% 70% at 78% 0%, rgba(255,255,255,0.12) 0%, transparent 55%)",
+            pointerEvents: "none",
           }}
         />
 
-        {/* ── Content anchored bottom-left ── */}
-        <div
-          className="hero-home-content"
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 2,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            paddingBottom: "clamp(52px, 9vh, 108px)",
-          }}
-        >
-          <div className="container">
+        <div className="container" style={{ position: "relative", zIndex: 1, padding: "clamp(118px, 16vh, 184px) 0 clamp(64px, 9vh, 112px)" }}>
+          <div className="rg-split" style={{ gap: "clamp(40px, 6vw, 84px)", alignItems: "center" }}>
 
-            {/* Live badge */}
-            <p
+            {/* ── Texte ── */}
+            <div>
+
+            {/* Badge cible */}
+            <span
+              data-reveal=""
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 8,
+                gap: 9,
+                padding: "7px 16px",
+                borderRadius: 999,
+                background: "rgba(255,255,255,0.12)",
+                border: "1px solid rgba(255,255,255,0.22)",
+                color: "var(--white)",
                 fontFamily: "var(--sans)",
-                fontSize: 10,
-                letterSpacing: ".28em",
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: ".12em",
                 textTransform: "uppercase",
-                color: "rgba(255,255,255,0.48)",
-                margin: "0 0 32px",
+                marginBottom: 28,
               }}
             >
-              <span
-                style={{
-                  width: 5,
-                  height: 5,
-                  background: "var(--gold)",
-                  borderRadius: "50%",
-                  flexShrink: 0,
-                  boxShadow: "0 0 10px rgba(200,168,75,0.8)",
-                }}
-              />
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold)", flexShrink: 0 }} />
               Dirigeants · Cadres · Thérapeutes
-            </p>
+            </span>
 
-            {/* H1 — large Cormorant Garamond serif */}
+            {/* H1 */}
             <h1
               className="mega"
               data-reveal=""
               style={{
-                fontSize: "clamp(28px, 3.7vw, 54px)",
+                fontSize: "clamp(34px, 4.4vw, 64px)",
                 color: "var(--white)",
                 margin: 0,
-                lineHeight: 1.1,
+                lineHeight: 1.06,
                 fontWeight: 300,
                 letterSpacing: "-0.01em",
-                maxWidth: 860,
               }}
             >
               De l&apos;épuisement à l&apos;équilibre,{" "}
@@ -364,68 +346,31 @@ export default function Home() {
               </em>
             </h1>
 
-            {/* Divider */}
-            <div
-              style={{
-                width: 56,
-                height: 1,
-                background: "linear-gradient(90deg, rgba(200,168,75,0.8), transparent)",
-                margin: "36px 0 28px",
-              }}
-            />
-
             {/* Subline */}
             <p
               data-reveal=""
-              data-reveal-delay="2"
+              data-reveal-delay="1"
               style={{
                 fontFamily: "var(--sans)",
-                fontSize: "clamp(14px, 1.2vw, 16.5px)",
+                fontSize: "clamp(15px, 1.2vw, 17px)",
                 lineHeight: 1.8,
-                maxWidth: 640,
-                margin: "0 0 30px",
-                color: "rgba(255,255,255,0.72)",
+                maxWidth: 540,
+                margin: "28px 0 32px",
+                color: "rgba(255,255,255,0.86)",
               }}
             >
               J&apos;aide les dirigeants et entrepreneurs qui{" "}
-              <em style={{ fontFamily: "var(--serif)", color: "rgba(255,255,255,0.95)" }}>
+              <em style={{ fontFamily: "var(--serif)", fontStyle: "italic", color: "var(--white)" }}>
                 réussissent extérieurement mais s&apos;épuisent intérieurement
               </em>
               {" "}à sortir des schémas de suradaptation et d&apos;auto-sabotage — pour retrouver
               clarté, énergie et équilibre intérieur.
             </p>
 
-            {/* Promesses (bandeau LinkedIn) */}
-            <div
-              data-reveal=""
-              data-reveal-delay="2"
-              className="hero-cta-row"
-              style={{ display: "inline-flex", gap: 8, flexWrap: "wrap", margin: "0 0 40px" }}
-            >
-              {["Dépasser vos blocages", "Transformer votre stress", "Retrouver un mieux-être émotionnel"].map((t) => (
-                <span
-                  key={t}
-                  style={{
-                    fontFamily: "var(--sans)",
-                    fontSize: 11,
-                    letterSpacing: ".04em",
-                    padding: "7px 14px",
-                    border: "1px solid rgba(255,255,255,0.22)",
-                    color: "rgba(255,255,255,0.82)",
-                  }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-
             {/* CTAs */}
-            <div data-reveal="" data-reveal-delay="3">
-              <div
-                className="hero-cta-row"
-                style={{ display: "inline-flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}
-              >
-                <Link href="/contact" className="btn btn-gold btn-lg">
+            <div data-reveal="" data-reveal-delay="2">
+              <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+                <Link href="/contact" className="btn btn-primary btn-lg">
                   Réserver un appel <Arrow />
                 </Link>
                 <Link href="/domoina" className="btn btn-ghost-white">
@@ -439,84 +384,61 @@ export default function Home() {
                   fontFamily: "var(--sans)",
                   fontSize: 10.5,
                   letterSpacing: ".1em",
-                  color: "rgba(255,255,255,0.28)",
+                  color: "rgba(255,255,255,0.55)",
                 }}
               >
                 Appel offert · Sans engagement
               </span>
             </div>
 
+            </div>
+
+            {/* ── Image + étiquettes flottantes ── */}
+            <div data-reveal="" data-reveal-delay="1" style={{ position: "relative" }}>
+              <div className="img-zoom" style={{ position: "relative", border: "1px solid rgba(255,255,255,0.28)", boxShadow: "0 40px 90px -45px rgba(0,0,0,0.5)" }}>
+                <Placeholder
+                  style={{ aspectRatio: "4/5" }}
+                  src="/domoina.jpg"
+                  alt="Domoïna Ramiadana — thérapeute initiatique"
+                  objectPosition="top center"
+                  sizes="(max-width: 900px) 100vw, 48vw"
+                />
+              </div>
+              {[
+                { t: "Dépasser vos blocages", top: 26, left: 14 },
+                { t: "Transformer votre stress", bottom: 104, right: 14 },
+                { t: "Mieux-être émotionnel", bottom: 24, left: 24 },
+              ].map((c, i) => (
+                <span
+                  key={i}
+                  style={{
+                    position: "absolute",
+                    top: c.top,
+                    bottom: c.bottom,
+                    left: c.left,
+                    right: c.right,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    background: "var(--white)",
+                    border: "1px solid var(--line)",
+                    borderRadius: 999,
+                    padding: "8px 14px",
+                    fontFamily: "var(--sans)",
+                    fontSize: 11.5,
+                    fontWeight: 500,
+                    color: "var(--navy-ink)",
+                    boxShadow: "0 16px 36px -16px rgba(20,40,120,0.28)",
+                  }}
+                >
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold)", flexShrink: 0 }} />
+                  {c.t}
+                </span>
+              ))}
+            </div>
+
           </div>
         </div>
-
-        {/* ── Top-right coordinates ── */}
-        <div
-          style={{
-            position: "absolute",
-            top: 100,
-            right: 52,
-            zIndex: 2,
-            textAlign: "right",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: 9.5,
-              letterSpacing: ".22em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.3)",
-              margin: 0,
-              lineHeight: 1.9,
-            }}
-          >
-            Centre HUT · Sarthe
-            <br />
-            <span style={{ color: "var(--gold)", opacity: 0.55 }}>48°10′ N · 0°06′ E</span>
-          </p>
-        </div>
-
-        {/* ── Scroll indicator ── */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "clamp(28px, 5vh, 52px)",
-            right: 52,
-            zIndex: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: 8.5,
-              letterSpacing: ".32em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.28)",
-              writingMode: "vertical-rl",
-              transform: "rotate(180deg)",
-            }}
-          >
-            Découvrir
-          </span>
-          <span
-            style={{
-              display: "block",
-              width: 1,
-              height: 44,
-              background: "linear-gradient(to bottom, rgba(200,168,75,0.7), transparent)",
-            }}
-          />
-        </div>
-
-        {/* ── Bottom gold rule ── */}
-        <hr
-          className="filet-gold-full"
-          style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 3, opacity: 0.5 }}
-        />
       </section>
 
       {/* ══════════════════════════════════════════════════════
@@ -538,10 +460,10 @@ export default function Home() {
           02 · STATS
           ══════════════════════════════════════════════════════ */}
       <section
-        style={{ background: "var(--navy)", color: "var(--white)", padding: "80px 0", position: "relative" }}
-        className="noise"
+        className="sec-blue"
+        style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", padding: "80px 0", position: "relative" }}
       >
-        <span className="section-num">02 — Repères</span>
+        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>02 — Repères</span>
         <div className="container">
           <div className="stats-grid">
             {stats.map((s, i) => (
@@ -557,7 +479,7 @@ export default function Home() {
               >
                 <div
                   className="stat-n"
-                  style={{ fontSize: "clamp(36px,4vw,56px)", marginBottom: 10 }}
+                  style={{ fontSize: "clamp(36px,4vw,56px)", marginBottom: 10, color: "var(--white)" }}
                 >
                   {s.n}
                 </div>
@@ -625,11 +547,11 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           PARTI PRIS — une spiritualité incarnée dans la relation
           ══════════════════════════════════════════════════════ */}
-      <section className="section noise" style={{ background: "var(--navy-ink)", color: "var(--white)", position: "relative" }}>
-        <span className="section-num" style={{ color: "var(--gold)" }}>Notre parti pris</span>
+      <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}>
+        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>Notre parti pris</span>
         <div className="container-narrow" style={{ textAlign: "center" }}>
-          <p className="eyebrow" style={{ justifyContent: "center", color: "var(--gold)", margin: "0 0 36px" }}>
-            <span className="dot" />Une autre manière de vivre le spirituel<span className="dot" />
+          <p className="eyebrow" style={{ justifyContent: "center", color: "rgba(255,255,255,0.85)", margin: "0 0 36px" }}>
+            <span className="dot" style={{ background: "var(--white)" }} />Une autre manière de vivre le spirituel<span className="dot" style={{ background: "var(--white)" }} />
           </p>
           <p
             data-reveal=""
@@ -637,17 +559,17 @@ export default function Home() {
             style={{ fontSize: "clamp(24px,3vw,46px)", lineHeight: 1.22, margin: 0, fontWeight: 300, color: "var(--white)" }}
           >
             Ici, la spiritualité ne se contemple pas&nbsp;:{" "}
-            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elle s&apos;incarne.</em>
+            <em style={{ color: "var(--white)", fontStyle: "italic" }}>elle s&apos;incarne.</em>
             {" "}Elle se vit, et se mesure à votre capacité à habiter vos relations —
             professionnelles, familiales, amoureuses — de manière consciente.
           </p>
-          <hr className="filet" style={{ margin: "44px auto 28px" }} />
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.72)", maxWidth: 640, margin: "0 auto 36px" }}>
+          <hr style={{ width: 48, height: 1, border: 0, background: "rgba(255,255,255,0.5)", margin: "44px auto 28px" }} />
+          <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 640, margin: "0 auto 36px" }}>
             Ni religion, ni développement personnel&nbsp;: un accompagnement spirituel et initiatique
             pensé pour les dirigeants, entrepreneurs et cadres qui ont déjà réussi — et qui sentent
             qu&apos;une autre dimension d&apos;eux-mêmes cherche à s&apos;incarner.
           </p>
-          <Link href="/methodes" className="btn btn-gold">
+          <Link href="/methodes" className="btn" style={{ background: "var(--white)", color: "var(--blue)", borderColor: "var(--white)" }}>
             Découvrir mon approche <Arrow />
           </Link>
         </div>
@@ -996,18 +918,18 @@ export default function Home() {
           08 · OFFRE GOLD
           ══════════════════════════════════════════════════════ */}
       <section
-        className="section"
-        style={{ background: "var(--navy)", color: "var(--white)", position: "relative" }}
+        className="section sec-blue"
+        style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}
       >
-        <span className="section-num">08 — Offre Gold</span>
+        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>08 — Offre Gold</span>
         <div className="container">
           <div className="section-head" style={{ alignItems: "end" }}>
             <div>
-              <Eyebrow gold style={{ marginBottom: 24 }}>L&apos;Offre Gold</Eyebrow>
+              <Eyebrow style={{ color: "rgba(255,255,255,0.85)", marginBottom: 24 }}>L&apos;Offre Gold</Eyebrow>
               <h2 style={{ color: "var(--white)" }}>
                 Trois niveaux
                 <br />
-                <em className="display-italic" style={{ color: "var(--gold)" }}>
+                <em className="display-italic" style={{ color: "var(--white)" }}>
                   d&apos;engagement.
                 </em>
               </h2>
@@ -1340,19 +1262,19 @@ export default function Home() {
           11 · TÉMOIGNAGES — on navy for contrast
           ══════════════════════════════════════════════════════ */}
       <section
-        className="section"
+        className="section sec-blue"
         id="temoignages"
-        style={{ background: "var(--navy)", position: "relative" }}
+        style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}
       >
-        <span className="section-num">11 — Témoignages</span>
+        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>11 — Témoignages</span>
         <div className="container">
           <div className="section-head">
             <div>
-              <Eyebrow gold style={{ marginBottom: 24 }}>Témoignages</Eyebrow>
+              <Eyebrow style={{ color: "rgba(255,255,255,0.85)", marginBottom: 24 }}>Témoignages</Eyebrow>
               <h2 style={{ color: "var(--white)" }}>
                 Ceux que j&apos;accompagne
                 <br />
-                <em className="display-italic" style={{ color: "var(--gold)" }}>
+                <em className="display-italic" style={{ color: "var(--white)" }}>
                   témoignent.
                 </em>
               </h2>
@@ -1466,22 +1388,22 @@ export default function Home() {
           ══════════════════════════════════════════════════════ */}
       <section
         id="masterclass"
-        className="section"
-        style={{ background: "var(--navy-ink)", color: "var(--white)", position: "relative" }}
+        className="section sec-blue"
+        style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}
       >
-        <span className="section-num">12 — Masterclass</span>
+        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>12 — Masterclass</span>
         <div className="container">
           <div className="masterclass-grid">
             {/* Copy */}
             <div data-reveal="">
-              <Eyebrow gold style={{ marginBottom: 24 }}>Masterclass</Eyebrow>
+              <Eyebrow style={{ color: "rgba(255,255,255,0.85)", marginBottom: 24 }}>Masterclass</Eyebrow>
               <h2
                 className="display"
                 style={{ fontSize: "clamp(26px,2.8vw,44px)", color: "var(--white)", margin: "0 0 24px", lineHeight: 1.05 }}
               >
                 Pour celles qui
                 <br />
-                <em className="display-italic" style={{ color: "var(--gold)" }}>
+                <em className="display-italic" style={{ color: "var(--white)" }}>
                   transmettent.
                 </em>
               </h2>

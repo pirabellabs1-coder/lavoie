@@ -150,7 +150,7 @@ export default function FAQ() {
           ))}
 
           {/* Question non trouvée */}
-          <div style={{ background: "var(--navy)", padding: "48px 40px", textAlign: "center" }}>
+          <div className="sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", padding: "48px 40px", textAlign: "center" }}>
             <h3 className="display" style={{ fontSize: 32, color: "var(--white)", margin: "0 0 16px" }}>
               Vous ne trouvez pas votre réponse ?
             </h3>

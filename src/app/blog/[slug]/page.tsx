@@ -92,7 +92,7 @@ export default async function ArticlePage({
     <div className="page-fade">
 
       {/* HERO ARTICLE */}
-      <section className="page-hero" style={{ background: "var(--navy)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+      <section className="page-hero sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <div className="container-narrow">
           <Link
             href="/blog"
@@ -129,7 +129,7 @@ export default async function ArticlePage({
       </section>
 
       {/* COUVERTURE ARTICLE */}
-      <div style={{ background: "var(--navy)", padding: "0 0 16px" }}>
+      <div className="sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", padding: "0 0 16px" }}>
         <div className="container-narrow">
           <div style={{ aspectRatio: "16/9", background: "repeating-linear-gradient(135deg, rgba(200,168,75,0.06) 0 14px, rgba(200,168,75,0.02) 14px 28px)", border: "1px solid rgba(255,255,255,0.08)", display: "grid", placeItems: "center" }}>
             <div style={{ textAlign: "center" }}>

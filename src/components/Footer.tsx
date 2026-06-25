@@ -17,11 +17,11 @@ export default function Footer() {
         <div className="container-narrow">
           <p
             className="eyebrow"
-            style={{ justifyContent: "center", color: "var(--navy-ink)", marginBottom: 20, opacity: 0.75 }}
+            style={{ justifyContent: "center", color: "rgba(255,255,255,0.85)", marginBottom: 20 }}
           >
-            <span className="dot" style={{ background: "var(--navy)" }} />
+            <span className="dot" style={{ background: "var(--white)" }} />
             Premier pas
-            <span className="dot" style={{ background: "var(--navy)" }} />
+            <span className="dot" style={{ background: "var(--white)" }} />
           </p>
           <h3>
             Et si votre prochaine réussite
@@ -34,14 +34,18 @@ export default function Footer() {
               margin: "0 auto 36px",
               fontSize: 15.5,
               lineHeight: 1.72,
-              color: "rgba(14,26,74,0.7)",
+              color: "rgba(255,255,255,0.88)",
             }}
           >
             Une spiritualité qui ne se contemple pas&nbsp;: elle s&apos;incarne dans vos relations —
             professionnelles, familiales, amoureuses. Réservez votre appel découverte offert
             avec Domoïna.
           </p>
-          <Link href="/contact" className="btn btn-primary">
+          <Link
+            href="/contact"
+            className="btn"
+            style={{ background: "var(--white)", color: "var(--blue)", borderColor: "var(--white)" }}
+          >
             Réserver mon appel offert <Arrow />
           </Link>
           <p
@@ -51,7 +55,7 @@ export default function Footer() {
               fontSize: 11,
               letterSpacing: ".12em",
               textTransform: "uppercase",
-              color: "rgba(14,26,74,0.45)",
+              color: "rgba(255,255,255,0.6)",
             }}
           >
             Sans engagement · Réponse sous 24h

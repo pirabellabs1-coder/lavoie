@@ -59,7 +59,7 @@ export default function CentreHut() {
     <div className="page-fade">
 
       {/* HERO */}
-      <section className="page-hero" style={{ background: "var(--navy)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+      <section className="page-hero sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <div className="container">
           <div className="rg-split" style={{ gap: 100, alignItems: "center" }}>
             <div>
@@ -87,7 +87,7 @@ export default function CentreHut() {
       </section>
 
       {/* GALERIE */}
-      <section style={{ background: "var(--navy)", padding: "4px 16px 16px" }}>
+      <section className="sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", padding: "4px 16px 16px" }}>
         <div className="container">
           <div className="rg-split-2-1" style={{ gap: 8 }}>
             <Placeholder
@@ -224,7 +224,7 @@ export default function CentreHut() {
       </section>
 
       {/* CTA */}
-      <section className="section-tight" style={{ background: "var(--navy)", textAlign: "center" }}>
+      <section className="section-tight sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", textAlign: "center" }}>
         <div className="container-narrow">
           <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>Premier pas</Eyebrow>
           <h3 className="display" style={{ fontSize: 36, margin: "0 0 24px", color: "var(--white)", lineHeight: 1.1 }}>

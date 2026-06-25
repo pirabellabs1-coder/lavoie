@@ -2,26 +2,36 @@
 
 /* ═══════════════════════════════════════════════════════
    DESIGN SYSTEM — La Voie 2 la Conscience
-   Palette: #0f1d6e navy · #ffffff blanc · #c8a84b or · #f5f2ea paper
+   2 couleurs : BLEU (fonds) + JAUNE (accent), texte blanc · footer noir
+   --blue = fonds bleus · --gold = accent jaune vif · --navy = noir
    ═══════════════════════════════════════════════════════ */
 
 :root {
-  --navy:     #0f1d6e;
-  --navy-ink: #07103c;
-  --gold:     #c8a84b;
-  --gold-light: #f5c542;
+  /* Noir (footer, texte sur fond clair) */
+  --navy:     #14181f;
+  --navy-ink: #0b0e13;
+  /* Fonds bleus (marine de marque) */
+  --blue:     #0f1d6e;
+  --blue-deep: #0a1452;
+  /* ACCENT : jaune vif (boutons, mots en italique, touches) */
+  --gold:     #f5c422;
+  --gold-light: #ffda5e;
   --white:    #ffffff;
-  --paper:    #f5f2ea;
-  --paper-alt: #ede9df;
-  --line:     rgba(15, 29, 110, 0.1);
-  --line-dark: rgba(15, 29, 110, 0.18);
-  --mute:     rgba(7, 16, 60, 0.5);
+  --paper:    #eef1fb;
+  --paper-alt: #e3e9f9;
+  --line:     rgba(20, 40, 120, 0.12);
+  --line-dark: rgba(20, 40, 120, 0.20);
+  --mute:     rgba(14, 23, 46, 0.55);
   --serif:    var(--font-cormorant, "Cormorant Garamond"), "Georgia", serif;
   --sans:     var(--font-inter, "Inter"), system-ui, -apple-system, sans-serif;
   --mono:     ui-monospace, monospace;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --duration: 0.45s;
+  /* Rayons d'arrondi (refonte claire) */
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 18px;
 }
 
 /* ——— Reset ——— */
@@ -90,7 +100,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .eyebrow .dot {
   display: inline-block;
   width: 3px; height: 3px;
-  background: var(--gold);
+  background: var(--blue);
   border-radius: 50%;
   flex-shrink: 0;
   margin: 0 12px 1px;
@@ -101,7 +111,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .filet {
   height: 1px;
-  background: linear-gradient(90deg, var(--gold), rgba(200,168,75,0.25));
+  background: linear-gradient(90deg, var(--blue), rgba(15,29,110,0.2));
   border: 0;
   width: 48px;
   margin: 0;
@@ -148,6 +158,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   text-decoration: none;
   font-family: var(--sans);
   overflow: hidden;
+  border-radius: var(--r-sm);
 }
 /* Shimmer overlay */
 .btn::before {
@@ -169,28 +180,29 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn:hover::before { left: 160%; }
 
 .btn-primary {
-  background: var(--navy);
-  color: var(--white);
-  border-color: var(--navy);
+  background: var(--gold);
+  color: var(--navy-ink);
+  border-color: var(--gold);
+  font-weight: 600;
 }
 .btn-primary:hover {
-  background: var(--navy-ink);
-  border-color: var(--navy-ink);
+  background: var(--gold-light);
+  border-color: var(--gold-light);
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px -10px rgba(7,16,60,0.45);
+  box-shadow: 0 14px 34px -10px rgba(245,196,34,0.5);
 }
 
 .btn-ghost {
   background: transparent;
   color: var(--navy);
-  border-color: rgba(15,29,110,0.35);
+  border-color: rgba(20,40,120,0.3);
 }
 .btn-ghost:hover {
   background: var(--navy);
   color: var(--white);
   border-color: var(--navy);
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px -10px rgba(7,16,60,0.3);
+  box-shadow: 0 14px 34px -10px rgba(20,24,31,0.3);
 }
 
 .btn-ghost-white {
@@ -211,10 +223,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-weight: 600;
 }
 .btn-gold:hover {
-  background: #b8962f;
-  border-color: #b8962f;
+  background: var(--gold-light);
+  border-color: var(--gold-light);
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px -10px rgba(200,168,75,0.5);
+  box-shadow: 0 14px 34px -10px rgba(245,196,34,0.5);
 }
 
 .btn-sm { padding: 11px 20px; font-size: 11px; }
@@ -469,7 +481,7 @@ section { position: relative; }
 footer { margin-top: 0; }
 
 .footer-cta {
-  background: var(--gold);
+  background: linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%);
   padding: 96px 0;
   text-align: center;
   position: relative;
@@ -487,7 +499,7 @@ footer { margin-top: 0; }
   font-size: clamp(26px, 2.8vw, 44px);
   font-weight: 300;
   letter-spacing: -0.01em;
-  color: var(--navy-ink);
+  color: var(--white);
   margin: 0 0 28px;
   line-height: 1.02;
 }
@@ -507,7 +519,7 @@ footer { margin-top: 0; }
   font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: rgba(255,255,255,0.95);
   margin: 0 0 20px;
 }
 .footer-main a {
@@ -539,8 +551,8 @@ footer { margin-top: 0; }
   color: rgba(255,255,255,0.6);
 }
 .social a:hover {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--white);
+  color: var(--white);
 }
 
 .footer-bottom {
@@ -557,7 +569,7 @@ footer { margin-top: 0; }
   flex-wrap: wrap;
 }
 .footer-bottom a { color: rgba(255,255,255,0.45); transition: color 0.2s; }
-.footer-bottom a:hover { color: var(--gold); }
+.footer-bottom a:hover { color: var(--white); }
 
 /* ─── PAGE SECTIONS ───────────────────────────────────── */
 
@@ -642,7 +654,7 @@ footer { margin-top: 0; }
   font-family: var(--serif);
   font-style: italic;
   font-size: 13px;
-  color: var(--gold);
+  color: var(--blue);
   letter-spacing: 0.04em;
 }
 
@@ -761,7 +773,7 @@ footer { margin-top: 0; }
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--gold);
+  color: var(--blue);
   font-feature-settings: "tnum" 1, "lnum" 1;
 }
 
@@ -795,7 +807,7 @@ footer { margin-top: 0; }
 .ph-inner {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--navy-ink) 0%, var(--navy) 60%, #1e3bb8 100%);
+  background: linear-gradient(135deg, #142579 0%, #0f1d6e 55%, #2347e6 100%);
 }
 .ph-inner::after {
   content: '';
@@ -1008,7 +1020,7 @@ select option { background: var(--white); }
   font-family: var(--sans);
   font-size: 10.5px;
   letter-spacing: 0.22em;
-  color: var(--gold);
+  color: var(--blue);
   z-index: 2;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -1473,3 +1485,42 @@ select option { background: var(--white); }
   }
   .hero-home-content .hero-cta-row { justify-content: center; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   REFONTE CLAIRE — arrondis (coins doux comme la référence)
+   ═══════════════════════════════════════════════════════ */
+.card, .card-hover, .card-on-paper, .testi, .testi-dark,
+.glass-card, .glass-card-dark, .img-card, .video-frame { border-radius: 14px !important; }
+
+/* Cartes claires : bordure plus épaisse + ombre douce (arrondi modéré).
+   !important : beaucoup de cartes ont une bordure inline 1px à surcharger. */
+.card, .card-hover, .card-on-paper, .testi {
+  border: 2px solid var(--line-dark) !important;
+  box-shadow: 0 12px 32px -16px rgba(20, 40, 120, 0.16) !important;
+}
+.card:hover, .card-hover:hover, .testi:hover {
+  border-color: rgba(35, 71, 230, 0.45) !important;
+  box-shadow: 0 24px 52px -22px rgba(20, 40, 120, 0.26) !important;
+}
+
+.pill { border-radius: 999px; }
+.field input, .field textarea, .field select { border-radius: 10px; }
+.nav-dropdown { border-radius: 14px; }
+.img-zoom, .ph { border-radius: 14px; }
+.marquee { border-radius: 0; } /* bandeau pleine largeur : pas d'arrondi */
+
+/* ═══════════════════════════════════════════════════════
+   SECTIONS MARINE (.sec-blue) — texte blanc, accents JAUNES
+   (les accents sont bleus par défaut, pour les fonds clairs)
+   ═══════════════════════════════════════════════════════ */
+.sec-blue { color: var(--white); }
+.sec-blue h2, .sec-blue h3, .sec-blue h4,
+.sec-blue .display, .sec-blue .mega { color: var(--white); }
+.sec-blue .display-italic { color: var(--gold); }
+.sec-blue .section-num { color: var(--gold); opacity: 0.8; }
+.sec-blue .card-num, .sec-blue .stat-n { color: var(--gold); }
+.sec-blue .eyebrow { color: rgba(255,255,255,0.85); }
+.sec-blue .eyebrow .dot { background: var(--gold); }
+.sec-blue .filet { background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent); }
+.sec-blue .link-underline { color: var(--white); }
+.sec-blue .pill { border-color: rgba(255,255,255,0.4); color: var(--white); }

@@ -96,7 +96,7 @@ export default function MasterclassChallenge() {
     <div className="page-fade">
 
       {/* HERO */}
-      <section className="page-hero" style={{ background: "var(--navy)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+      <section className="page-hero sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <Eyebrow style={{ marginBottom: 32, color: "var(--gold)" }}>
             Challenge offert · 100% en ligne · 3 jours
@@ -157,7 +157,7 @@ export default function MasterclassChallenge() {
       </section>
 
       {/* PROGRAMME */}
-      <section className="section" style={{ background: "var(--navy)", color: "var(--white)" }}>
+      <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)" }}>
         <div className="container">
           <div className="section-head">
             <div>
@@ -269,7 +269,7 @@ export default function MasterclassChallenge() {
       </section>
 
       {/* TÉMOIGNAGES */}
-      <section className="section" style={{ background: "var(--navy)" }}>
+      <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)" }}>
         <div className="container">
           <div className="section-head">
             <div>

@@ -70,7 +70,7 @@ const piliers = [
     num: "IV",
     titre: "La V.I.E.",
     sub: "Voie Initiatique de l'Eau",
-    body: "L'eau comme espace thérapeutique, symbolique et initiatique. Elle accompagne les passages de vie, les libérations émotionnelles profondes et les processus de renaissance intérieure.",
+    body: "La renaissance, le passage, l'incarnation : une traversée par l'élément Eau — immersions, rituels intérieurs et voyages initiatiques (notamment à Madagascar).",
   },
 ];
 
@@ -170,7 +170,7 @@ export default function ApprochePage() {
       <hr className="filet-gold-full" />
 
       {/* NIVEAU 2 — LES 4 PILIERS */}
-      <section id="piliers" className="section" style={{ background: "var(--navy)", color: "var(--white)" }}>
+      <section id="piliers" className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)" }}>
         <div className="container">
           <div className="section-head">
             <div>
@@ -186,7 +186,7 @@ export default function ApprochePage() {
 
           <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
             {piliers.map((p, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "var(--navy)" }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "rgba(255,255,255,0.05)" }}>
                 <span className="card-num" style={{ fontSize: 16 }}>{p.num}</span>
                 <h3 className="display" style={{ fontSize: 30, color: "var(--white)", margin: "18px 0 6px", lineHeight: 1.15 }}>{p.titre}</h3>
                 <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15, color: "var(--gold)", margin: "0 0 20px" }}>{p.sub}</p>
@@ -206,6 +206,12 @@ export default function ApprochePage() {
               <p className="card-num" style={{ fontSize: 16, marginBottom: 16 }}>Pilier I.</p>
               <h2 style={{ fontSize: "clamp(48px, 7vw, 88px)" }}>A.I.M.E.</h2>
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 22, color: "var(--navy)", margin: "12px 0 0", fontWeight: 300 }}>
+                Pour <strong style={{ fontWeight: 600, fontStyle: "normal", color: "var(--blue)" }}>A</strong>ccompagnement{" "}
+                <strong style={{ fontWeight: 600, fontStyle: "normal", color: "var(--blue)" }}>I</strong>nitiatique{" "}
+                <strong style={{ fontWeight: 600, fontStyle: "normal", color: "var(--blue)" }}>M</strong>ental et{" "}
+                <strong style={{ fontWeight: 600, fontStyle: "normal", color: "var(--blue)" }}>É</strong>motionnel.
+              </p>
+              <p style={{ fontFamily: "var(--sans)", fontSize: 12.5, letterSpacing: ".06em", color: "var(--mute)", margin: "10px 0 0" }}>
                 Le parcours signature, en quatre phases.
               </p>
             </div>
@@ -275,6 +281,67 @@ export default function ApprochePage() {
         </div>
       </section>
 
+      {/* DÉTAIL — LA V.I.E. */}
+      <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="card-num" style={{ fontSize: 16, marginBottom: 16 }}>Pilier IV.</p>
+              <h2 style={{ color: "var(--white)" }}>
+                La <em className="display-italic">V.I.E.</em>
+              </h2>
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--gold)", margin: "12px 0 0", fontWeight: 300 }}>
+                Voie Initiatique de l&apos;Eau.
+              </p>
+            </div>
+            <div>
+              <hr style={{ width: 48, height: 1, border: 0, background: "rgba(255,255,255,0.5)", marginBottom: 24 }} />
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: "clamp(20px, 2.4vw, 28px)", lineHeight: 1.4, color: "var(--white)", margin: 0 }}>
+                La renaissance. Le passage. L&apos;incarnation.
+              </p>
+              <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", margin: "18px 0 0" }}>
+                Ce pilier final n&apos;est pas une pratique… c&apos;est une <em style={{ fontStyle: "italic", color: "var(--gold)" }}>traversée</em>.
+              </p>
+            </div>
+          </div>
+
+          <div className="rg-split" style={{ gap: "clamp(40px, 6vw, 80px)", alignItems: "center", marginTop: 16 }}>
+            <div>
+              <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "rgba(255,255,255,0.85)", margin: "0 0 28px" }}>
+                À travers des immersions, des rituels intérieurs, des voyages initiatiques et des
+                expériences en lien avec l&apos;Eau — notamment à Madagascar —, vous revenez à&nbsp;:
+              </p>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {[
+                  "votre mémoire ancestrale",
+                  "votre juste place",
+                  "votre territoire intérieur",
+                  "votre lien au Vivant",
+                  "votre autorité sacrée et symbolique",
+                ].map((t, i) => (
+                  <li key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "13px 0", borderBottom: "1px solid rgba(255,255,255,0.12)", fontSize: 16, lineHeight: 1.55, color: "var(--white)" }}>
+                    <span style={{ color: "var(--gold)", flexShrink: 0, fontSize: 12, marginTop: 5 }}>✦</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div style={{ textAlign: "center" }}>
+              <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", margin: "0 0 22px" }}>
+                C&apos;est là que s&apos;intègre définitivement
+              </p>
+              <p className="display" style={{ fontSize: "clamp(28px, 3.4vw, 46px)", lineHeight: 1.25, color: "var(--white)", margin: 0, fontWeight: 300 }}>
+                Qui vous étiez{" "}
+                <span style={{ color: "var(--gold)" }}>➜</span>
+                <br />
+                <em className="display-italic" style={{ color: "var(--gold)" }}>qui vous devenez.</em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* AU CŒUR DE V2C — SYNTHÈSE */}
       <section className="section" style={{ background: "var(--white)" }}>
         <div className="container">
@@ -305,8 +372,8 @@ export default function ApprochePage() {
               </ul>
             </div>
 
-            <div className="card" style={{ background: "var(--navy)", border: "1px solid var(--navy)" }}>
-              <p className="card-num" style={{ fontSize: 14, marginBottom: 14 }}>Les 4 piliers</p>
+            <div className="card" style={{ background: "#0f1d6e", border: "1px solid rgba(255,255,255,0.14)" }}>
+              <p className="card-num" style={{ fontSize: 14, marginBottom: 14, color: "var(--gold)" }}>Les 4 piliers</p>
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--white)", margin: "0 0 22px", lineHeight: 1.4 }}>
                 «&nbsp;Comment cette transformation est-elle vécue&nbsp;?&nbsp;»
               </p>
@@ -329,7 +396,7 @@ export default function ApprochePage() {
       </section>
 
       {/* NIVEAU 3 — LA ZONE D'E.A.U. */}
-      <section id="eau" className="section noise" style={{ background: "var(--navy-ink)", color: "var(--white)", position: "relative" }}>
+      <section id="eau" className="section noise sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}>
         <div className="container">
           <div className="rg-split" style={{ gap: 80, alignItems: "center" }}>
             <div>

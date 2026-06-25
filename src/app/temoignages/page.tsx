@@ -101,7 +101,7 @@ export default function Temoignages() {
       />
 
       {/* HERO */}
-      <section className="page-hero" style={{ background: "var(--navy)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+      <section className="page-hero sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <Eyebrow style={{ marginBottom: 32, color: "var(--gold)" }}>Ils l&apos;ont vécu</Eyebrow>
           <h1 className="display" style={{ fontSize: "clamp(28px, 3.5vw, 56px)", margin: "0 0 28px", lineHeight: 1.05, color: "var(--white)" }}>
@@ -147,13 +147,13 @@ export default function Temoignages() {
       </section>
 
       {/* GRILLE */}
-      <section className="section" style={{ background: "var(--navy)" }}>
+      <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)" }}>
         <div className="container">
           <div className="rg-3" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
             {temoignages.map((t, i) => (
               <div key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{
                 padding: "40px 32px",
-                background: "var(--navy)",
+                background: "rgba(255,255,255,0.05)",
               }}>
                 <div style={{ display: "flex", gap: 3, marginBottom: 20 }}>
                   {Array.from({ length: 5 }).map((_, j) => (

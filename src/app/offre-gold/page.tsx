@@ -142,11 +142,11 @@ export default function OffreGoldPage() {
           <div className="rg-3" style={{ gap: 0 }}>
             {offres.map((o, i) => (
               <div key={i} className={o.featured ? "offre-pop" : undefined} style={{
-                background: o.featured ? "var(--navy)" : "var(--white)",
+                background: o.featured ? "#0f1d6e" : "var(--white)",
                 color: o.featured ? "var(--white)" : "var(--navy-ink)",
                 padding: "56px 40px 48px",
-                border: `1px solid ${o.featured ? "var(--navy)" : "var(--line)"}`,
-                borderRight: i < 2 ? 0 : `1px solid ${o.featured ? "var(--navy)" : "var(--line)"}`,
+                border: `1px solid ${o.featured ? "#0f1d6e" : "var(--line)"}`,
+                borderRight: i < 2 ? 0 : `1px solid ${o.featured ? "#0f1d6e" : "var(--line)"}`,
                 position: "relative",
                 transform: o.featured ? "translateY(-20px)" : "none",
                 boxShadow: o.featured ? "0 40px 80px -30px rgba(14,26,74,0.45)" : "none",
@@ -266,7 +266,7 @@ export default function OffreGoldPage() {
       </section>
 
       {/* CTA */}
-      <section className="section-tight" style={{ background: "var(--navy)", color: "var(--white)", textAlign: "center" }}>
+      <section className="section-tight sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", textAlign: "center" }}>
         <div className="container-narrow">
           <Eyebrow style={{ marginBottom: 24, color: "var(--gold)" }}>L&apos;Offre Gold est faite pour vous</Eyebrow>
           <h3 className="display" style={{ fontSize: 48, margin: "0 0 24px", color: "var(--white)", lineHeight: 1.08 }}>
