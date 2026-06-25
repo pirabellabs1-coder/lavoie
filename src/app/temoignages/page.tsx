@@ -153,7 +153,7 @@ export default function Temoignages() {
             {temoignages.map((t, i) => (
               <div key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{
                 padding: "40px 32px",
-                background: "rgba(255,255,255,0.05)",
+                background: "rgba(255,255,255,0.03)",
               }}>
                 <div style={{ display: "flex", gap: 3, marginBottom: 20 }}>
                   {Array.from({ length: 5 }).map((_, j) => (

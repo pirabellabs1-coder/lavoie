@@ -294,7 +294,7 @@ export default function Home() {
           }}
         />
 
-        <div className="container" style={{ position: "relative", zIndex: 1, padding: "clamp(118px, 16vh, 184px) 0 clamp(64px, 9vh, 112px)" }}>
+        <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: "clamp(118px, 16vh, 184px)", paddingBottom: "clamp(64px, 9vh, 112px)" }}>
           <div className="rg-split" style={{ gap: "clamp(40px, 6vw, 84px)", alignItems: "center" }}>
 
             {/* ── Texte ── */}
@@ -472,14 +472,14 @@ export default function Home() {
                 data-reveal=""
                 data-reveal-delay={String(i)}
                 style={{
-                  padding: "24px 32px",
+                  padding: "20px 16px",
                   textAlign: "center",
                   borderLeft: i === 0 ? 0 : "1px solid rgba(255,255,255,0.12)",
                 }}
               >
                 <div
                   className="stat-n"
-                  style={{ fontSize: "clamp(36px,4vw,56px)", marginBottom: 10, color: "var(--white)" }}
+                  style={{ fontSize: "clamp(26px,3.2vw,44px)", marginBottom: 10, color: "var(--white)" }}
                 >
                   {s.n}
                 </div>
@@ -1341,7 +1341,7 @@ export default function Home() {
               gap: 28,
               flexWrap: "wrap",
               padding: "24px 36px",
-              background: "rgba(255,255,255,0.05)",
+              background: "rgba(255,255,255,0.03)",
               border: "1px solid rgba(255,255,255,0.1)",
               maxWidth: 660,
               margin: "52px auto 0",

@@ -174,7 +174,7 @@ export default function MasterclassChallenge() {
 
           <div style={{ display: "grid", gap: 16 }}>
             {jours.map((j, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} className="rg-split-fixed" style={{ gap: 40, padding: "40px 44px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", alignItems: "start" }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i)} className="rg-split-fixed" style={{ gap: 40, padding: "40px 44px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", alignItems: "start" }}>
                 <div>
                   <p className="display" style={{ fontSize: 64, color: "rgba(200,168,75,0.45)", margin: 0, lineHeight: 1 }}>{j.jour}</p>
                   <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)", margin: "12px 0 0" }}>{j.duree}</p>
