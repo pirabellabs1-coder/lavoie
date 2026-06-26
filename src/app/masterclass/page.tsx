@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Challenge offert — De la Blessure Originelle à l'Équilibre de Vie",
@@ -331,6 +332,29 @@ export default function MasterclassChallenge() {
           </p>
         </div>
       </section>
+
+      {/* CALENDRIER — DATES (Calendly) */}
+      <section className="section" style={{ background: "var(--white)" }}>
+        <div className="container-narrow" style={{ textAlign: "center" }}>
+          <Eyebrow style={{ marginBottom: 24 }}>Prochaines dates</Eyebrow>
+          <h2 className="display" style={{ fontSize: "clamp(28px, 3vw, 44px)", margin: "0 0 16px", lineHeight: 1.06 }}>
+            Choisissez votre <em className="display-italic" style={{ color: "var(--blue)" }}>créneau.</em>
+          </h2>
+          <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 540, margin: "0 auto 40px" }}>
+            Voici les dates où je propose le challenge. Réservez la session qui vous convient.
+          </p>
+          <div
+            className="calendly-inline-widget"
+            data-url="https://calendly.com/lavoie2laconscience/nouvelle-reunion"
+            style={{ minWidth: 320, height: 700 }}
+          />
+        </div>
+      </section>
+
+      <Script
+        src="https://assets.calendly.com/assets/external/widget.js"
+        strategy="lazyOnload"
+      />
 
     </div>
   );
