@@ -1528,11 +1528,5 @@ select option { background: var(--white); }
 .sec-blue .link-underline { color: var(--white); }
 .sec-blue .pill { border-color: rgba(255,255,255,0.4); color: var(--white); }
 
-/* Hero : pleine largeur sur desktop (padding horizontal 0), padding seulement sur mobile. */
-.hero-container { padding-left: 0 !important; padding-right: 0 !important; }
-@media (max-width: 768px) {
-  .hero-container { padding-left: 20px !important; padding-right: 20px !important; }
-}
-@media (max-width: 480px) {
-  .hero-container { padding-left: 16px !important; padding-right: 16px !important; }
-}
+/* Hero : gutter horizontal responsif — jamais nul, pour ne pas coller aux bords. */
+.hero-container { padding-left: clamp(24px, 5vw, 56px) !important; padding-right: clamp(24px, 5vw, 56px) !important; }
