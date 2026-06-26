@@ -294,7 +294,7 @@ export default function Home() {
           }}
         />
 
-        <div className="container" style={{ position: "relative", zIndex: 1, paddingTop: "clamp(118px, 16vh, 184px)", paddingBottom: "clamp(64px, 9vh, 112px)" }}>
+        <div className="container hero-container" style={{ position: "relative", zIndex: 1, paddingTop: "clamp(118px, 16vh, 184px)", paddingBottom: "clamp(64px, 9vh, 112px)" }}>
           <div className="rg-split" style={{ gap: "clamp(40px, 6vw, 84px)", alignItems: "center" }}>
 
             {/* ── Texte ── */}

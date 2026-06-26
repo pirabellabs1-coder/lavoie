@@ -184,7 +184,7 @@ export default function ApprochePage() {
             </p>
           </div>
 
-          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
+          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
             {piliers.map((p, i) => (
               <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "rgba(255,255,255,0.03)" }}>
                 <span className="card-num" style={{ fontSize: 16 }}>{p.num}</span>
@@ -264,7 +264,7 @@ export default function ApprochePage() {
 
           <div className="rg-4" style={{ gap: 0 }}>
             {saisons.map((s, i) => (
-              <div key={i} style={{ padding: "56px 32px", background: s.isGold ? "var(--gold)" : "#0f1d6e", color: s.isGold ? "var(--navy-ink)" : "var(--white)", position: "relative", minHeight: 360, display: "flex", flexDirection: "column" }}>
+              <div key={i} style={{ padding: "56px 32px", background: s.isGold ? "var(--gold)" : "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: s.isGold ? "var(--navy-ink)" : "var(--white)", position: "relative", minHeight: 360, display: "flex", flexDirection: "column" }}>
                 <p className="card-num" style={{ fontSize: 13, marginBottom: 12, color: s.isGold ? "var(--navy)" : "var(--gold)" }}>
                   {String(i + 1).padStart(2, "0")} / 04
                 </p>

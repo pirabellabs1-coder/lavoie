@@ -196,7 +196,7 @@ export default function DomoinaPage() {
             </p>
           </div>
 
-          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.15)" }}>
+          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
             {piliers.map((v, i) => (
               <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "rgba(255,255,255,0.03)" }}>
                 <span className="card-num" style={{ fontSize: 16 }}>{v.num}</span>
