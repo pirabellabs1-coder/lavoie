@@ -294,7 +294,7 @@ export default function Home() {
           }}
         />
 
-        <div className="container hero-container" style={{ position: "relative", zIndex: 1, paddingTop: "clamp(118px, 16vh, 184px)", paddingBottom: "clamp(64px, 9vh, 112px)" }}>
+        <div className="container hero-container" style={{ position: "relative", zIndex: 1, paddingTop: "clamp(88px, 11vh, 128px)", paddingBottom: "clamp(40px, 6vh, 76px)" }}>
           <div className="rg-split" style={{ gap: "clamp(40px, 6vw, 84px)", alignItems: "center" }}>
 
             {/* ── Texte ── */}
@@ -549,7 +549,7 @@ export default function Home() {
           ══════════════════════════════════════════════════════ */}
       <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}>
         <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>Notre parti pris</span>
-        <div className="container-narrow" style={{ textAlign: "center" }}>
+        <div className="container" style={{ textAlign: "center" }}>
           <p className="eyebrow" style={{ justifyContent: "center", color: "rgba(255,255,255,0.85)", margin: "0 0 36px" }}>
             <span className="dot" style={{ background: "var(--white)" }} />Une autre manière de vivre le spirituel<span className="dot" style={{ background: "var(--white)" }} />
           </p>
