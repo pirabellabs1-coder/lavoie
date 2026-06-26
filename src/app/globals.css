@@ -1528,5 +1528,6 @@ select option { background: var(--white); }
 .sec-blue .link-underline { color: var(--white); }
 .sec-blue .pill { border-color: rgba(255,255,255,0.4); color: var(--white); }
 
-/* Hero : gutter horizontal responsif — jamais nul, pour ne pas coller aux bords. */
-.hero-container { padding-left: clamp(24px, 5vw, 56px) !important; padding-right: clamp(24px, 5vw, 56px) !important; }
+/* Hero : plein cadre (pas de max-width) + gutter responsif minimal — réduit le vide
+   sur les côtés en desktop sans coller aux bords sur mobile (min 24px). */
+.hero-container { max-width: none !important; padding-left: clamp(24px, 3vw, 48px) !important; padding-right: clamp(24px, 3vw, 48px) !important; }
