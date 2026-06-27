@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Script from "next/script";
 
 export const metadata: Metadata = {
@@ -113,9 +112,9 @@ export default function MasterclassChallenge() {
             Ce challenge 100% en ligne est pour vous si vous sentez que votre vie personnelle paie
             le prix de votre réussite extérieure.
           </p>
-          <Link href="/contact" className="btn btn-gold btn-lg">
+          <a href="#dates" className="btn btn-gold btn-lg">
             Je m&apos;inscris gratuitement <Arrow />
-          </Link>
+          </a>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 56, flexWrap: "wrap", marginTop: 56 }}>
             {stats.map((s, i) => (
@@ -215,9 +214,9 @@ export default function MasterclassChallenge() {
             ))}
           </ul>
           <div style={{ textAlign: "center" }}>
-            <Link href="/contact" className="btn btn-primary btn-lg">
+            <a href="#dates" className="btn btn-primary btn-lg">
               Je veux ces résultats <Arrow />
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -324,9 +323,9 @@ export default function MasterclassChallenge() {
             ))}
           </div>
 
-          <Link href="/contact" className="btn btn-gold btn-lg">
+          <a href="#dates" className="btn btn-gold btn-lg">
             Je rejoins le challenge gratuit <Arrow />
-          </Link>
+          </a>
           <p className="small" style={{ margin: "16px 0 0", color: "var(--mute)", fontSize: 11.5, letterSpacing: ".08em" }}>
             Challenge 100% offert · Places limitées
           </p>
@@ -334,7 +333,7 @@ export default function MasterclassChallenge() {
       </section>
 
       {/* CALENDRIER — DATES (Calendly) */}
-      <section className="section" style={{ background: "var(--white)" }}>
+      <section id="dates" className="section" style={{ background: "var(--white)", scrollMarginTop: 90 }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <Eyebrow style={{ marginBottom: 24 }}>Prochaines dates</Eyebrow>
           <h2 className="display" style={{ fontSize: "clamp(28px, 3vw, 44px)", margin: "0 0 16px", lineHeight: 1.06 }}>
