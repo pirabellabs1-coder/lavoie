@@ -3,6 +3,7 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import Marquee from "@/components/Marquee";
 import NewsletterForm from "@/components/NewsletterForm";
+import { getRecentArticles } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
@@ -236,32 +237,16 @@ const temoignages = [
   },
 ];
 
-const journal = [
-  {
-    cat: "Méthode V.I.E.",
-    title: "L'eau comme élément de guérison : ce que la science dit.",
-    date: "Avril 2026",
-    read: "12 min",
-    slug: "eau-element-guerison",
-    img: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    cat: "Leadership",
-    title: "Diriger avec authenticité : la nouvelle compétence du XXIe siècle.",
-    date: "Avril 2026",
-    read: "10 min",
-    slug: "diriger-authenticite",
-    img: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    cat: "Cycle des Saisons",
-    title: "Retrouver ses rythmes naturels dans un monde qui s'accélère.",
-    date: "Avril 2026",
-    read: "7 min",
-    slug: "cycle-saisons-rythmes-naturels",
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&auto=format&fit=crop",
-  },
-];
+// Section « Journal » de l'accueil — alimentée par la vraie source d'articles
+// (vide tant que l'automatisation n'a pas publié d'articles → section masquée).
+const journal = getRecentArticles(3).map((a) => ({
+  cat: a.categorie,
+  title: a.titre,
+  date: a.date,
+  read: a.lecture,
+  slug: a.slug,
+  img: a.image,
+}));
 
 const presse = ["MADAME FIGARO", "LES ÉCHOS", "PSYCHOLOGIES", "L'OBS", "FORBES FR"];
 
@@ -1476,6 +1461,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           13 · JOURNAL
           ══════════════════════════════════════════════════════ */}
+      {journal.length > 0 && (
       <section id="journal" className="section" style={{ background: "var(--paper)", position: "relative" }}>
         <span className="section-num">13 — Journal</span>
         <div className="container">
@@ -1542,6 +1528,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ══════════════════════════════════════════════════════
           14 · PRESSE

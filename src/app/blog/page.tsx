@@ -47,6 +47,23 @@ export default function Blog() {
         </div>
       </section>
 
+      {/* ÉTAT VIDE — aucun article (le blog se remplit via automatisation) */}
+      {articles.length === 0 && (
+        <section className="section" style={{ background: "var(--white)", textAlign: "center" }}>
+          <div className="container-narrow">
+            <span style={{ fontSize: 56, color: "var(--gold)", display: "block", lineHeight: 1, marginBottom: 24 }}>✦</span>
+            <h2 className="display" style={{ fontSize: "clamp(28px, 3.2vw, 46px)", margin: "0 0 18px", lineHeight: 1.06 }}>
+              Les premiers articles<br /><em className="display-italic" style={{ color: "var(--blue)" }}>arrivent bientôt.</em>
+            </h2>
+            <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 480, margin: "0 auto" }}>
+              Le blog se prépare. Abonnez-vous ci-dessous pour être prévenu·e dès la première publication.
+            </p>
+          </div>
+        </section>
+      )}
+
+      {articles.length > 0 && (
+        <>
       {/* FILTRES */}
       <div style={{ position: "sticky", top: 0, zIndex: 30, background: "#0f1d6e", borderBottom: "1px solid rgba(255,255,255,0.15)", padding: "14px 0" }}>
         <div className="container">
@@ -136,6 +153,8 @@ export default function Blog() {
           </div>
         </div>
       </section>
+        </>
+      )}
 
       {/* NEWSLETTER */}
       <section className="section" style={{ background: "var(--paper)", textAlign: "center" }}>
