@@ -165,6 +165,22 @@ export default function Footer() {
               <Link href="/cadre-deontologique">Déontologie</Link>
             </span>
           </div>
+
+          {/* Signature agence */}
+          <div style={{ textAlign: "center", marginTop: 24, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+            <span style={{ fontFamily: "var(--sans)", fontSize: 11.5, letterSpacing: ".04em", color: "rgba(255,255,255,0.5)" }}>
+              Réalisé par{" "}
+              <a
+                href="https://pirabellabs.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--gold)", fontWeight: 500 }}
+              >
+                Pirabel Labs
+              </a>
+              {" "}— agence web, marketing &amp; SEO
+            </span>
+          </div>
         </div>
       </div>
 
