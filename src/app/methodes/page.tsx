@@ -281,6 +281,61 @@ export default function ApprochePage() {
         </div>
       </section>
 
+      {/* DÉTAIL — KI-ZOLA */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="card-num" style={{ fontSize: 16, marginBottom: 16 }}>Pilier III.</p>
+              <h2>
+                La méthode <em className="display-italic">Ki-Zola.</em>
+              </h2>
+              <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--blue)", margin: "12px 0 0", fontWeight: 300 }}>
+                Le corps se souvient — l&apos;eau libère.
+              </p>
+            </div>
+            <div>
+              <hr className="filet" style={{ marginBottom: 24 }} />
+              <p style={{ fontSize: 17, lineHeight: 1.8, color: "var(--navy-ink)", margin: 0 }}>
+                Dans l&apos;eau chaude, le mental lâche prise, le système nerveux se régule, et ce
+                qui était figé se transforme.
+              </p>
+            </div>
+          </div>
+
+          <div className="rg-split" style={{ gap: "clamp(40px, 6vw, 80px)", alignItems: "center", marginTop: 16 }}>
+            <div>
+              <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--navy-ink)", margin: "0 0 28px" }}>
+                Cette immersion vous permet&nbsp;:
+              </p>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {[
+                  "un accès direct aux mémoires logées dans le corps",
+                  "une libération émotionnelle profonde mais sécurisée",
+                  "la régulation du système nerveux",
+                  "la réconciliation avec votre vécu intime",
+                ].map((t, i) => (
+                  <li key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "13px 0", borderBottom: "1px solid var(--line)", fontSize: 16, lineHeight: 1.55, color: "var(--navy-ink)" }}>
+                    <span style={{ color: "var(--blue)", flexShrink: 0, fontSize: 12, marginTop: 5 }}>✦</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div style={{ textAlign: "center" }}>
+              <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: ".2em", textTransform: "uppercase", color: "var(--mute)", margin: "0 0 22px" }}>
+                La porte d&apos;accès au vécu, pas au concept
+              </p>
+              <p className="display" style={{ fontSize: "clamp(26px, 3.2vw, 42px)", lineHeight: 1.25, color: "var(--navy)", margin: 0, fontWeight: 300 }}>
+                Ce pilier transforme l&apos;expérience en{" "}
+                <em className="display-italic" style={{ color: "var(--blue)" }}>intégration cellulaire.</em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* DÉTAIL — LA V.I.E. */}
       <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}>
         <div className="container">
@@ -297,10 +352,10 @@ export default function ApprochePage() {
             <div>
               <hr style={{ width: 48, height: 1, border: 0, background: "rgba(255,255,255,0.5)", marginBottom: 24 }} />
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: "clamp(20px, 2.4vw, 28px)", lineHeight: 1.4, color: "var(--white)", margin: 0 }}>
-                La renaissance. Le passage. L&apos;incarnation.
+                La renaissance — Le passage — L&apos;incarnation.
               </p>
               <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", margin: "18px 0 0" }}>
-                Ce pilier final n&apos;est pas une pratique… c&apos;est une <em style={{ fontStyle: "italic", color: "var(--gold)" }}>traversée</em>.
+                Ce pilier final n&apos;est plus une pratique. C&apos;est un <em style={{ fontStyle: "italic", color: "var(--gold)" }}>seuil</em>.
               </p>
             </div>
           </div>
@@ -308,16 +363,17 @@ export default function ApprochePage() {
           <div className="rg-split" style={{ gap: "clamp(40px, 6vw, 80px)", alignItems: "center", marginTop: 16 }}>
             <div>
               <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "rgba(255,255,255,0.85)", margin: "0 0 28px" }}>
-                À travers des immersions, des rituels intérieurs, des voyages initiatiques et des
-                expériences en lien avec l&apos;Eau — notamment à Madagascar —, vous revenez à&nbsp;:
+                À travers des immersions, des retraites et des voyages initiatiques — notamment à
+                Madagascar —, l&apos;Eau devient transmission, mémoire, vérité. Ce processus vous
+                reconnecte à&nbsp;:
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 {[
-                  "votre mémoire ancestrale",
+                  "votre lignée",
+                  "votre souveraineté intérieure",
                   "votre juste place",
-                  "votre territoire intérieur",
-                  "votre lien au Vivant",
-                  "votre autorité sacrée et symbolique",
+                  "votre identité profonde",
+                  "votre mission",
                 ].map((t, i) => (
                   <li key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "13px 0", borderBottom: "1px solid rgba(255,255,255,0.12)", fontSize: 16, lineHeight: 1.55, color: "var(--white)" }}>
                     <span style={{ color: "var(--gold)", flexShrink: 0, fontSize: 12, marginTop: 5 }}>✦</span>

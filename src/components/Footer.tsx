@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SOCIALS } from "@/lib/social";
 
 function Arrow() {
   return (
@@ -106,10 +107,17 @@ export default function Footer() {
                 Transformez vos blessures en Excellence Authentique Unique.
               </p>
               <div className="social">
-                <a href="#" title="Instagram" aria-label="Instagram">IG</a>
-                <a href="#" title="LinkedIn" aria-label="LinkedIn">IN</a>
-                <a href="#" title="YouTube" aria-label="YouTube">YT</a>
-                <a href="#" title="TikTok" aria-label="TikTok">TT</a>
+                {SOCIALS.map((s) => (
+                  <a
+                    key={s.abbr}
+                    href={s.url || "#"}
+                    title={s.name}
+                    aria-label={s.name}
+                    {...(s.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
+                    {s.abbr}
+                  </a>
+                ))}
               </div>
             </div>
 

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Script from "next/script";
+import { SOCIALS } from "@/lib/social";
 
 function Arrow() {
   return (
@@ -99,6 +101,26 @@ export default function ContactPage() {
           </p>
         </div>
       </section>
+
+      {/* CALENDRIER — RÉSERVATION DIRECTE (Calendly) */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container-narrow" style={{ textAlign: "center" }}>
+          <Eyebrow style={{ marginBottom: 24 }}>Réservation directe</Eyebrow>
+          <h2 className="display" style={{ fontSize: "clamp(28px, 3.2vw, 46px)", margin: "0 0 16px", lineHeight: 1.06 }}>
+            Choisissez votre <em className="display-italic" style={{ color: "var(--blue)" }}>créneau.</em>
+          </h2>
+          <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 540, margin: "0 auto" }}>
+            Réservez votre appel découverte directement dans l&apos;agenda de Domoïna —
+            ou utilisez le formulaire ci-dessous si vous préférez écrire.
+          </p>
+          <div
+            className="calendly-inline-widget"
+            data-url="https://calendly.com/lavoie2laconscience/1er-rdv"
+            style={{ minWidth: 320, height: 700, marginTop: 40 }}
+          />
+        </div>
+      </section>
+      <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="lazyOnload" />
 
       {/* FORM + INFOS */}
       <section className="section" style={{ paddingTop: 100 }}>
@@ -204,8 +226,16 @@ export default function ContactPage() {
                 <div style={{ paddingTop: 28, borderTop: "1px solid var(--line)" }}>
                   <p className="small" style={{ letterSpacing: ".18em", textTransform: "uppercase", color: "var(--gold)", margin: "0 0 14px", fontSize: 10.5 }}>Réseaux</p>
                   <div className="social" style={{ marginTop: 0 }}>
-                    {[["IG", "Instagram"], ["IN", "LinkedIn"], ["YT", "YouTube"], ["TT", "TikTok"]].map(([abbr, name]) => (
-                      <a key={abbr} href="#" style={{ borderColor: "var(--line)", color: "var(--navy)" }} title={name}>{abbr}</a>
+                    {SOCIALS.map((s) => (
+                      <a
+                        key={s.abbr}
+                        href={s.url || "#"}
+                        style={{ borderColor: "var(--line)", color: "var(--navy)" }}
+                        title={s.name}
+                        {...(s.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      >
+                        {s.abbr}
+                      </a>
                     ))}
                   </div>
                 </div>

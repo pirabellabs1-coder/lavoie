@@ -191,27 +191,11 @@ const parcours = [
 
 const voyages = [
   {
-    lieu: "Maroc",
-    sub: "Atlas · Vallée des Roses",
-    body:
-      "Sept jours à la rencontre des sources, des hammams rituels et du silence des hauts plateaux.",
-    month: "Mars / Octobre",
-    img: "https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    lieu: "Japon",
-    sub: "Kyoto · Onsens sacrés",
-    body:
-      "Dix jours dans la tradition des bains rituels japonais et des temples Zen — pratique du misogi.",
-    month: "Avril / Novembre",
-    img: "https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800&q=80&auto=format&fit=crop",
-  },
-  {
     lieu: "Madagascar",
-    sub: "Sources & Océan Indien",
+    sub: "Au cœur de la source",
     body:
-      "Quatorze jours dans la terre d'origine de Domoina — rituels d'eau, héritage maternel, accompagnement intime.",
-    month: "Janvier · Royale uniquement",
+      "Un voyage initiatique dans la terre d'origine de Domoïna — rituels d'eau, mémoire ancestrale et accompagnement intime, là où l'Eau devient un véritable maître.",
+    month: "Sur invitation · Immersion Royale",
     img: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=80&auto=format&fit=crop",
   },
 ];
@@ -1170,18 +1154,18 @@ export default function Home() {
             <div>
               <Eyebrow style={{ marginBottom: 24 }}>Voyages initiatiques</Eyebrow>
               <h2>
-                Trois destinations,
+                Madagascar,
                 <br />
-                <em className="display-italic">une même eau.</em>
+                <em className="display-italic">au cœur de la source.</em>
               </h2>
             </div>
             <p>
-              Inclus dans l&apos;Immersion Royale, optionnels en Expansion. Chaque voyage
-              prolonge le travail du Centre HUT dans une géographie qui ajoute son propre enseignement.
+              Inclus dans l&apos;Immersion Royale. Le voyage prolonge le travail du Centre HUT
+              dans la terre d&apos;origine de Domoïna, là où l&apos;Eau devient un véritable maître.
             </p>
           </div>
 
-          <div className="three-grid">
+          <div style={{ maxWidth: 580, margin: "0 auto" }}>
             {voyages.map((v, i) => (
               <div
                 key={i}
