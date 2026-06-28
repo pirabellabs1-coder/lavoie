@@ -68,12 +68,15 @@ export default function DomoinaPage() {
                 Domoïna Ramiadana
               </h1>
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 17, color: "var(--navy)", margin: "0 0 32px", fontWeight: 300 }}>
-                Thérapeute initiatique des dirigeants en quête d&apos;excellence.
+                Guide initiatique des dirigeants, cadres et thérapeutes en quête de sens.
               </p>
               <hr className="filet" style={{ marginBottom: 32 }} />
               <p style={{ fontSize: 18, lineHeight: 1.7, color: "var(--navy-ink)", maxWidth: 480 }}>
-                J&apos;accompagne les dirigeants à succès à transformer leurs blessures originelles
-                et leurs schémas de compensation en leur zone d&apos;Excellence Authentique Unique (E.A.U.).
+                Depuis plus de vingt ans, j&apos;accompagne celles et ceux qui réussissent
+                extérieurement mais ressentent un appel plus profond. Là où d&apos;autres voient
+                une faille, je vois un point de passage&nbsp;: ce que vous avez appris à cacher
+                devient la source de votre{" "}
+                <em style={{ fontStyle: "italic", color: "var(--navy)" }}>Excellence Authentique Unique</em>.
               </p>
             </div>
             <Placeholder

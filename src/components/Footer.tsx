@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SOCIALS } from "@/lib/social";
+import SocialIcon from "@/components/SocialIcon";
 
 function Arrow() {
   return (
@@ -115,7 +116,7 @@ export default function Footer() {
                     aria-label={s.name}
                     {...(s.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   >
-                    {s.abbr}
+                    <SocialIcon name={s.name} />
                   </a>
                 ))}
               </div>

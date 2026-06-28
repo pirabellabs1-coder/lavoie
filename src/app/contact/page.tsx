@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { SOCIALS } from "@/lib/social";
+import SocialIcon from "@/components/SocialIcon";
 
 function Arrow() {
   return (
@@ -234,7 +235,7 @@ export default function ContactPage() {
                         title={s.name}
                         {...(s.url ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       >
-                        {s.abbr}
+                        <SocialIcon name={s.name} />
                       </a>
                     ))}
                   </div>

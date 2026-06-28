@@ -367,7 +367,7 @@ export default function Home() {
             </div>
 
             {/* ── Image + étiquettes flottantes ── */}
-            <div data-reveal="" data-reveal-delay="1" style={{ position: "relative" }}>
+            <div data-reveal="" data-reveal-delay="1" style={{ position: "relative", maxWidth: 430, width: "100%", margin: "0 auto" }}>
               <div className="img-zoom" style={{ position: "relative", border: "1px solid rgba(255,255,255,0.28)", boxShadow: "0 40px 90px -45px rgba(0,0,0,0.5)" }}>
                 <Placeholder
                   style={{ aspectRatio: "4/5" }}
