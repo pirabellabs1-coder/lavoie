@@ -68,14 +68,17 @@ export default function DomoinaPage() {
                 Domoïna Ramiadana
               </h1>
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 17, color: "var(--navy)", margin: "0 0 32px", fontWeight: 300 }}>
-                Guide initiatique des dirigeants, cadres et thérapeutes en quête de sens.
+                Fondatrice de La Voie 2 la Conscience &amp; du Centre HUT.
               </p>
               <hr className="filet" style={{ marginBottom: 32 }} />
-              <p style={{ fontSize: 18, lineHeight: 1.7, color: "var(--navy-ink)", maxWidth: 480 }}>
-                Depuis plus de vingt ans, j&apos;accompagne celles et ceux qui réussissent
-                extérieurement mais ressentent un appel plus profond. Là où d&apos;autres voient
-                une faille, je vois un point de passage&nbsp;: ce que vous avez appris à cacher
-                devient la source de votre{" "}
+              <p style={{ fontSize: 17.5, lineHeight: 1.72, color: "var(--navy-ink)", maxWidth: 520 }}>
+                Un accompagnement <em style={{ fontStyle: "italic", color: "var(--navy)" }}>initiatique et spirituel</em> pour
+                les dirigeants, cadres et thérapeutes en quête de sens — celles et ceux qui
+                réussissent extérieurement mais portent une vision spirituelle de la vie, et veulent
+                l&apos;incarner pleinement. Depuis plus de vingt ans, je guide ces dirigeants et
+                thérapeutes vers une réussite qui ne s&apos;oppose plus à leur vie intérieure. Là où
+                d&apos;autres voient une faille, je vois un point de passage&nbsp;: ce que vous avez
+                appris à cacher devient la source de votre{" "}
                 <em style={{ fontStyle: "italic", color: "var(--navy)" }}>Excellence Authentique Unique</em>.
               </p>
             </div>
