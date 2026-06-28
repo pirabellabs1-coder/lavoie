@@ -290,7 +290,7 @@ export default function Home() {
               }}
             >
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold)", flexShrink: 0 }} />
-              Dirigeants · Cadres · Thérapeutes
+              Dirigeants · Cadres · Thérapeutes en quête de sens
             </span>
 
             {/* H1 */}
@@ -328,12 +328,16 @@ export default function Home() {
                 color: "rgba(255,255,255,0.86)",
               }}
             >
-              J&apos;aide les dirigeants et entrepreneurs qui{" "}
+              Un accompagnement{" "}
               <em style={{ fontFamily: "var(--serif)", fontStyle: "italic", color: "var(--white)" }}>
-                réussissent extérieurement mais s&apos;épuisent intérieurement
+                initiatique et spirituel
               </em>
-              {" "}à sortir des schémas de suradaptation et d&apos;auto-sabotage — pour retrouver
-              clarté, énergie et équilibre intérieur.
+              {" "}pour les dirigeants, cadres et thérapeutes en quête de sens — celles et ceux
+              qui réussissent extérieurement mais portent une{" "}
+              <em style={{ fontFamily: "var(--serif)", fontStyle: "italic", color: "var(--gold)" }}>
+                vision spirituelle de la vie
+              </em>
+              , et veulent l&apos;incarner pleinement.
             </p>
 
             {/* CTAs */}
