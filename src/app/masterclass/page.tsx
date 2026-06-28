@@ -74,9 +74,9 @@ const obtenir = [
 
 const temoignages = [
   { name: "Nora Hachelaf", quote: "Domoïna est une thérapeute que je recommande vivement. Dès notre première rencontre, j'ai été frappée par son écoute attentive et sa capacité à déceler ce qui se passe réellement." },
-  { name: "Nkodia Bervette", quote: "Le travail amorcé avec Domoïna m'a permis d'accéder à une part de ma mémoire qui m'empêchait pourtant d'avancer correctement dans mon quotidien. J'ai pu constater les progrès réalisés au fil des séances individuelles." },
+  { name: "Sandrine Jeanne", quote: "Cela fait maintenant 4 ans que je chemine avec le CDS au sein de LV2C. Aujourd'hui, je suis en capacité d'affirmer que la Voie Initiatique avec laquelle j'avance est profondément transformatrice." },
   { name: "Bernard Joly", quote: "J'ai eu l'occasion de travailler avec Domoïna pour un problème que j'avais au dos. Dès la 1ʳᵉ séance j'ai été surpris du résultat, car cela faisait plusieurs mois que je ne dormais plus la nuit." },
-  { name: "Ariel Zoalguidas", quote: "Faire le lien entre ce que je ne vois pas mais qui se manifeste et ce que je connais ou ce que je vis… ça n'a pas de prix ! J'ai appris à me comprendre et j'en apprends encore tous les jours." },
+  { name: "Victoria Topenot", quote: "Ces stages sont exigeants et éprouvants — sortir de sa zone de confort n'est jamais facile. Mais les résultats sont là, après de nombreuses années de suivi thérapeutique." },
 ];
 
 const bioStats = [

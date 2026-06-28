@@ -46,43 +46,26 @@ const videos = [
   },
 ];
 
+// Avis Google vérifiés (clients réels). Source unique de la page Témoignages.
 const temoignages = [
-  {
-    nom: "Isabelle M.",
-    titre: "Directrice des Ressources Humaines",
-    duree: "Immersion Expansion · 6 mois",
-    texte: "En six mois avec Domoina, j'ai retrouvé un alignement profond que je cherchais depuis des années. Son approche unique mêle rigueur et profondeur — chaque séance m'a amenée à un nouveau niveau de compréhension de moi-même. Le Centre HUT est un lieu magique, hors du temps.",
-  },
-  {
-    nom: "Pierre L.",
-    titre: "Dirigeant d'entreprise",
-    duree: "Immersion Royale · 12 mois",
-    texte: "Le Centre HUT est un sanctuaire hors du temps. Les stages immersifs ont fondamentalement changé ma façon de diriger et d'être en relation. Domoina a une capacité rare à voir l'essence de chaque personne et à l'accompagner avec une précision chirurgicale.",
-  },
-  {
-    nom: "Sophie D.",
-    titre: "Thérapeute & Naturopathe",
-    duree: "Immersion Essence · 3 mois",
-    texte: "La méthode V.I.E. est extraordinaire. En tant que thérapeute moi-même, j'étais sceptique au départ. Mais l'approche de Domoina m'a dépassée par sa profondeur et son efficacité. J'ai recommandé La Voie 2 la Conscience à plusieurs de mes collègues.",
-  },
-  {
-    nom: "Marc A.",
-    titre: "Cadre supérieur, secteur bancaire",
-    duree: "Immersion Expansion · 6 mois",
-    texte: "Je suis arrivé au bout du rouleau après 20 ans dans la finance. Domoina m'a aidé à démêler ce qui m'appartenait vraiment de ce que j'avais intégré par pression sociale. Six mois plus tard, j'ai retrouvé un sens profond à mon travail.",
-  },
-  {
-    nom: "Nathalie R.",
-    titre: "Médecin généraliste",
-    duree: "Immersion Royale · 9 mois",
-    texte: "L'accompagnement de Domoina est d'une qualité rare. Sa capacité à créer un espace de sécurité totale, combinée à sa profondeur d'approche, produit des résultats que je n'aurais jamais imaginés. Le Cycle des Saisons m'a appris à me respecter selon mes propres rythmes.",
-  },
-  {
-    nom: "Karim B.",
-    titre: "Coach professionnel certifié",
-    duree: "Immersion Expansion · 6 mois",
-    texte: "En tant que coach moi-même, trouver un accompagnateur à la hauteur n'est pas une mince affaire. Domoina m'a surpris à chaque session par la finesse de son analyse et l'audace de ses interventions. Le parcours AIME est un outil extraordinaire.",
-  },
+  { nom: "Nora Hachelaf", date: "il y a un an", texte: "Domoïna est une thérapeute et sexothérapeute que je recommande vivement, même si j'ai dû interrompre mes consultations pour des raisons financières. Dès notre première rencontre, j'ai été frappée par son écoute attentive et sa capacité à déceler ce qui se passe réellement." },
+  { nom: "Emilie G.", date: "il y a 2 ans", texte: "Cela fait déjà quatre ans que je chemine avec Domoïna et j'en suis ravie. Le terme « élargissement de la conscience » reflète vraiment mon ressenti lorsque je travaille avec elle. Une accompagnatrice hors pair." },
+  { nom: "Dany GM", date: "il y a 3 ans", texte: "J'ai fait la connaissance de Domoïna il y a de cela juste quelques mois (2 pour être plus précis). Son accompagnement m'a permis d'avancer de manière significative et profonde." },
+  { nom: "Cathy Brun", date: "il y a 2 ans", texte: "J'avais déjà publié un témoignage il y a plus de 2 ans. Avec ces années écoulées, je souhaite renouveler ma confiance envers Domoïna et son accompagnement. Un chemin de transformation remarquable." },
+  { nom: "Josette Henry", date: "il y a 2 ans", texte: "Lorsque j'ai rencontré Domoïna pour la première fois, j'ai raconté à grande vitesse tout ce qui m'incombait. J'ai été stoppée net. À l'endroit où j'étais, j'ai pensé qu'elle manquait d'empathie… mais c'était tout le contraire : elle savait exactement ce dont j'avais besoin." },
+  { nom: "Victoria Topenot", date: "il y a 4 ans", texte: "Deuxième année de participation aux stages de thérapie de groupe pour moi, après de nombreuses années de suivi thérapeutique divers et varié. Ces stages sont exigeants et éprouvants — sortir de sa zone de confort n'est jamais facile. Mais les résultats sont là." },
+  { nom: "Bernard Joly", date: "il y a 3 ans", texte: "J'ai eu l'occasion de travailler avec Domoïna pour un problème que j'avais au dos. Dès la 1ère séance, j'ai été surpris du résultat car cela faisait plusieurs mois que je ne dormais plus la nuit. Je lui ai dit dès le lendemain ma surprise." },
+  { nom: "Mireille Tamarin", date: "il y a 5 ans", texte: "J'ai connu Domoïna via une amie pour une problématique bien précise. En découvrant son travail, j'étais loin de penser que l'accompagnement de groupe serait autant bénéfique. À aucun moment je n'aurais imaginé recevoir des miroirs à travers les autres participants." },
+  { nom: "Yona Bravo", date: "il y a 2 ans", texte: "Merci pour vos enseignements et votre qualité d'écoute. Pour moi, vous êtes vraiment une médium, même si vous ne voulez pas de ce qualificatif. Vous êtes un intermédiaire entre les différentes réalités du plan terrestre. Continuez à éclairer ceux qui veulent retrouver leur être profond." },
+  { nom: "Sandrine Jeanne", date: "il y a un an", texte: "Cela fait maintenant 4 ans que je chemine avec le CDS au sein de LV2C : j'apprends, je comprends et je commence à intégrer les enseignements que je reçois. Aujourd'hui, je suis en capacité d'affirmer que la Voie Initiatique avec laquelle j'avance est profondément transformatrice." },
+  { nom: "Alexandre Bonal", date: "il y a 3 ans", texte: "Au sortir de ma première séance, suite à une douleur à l'épaule, j'ai été surpris d'avoir senti le lâcher-prise — s'abandonner, se sentir vide de toutes charges. Une expérience que je n'attendais pas." },
+  { nom: "Salhi Chamseddine", date: "il y a 7 mois", texte: "Thérapeute d'exception, avec un don inné pour lire l'inconscient comme si elle lisait le futur des gens." },
+  { nom: "Martial Djaimba", date: "il y a 5 ans", texte: "Mille fois merci Domoïna ! Vous avez changé ma vie ! J'ai appris beaucoup de choses ! Je recommande vraiment. Une thérapeute très remarquable !" },
+  { nom: "Brayan Peno", date: "il y a 2 ans", texte: "Je recommande son approche." },
+  { nom: "Isabelle Labelle", date: "il y a 6 ans", texte: "Merci pour tout, beaucoup de belles choses dans ma vie depuis ma première séance. Je recommande." },
+  { nom: "Aliou Diaby", date: "il y a un an", texte: "Merci pour votre professionnalisme. Que Dieu vous bénisse éternellement." },
+  { nom: "Stéphanie Moreno Vaz", date: "il y a 5 ans", texte: "Accompagnement exceptionnel et holistique, je recommande fortement !" },
+  { nom: "Patrick Gervais", date: "il y a 10 mois", texte: "Merci pour l'accompagnement." },
 ];
 
 export default function Temoignages() {
@@ -152,22 +135,28 @@ export default function Temoignages() {
           <div className="rg-3" style={{ gap: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
             {temoignages.map((t, i) => (
               <div key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{
-                padding: "40px 32px",
+                padding: "32px 30px",
                 background: "rgba(255,255,255,0.03)",
+                display: "flex",
+                flexDirection: "column",
               }}>
-                <div style={{ display: "flex", gap: 3, marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+                  <span style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--gold)", color: "var(--navy-ink)", display: "grid", placeItems: "center", fontFamily: "var(--serif)", fontWeight: 600, fontSize: 17, flexShrink: 0 }}>
+                    {t.nom.charAt(0)}
+                  </span>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 500, color: "var(--white)", margin: 0 }}>{t.nom}</p>
+                    <p className="small" style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: 11.5 }}>{t.date}</p>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: 3, marginBottom: 14 }}>
                   {Array.from({ length: 5 }).map((_, j) => (
                     <span key={j} style={{ color: "var(--gold)", fontSize: 13 }}>★</span>
                   ))}
                 </div>
-                <p className="small" style={{ letterSpacing: ".14em", textTransform: "uppercase", color: "var(--gold)", margin: "0 0 20px", fontSize: 10.5 }}>{t.duree}</p>
-                <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,0.8)", margin: "0 0 28px" }}>
+                <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15.5, lineHeight: 1.7, color: "rgba(255,255,255,0.82)", margin: 0 }}>
                   &ldquo;{t.texte}&rdquo;
                 </p>
-                <div style={{ paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-                  <p style={{ fontSize: 14, fontWeight: 500, color: "var(--white)", margin: "0 0 4px" }}>{t.nom}</p>
-                  <p className="small" style={{ color: "rgba(255,255,255,0.5)", margin: 0 }}>{t.titre}</p>
-                </div>
               </div>
             ))}
           </div>

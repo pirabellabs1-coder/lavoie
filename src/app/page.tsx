@@ -203,8 +203,8 @@ const voyages = [
 const temoignages = [
   {
     quote:
-      "Le travail amorcé avec Domoïna m'a permis d'accéder à une part de ma mémoire qui m'empêchait pourtant d'avancer correctement dans mon quotidien. J'ai pu constater les progrès réalisés au fil des séances individuelles.",
-    name: "Nkodia Bervette",
+      "Domoïna est une thérapeute que je recommande vivement. Dès notre première rencontre, j'ai été frappée par son écoute attentive et sa capacité à déceler ce qui se passe réellement.",
+    name: "Nora Hachelaf",
     source: "Avis Google vérifié",
   },
   {
@@ -367,7 +367,7 @@ export default function Home() {
             </div>
 
             {/* ── Image + étiquettes flottantes ── */}
-            <div data-reveal="" data-reveal-delay="1" style={{ position: "relative", maxWidth: 430, width: "100%", margin: "0 auto" }}>
+            <div data-reveal="" data-reveal-delay="1" style={{ position: "relative", maxWidth: 540, width: "100%", margin: "0 auto" }}>
               <div className="img-zoom" style={{ position: "relative", border: "1px solid rgba(255,255,255,0.28)", boxShadow: "0 40px 90px -45px rgba(0,0,0,0.5)" }}>
                 <Placeholder
                   style={{ aspectRatio: "4/5" }}
