@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/site";
 import { ARTICLE_SLUGS as BLOG_SLUGS } from "@/lib/articles";
+import { DOC_SLUGS } from "@/lib/documents";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -35,5 +36,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  return [...staticEntries, ...blogEntries];
+  const docEntries: MetadataRoute.Sitemap = DOC_SLUGS.map((slug) => ({
+    url: `${SITE.url}/cadre-deontologique/${slug}`,
+    lastModified: now,
+    changeFrequency: "yearly",
+    priority: 0.2,
+  }));
+
+  return [...staticEntries, ...blogEntries, ...docEntries];
 }

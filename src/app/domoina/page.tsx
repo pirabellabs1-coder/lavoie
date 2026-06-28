@@ -5,7 +5,7 @@ import Placeholder from "@/components/Placeholder";
 export const metadata: Metadata = {
   title: "Domoïna Ramiadana — Thérapeute initiatique",
   description:
-    "Domoïna Ramiadana, thérapeute initiatique et guide des dirigeants en quête d'excellence. Plus de 20 ans d'accompagnement holistique. Fondatrice du Centre HUT et de La Voie 2 la Conscience.",
+    "Domoïna Ramiadana, thérapeute initiatique des dirigeants, cadres et thérapeutes en quête d'excellence. Plus de 20 ans d'accompagnement holistique. Fondatrice du Centre HUT et de La Voie 2 la Conscience.",
   alternates: { canonical: "/domoina" },
 };
 
@@ -102,13 +102,13 @@ export default function DomoinaPage() {
             <div>
               <Eyebrow style={{ marginBottom: 24 }}>Qui suis-je&nbsp;?</Eyebrow>
               <h2 className="display" style={{ fontSize: "clamp(28px, 3vw, 42px)", margin: "0 0 28px", lineHeight: 1.12 }}>
-                Une guide au service de <em className="display-italic">votre transformation consciente.</em>
+                Une thérapeute au service de <em className="display-italic">votre transformation consciente.</em>
               </h2>
               <hr className="filet" style={{ marginBottom: 28 }} />
 
               <p style={{ fontFamily: "var(--serif)", fontSize: 20, lineHeight: 1.55, color: "var(--navy)", margin: "0 0 22px" }}>
                 <span style={{ fontSize: 60, float: "left", lineHeight: 0.85, marginRight: 12, color: "var(--gold)" }}>J</span>
-                e suis Domoïna Ramiadana, thérapeute initiatique et guide pour leaders et dirigeants
+                e suis Domoïna Ramiadana, thérapeute initiatique pour leaders et dirigeants
                 à succès en quête de sens. Formatrice, fondatrice du Centre Holistique UnTout (HUT)
                 et de La Voie 2 la Conscience, créatrice du Parcours AIME et du Cycle des Saisons.
               </p>

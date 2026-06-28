@@ -68,7 +68,7 @@ export default function ContactPage() {
             </h1>
             <hr className="filet" style={{ margin: "0 auto 32px" }} />
             <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--navy-ink)", margin: "0 0 36px" }}>
-              Votre demande nous parvient. Domoina ou son équipe vous recontactera
+              Votre demande nous parvient. Domoïna ou son équipe vous recontactera
               sous <strong style={{ fontWeight: 500 }}>24 heures ouvrées</strong> à l&apos;adresse{" "}
               <strong style={{ fontWeight: 500 }}>{form.email || "votre adresse"}</strong> pour fixer
               ensemble votre appel découverte.
@@ -243,7 +243,7 @@ export default function ContactPage() {
                     « Nous accordons à chaque demande l&apos;attention qu&apos;elle mérite. C&apos;est la première
                     promesse, avant toutes les autres. »
                   </p>
-                  <p className="small" style={{ margin: "14px 0 0", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--mute)", fontSize: 10.5 }}>Domoina</p>
+                  <p className="small" style={{ margin: "14px 0 0", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--mute)", fontSize: 10.5 }}>Domoïna</p>
                 </div>
               </div>
             </div>

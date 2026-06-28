@@ -40,7 +40,7 @@ export default function PolitiqueConfidentialite() {
               <h2 className="display" style={{ fontSize: 28, color: "var(--navy)", margin: "0 0 16px" }}>Responsable du traitement</h2>
               <hr className="filet" style={{ marginBottom: 20 }} />
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)" }}>
-                La Voie 2 la Conscience, représentée par Domoina.<br />
+                La Voie 2 la Conscience, représentée par Domoïna.<br />
                 Contact : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.fr</strong>
               </p>
             </div>

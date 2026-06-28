@@ -52,7 +52,7 @@ export function founderLd(): Record<string, unknown> {
     "@type": "Person",
     "@id": FOUNDER_ID,
     name: SITE.founder,
-    jobTitle: "Guide initiatique · Fondatrice",
+    jobTitle: "Thérapeute initiatique · Fondatrice",
     worksFor: { "@id": ORG_ID },
     url: `${SITE.url}/domoina`,
     knowsAbout: [

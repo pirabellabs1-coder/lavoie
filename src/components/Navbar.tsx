@@ -8,7 +8,7 @@ type NavLeaf = { href: string; label: string; desc?: string };
 type NavItem = NavLeaf | { label: string; children: NavLeaf[] };
 
 const nav: NavItem[] = [
-  { href: "/domoina", label: "Domoina" },
+  { href: "/domoina", label: "Domoïna" },
   {
     label: "L'approche",
     children: [

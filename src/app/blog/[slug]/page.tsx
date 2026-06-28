@@ -121,8 +121,8 @@ export default async function ArticlePage({
               <span className="display" style={{ fontSize: 20, color: "var(--gold)" }}>D</span>
             </div>
             <div>
-              <p style={{ fontSize: 14, color: "var(--white)", margin: 0, fontWeight: 500 }}>Domoina</p>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", margin: 0, fontFamily: "var(--sans)", letterSpacing: ".05em" }}>Guide initiatique</p>
+              <p style={{ fontSize: 14, color: "var(--white)", margin: 0, fontWeight: 500 }}>Domoïna</p>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", margin: 0, fontFamily: "var(--sans)", letterSpacing: ".05em" }}>Thérapeute initiatique</p>
             </div>
           </div>
         </div>
@@ -162,9 +162,9 @@ export default async function ArticlePage({
               <span className="display" style={{ fontSize: 28, color: "var(--gold)" }}>D</span>
             </div>
             <div>
-              <p className="display" style={{ fontSize: 22, color: "var(--navy)", margin: "0 0 4px" }}>Domoina</p>
+              <p className="display" style={{ fontSize: 22, color: "var(--navy)", margin: "0 0 4px" }}>Domoïna</p>
               <p style={{ fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--gold)", margin: "0 0 12px", fontFamily: "var(--sans)" }}>
-                Guide initiatique · La Voie 2 la Conscience
+                Thérapeute initiatique · La Voie 2 la Conscience
               </p>
               <p style={{ fontSize: 14, lineHeight: 1.75, color: "var(--mute)", margin: 0 }}>
                 15 ans dédiés à la transformation profonde des êtres en quête d&apos;excellence authentique.

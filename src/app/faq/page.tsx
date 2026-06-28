@@ -6,7 +6,7 @@ import { faqLd, breadcrumbLd } from "@/lib/jsonld";
 export const metadata: Metadata = {
   title: "FAQ — Questions fréquentes sur l'accompagnement",
   description:
-    "Toutes les réponses à vos questions sur l'accompagnement de Domoina, l'Offre Gold, le Centre HUT et les méthodes de transformation.",
+    "Toutes les réponses à vos questions sur l'accompagnement de Domoïna, l'Offre Gold, le Centre HUT et les méthodes de transformation.",
   alternates: { canonical: "/faq" },
 };
 
@@ -33,7 +33,7 @@ const categories = [
     titre: "L'accompagnement",
     questions: [
       {
-        q: "À qui s'adresse l'accompagnement de Domoina ?",
+        q: "À qui s'adresse l'accompagnement de Domoïna ?",
         r: "L'accompagnement est destiné aux dirigeants, cadres supérieurs et thérapeutes qui ressentent un décalage entre leur vie extérieure (souvent réussie) et leur état intérieur. Il s'adresse à celles et ceux qui sont prêts à aller en profondeur pour transformer durablement leur relation à eux-mêmes et au monde.",
       },
       {
@@ -84,7 +84,7 @@ const categories = [
       },
       {
         q: "L'accompagnement est-il confidentiel ?",
-        r: "La confidentialité est un pilier fondamental de notre pratique. Tout ce qui est partagé en séance ou lors des stages reste strictement confidentiel, conformément au cadre déontologique de Domoina.",
+        r: "La confidentialité est un pilier fondamental de notre pratique. Tout ce qui est partagé en séance ou lors des stages reste strictement confidentiel, conformément au cadre déontologique de Domoïna.",
       },
     ],
   },
@@ -155,7 +155,7 @@ export default function FAQ() {
               Vous ne trouvez pas votre réponse ?
             </h3>
             <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", margin: "0 0 32px" }}>
-              Domoina répond personnellement à toutes vos questions sous 24h ouvrées.
+              Domoïna répond personnellement à toutes vos questions sous 24h ouvrées.
             </p>
             <Link href="/contact" className="btn btn-gold">
               Poser ma question <Arrow />

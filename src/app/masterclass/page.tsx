@@ -230,7 +230,7 @@ export default function MasterclassChallenge() {
               Domoïna Ramiadana
             </h2>
             <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 16, color: "var(--gold)", margin: 0 }}>
-              Guide initiatique des dirigeants, cadres et thérapeutes en quête d&apos;excellence.
+              Thérapeute initiatique des dirigeants, cadres et thérapeutes en quête d&apos;excellence.
             </p>
           </div>
 

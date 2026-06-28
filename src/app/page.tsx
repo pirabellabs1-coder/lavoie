@@ -511,7 +511,7 @@ export default function Home() {
           >
             La Voie 2 la Conscience est née d&apos;une vision profonde : créer un pont entre le
             monde matériel et spirituel, permettant à chaque âme de retrouver sa véritable essence.
-            Fondée par Domoina, guide spirituelle reconnue, notre approche allie sagesse ancestrale
+            Fondée par Domoïna, thérapeute reconnue, notre approche allie sagesse ancestrale
             et techniques modernes pour vous accompagner dans votre voyage de transformation.
           </p>
         </div>
@@ -664,7 +664,7 @@ export default function Home() {
                 mark="02"
                 style={{ aspectRatio: "4/5", background: "var(--paper-alt)" }}
                 src="/domoina.jpg"
-                alt="Portrait de Domoina Bockomba, guide initiatique"
+                alt="Portrait de Domoïna Ramiadana, thérapeute initiatique"
                 objectPosition="top center"
                 sizes="(max-width: 768px) 100vw, 40vw"
               />
@@ -727,9 +727,9 @@ export default function Home() {
                 className="display"
                 style={{ fontSize: "clamp(30px,3.2vw,52px)", margin: "0 0 24px", lineHeight: 1.05 }}
               >
-                Domoina,
+                Domoïna,
                 <br />
-                <em style={{ fontWeight: 300 }}>guide initiatique.</em>
+                <em style={{ fontWeight: 300 }}>thérapeute initiatique.</em>
               </h2>
               <hr className="filet" style={{ marginBottom: 28 }} />
               <p style={{ fontSize: 17, lineHeight: 1.8, color: "var(--navy-ink)", margin: "0 0 18px" }}>
@@ -1391,7 +1391,7 @@ export default function Home() {
               </p>
               <p style={{ fontSize: 15, lineHeight: 1.75, color: "rgba(255,255,255,0.5)", margin: "0 0 36px" }}>
                 Quatre week-ends de formation par an. Promotion limitée à douze. Sélection
-                sur dossier et entretien préalable avec Domoina.
+                sur dossier et entretien préalable avec Domoïna.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <Link href="/contact" className="btn btn-gold">
@@ -1586,7 +1586,7 @@ export default function Home() {
               <hr className="filet" style={{ marginBottom: 24 }} />
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)", margin: 0 }}>
                 Quatre fois par an, en accord avec le Cycle des Saisons — une lettre longue
-                de Domoina, des notes de pratique et l&apos;agenda des cohortes à venir.
+                de Domoïna, des notes de pratique et l&apos;agenda des cohortes à venir.
                 Pas de marketing, pas d&apos;algorithme, pas de fréquence imposée.
               </p>
             </div>

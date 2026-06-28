@@ -7,7 +7,7 @@ import { videoLd, breadcrumbLd } from "@/lib/jsonld";
 export const metadata: Metadata = {
   title: "Témoignages — Paroles de transformation",
   description:
-    "Découvrez les témoignages de clients accompagnés par Domoina. Dirigeants, thérapeutes et cadres partagent leur expérience de transformation authentique.",
+    "Découvrez les témoignages de clients accompagnés par Domoïna. Dirigeants, thérapeutes et cadres partagent leur expérience de transformation authentique.",
   alternates: { canonical: "/temoignages" },
 };
 

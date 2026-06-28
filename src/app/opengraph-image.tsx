@@ -57,7 +57,7 @@ export default function OpengraphImage() {
             fontSize: 26,
           }}
         >
-          <span>Domoina · 15 ans de pratique · 500+ accompagnements</span>
+          <span>Domoïna · 15 ans de pratique · 500+ accompagnements</span>
           <span style={{ color: "#c8a84b" }}>Centre HUT · Sarthe</span>
         </div>
       </div>

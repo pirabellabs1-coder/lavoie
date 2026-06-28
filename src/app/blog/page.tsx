@@ -5,7 +5,7 @@ import { ARTICLES as articles } from "@/lib/articles";
 export const metadata: Metadata = {
   title: "Blog — Articles & réflexions sur la transformation",
   description:
-    "Articles, insights et réflexions de Domoina sur la transformation personnelle, la conscience, les pratiques initiatiques et l'excellence authentique.",
+    "Articles, insights et réflexions de Domoïna sur la transformation personnelle, la conscience, les pratiques initiatiques et l'excellence authentique.",
   alternates: { canonical: "/blog" },
 };
 
@@ -164,7 +164,7 @@ export default function Blog() {
             Recevez les<br /><em className="display-italic">prochains articles.</em>
           </h3>
           <p style={{ fontSize: 16, color: "var(--mute)", margin: "0 0 36px", lineHeight: 1.7 }}>
-            Insights, pratiques et réflexions de Domoina, directement dans votre boîte mail.
+            Insights, pratiques et réflexions de Domoïna, directement dans votre boîte mail.
           </p>
           <form style={{ display: "flex", gap: 10, maxWidth: 520, margin: "0 auto" }}>
             <input

@@ -41,7 +41,7 @@ export default function MentionsLegales() {
               <hr className="filet" style={{ marginBottom: 20 }} />
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)" }}>
                 La Voie 2 la Conscience<br />
-                Représentée par Domoina<br />
+                Représentée par Domoïna<br />
                 50 Rue Principale, 72110 Rouperroux-le-Coquet, Sarthe<br />
                 Email : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.fr</strong><br />
                 Téléphone : <strong style={{ fontWeight: 500 }}>07 64 20 15 24</strong>

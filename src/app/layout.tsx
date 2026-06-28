@@ -32,22 +32,22 @@ export const metadata: Metadata = {
     template: "%s | La Voie 2 la Conscience",
   },
   description:
-    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ personnes accompagnées par Domoina en 15 ans de pratique.",
+    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ personnes accompagnées par Domoïna en 15 ans de pratique.",
   applicationName: SITE.name,
   keywords: [
     "coaching transformation",
     "accompagnement initiatique",
     "retraite spirituelle dirigeants",
     "coaching dirigeant Sarthe",
-    "Domoina",
+    "Domoïna",
     "Centre HUT",
     "méthode AIME",
     "Voie Initiatique de l'Eau",
     "Cycle des Saisons",
     "excellence authentique",
   ],
-  authors: [{ name: "Domoina", url: `${SITE.url}/domoina` }],
-  creator: "Domoina",
+  authors: [{ name: "Domoïna", url: `${SITE.url}/domoina` }],
+  creator: "Domoïna",
   publisher: SITE.name,
   alternates: {
     canonical: "/",
@@ -81,6 +81,9 @@ export const metadata: Metadata = {
     },
   },
   category: "Coaching & accompagnement",
+  verification: {
+    google: "dbrB7rDSpAVAafvLAeB6OH3y9U7-6qhKrs6YBqyfu2E",
+  },
 };
 
 export default function RootLayout({
