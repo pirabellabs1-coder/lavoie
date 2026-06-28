@@ -199,6 +199,28 @@ export default function CentreHut() {
         </div>
       </section>
 
+      {/* VIDÉO */}
+      <section className="section" style={{ background: "var(--white)" }}>
+        <div className="container-narrow" style={{ textAlign: "center" }}>
+          <Eyebrow style={{ marginBottom: 24 }}>En vidéo</Eyebrow>
+          <h2 className="display" style={{ fontSize: "clamp(28px, 3.2vw, 46px)", margin: "0 0 16px", lineHeight: 1.06 }}>
+            Découvrez le <em className="display-italic" style={{ color: "var(--blue)" }}>Centre HUT.</em>
+          </h2>
+          <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 520, margin: "0 auto 40px" }}>
+            Une immersion en images dans le sanctuaire de reconnexion.
+          </p>
+          <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", borderRadius: 14, overflow: "hidden", border: "2px solid var(--line-dark)", boxShadow: "0 24px 60px -28px rgba(20,40,120,0.3)" }}>
+            <iframe
+              src="https://www.youtube.com/embed/2jr7ZopO8ME"
+              title="Découvrir le Centre HUT"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </section>
+
       {/* ESPACES */}
       <section className="section" style={{ background: "var(--paper)" }}>
         <div className="container">

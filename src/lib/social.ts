@@ -10,8 +10,8 @@
 export type SocialLink = { abbr: string; name: string; url: string };
 
 export const SOCIALS: SocialLink[] = [
-  { abbr: "IG", name: "Instagram", url: "https://www.instagram.com/lavoie2laconscience/" },
-  { abbr: "FB", name: "Facebook", url: "https://www.facebook.com/profile.php?id=61579137202783" },
+  { abbr: "IG", name: "Instagram", url: "https://www.instagram.com/voie2laconscience/" },
+  { abbr: "FB", name: "Facebook", url: "https://www.facebook.com/v2csourcedeau" },
   { abbr: "IN", name: "LinkedIn", url: "https://www.linkedin.com/in/domoina-ramiadana/" },
   { abbr: "YT", name: "YouTube", url: "https://youtube.com/@lavoie2laconscience?si=j0fhHcMQHO1CY8xf" },
 ];

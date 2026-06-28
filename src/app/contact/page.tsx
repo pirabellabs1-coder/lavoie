@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Script from "next/script";
+import CalendlyInline from "@/components/CalendlyInline";
 import { SOCIALS } from "@/lib/social";
 import SocialIcon from "@/components/SocialIcon";
 
@@ -74,7 +74,7 @@ export default function ContactPage() {
               ensemble votre appel découverte.
             </p>
             <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--mute)", margin: "0 0 36px" }}>
-              « Le premier appel — trente minutes pour se reconnaître. »
+              « Le premier appel — quarante-cinq minutes pour se reconnaître. »
             </p>
             <Link href="/" className="btn btn-ghost">
               Retour à l&apos;accueil
@@ -91,13 +91,13 @@ export default function ContactPage() {
       {/* HERO */}
       <section className="page-hero" style={{ background: "var(--white)", borderBottom: "1px solid var(--line)", paddingBottom: 60 }}>
         <div className="container-narrow" style={{ textAlign: "center" }}>
-          <Eyebrow style={{ marginBottom: 32 }}>Premier pas · 30 minutes offertes</Eyebrow>
+          <Eyebrow style={{ marginBottom: 32 }}>Premier pas · 45 minutes offertes</Eyebrow>
           <h1 className="display" style={{ fontSize: "clamp(36px, 4.6vw, 68px)", margin: "0 0 28px", lineHeight: 1.02 }}>
             Réservez votre<br /><em className="display-italic">appel découverte.</em>
           </h1>
           <hr className="filet" style={{ margin: "0 auto 32px" }} />
           <p style={{ fontSize: 18, lineHeight: 1.7, color: "var(--navy-ink)", maxWidth: 620, margin: "0 auto" }}>
-            Trente minutes, offertes et sans engagement. Une conversation simple
+            Quarante-cinq minutes, offertes et sans engagement. Une conversation simple
             pour comprendre où vous en êtes — et envisager le chemin juste.
           </p>
         </div>
@@ -114,14 +114,11 @@ export default function ContactPage() {
             Réservez votre appel découverte directement dans l&apos;agenda de Domoïna —
             ou utilisez le formulaire ci-dessous si vous préférez écrire.
           </p>
-          <div
-            className="calendly-inline-widget"
-            data-url="https://calendly.com/lavoie2laconscience/1er-rdv"
-            style={{ minWidth: 320, height: 700, marginTop: 40 }}
-          />
+          <div style={{ marginTop: 40 }}>
+            <CalendlyInline url="https://calendly.com/lavoie2laconscience/1er-rdv" />
+          </div>
         </div>
       </section>
-      <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="lazyOnload" />
 
       {/* FORM + INFOS */}
       <section className="section" style={{ paddingTop: 100 }}>

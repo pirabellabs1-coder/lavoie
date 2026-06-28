@@ -38,7 +38,7 @@ const categories = [
       },
       {
         q: "Comment se déroule un accompagnement type ?",
-        r: "Chaque accompagnement commence par un appel découverte (offert, 30 min), suivi d'un bilan approfondi. L'accompagnement alterne ensuite entre séances individuelles, stages immersifs au Centre HUT et temps d'intégration. Le rythme est adapté à chaque personne.",
+        r: "Chaque accompagnement commence par un appel découverte (offert, 45 min), suivi d'un bilan approfondi. L'accompagnement alterne ensuite entre séances individuelles, stages immersifs au Centre HUT et temps d'intégration. Le rythme est adapté à chaque personne.",
       },
       {
         q: "Les séances peuvent-elles se faire à distance ?",
@@ -80,7 +80,7 @@ const categories = [
       },
       {
         q: "Proposez-vous un premier entretien gratuit ?",
-        r: "Absolument. L'appel découverte (30 minutes) est offert, sans engagement et sans pression. Il permet de faire connaissance, d'explorer votre situation et de déterminer si l'accompagnement est adapté pour vous.",
+        r: "Absolument. L'appel découverte (45 minutes) est offert, sans engagement et sans pression. Il permet de faire connaissance, d'explorer votre situation et de déterminer si l'accompagnement est adapté pour vous.",
       },
       {
         q: "L'accompagnement est-il confidentiel ?",

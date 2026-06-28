@@ -162,7 +162,7 @@ const parcours = [
   {
     step: "01",
     title: "Appel découverte",
-    dur: "30 min · Offert",
+    dur: "45 min · Offert",
     body:
       "Un premier échange sans engagement. Pour comprendre ce qui vous amène et envisager le bon point d'entrée.",
   },

@@ -270,7 +270,7 @@ export default function Navbar() {
             </svg>
           </Link>
           <p style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: "var(--mute)", letterSpacing: ".1em" }}>
-            30 minutes · Gratuit · Sans engagement
+            45 minutes · Gratuit · Sans engagement
           </p>
         </div>
       </div>

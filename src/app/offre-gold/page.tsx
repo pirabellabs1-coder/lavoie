@@ -78,7 +78,7 @@ const garanties = [
 const faqs = [
   {
     q: "Comment se déroule concrètement un accompagnement ?",
-    a: "Tout commence par un appel découverte de trente minutes. Si nous décidons mutuellement de poursuivre, un audit d'alignement d'une heure permet de définir le niveau adapté, la cadence, et les premiers axes. Le parcours alterne séances individuelles à distance, stages immersifs au Centre HUT, et présence quotidienne par WhatsApp.",
+    a: "Tout commence par un appel découverte de quarante-cinq minutes. Si nous décidons mutuellement de poursuivre, un audit d'alignement d'une heure permet de définir le niveau adapté, la cadence, et les premiers axes. Le parcours alterne séances individuelles à distance, stages immersifs au Centre HUT, et présence quotidienne par WhatsApp.",
   },
   {
     q: "Quels sont les tarifs des trois niveaux ?",
