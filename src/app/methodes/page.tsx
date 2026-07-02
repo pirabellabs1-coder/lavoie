@@ -151,9 +151,9 @@ export default function ApprochePage() {
             </p>
           </div>
 
-          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+          <div className="rg-3" style={{ gap: 20, alignItems: "stretch" }}>
             {fondements.map((f, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 36px", background: "var(--white)", display: "flex", flexDirection: "column" }}>
+              <div key={i} className="card-hover" data-reveal="" data-reveal-delay={String(i)} style={{ padding: "44px 34px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
                   <span className="card-num" style={{ fontSize: 15 }}>{f.num}</span>
                   <span className="pill" style={{ borderColor: "rgba(200,168,75,0.4)", color: "var(--gold)" }}>{f.role}</span>
@@ -184,9 +184,9 @@ export default function ApprochePage() {
             </p>
           </div>
 
-          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+          <div className="rg-2" style={{ gap: 18 }}>
             {piliers.map((p, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "rgba(255,255,255,0.03)" }}>
+              <div key={i} className="card-marine" data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "42px 38px" }}>
                 <span className="card-num" style={{ fontSize: 16 }}>{p.num}</span>
                 <h3 className="display" style={{ fontSize: 30, color: "var(--white)", margin: "18px 0 6px", lineHeight: 1.15 }}>{p.titre}</h3>
                 <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15, color: "var(--gold)", margin: "0 0 20px" }}>{p.sub}</p>
@@ -228,9 +228,9 @@ export default function ApprochePage() {
             </div>
           </div>
 
-          <div className="rg-4" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+          <div className="rg-4" style={{ gap: 16, alignItems: "stretch" }}>
             {aimePhases.map((p, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} style={{ padding: "48px 32px", background: i % 2 === 0 ? "var(--white)" : "var(--paper)", position: "relative", overflow: "hidden" }}>
+              <div key={i} className="card-hover" data-reveal="" data-reveal-delay={String(i)} style={{ padding: "44px 30px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, position: "relative", overflow: "hidden" }}>
                 <span className="display" style={{ fontSize: 200, color: "rgba(7,16,60,0.06)", position: "absolute", top: -30, right: 12, lineHeight: 1, fontWeight: 400, pointerEvents: "none" }}>
                   {p.letter}
                 </span>
@@ -262,9 +262,9 @@ export default function ApprochePage() {
             </p>
           </div>
 
-          <div className="rg-4" style={{ gap: 0 }}>
+          <div className="rg-4" style={{ gap: 16 }}>
             {saisons.map((s, i) => (
-              <div key={i} style={{ padding: "56px 32px", background: s.isGold ? "var(--gold)" : "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: s.isGold ? "var(--navy-ink)" : "var(--white)", position: "relative", minHeight: 360, display: "flex", flexDirection: "column" }}>
+              <div key={i} className="hover-lift" style={{ padding: "52px 30px", background: s.isGold ? "var(--gold)" : "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: s.isGold ? "var(--navy-ink)" : "var(--white)", position: "relative", minHeight: 360, display: "flex", flexDirection: "column", borderRadius: 16, overflow: "hidden" }}>
                 <p className="card-num" style={{ fontSize: 13, marginBottom: 12, color: s.isGold ? "var(--navy)" : "var(--gold)" }}>
                   {String(i + 1).padStart(2, "0")} / 04
                 </p>
@@ -409,7 +409,7 @@ export default function ApprochePage() {
           </div>
 
           <div className="rg-2" style={{ gap: 24 }}>
-            <div className="card" style={{ background: "var(--paper)" }}>
+            <div className="card hover-lift" style={{ background: "var(--paper)" }}>
               <p className="card-num" style={{ fontSize: 14, marginBottom: 14 }}>Les 3 fondements</p>
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--navy)", margin: "0 0 22px", lineHeight: 1.4 }}>
                 «&nbsp;Sur quoi repose cette approche&nbsp;?&nbsp;»
@@ -428,7 +428,7 @@ export default function ApprochePage() {
               </ul>
             </div>
 
-            <div className="card" style={{ background: "#0f1d6e", border: "1px solid rgba(255,255,255,0.14)" }}>
+            <div className="card hover-lift" style={{ background: "#0f1d6e", border: "1px solid rgba(255,255,255,0.14)" }}>
               <p className="card-num" style={{ fontSize: 14, marginBottom: 14, color: "var(--gold)" }}>Les 4 piliers</p>
               <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 20, color: "var(--white)", margin: "0 0 22px", lineHeight: 1.4 }}>
                 «&nbsp;Comment cette transformation est-elle vécue&nbsp;?&nbsp;»

@@ -682,9 +682,18 @@ footer { margin-top: 0; }
   transition: transform 0.45s var(--ease-out), border-color 0.35s, box-shadow 0.45s;
 }
 .card-hover:hover {
-  transform: translateY(-8px);
+  transform: translateY(-8px) !important;
   border-color: rgba(15,29,110,0.18);
   box-shadow: 0 28px 56px -28px rgba(7,16,60,0.18);
+}
+
+/* Utilitaire : simple soulèvement au survol (sans changer bordure/fond) */
+.hover-lift {
+  transition: transform 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out);
+}
+.hover-lift:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 34px 64px -30px rgba(7,16,60,0.42);
 }
 
 .card-num {
