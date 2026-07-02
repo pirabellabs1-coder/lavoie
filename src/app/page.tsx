@@ -419,6 +419,79 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
+          01b · CENTRE HUT — bande immersive (4 visuels)
+          ══════════════════════════════════════════════════════ */}
+      <section
+        className="sec-blue"
+        style={{
+          background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)",
+          color: "var(--white)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div className="container" style={{ textAlign: "center", paddingTop: 64, paddingBottom: 34 }}>
+          <p className="eyebrow" data-reveal="" style={{ justifyContent: "center", color: "var(--gold)", margin: "0 0 14px" }}>
+            <span className="dot" style={{ background: "var(--gold)" }} />Le Centre HUT · Sarthe<span className="dot" style={{ background: "var(--gold)" }} />
+          </p>
+          <h2
+            data-reveal=""
+            style={{
+              fontFamily: "var(--font-poppins), system-ui, sans-serif",
+              fontWeight: 600,
+              fontSize: "clamp(24px, 3vw, 40px)",
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+              margin: "0 auto",
+              maxWidth: 720,
+              color: "var(--white)",
+            }}
+          >
+            Un écrin de nature pour se transformer
+          </h2>
+          <p
+            data-reveal=""
+            data-reveal-delay="1"
+            style={{
+              fontFamily: "var(--sans)",
+              fontSize: 15,
+              lineHeight: 1.7,
+              color: "rgba(255,255,255,0.78)",
+              maxWidth: 560,
+              margin: "16px auto 0",
+            }}
+          >
+            Microforêt, jardin zen, étang &amp; piscine — un lieu confidentiel où vivre vos
+            immersions, à une heure de Paris.
+          </p>
+        </div>
+
+        {/* Bande d'images pleine largeur */}
+        <div className="hut-strip" data-reveal="" data-reveal-delay="1">
+          {[
+            { src: "/hut-jardin-zen.png", k: "Nature", t: "Jardin zen & piscine" },
+            { src: "/hut-terrasse.png", k: "Extérieur", t: "Terrasse en pierre" },
+            { src: "/hut-salle.png", k: "Convivialité", t: "Salle de vie" },
+            { src: "/hut-chambre.png", k: "Repos", t: "Chambres apaisantes" },
+          ].map((tile, i) => (
+            <Link href="/centre-hut" className="hut-tile" key={i} aria-label={`Centre HUT — ${tile.t}`}>
+              <Placeholder src={tile.src} alt={`${tile.t} — Centre HUT`} sizes="(max-width: 860px) 50vw, 25vw" />
+              <span className="hut-cap">
+                <span className="k">{tile.k}</span>
+                <span className="t">{tile.t}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <div className="container" style={{ textAlign: "center", paddingTop: 32, paddingBottom: 62 }}>
+          <Link href="/centre-hut" className="btn btn-ghost-white" data-reveal="">
+            Visiter le Centre HUT <Arrow />
+          </Link>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
           MARQUEE
           ══════════════════════════════════════════════════════ */}
       <Marquee
