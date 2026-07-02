@@ -3,7 +3,6 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import Marquee from "@/components/Marquee";
 import NewsletterForm from "@/components/NewsletterForm";
-import { getRecentArticles } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
@@ -189,17 +188,6 @@ const parcours = [
   },
 ];
 
-const voyages = [
-  {
-    lieu: "Madagascar",
-    sub: "Au cœur de la source",
-    body:
-      "Un voyage initiatique dans la terre d'origine de Domoïna — rituels d'eau, mémoire ancestrale et accompagnement intime, là où l'Eau devient un véritable maître.",
-    month: "Sur invitation · Immersion Royale",
-    img: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&q=80&auto=format&fit=crop",
-  },
-];
-
 const temoignages = [
   {
     quote:
@@ -220,18 +208,6 @@ const temoignages = [
     source: "Avis Google vérifié",
   },
 ];
-
-// Section « Journal » de l'accueil — alimentée par la vraie source d'articles
-// (vide tant que l'automatisation n'a pas publié d'articles → section masquée).
-const journal = getRecentArticles(3).map((a) => ({
-  cat: a.categorie,
-  title: a.titre,
-  date: a.date,
-  read: a.lecture,
-  slug: a.slug,
-  img: a.image,
-}));
-
 
 /* ─── PAGE ───────────────────────────────────────────────── */
 
@@ -506,78 +482,54 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          02 · STATS
+          02 · PARTI PRIS — manifeste + repères chiffrés (fusion Stats)
           ══════════════════════════════════════════════════════ */}
-      <section
-        className="sec-blue"
-        style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", padding: "80px 0", position: "relative" }}
-      >
-        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>02 — Repères</span>
-        <div className="container">
-          <div className="stats-grid">
-            {stats.map((s, i) => (
-              <div
-                key={i}
-                data-reveal=""
-                data-reveal-delay={String(i)}
-                style={{
-                  padding: "20px 16px",
-                  textAlign: "center",
-                  borderLeft: i === 0 ? 0 : "1px solid rgba(255,255,255,0.12)",
-                }}
-              >
-                <div
-                  className="stat-n"
-                  style={{ fontSize: "clamp(26px,3.2vw,44px)", marginBottom: 10, color: "var(--white)" }}
-                >
-                  {s.n}
-                </div>
-                <p
-                  style={{
-                    fontFamily: "var(--sans)",
-                    margin: 0,
-                    letterSpacing: ".14em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.6)",
-                    fontSize: 11,
-                  }}
-                >
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          03 · PARTI PRIS — une spiritualité incarnée dans la relation
-          ══════════════════════════════════════════════════════ */}
-      <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}>
+      <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative", overflow: "hidden" }}>
+        {/* Halo doré décoratif */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(70% 55% at 50% -8%, rgba(245,196,34,0.12) 0%, transparent 60%)",
+            pointerEvents: "none",
+          }}
+        />
         <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>Notre parti pris</span>
-        <div className="container" style={{ textAlign: "center" }}>
-          <p className="eyebrow" style={{ justifyContent: "center", color: "rgba(255,255,255,0.85)", margin: "0 0 36px" }}>
-            <span className="dot" style={{ background: "var(--white)" }} />Une autre manière de vivre le spirituel<span className="dot" style={{ background: "var(--white)" }} />
+        <div className="container" style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+          <p className="eyebrow" style={{ justifyContent: "center", color: "var(--gold)", margin: "0 0 22px" }}>
+            <span className="dot" style={{ background: "var(--gold)" }} />Une autre manière de vivre le spirituel<span className="dot" style={{ background: "var(--gold)" }} />
           </p>
+          {/* Guillemet décoratif */}
+          <div aria-hidden="true" style={{ fontFamily: "var(--serif)", fontSize: "clamp(60px,7vw,104px)", lineHeight: 1, color: "var(--gold)", margin: "0 0 -14px" }}>&ldquo;</div>
           <p
             data-reveal=""
             className="mega"
-            style={{ fontSize: "clamp(24px,3vw,46px)", lineHeight: 1.22, margin: 0, fontWeight: 300, color: "var(--white)" }}
+            style={{ fontSize: "clamp(25px,3vw,44px)", lineHeight: 1.24, margin: "0 auto", maxWidth: 920, fontWeight: 300, color: "var(--white)" }}
           >
             Ici, la spiritualité ne se contemple pas&nbsp;:{" "}
-            <em style={{ color: "var(--white)", fontStyle: "italic" }}>elle s&apos;incarne.</em>
+            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elle s&apos;incarne.</em>
             {" "}Elle se vit, et se mesure à votre capacité à habiter vos relations —
             professionnelles, familiales, amoureuses — de manière consciente.
           </p>
-          <hr style={{ width: 48, height: 1, border: 0, background: "rgba(255,255,255,0.5)", margin: "44px auto 28px" }} />
-          <p style={{ fontSize: 16, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", maxWidth: 640, margin: "0 auto 36px" }}>
+          <p style={{ fontSize: 15.5, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", maxWidth: 620, margin: "28px auto 34px" }}>
             Ni religion, ni développement personnel&nbsp;: un accompagnement spirituel et initiatique
             pensé pour les dirigeants, entrepreneurs et cadres qui ont déjà réussi — et qui sentent
             qu&apos;une autre dimension d&apos;eux-mêmes cherche à s&apos;incarner.
           </p>
-          <Link href="/methodes" className="btn" style={{ background: "var(--white)", color: "var(--blue)", borderColor: "var(--white)" }}>
+          <Link href="/methodes" className="btn btn-gold btn-lg">
             Découvrir mon approche <Arrow />
           </Link>
+
+          {/* Repères chiffrés (ex-section Stats, fusionnée) */}
+          <div className="parti-stats">
+            {stats.map((s, i) => (
+              <div key={i} className="parti-stat" data-reveal="" data-reveal-delay={String(i)}>
+                <div className="parti-stat-n">{s.n}</div>
+                <p className="parti-stat-l">{s.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1067,208 +1019,27 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          09 · CENTRE HUT
-          ══════════════════════════════════════════════════════ */}
-      <section className="section" style={{ position: "relative" }}>
-        <span className="section-num">09 — Centre HUT</span>
-        <div className="container">
-          <div className="hut-grid">
-            {/* Gallery */}
-            <div data-reveal="">
-              <div className="img-zoom" style={{ marginBottom: 12 }}>
-                <Placeholder
-                  style={{ aspectRatio: "14/10" }}
-                  src="/hut-jardin-zen.png"
-                  alt="Jardin zen du Centre HUT au crépuscule — bassin, lavandes et olivier"
-                  sizes="(max-width: 768px) 100vw, 55vw"
-                />
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <div className="img-zoom">
-                  <Placeholder
-                    style={{ aspectRatio: "4/3" }}
-                    src="/hut-terrasse.png"
-                    alt="Terrasse et bâtisse en pierre du Centre HUT"
-                    sizes="(max-width: 768px) 50vw, 27vw"
-                  />
-                </div>
-                <div className="img-zoom">
-                  <Placeholder
-                    style={{ aspectRatio: "4/3" }}
-                    src="/hut-salle.png"
-                    alt="Salle à manger conviviale du Centre HUT"
-                    sizes="(max-width: 768px) 50vw, 27vw"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Copy */}
-            <div data-reveal="" data-reveal-delay="1">
-              <Eyebrow style={{ marginBottom: 24 }}>Un sanctuaire de reconnexion à soi</Eyebrow>
-              <h2
-                className="display"
-                style={{ fontSize: "clamp(28px,3vw,46px)", margin: "0 0 24px", lineHeight: 1.05 }}
-              >
-                Le Centre HUT,
-                <br />
-                <em style={{ fontWeight: 300 }}>un sanctuaire</em>
-                <br />
-                de reconnexion à soi.
-              </h2>
-              <hr className="filet" style={{ marginBottom: 28 }} />
-              <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--navy-ink)", margin: "0 0 22px" }}>
-                Vous n&apos;y venez pas par hasard. Il y a des lieux qui marquent une étape&nbsp;:
-                HUT en fait partie. Ce centre ne vous accueille pas, il vous reconnaît — et vous
-                offre le cadre juste pour aller là où vous n&apos;êtes encore jamais allé.
-              </p>
-              <p style={{ fontSize: 15, lineHeight: 1.78, color: "var(--mute)", margin: "0 0 32px" }}>
-                À deux heures de Paris, niché dans une nature vibrante et préservée, le Centre HUT
-                est un espace vivant, pensé comme un cocon initiatique pour vos processus de
-                guérison, de transformation et de renaissance.
-              </p>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 16,
-                  paddingTop: 28,
-                  borderTop: "1px solid var(--line)",
-                }}
-              >
-                {[
-                  { n: "2h", label: "de Paris" },
-                  { n: "8", label: "Personnes max" },
-                ].map((s, i) => (
-                  <div key={i}>
-                    <p className="num" style={{ fontSize: "clamp(26px,2.8vw,36px)", color: "var(--navy)", margin: "0 0 4px" }}>
-                      {s.n}
-                    </p>
-                    <p
-                      style={{
-                        fontFamily: "var(--sans)",
-                        fontSize: 10,
-                        margin: 0,
-                        letterSpacing: ".12em",
-                        textTransform: "uppercase",
-                        color: "var(--mute)",
-                      }}
-                    >
-                      {s.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          10 · VOYAGES INITIATIQUES
-          ══════════════════════════════════════════════════════ */}
-      <section className="section" style={{ background: "var(--white)", position: "relative" }}>
-        <span className="section-num">10 — Voyages</span>
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <Eyebrow style={{ marginBottom: 24 }}>Voyages initiatiques</Eyebrow>
-              <h2>
-                Madagascar,
-                <br />
-                <em className="display-italic">au cœur de la source.</em>
-              </h2>
-            </div>
-            <p>
-              Inclus dans l&apos;Immersion Royale. Le voyage prolonge le travail du Centre HUT
-              dans la terre d&apos;origine de Domoïna, là où l&apos;Eau devient un véritable maître.
-            </p>
-          </div>
-
-          <div style={{ maxWidth: 580, margin: "0 auto" }}>
-            {voyages.map((v, i) => (
-              <div
-                key={i}
-                data-reveal=""
-                data-reveal-delay={String(i)}
-                className="card-hover"
-                style={{ background: "var(--paper)", border: "1px solid var(--line)" }}
-              >
-                <div className="img-zoom" style={{ borderBottom: "1px solid var(--line)" }}>
-                  <Placeholder
-                    mark={"0" + (i + 6)}
-                    style={{ aspectRatio: "16/10" }}
-                    src={v.img}
-                    alt={"Voyage initiatique · " + v.lieu}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div style={{ padding: "26px 30px 32px" }}>
-                  <p
-                    style={{
-                      fontFamily: "var(--sans)",
-                      fontSize: 10.5,
-                      letterSpacing: ".2em",
-                      textTransform: "uppercase",
-                      color: "var(--gold)",
-                      margin: "0 0 10px",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {v.month}
-                  </p>
-                  <h3
-                    className="display"
-                    style={{ fontSize: "clamp(22px,2.2vw,32px)", color: "var(--navy)", margin: "0 0 4px", lineHeight: 1.1 }}
-                  >
-                    {v.lieu}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--serif)",
-                      fontStyle: "italic",
-                      fontSize: 15,
-                      color: "var(--mute)",
-                      margin: "0 0 18px",
-                    }}
-                  >
-                    {v.sub}
-                  </p>
-                  <hr className="filet" style={{ marginBottom: 18 }} />
-                  <p style={{ fontSize: 14, lineHeight: 1.72, color: "var(--navy-ink)", margin: 0 }}>
-                    {v.body}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <hr className="filet-gold-full" />
-
-      {/* ══════════════════════════════════════════════════════
           11 · TÉMOIGNAGES — on navy for contrast
           ══════════════════════════════════════════════════════ */}
       <section
-        className="section sec-blue"
+        className="section"
         id="temoignages"
-        style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}
+        style={{ background: "var(--paper)", position: "relative" }}
       >
-        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>11 — Témoignages</span>
+        <span className="section-num">11 — Témoignages</span>
         <div className="container">
           <div className="section-head">
             <div>
-              <Eyebrow style={{ color: "rgba(255,255,255,0.85)", marginBottom: 24 }}>Témoignages</Eyebrow>
-              <h2 style={{ color: "var(--white)" }}>
+              <Eyebrow style={{ marginBottom: 24 }}>Témoignages</Eyebrow>
+              <h2>
                 Ceux que j&apos;accompagne
                 <br />
-                <em className="display-italic" style={{ color: "var(--white)" }}>
+                <em className="display-italic">
                   témoignent.
                 </em>
               </h2>
             </div>
-            <p style={{ color: "rgba(255,255,255,0.58)" }}>
+            <p>
               Des avis Google vérifiés de celles et ceux qui cheminent avec La Voie 2 la Conscience.
             </p>
           </div>
@@ -1279,7 +1050,7 @@ export default function Home() {
                 key={i}
                 data-reveal=""
                 data-reveal-delay={String(i)}
-                className="testi-dark"
+                className="testi"
                 style={{ display: "flex", flexDirection: "column" }}
               >
                 <p
@@ -1287,7 +1058,7 @@ export default function Home() {
                     fontFamily: "var(--serif)",
                     fontSize: "clamp(15px,1.2vw,17px)",
                     lineHeight: 1.68,
-                    color: "rgba(255,255,255,0.88)",
+                    color: "var(--navy-ink)",
                     margin: "0 0 24px",
                     fontStyle: "italic",
                     flexGrow: 1,
@@ -1296,8 +1067,8 @@ export default function Home() {
                 >
                   {t.quote}
                 </p>
-                <hr style={{ height: 1, background: "rgba(255,255,255,0.1)", border: 0, marginBottom: 16 }} />
-                <p style={{ margin: "0 0 6px", fontWeight: 500, fontSize: 13.5, color: "var(--white)", fontFamily: "var(--sans)" }}>
+                <hr style={{ height: 1, background: "var(--line)", border: 0, marginBottom: 16 }} />
+                <p style={{ margin: "0 0 6px", fontWeight: 600, fontSize: 13.5, color: "var(--navy)", fontFamily: "var(--sans)" }}>
                   {t.name}
                 </p>
                 <p
@@ -1330,16 +1101,16 @@ export default function Home() {
               gap: 28,
               flexWrap: "wrap",
               padding: "24px 36px",
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "var(--white)",
+              border: "1px solid var(--line)",
               maxWidth: 660,
               margin: "52px auto 0",
             }}
           >
             <div style={{ textAlign: "center" }}>
-              <p className="num" style={{ fontSize: 52, color: "var(--white)", margin: 0, lineHeight: 1 }}>
+              <p className="num" style={{ fontSize: 52, color: "var(--navy)", margin: 0, lineHeight: 1 }}>
                 4.9
-                <span style={{ fontSize: 20, color: "rgba(255,255,255,0.35)" }}>/5</span>
+                <span style={{ fontSize: 20, color: "var(--mute)" }}>/5</span>
               </p>
               <p
                 style={{
@@ -1353,19 +1124,19 @@ export default function Home() {
                 ★ ★ ★ ★ ★
               </p>
             </div>
-            <div className="vdiv" style={{ height: 44 }} />
+            <div className="vdiv" style={{ height: 44, background: "var(--line-dark)" }} />
             <div>
-              <p style={{ fontSize: 14.5, color: "rgba(255,255,255,0.82)", margin: "0 0 4px", lineHeight: 1.5 }}>
-                <strong style={{ fontWeight: 500 }}>142 avis Google</strong> · 100% recommandent
+              <p style={{ fontSize: 14.5, color: "var(--navy-ink)", margin: "0 0 4px", lineHeight: 1.5 }}>
+                <strong style={{ fontWeight: 600 }}>142 avis Google</strong> · 100% recommandent
               </p>
-              <p style={{ fontFamily: "var(--sans)", margin: 0, color: "rgba(255,255,255,0.38)", fontSize: 11.5 }}>
+              <p style={{ fontFamily: "var(--sans)", margin: 0, color: "var(--mute)", fontSize: 11.5 }}>
                 Vérifiés · Anonymisés à la demande
               </p>
             </div>
           </div>
 
           <div style={{ textAlign: "center", marginTop: 44 }}>
-            <Link href="/temoignages" className="btn btn-ghost-white">
+            <Link href="/temoignages" className="btn btn-ghost">
               Lire tous les témoignages <Arrow />
             </Link>
           </div>
@@ -1461,78 +1232,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ══════════════════════════════════════════════════════
-          13 · JOURNAL
-          ══════════════════════════════════════════════════════ */}
-      {journal.length > 0 && (
-      <section id="journal" className="section" style={{ background: "var(--paper)", position: "relative" }}>
-        <span className="section-num">13 — Journal</span>
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <Eyebrow style={{ marginBottom: 24 }}>Journal</Eyebrow>
-              <h2>
-                Lire,
-                <br />
-                <em className="display-italic">avant de venir.</em>
-              </h2>
-            </div>
-            <p>
-              Textes, notes de pratique et témoignages — pour donner à lire ce qui ne se résume pas.
-            </p>
-          </div>
-
-          <div className="three-grid">
-            {journal.map((j, i) => (
-              <Link
-                key={i}
-                href={`/blog/${j.slug}`}
-                data-reveal=""
-                data-reveal-delay={String(i)}
-                className="card-hover"
-                style={{ display: "block", background: "var(--white)", border: "1px solid var(--line)", textDecoration: "none" }}
-              >
-                <div className="img-zoom" style={{ borderBottom: "1px solid var(--line)" }}>
-                  <Placeholder
-                    mark={"0" + (i + 8)}
-                    style={{ aspectRatio: "16/10" }}
-                    src={j.img}
-                    alt={j.title}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <div style={{ padding: "22px 26px 28px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                    <span className="pill">{j.cat}</span>
-                    <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--mute)" }}>
-                      {j.read} lecture
-                    </span>
-                  </div>
-                  <h3
-                    className="display"
-                    style={{ fontSize: "clamp(19px,1.9vw,26px)", color: "var(--navy)", margin: "0 0 16px", lineHeight: 1.28 }}
-                  >
-                    {j.title}
-                  </h3>
-                  <hr className="filet" style={{ marginBottom: 16 }} />
-                  <p style={{ fontFamily: "var(--sans)", fontSize: 12, margin: 0, color: "var(--mute)", letterSpacing: ".04em" }}>
-                    <span style={{ color: "var(--gold)", marginRight: 6 }}>—</span>
-                    {j.date}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div style={{ textAlign: "center", marginTop: 52 }}>
-            <Link href="/blog" className="link-underline">
-              Lire tout le journal <Arrow />
-            </Link>
-          </div>
-        </div>
-      </section>
-      )}
 
       {/* ══════════════════════════════════════════════════════
           14 · NEWSLETTER
