@@ -232,7 +232,6 @@ const journal = getRecentArticles(3).map((a) => ({
   img: a.image,
 }));
 
-const presse = ["MADAME FIGARO", "LES ÉCHOS", "PSYCHOLOGIES", "L'OBS", "FORBES FR"];
 
 /* ─── PAGE ───────────────────────────────────────────────── */
 
@@ -1519,55 +1518,7 @@ export default function Home() {
       )}
 
       {/* ══════════════════════════════════════════════════════
-          14 · PRESSE
-          ══════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          padding: "52px 0",
-          background: "var(--white)",
-          borderTop: "1px solid var(--line)",
-          borderBottom: "1px solid var(--line)",
-        }}
-      >
-        <div className="container">
-          <p
-            style={{
-              textAlign: "center",
-              fontFamily: "var(--sans)",
-              fontSize: 10.5,
-              letterSpacing: ".22em",
-              textTransform: "uppercase",
-              color: "var(--mute)",
-              margin: "0 0 32px",
-            }}
-          >
-            Une pratique citée dans
-          </p>
-          <div className="presse-grid">
-            {presse.map((m, i) => (
-              <div
-                key={i}
-                style={{
-                  textAlign: "center",
-                  fontFamily: "var(--serif)",
-                  fontStyle: "italic",
-                  fontSize: "clamp(14px,1.8vw,22px)",
-                  color: "var(--navy)",
-                  opacity: 0.35,
-                  padding: "8px 0",
-                  borderLeft: i === 0 ? 0 : "1px solid var(--line)",
-                  transition: "opacity 0.3s",
-                }}
-              >
-                {m}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          15 · NEWSLETTER
+          14 · NEWSLETTER
           ══════════════════════════════════════════════════════ */}
       <section
         className="section"
