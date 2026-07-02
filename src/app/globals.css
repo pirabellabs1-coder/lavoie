@@ -291,7 +291,7 @@ section { position: relative; }
   align-items: center;
   gap: 11px;
 }
-.logo-mark { height: 46px; width: auto; flex-shrink: 0; }
+.logo-mark { height: 52px; width: auto; flex-shrink: 0; }
 .logo-word { display: flex; flex-direction: column; }
 .logo:hover { opacity: 0.75; }
 .logo .num {

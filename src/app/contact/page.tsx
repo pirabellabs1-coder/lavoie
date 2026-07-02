@@ -40,16 +40,34 @@ export default function ContactPage() {
     situation: "", niveau: "", rgpd: false,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const val = e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
     setForm({ ...form, [k]: val });
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setSending(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error();
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      setErrorMsg(
+        "Une erreur est survenue. Réessayez, ou écrivez-nous directement à contact@lavoie2laconscience.com.",
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   if (submitted) {
@@ -183,9 +201,14 @@ export default function ContactPage() {
                 </span>
               </label>
 
-              <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-                Envoyer ma demande <Arrow />
+              <button type="submit" disabled={sending} className="btn btn-primary" style={{ width: "100%", justifyContent: "center", opacity: sending ? 0.7 : 1, cursor: sending ? "wait" : "pointer" }}>
+                {sending ? "Envoi en cours…" : <>Envoyer ma demande <Arrow /></>}
               </button>
+              {errorMsg && (
+                <p role="alert" style={{ textAlign: "center", margin: "16px 0 0", color: "#c0392b", fontSize: 13, lineHeight: 1.5 }}>
+                  {errorMsg}
+                </p>
+              )}
               <p className="small" style={{ textAlign: "center", margin: "20px 0 0", color: "var(--mute)", fontSize: 12 }}>
                 ✦ Réponse sous 24h ouvrées · Confidentialité absolue ✦
               </p>

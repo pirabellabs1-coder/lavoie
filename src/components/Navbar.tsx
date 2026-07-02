@@ -77,12 +77,8 @@ export default function Navbar() {
         <div className={`nav-inner${shrunk ? " shrunk" : ""}`}>
 
           {/* ── Logo ── */}
-          <Link href="/" className="logo">
+          <Link href="/" className="logo" aria-label="La Voie 2 la Conscience — Accueil">
             <Image src="/logo.png" alt="La Voie 2 la Conscience" width={490} height={480} className="logo-mark" priority />
-            <span className="logo-word">
-              La Voie <span className="num">&thinsp;2&thinsp;</span> la Conscience
-              <small>Accompagnement initiatique</small>
-            </span>
           </Link>
 
           {/* ── Desktop links ── */}
@@ -164,8 +160,8 @@ export default function Navbar() {
           padding: "0 20px",
           borderBottom: "1px solid var(--line)",
         }}>
-          <Link href="/" className="logo" style={{ fontSize: 16 }}>
-            La Voie <span className="num">&thinsp;2&thinsp;</span> la Conscience
+          <Link href="/" className="logo" aria-label="La Voie 2 la Conscience — Accueil">
+            <Image src="/logo.png" alt="La Voie 2 la Conscience" width={42} height={41} className="logo-mark" priority />
           </Link>
           <button
             onClick={() => setMobileOpen(false)}
