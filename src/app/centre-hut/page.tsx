@@ -175,7 +175,7 @@ export default function CentreHut() {
             </div>
 
             {/* INFOS PRATIQUES */}
-            <div style={{ background: "var(--paper)", padding: 40, border: "1px solid var(--line)" }}>
+            <div style={{ background: "var(--paper)", padding: 40, border: "1px solid var(--line)", borderRadius: 18 }}>
               <Eyebrow style={{ marginBottom: 24 }}>Informations pratiques</Eyebrow>
               <div style={{ borderTop: "1px solid var(--line)" }}>
                 {infos.map((info, i) => (
@@ -235,9 +235,9 @@ export default function CentreHut() {
             </p>
           </div>
 
-          <div className="rg-2" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+          <div className="rg-2" style={{ gap: 18 }}>
             {espaces.map((e, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "48px 36px", background: "var(--white)" }}>
+              <div key={i} className="card-hover" data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 34px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16 }}>
                 <div style={{ width: 48, height: 48, border: "1px solid var(--blue)", display: "grid", placeItems: "center", marginBottom: 28, color: "var(--blue)", fontSize: 22 }}>
                   {e.glyph}
                 </div>

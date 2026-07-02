@@ -140,9 +140,9 @@ export default function MasterclassChallenge() {
             </p>
           </div>
 
-          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+          <div className="rg-3" style={{ gap: 18, alignItems: "stretch" }}>
             {situations.map((s, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{ padding: "36px 32px", background: "var(--white)" }}>
+              <div key={i} className="card-hover" data-reveal="" data-reveal-delay={String(i % 3)} style={{ padding: "34px 30px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16 }}>
                 <div style={{ width: 30, height: 30, border: "1px solid var(--gold)", borderRadius: "50%", display: "grid", placeItems: "center", color: "var(--gold)", fontSize: 14, marginBottom: 18 }}>✕</div>
                 <h3 className="display" style={{ fontSize: 22, color: "var(--navy)", margin: "0 0 12px", lineHeight: 1.2 }}>{s.t}</h3>
                 <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--mute)", margin: 0 }}>{s.b}</p>
@@ -174,7 +174,7 @@ export default function MasterclassChallenge() {
 
           <div style={{ display: "grid", gap: 16 }}>
             {jours.map((j, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i)} className="rg-split-fixed" style={{ gap: 40, padding: "40px 44px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", alignItems: "start" }}>
+              <div key={i} data-reveal="" data-reveal-delay={String(i)} className="rg-split-fixed card-marine" style={{ gap: 40, padding: "40px 44px", alignItems: "start" }}>
                 <div>
                   <p className="display" style={{ fontSize: 64, color: "rgba(200,168,75,0.45)", margin: 0, lineHeight: 1 }}>{j.jour}</p>
                   <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--gold)", margin: "12px 0 0" }}>{j.duree}</p>
@@ -315,7 +315,7 @@ export default function MasterclassChallenge() {
 
           <div className="rg-3" style={{ gap: 16, marginBottom: 44 }}>
             {inscription.map((g, i) => (
-              <div key={i} style={{ background: "var(--white)", border: "1px solid var(--line)", padding: "32px 24px" }}>
+              <div key={i} className="card-hover" style={{ background: "var(--white)", border: "1px solid var(--line)", padding: "34px 26px", borderRadius: 16 }}>
                 <div style={{ width: 30, height: 30, border: "1px solid var(--gold)", display: "grid", placeItems: "center", color: "var(--gold)", fontSize: 14, margin: "0 auto 18px" }}>✦</div>
                 <h3 style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "var(--navy)", margin: "0 0 8px" }}>{g.t}</h3>
                 <p className="small muted" style={{ margin: 0, lineHeight: 1.55, fontSize: 12.5 }}>{g.b}</p>

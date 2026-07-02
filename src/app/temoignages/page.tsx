@@ -132,11 +132,10 @@ export default function Temoignages() {
       {/* GRILLE */}
       <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)" }}>
         <div className="container">
-          <div className="rg-3" style={{ gap: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+          <div className="rg-3" style={{ gap: 16 }}>
             {temoignages.map((t, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 3)} style={{
-                padding: "32px 30px",
-                background: "rgba(255,255,255,0.03)",
+              <div key={i} className="card-marine" data-reveal="" data-reveal-delay={String(i % 3)} style={{
+                padding: "30px 28px",
                 display: "flex",
                 flexDirection: "column",
               }}>
