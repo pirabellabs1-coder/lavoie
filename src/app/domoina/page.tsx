@@ -5,7 +5,7 @@ import Placeholder from "@/components/Placeholder";
 export const metadata: Metadata = {
   title: "Domoïna Ramiadana — Thérapeute initiatique",
   description:
-    "Domoïna Ramiadana, thérapeute initiatique des dirigeants, cadres et thérapeutes en quête d'excellence. Plus de 20 ans d'accompagnement holistique. Fondatrice du Centre HUT et de La Voie 2 la Conscience.",
+    "Domoïna Ramiadana, thérapeute initiatique des dirigeants, cadres et thérapeutes en quête d'excellence. Plus de 21 ans d'accompagnement holistique. Fondatrice du Centre HUT et de La Voie 2 la Conscience.",
   alternates: { canonical: "/domoina" },
 };
 
@@ -124,14 +124,14 @@ export default function DomoinaPage() {
                 ou simplement une impression de vide existentiel — malgré tout ce qu&apos;ils ont construit.
               </p>
               <p style={{ fontSize: 15.5, lineHeight: 1.82, color: "var(--navy-ink)", margin: 0 }}>
-                Avec plus de <strong style={{ fontWeight: 500 }}>20 ans d&apos;expérience</strong> dans
+                Avec plus de <strong style={{ fontWeight: 500 }}>21 ans d&apos;expérience</strong> dans
                 l&apos;accompagnement holistique, je me consacre aujourd&apos;hui à aider ces dirigeants à
                 retrouver leur clarté, leur légitimité, leur puissance et leur Vision Intérieure Propre
                 (V.I.P.), en revenant à leur zone d&apos;E.A.U.
               </p>
 
               <div style={{ display: "flex", gap: 48, flexWrap: "wrap", marginTop: 40, paddingTop: 28, borderTop: "1px solid var(--line)" }}>
-                {[{ n: "20+", label: "Années d'expérience" }, { n: "500+", label: "Vies transformées" }, { n: "4", label: "Piliers" }].map((s, i) => (
+                {[{ n: "21+", label: "Années d'expérience" }, { n: "500+", label: "Vies transformées" }, { n: "4", label: "Piliers" }].map((s, i) => (
                   <div key={i}>
                     <p className="num" style={{ fontSize: 48, color: "var(--navy)", margin: 0 }}>{s.n}</p>
                     <p className="small muted" style={{ letterSpacing: ".16em", textTransform: "uppercase", margin: "4px 0 0", fontSize: 10.5 }}>{s.label}</p>
@@ -167,7 +167,7 @@ export default function DomoinaPage() {
               énergétique, émotionnelle et mentale.
             </p>
           </div>
-          <ul style={{ listStyle: "none", padding: 0, margin: "0 auto", maxWidth: 680 }}>
+          <ul style={{ listStyle: "none", padding: 0, margin: "0 auto", maxWidth: 680, display: "flex", flexDirection: "column", gap: 12 }}>
             {[
               "Une vision claire de votre mission et de vos priorités",
               "Une libération des blocages inconscients ou transgénérationnels",
@@ -175,7 +175,7 @@ export default function DomoinaPage() {
               "Une productivité consciente, sans vous cramer",
               "Une réussite qui a du sens, au-delà du succès extérieur",
             ].map((g, i) => (
-              <li key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "18px 0", borderBottom: "1px solid var(--line)" }}>
+              <li key={i} className="card-hover" style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "20px 24px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 14 }}>
                 <span style={{ color: "var(--gold)", flexShrink: 0, fontSize: 14, marginTop: 3 }}>✦</span>
                 <span style={{ fontSize: 16.5, lineHeight: 1.6, color: "var(--navy-ink)" }}>{g}</span>
               </li>
@@ -202,9 +202,9 @@ export default function DomoinaPage() {
             </p>
           </div>
 
-          <div className="rg-2" style={{ gap: 1, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+          <div className="rg-2" style={{ gap: 18 }}>
             {piliers.map((v, i) => (
-              <div key={i} data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "44px 40px", background: "rgba(255,255,255,0.03)" }}>
+              <div key={i} className="card-marine" data-reveal="" data-reveal-delay={String(i % 2)} style={{ padding: "42px 38px" }}>
                 <span className="card-num" style={{ fontSize: 16 }}>{v.num}</span>
                 <h3 className="display" style={{ fontSize: 32, color: "var(--white)", margin: "20px 0 6px", lineHeight: 1.1 }}>{v.title}</h3>
                 <p style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 15, color: "var(--gold)", margin: "0 0 20px" }}>{v.sub}</p>
