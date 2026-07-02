@@ -967,6 +967,107 @@ footer { margin-top: 0; }
   .hut-cap .t { font-size: 14px; }
 }
 
+/* ─── ACCUEIL : parcours en timeline (07) ──────────────── */
+.parcours-flow {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.parcours-flow::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(245,196,34,0.12), var(--gold) 22%, var(--gold) 78%, rgba(245,196,34,0.12));
+  z-index: 0;
+}
+.parcours-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.parcours-node {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 22px -10px rgba(15,29,110,0.4);
+  transition: background 0.4s var(--ease-out), border-color 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+.parcours-node span {
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--gold);
+  transition: color 0.4s var(--ease-out);
+}
+.parcours-card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 26px 22px 28px;
+  text-align: center;
+  box-shadow: 0 18px 40px -28px rgba(15,29,110,0.3);
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+.parcours-step:hover .parcours-card {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 56px -26px rgba(15,29,110,0.4);
+}
+.parcours-step:hover .parcours-node {
+  background: var(--blue);
+  border-color: var(--blue);
+  transform: scale(1.06);
+}
+.parcours-step:hover .parcours-node span { color: #fff; }
+.parcours-dur {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--blue);
+  background: rgba(245,196,34,0.16);
+  border: 1px solid rgba(245,196,34,0.42);
+  border-radius: 999px;
+  padding: 5px 13px;
+  margin-bottom: 14px;
+}
+.parcours-title {
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--navy-ink);
+  margin: 0 0 10px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.parcours-body {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--mute);
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .parcours-flow { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .parcours-flow::before { display: none; }
+}
+@media (max-width: 520px) {
+  .parcours-flow { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+}
+
 /* ─── FORMS ───────────────────────────────────────────── */
 
 .field { display: flex; flex-direction: column; gap: 8px; }

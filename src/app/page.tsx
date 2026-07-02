@@ -877,43 +877,26 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="four-grid">
+          <div className="parcours-flow">
             {parcours.map((p, i) => (
               <div
+                className="parcours-step"
                 key={i}
                 data-reveal=""
                 data-reveal-delay={String(i)}
-                style={{ position: "relative" }}
               >
-                <div className="step-circle" style={{ marginBottom: 22 }}>
-                  {p.step}
+                <div className="parcours-node"><span>{p.step}</span></div>
+                <div className="parcours-card">
+                  <span className="parcours-dur">{p.dur}</span>
+                  <h4 className="parcours-title">{p.title}</h4>
+                  <p className="parcours-body">{p.body}</p>
                 </div>
-                <h4
-                  className="display"
-                  style={{ fontSize: "clamp(22px,2.2vw,28px)", color: "var(--navy)", margin: "0 0 8px", lineHeight: 1.15 }}
-                >
-                  {p.title}
-                </h4>
-                <p
-                  style={{
-                    fontFamily: "var(--serif)",
-                    fontStyle: "italic",
-                    fontSize: 13.5,
-                    color: "var(--gold)",
-                    margin: "0 0 16px",
-                  }}
-                >
-                  {p.dur}
-                </p>
-                <p style={{ fontSize: 14, lineHeight: 1.72, color: "var(--navy-ink)", margin: 0 }}>
-                  {p.body}
-                </p>
               </div>
             ))}
           </div>
 
-          <div style={{ textAlign: "center", marginTop: 60 }}>
-            <Link href="/contact" className="btn btn-ghost">
+          <div style={{ textAlign: "center", marginTop: 56 }}>
+            <Link href="/contact" className="btn btn-primary btn-lg">
               Démarrer à l&apos;étape 01 <Arrow />
             </Link>
           </div>
