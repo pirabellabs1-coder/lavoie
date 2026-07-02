@@ -3,6 +3,8 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import Marquee from "@/components/Marquee";
 import NewsletterForm from "@/components/NewsletterForm";
+import JsonLd from "@/components/JsonLd";
+import { faqLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
@@ -272,6 +274,7 @@ const faqs = [
 export default function Home() {
   return (
     <div className="page-fade">
+      <JsonLd data={[faqLd(faqs.map((f) => ({ q: f.q, a: f.r })))]} />
 
       {/* ══════════════════════════════════════════════════════
           01 · HERO — Full-bleed cinematic
