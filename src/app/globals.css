@@ -1101,6 +1101,34 @@ footer { margin-top: 0; }
   .parti-stat + .parti-stat { border-left: 0; border-top: 1px solid rgba(255,255,255,0.15); }
 }
 
+/* ─── ACCUEIL : vraies cartes Offre Gold (3 niveaux) ───── */
+.offre-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.5s var(--ease-out), border-color 0.4s var(--ease-out),
+              box-shadow 0.5s var(--ease-out), background 0.4s var(--ease-out);
+}
+.offre-card:hover {
+  transform: translateY(-10px) !important;
+  border-color: rgba(245,196,34,0.55);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 34px 66px -30px rgba(0,0,0,0.6);
+}
+.offre-card--featured {
+  background: rgba(245,196,34,0.09);
+  border-color: rgba(245,196,34,0.6);
+  box-shadow: 0 26px 60px -30px rgba(0,0,0,0.5);
+}
+.offre-card--featured:hover {
+  border-color: var(--gold);
+  background: rgba(245,196,34,0.13);
+}
+
 /* ─── FORMS ───────────────────────────────────────────── */
 
 .field { display: flex; flex-direction: column; gap: 8px; }
@@ -1478,8 +1506,8 @@ select option { background: var(--white); }
 .offres-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border: 1px solid rgba(255,255,255,0.15);
-  overflow: visible;
+  gap: 22px;
+  align-items: stretch;
 }
 
 /* Centre HUT — gallery + text */
@@ -1531,9 +1559,7 @@ select option { background: var(--white); }
   .three-grid { grid-template-columns: 1fr; gap: 16px; }
   .video-grid { grid-template-columns: 1fr; gap: 16px; }
   .pourqui-grid { grid-template-columns: 1fr; }
-  .offres-grid { grid-template-columns: 1fr; }
-  .offres-grid > * { border-right: 0 !important; border-bottom: 1px solid rgba(255,255,255,0.12); }
-  .offres-grid > *:last-child { border-bottom: 0; }
+  .offres-grid { grid-template-columns: 1fr; gap: 18px; }
   .four-grid { grid-template-columns: 1fr; gap: 28px; }
   .presse-grid { grid-template-columns: repeat(2, 1fr); }
   .presse-grid > *:nth-child(odd) { border-left: 0; }

@@ -887,13 +887,7 @@ export default function Home() {
                 key={i}
                 data-reveal=""
                 data-reveal-delay={String(i)}
-                style={{
-                  borderRight: i < 2 ? "1px solid rgba(255,255,255,0.15)" : 0,
-                  background: o.featured ? "rgba(200,168,75,0.07)" : "transparent",
-                  position: "relative",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
+                className={`offre-card${o.featured ? " offre-card--featured" : ""}`}
               >
                 {/* Barre accent dorée — carte featured */}
                 {o.featured && (
