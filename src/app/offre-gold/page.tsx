@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { faqLd, breadcrumbLd } from "@/lib/jsonld";
@@ -95,8 +92,6 @@ const faqs = [
 ];
 
 export default function OffreGoldPage() {
-  const [openFaq, setOpenFaq] = useState(0);
-
   return (
     <div className="page-fade">
       <JsonLd
@@ -139,21 +134,12 @@ export default function OffreGoldPage() {
               Chaque programme est une porte vers une transformation unique et profonde.
             </p>
           </div>
-          <div className="rg-3" style={{ gap: 0 }}>
+          <div className="rg-3" style={{ gap: 22, alignItems: "stretch" }}>
             {offres.map((o, i) => (
-              <div key={i} className={o.featured ? "offre-pop" : undefined} style={{
-                background: o.featured ? "#0f1d6e" : "var(--white)",
-                color: o.featured ? "var(--white)" : "var(--navy-ink)",
-                padding: "56px 40px 48px",
-                border: `1px solid ${o.featured ? "#0f1d6e" : "var(--line)"}`,
-                borderRight: i < 2 ? 0 : `1px solid ${o.featured ? "#0f1d6e" : "var(--line)"}`,
-                position: "relative",
-                transform: o.featured ? "translateY(-20px)" : "none",
-                boxShadow: o.featured ? "0 40px 80px -30px rgba(14,26,74,0.45)" : "none",
-              }}>
-                {o.featured && <div style={{ position: "absolute", top: -1, left: -1, right: -1, height: 6, background: "var(--gold)" }} />}
+              <div key={i} className={`og-card${o.featured ? " og-card--featured" : ""}`}>
+                {o.featured && <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 5, background: "var(--gold)" }} />}
                 {o.featured && (
-                  <span className="pill pill-gold" style={{ position: "absolute", top: 28, right: 28 }}>★ Le plus choisi</span>
+                  <span className="pill pill-gold" style={{ position: "absolute", top: 26, right: 26 }}>★ Le plus choisi</span>
                 )}
                 <p className="small" style={{ letterSpacing: ".2em", textTransform: "uppercase", color: o.featured ? "var(--gold)" : "var(--mute)", margin: "0 0 18px", fontSize: 10.5 }}>{o.tag}</p>
                 <h3 className="display" style={{ fontSize: 44, color: o.featured ? "var(--white)" : "var(--navy)", margin: "0 0 6px", lineHeight: 1.05 }}>{o.title}</h3>
@@ -168,7 +154,7 @@ export default function OffreGoldPage() {
                     </li>
                   ))}
                 </ul>
-                <p className="small" style={{ letterSpacing: ".14em", textTransform: "uppercase", color: o.featured ? "rgba(255,255,255,0.6)" : "var(--mute)", margin: "0 0 20px", fontSize: 10.5 }}>
+                <p className="small" style={{ letterSpacing: ".14em", textTransform: "uppercase", color: o.featured ? "rgba(255,255,255,0.6)" : "var(--mute)", margin: "auto 0 20px", fontSize: 10.5 }}>
                   Tarif sur devis · facilités 3-12 fois
                 </p>
                 <Link href="/contact" className={o.featured ? "btn btn-gold" : "btn btn-ghost"} style={{ width: "100%", justifyContent: "center" }}>
@@ -198,7 +184,7 @@ export default function OffreGoldPage() {
               "Accompagnement sur mesure adapté à votre saison intérieure",
               "Un chemin de bascule, pas une méthode standard",
             ].map((s, i) => (
-              <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "20px 24px", background: "var(--white)", border: "1px solid var(--line)" }}>
+              <div key={i} className="card-hover" style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: "22px 26px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 14 }}>
                 <span style={{ color: "var(--gold)", flexShrink: 0, fontSize: 15, marginTop: 2 }}>✓</span>
                 <span style={{ fontSize: 15.5, lineHeight: 1.6, color: "var(--navy-ink)" }}>{s}</span>
               </div>
@@ -221,9 +207,9 @@ export default function OffreGoldPage() {
             </p>
           </div>
 
-          <div className="rg-4" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+          <div className="rg-4" style={{ gap: 16 }}>
             {garanties.map((g, i) => (
-              <div key={i} style={{ padding: "32px 28px", background: "var(--white)", transition: "background .3s" }}>
+              <div key={i} className="card-hover" style={{ padding: "30px 26px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 14 }}>
                 <div style={{ width: 28, height: 28, border: "1px solid var(--gold)", display: "grid", placeItems: "center", marginBottom: 20, color: "var(--gold)", fontSize: 14 }}>✦</div>
                 <h4 style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "var(--navy)", margin: "0 0 8px" }}>{g.t}</h4>
                 <p className="small muted" style={{ margin: 0, lineHeight: 1.55, fontSize: 12.5 }}>{g.b}</p>
@@ -243,24 +229,16 @@ export default function OffreGoldPage() {
             </h2>
           </div>
 
-          <div style={{ borderTop: "1px solid var(--line)" }}>
-            {faqs.map((f, i) => {
-              const open = openFaq === i;
-              return (
-                <div key={i} style={{ borderBottom: "1px solid var(--line)" }}>
-                  <button
-                    onClick={() => setOpenFaq(open ? -1 : i)}
-                    style={{ width: "100%", textAlign: "left", background: "transparent", border: 0, padding: "32px 0", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24, cursor: "pointer" }}
-                  >
-                    <span className="display" style={{ fontSize: 26, color: "var(--navy)" }}>{f.q}</span>
-                    <span style={{ width: 36, height: 36, border: "1px solid var(--navy)", display: "grid", placeItems: "center", flexShrink: 0, transition: "transform .3s, background .3s, color .3s", transform: open ? "rotate(45deg)" : "none", background: open ? "var(--navy)" : "transparent", color: open ? "var(--gold)" : "var(--navy)", fontSize: 20 }}>+</span>
-                  </button>
-                  {open && (
-                    <p style={{ fontSize: 16, lineHeight: 1.75, color: "var(--mute)", margin: "0 0 32px", maxWidth: 720 }}>{f.a}</p>
-                  )}
-                </div>
-              );
-            })}
+          <div className="faq-list">
+            {faqs.map((f, i) => (
+              <details className="faq-item" key={i}>
+                <summary className="faq-q">
+                  <span>{f.q}</span>
+                  <span className="faq-icon" aria-hidden="true" />
+                </summary>
+                <div className="faq-a">{f.a}</div>
+              </details>
+            ))}
           </div>
         </div>
       </section>

@@ -1120,6 +1120,38 @@ footer { margin-top: 0; }
   background: rgba(245,196,34,0.13);
 }
 
+/* ─── OFFRE GOLD (page) : cartes des 3 niveaux (section claire) ─ */
+.og-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 50px 34px 42px;
+  transition: transform 0.45s var(--ease-out), border-color 0.4s var(--ease-out), box-shadow 0.45s var(--ease-out);
+}
+.og-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(245,196,34,0.6);
+  box-shadow: 0 34px 66px -30px rgba(20,40,120,0.3);
+}
+.og-card--featured {
+  background: linear-gradient(160deg, #142579 0%, #0f1d6e 55%, #0a1450 100%);
+  border-color: transparent;
+  color: var(--white);
+  overflow: hidden;
+  box-shadow: 0 40px 80px -32px rgba(14,26,74,0.5);
+}
+.og-card--featured:hover {
+  border-color: transparent;
+  box-shadow: 0 50px 92px -30px rgba(14,26,74,0.62);
+}
+@media (min-width: 901px) {
+  .og-card--featured { transform: translateY(-16px); }
+  .og-card--featured:hover { transform: translateY(-26px); }
+}
+
 /* ─── ACCUEIL : tableau avant / après ──────────────────── */
 .ba-table {
   max-width: 900px;
