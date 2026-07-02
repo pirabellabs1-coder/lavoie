@@ -167,7 +167,7 @@ export default async function ArticlePage({
                 Thérapeute initiatique · La Voie 2 la Conscience
               </p>
               <p style={{ fontSize: 14, lineHeight: 1.75, color: "var(--mute)", margin: 0 }}>
-                15 ans dédiés à la transformation profonde des êtres en quête d&apos;excellence authentique.
+                Plus de 21 ans dédiés à la transformation profonde des êtres en quête d&apos;excellence authentique.
               </p>
             </div>
           </div>

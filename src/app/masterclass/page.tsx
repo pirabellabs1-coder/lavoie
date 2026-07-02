@@ -81,7 +81,7 @@ const temoignages = [
 
 const bioStats = [
   { n: "+300", label: "Dirigeants accompagnés" },
-  { n: "15+", label: "Années d'expérience" },
+  { n: "21+", label: "Années d'expérience" },
   { n: "98%", label: "Taux de satisfaction" },
 ];
 

@@ -75,7 +75,7 @@ export default function DomoinaPage() {
                 Un accompagnement <em style={{ fontStyle: "italic", color: "var(--navy)" }}>initiatique et spirituel</em> pour
                 les dirigeants, cadres et thérapeutes en quête de sens — celles et ceux qui
                 réussissent extérieurement mais portent une vision spirituelle de la vie, et veulent
-                l&apos;incarner pleinement. Depuis plus de vingt ans, je guide ces dirigeants et
+                l&apos;incarner pleinement. Depuis plus de vingt et un ans, j&apos;accompagne ces dirigeants et
                 thérapeutes vers une réussite qui ne s&apos;oppose plus à leur vie intérieure. Là où
                 d&apos;autres voient une faille, je vois un point de passage&nbsp;: ce que vous avez
                 appris à cacher devient la source de votre{" "}

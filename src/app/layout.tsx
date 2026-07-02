@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     template: "%s | La Voie 2 la Conscience",
   },
   description:
-    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ personnes accompagnées par Domoïna en 15 ans de pratique.",
+    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ personnes accompagnées par Domoïna en plus de 21 ans de pratique.",
   applicationName: SITE.name,
   keywords: [
     "coaching transformation",

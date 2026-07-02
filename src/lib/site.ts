@@ -8,7 +8,7 @@ export const SITE = {
   name: "La Voie 2 la Conscience",
   shortName: "La Voie 2 la Conscience",
   description:
-    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ personnes accompagnées par Domoïna en 15 ans de pratique. Méthodes AIME, V.I.E. et Cycle des Saisons.",
+    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ personnes accompagnées par Domoïna en plus de 21 ans de pratique. Méthodes AIME, V.I.E. et Cycle des Saisons.",
   locale: "fr_FR",
   founder: "Domoïna",
   email: "contact@lavoie2laconscience.fr",

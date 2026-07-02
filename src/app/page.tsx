@@ -8,7 +8,7 @@ import { getRecentArticles } from "@/lib/articles";
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
   description:
-    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ transformations en 15 ans de pratique. Méthodes AIME, V.I.E. et Cycle des Saisons.",
+    "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ transformations en plus de 21 ans de pratique. Méthodes AIME, V.I.E. et Cycle des Saisons.",
 };
 
 function Arrow({ size = 14 }: { size?: number }) {
@@ -51,7 +51,7 @@ function Eyebrow({
 
 const stats = [
   { n: "500+", label: "Vies transformées" },
-  { n: "15+",  label: "Années d'expérience" },
+  { n: "21+",  label: "Années d'expérience" },
   { n: "100%", label: "Engagement" },
 ];
 
@@ -802,7 +802,7 @@ export default function Home() {
               </h2>
             </div>
             <p>
-              Trois méthodes propriétaires développées sur quinze ans de pratique.
+              Trois méthodes propriétaires développées sur plus de vingt et un ans de pratique.
               Elles se combinent — jamais ne se substituent — au temps long du vivant.
             </p>
           </div>
