@@ -885,6 +885,15 @@ footer { margin-top: 0; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ─── ACCUEIL : police Poppins ────────────────────────────
+   Sur la page d'accueil, le texte courant (sans-serif) passe en
+   Poppins pour un rendu plus net et moderne. Les grands titres
+   décoratifs en serif (var(--serif)) restent inchangés. */
+.home-poppins {
+  --sans: var(--font-poppins), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-poppins), system-ui, -apple-system, sans-serif;
+}
+
 /* ─── FORMS ───────────────────────────────────────────── */
 
 .field { display: flex; flex-direction: column; gap: 8px; }

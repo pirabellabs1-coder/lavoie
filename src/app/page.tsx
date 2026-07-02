@@ -237,7 +237,7 @@ const journal = getRecentArticles(3).map((a) => ({
 
 export default function Home() {
   return (
-    <div className="page-fade">
+    <div className="page-fade home-poppins">
 
       {/* ══════════════════════════════════════════════════════
           01 · HERO — Full-bleed cinematic
@@ -294,24 +294,23 @@ export default function Home() {
 
             {/* H1 */}
             <h1
-              className="mega"
               data-reveal=""
               style={{
-                fontSize: "clamp(34px, 4.4vw, 64px)",
+                fontFamily: "var(--font-poppins), system-ui, sans-serif",
+                fontSize: "clamp(33px, 4.3vw, 58px)",
                 color: "var(--white)",
                 margin: 0,
-                lineHeight: 1.06,
-                fontWeight: 300,
-                letterSpacing: "-0.01em",
+                lineHeight: 1.15,
+                fontWeight: 600,
+                letterSpacing: "-0.02em",
               }}
             >
               De l&apos;épuisement à l&apos;équilibre,{" "}
-              <em
-                className="display-italic"
-                style={{ color: "var(--gold)", fontWeight: 300 }}
+              <span
+                style={{ color: "var(--gold)", fontWeight: 600 }}
               >
                 dans votre vie, votre couple, votre famille.
-              </em>
+              </span>
             </h1>
 
             {/* Subline */}
