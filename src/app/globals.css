@@ -279,19 +279,32 @@ section { position: relative; }
 
 .logo {
   font-family: var(--serif);
-  font-size: 22px;
-  font-weight: 400;
   color: var(--navy);
-  line-height: 1.1;
   text-decoration: none;
-  letter-spacing: 0.01em;
   flex-shrink: 0;
   transition: opacity 0.2s;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 11px;
+  gap: 4px;
 }
-.logo-mark { height: 52px; width: auto; flex-shrink: 0; }
+.logo-mark {
+  height: 46px;
+  width: auto;
+  flex-shrink: 0;
+  transition: height 0.3s var(--ease-out);
+}
+.logo-name {
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  color: var(--navy);
+  white-space: nowrap;
+  font-weight: 500;
+}
+.nav-inner.shrunk .logo-mark { height: 38px; }
+.nav-inner.shrunk .logo-name { font-size: 10.5px; }
 .logo-word { display: flex; flex-direction: column; }
 
 /* CTA flottant permanent (conversion) — bouton de réservation */

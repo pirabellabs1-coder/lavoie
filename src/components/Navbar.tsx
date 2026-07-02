@@ -79,6 +79,7 @@ export default function Navbar() {
           {/* ── Logo ── */}
           <Link href="/" className="logo" aria-label="La Voie 2 la Conscience — Accueil">
             <Image src="/logo.png" alt="La Voie 2 la Conscience" width={490} height={480} className="logo-mark" priority />
+            <span className="logo-name">La Voie <span className="num">2</span> la Conscience</span>
           </Link>
 
           {/* ── Desktop links ── */}
