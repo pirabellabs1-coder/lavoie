@@ -287,7 +287,12 @@ section { position: relative; }
   letter-spacing: 0.01em;
   flex-shrink: 0;
   transition: opacity 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
 }
+.logo-mark { height: 46px; width: auto; flex-shrink: 0; }
+.logo-word { display: flex; flex-direction: column; }
 .logo:hover { opacity: 0.75; }
 .logo .num {
   font-style: italic;

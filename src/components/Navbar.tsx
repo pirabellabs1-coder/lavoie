@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 type NavLeaf = { href: string; label: string; desc?: string };
@@ -77,8 +78,11 @@ export default function Navbar() {
 
           {/* ── Logo ── */}
           <Link href="/" className="logo">
-            La Voie <span className="num">&thinsp;2&thinsp;</span> la Conscience
-            <small>Accompagnement initiatique</small>
+            <Image src="/logo.png" alt="La Voie 2 la Conscience" width={490} height={480} className="logo-mark" priority />
+            <span className="logo-word">
+              La Voie <span className="num">&thinsp;2&thinsp;</span> la Conscience
+              <small>Accompagnement initiatique</small>
+            </span>
           </Link>
 
           {/* ── Desktop links ── */}
