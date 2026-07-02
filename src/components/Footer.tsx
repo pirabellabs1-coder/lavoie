@@ -159,8 +159,8 @@ export default function Footer() {
                 <br />
                 Sarthe, France
               </p>
-              <a href="mailto:contact@lavoie2laconscience.fr">
-                contact@lavoie2laconscience.fr
+              <a href="mailto:contact@lavoie2laconscience.com">
+                contact@lavoie2laconscience.com
               </a>
               <a href="tel:+33764201524">07 64 20 15 24</a>
             </div>

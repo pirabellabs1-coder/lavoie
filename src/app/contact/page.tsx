@@ -144,7 +144,7 @@ export default function ContactPage() {
           <div className="rg-split-bias" style={{ gap: 80, alignItems: "start" }}>
 
             {/* FORM */}
-            <form onSubmit={onSubmit} className="contact-form" style={{ background: "var(--white)", padding: 56, border: "1px solid var(--line)" }}>
+            <form onSubmit={onSubmit} className="contact-form" style={{ background: "var(--white)", padding: 56, border: "1px solid var(--line)", borderRadius: 18, boxShadow: "0 30px 70px -40px rgba(20,40,120,0.22)" }}>
               <Eyebrow style={{ marginBottom: 28 }}>Formulaire confidentiel</Eyebrow>
               <h2 className="display" style={{ fontSize: 36, margin: "0 0 40px", lineHeight: 1.15 }}>
                 Vos coordonnées,<br />
@@ -225,7 +225,7 @@ export default function ContactPage() {
               <div style={{ display: "grid", gap: 32 }}>
                 <div>
                   <p className="small" style={{ letterSpacing: ".18em", textTransform: "uppercase", color: "var(--gold)", margin: "0 0 10px", fontSize: 10.5 }}>Par email</p>
-                  <p style={{ fontFamily: "var(--serif)", fontSize: 22, color: "var(--navy)", margin: 0 }}>contact@lavoie2laconscience.fr</p>
+                  <p style={{ fontFamily: "var(--serif)", fontSize: 22, color: "var(--navy)", margin: 0 }}>contact@lavoie2laconscience.com</p>
                 </div>
 
                 <div>

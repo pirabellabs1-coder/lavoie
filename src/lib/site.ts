@@ -11,7 +11,7 @@ export const SITE = {
     "Accompagnement initiatique haut de gamme pour dirigeants, cadres supérieurs et thérapeutes. 500+ personnes accompagnées par Domoïna en plus de 21 ans de pratique. Méthodes AIME, V.I.E. et Cycle des Saisons.",
   locale: "fr_FR",
   founder: "Domoïna",
-  email: "contact@lavoie2laconscience.fr",
+  email: "contact@lavoie2laconscience.com",
   telephone: "+33764201524",
   // Centre HUT — Sarthe (48°10′ N · 0°06′ E)
   geo: { latitude: 48.1667, longitude: 0.1 },

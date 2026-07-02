@@ -41,7 +41,7 @@ export default function PolitiqueConfidentialite() {
               <hr className="filet" style={{ marginBottom: 20 }} />
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)" }}>
                 La Voie 2 la Conscience, représentée par Domoïna.<br />
-                Contact : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.fr</strong>
+                Contact : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.com</strong>
               </p>
             </div>
 
@@ -102,7 +102,7 @@ export default function PolitiqueConfidentialite() {
                 ))}
               </ul>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)" }}>
-                Pour exercer ces droits : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.fr</strong>
+                Pour exercer ces droits : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.com</strong>
               </p>
             </div>
 
@@ -120,7 +120,7 @@ export default function PolitiqueConfidentialite() {
               <hr className="filet" style={{ marginBottom: 20 }} />
               <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--navy-ink)" }}>
                 Pour toute question relative à la protection de vos données,
-                contactez-nous à : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.fr</strong>
+                contactez-nous à : <strong style={{ fontWeight: 500 }}>contact@lavoie2laconscience.com</strong>
               </p>
             </div>
 
