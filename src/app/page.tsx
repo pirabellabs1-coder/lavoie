@@ -209,11 +209,69 @@ const temoignages = [
   },
 ];
 
+const vecu = [
+  {
+    before: "Des tensions dans le couple qui s'installent sans qu'on sache vraiment pourquoi.",
+    after: "Une relation où vous êtes de nouveau pleinement présent.",
+  },
+  {
+    before: "Une distance avec vos enfants ou votre famille, malgré tout ce que vous leur offrez.",
+    after: "Des liens retrouvés, sans culpabilité ni compensation.",
+  },
+  {
+    before: "Une fatigue profonde qu'aucune nuit de sommeil ne répare vraiment.",
+    after: "Une énergie stable, qui ne dépend plus de la performance.",
+  },
+  {
+    before: "Un mode survie-performance permanent, où s'arrêter donne l'impression de reculer.",
+    after: "La capacité de ralentir sans perdre le contrôle.",
+  },
+  {
+    before: "Des addictions compensatoires — travail, alcool, écrans — pour ne pas ressentir.",
+    after: "Le courage de ressentir, sans avoir besoin de fuir.",
+  },
+  {
+    before: "Un sentiment de vide, même au sommet de ce que vous avez construit.",
+    after: "Un sentiment de plénitude, aligné avec qui vous êtes.",
+  },
+];
+
+const faqs = [
+  {
+    q: "À qui s'adresse cet accompagnement ?",
+    r: "Aux dirigeants, cadres, entrepreneurs et thérapeutes qui ont réussi extérieurement mais vivent une crise silencieuse : surcharge mentale, perte de sens, épuisement, ou vide existentiel malgré tout ce qu'ils ont construit.",
+  },
+  {
+    q: "Quelle est la différence avec un coach classique ?",
+    r: "L'approche de Domoïna va bien au-delà du coaching. Elle unit la science initiatique, la sagesse ancestrale et la puissance transformatrice de l'Eau pour travailler sur les blessures originelles — conscientes ou inconscientes — qui gouvernent vos choix et vos comportements.",
+  },
+  {
+    q: "L'appel découverte est-il vraiment gratuit ?",
+    r: "Oui, totalement. L'appel découverte est offert, sans engagement et sans carte bancaire. C'est un espace d'échange confidentiel pour comprendre votre situation et voir ensemble si un accompagnement est pertinent pour vous.",
+  },
+  {
+    q: "Où se déroulent les stages immersifs ?",
+    r: "Les stages ont lieu au Centre HUT, à Rouperroux-le-Coquet en Sarthe, à seulement 2h de Paris, au cœur de 1100 hectares de nature préservée.",
+  },
+  {
+    q: "Combien de temps dure l'accompagnement ?",
+    r: "Entre 3 et 12 mois selon le parcours choisi — Essence, Expansion ou Royale — avec des points d'étape réguliers pour ajuster le rythme.",
+  },
+  {
+    q: "Est-ce compatible avec un agenda de dirigeant ?",
+    r: "Oui. La majorité des personnes accompagnées sont des dirigeants et cadres. Les sessions s'organisent autour de vos contraintes, pas l'inverse.",
+  },
+  {
+    q: "Que se passe-t-il après l'appel découverte ?",
+    r: "Aucune pression. Vous recevez une proposition de parcours adaptée à votre situation, et vous prenez le temps de la réflexion nécessaire.",
+  },
+];
+
 /* ─── PAGE ───────────────────────────────────────────────── */
 
 export default function Home() {
   return (
-    <div className="page-fade home-poppins">
+    <div className="page-fade">
 
       {/* ══════════════════════════════════════════════════════
           01 · HERO — Full-bleed cinematic
@@ -270,23 +328,24 @@ export default function Home() {
 
             {/* H1 */}
             <h1
+              className="mega"
               data-reveal=""
               style={{
-                fontFamily: "var(--font-poppins), system-ui, sans-serif",
-                fontSize: "clamp(33px, 4.3vw, 58px)",
+                fontSize: "clamp(34px, 4.4vw, 64px)",
                 color: "var(--white)",
                 margin: 0,
-                lineHeight: 1.15,
-                fontWeight: 600,
-                letterSpacing: "-0.02em",
+                lineHeight: 1.06,
+                fontWeight: 300,
+                letterSpacing: "-0.01em",
               }}
             >
               De l&apos;épuisement à l&apos;équilibre,{" "}
-              <span
-                style={{ color: "var(--gold)", fontWeight: 600 }}
+              <em
+                className="display-italic"
+                style={{ color: "var(--gold)", fontWeight: 300 }}
               >
                 dans votre vie, votre couple, votre famille.
-              </span>
+              </em>
             </h1>
 
             {/* Subline */}
@@ -425,13 +484,13 @@ export default function Home() {
             <span className="dot" style={{ background: "var(--gold)" }} />Le Centre HUT · Sarthe<span className="dot" style={{ background: "var(--gold)" }} />
           </p>
           <h2
+            className="display"
             data-reveal=""
             style={{
-              fontFamily: "var(--font-poppins), system-ui, sans-serif",
-              fontWeight: 600,
-              fontSize: "clamp(24px, 3vw, 40px)",
-              lineHeight: 1.15,
-              letterSpacing: "-0.02em",
+              fontFamily: "var(--serif)",
+              fontWeight: 500,
+              fontSize: "clamp(26px, 3vw, 42px)",
+              lineHeight: 1.1,
               margin: "0 auto",
               maxWidth: 720,
               color: "var(--navy-ink)",
@@ -632,6 +691,55 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          04b · CE QUE VOUS VIVEZ — tableau avant / après
+          ══════════════════════════════════════════════════════ */}
+      <section
+        className="section sec-blue"
+        style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative", overflow: "hidden" }}
+      >
+        <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>Avant / après</span>
+        <div className="container">
+          <div style={{ maxWidth: 760, margin: "0 auto 48px", textAlign: "center" }}>
+            <Eyebrow gold centered style={{ marginBottom: 22 }}>Ce que vous vivez peut-être</Eyebrow>
+            <h2 className="display" style={{ color: "var(--white)", fontSize: "clamp(28px,3vw,46px)", lineHeight: 1.08, margin: "0 0 22px" }}>
+              Une réussite extérieure.
+              <br />
+              <em className="display-italic" style={{ color: "var(--gold)" }}>Une crise silencieuse.</em>
+            </h2>
+            <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "rgba(255,255,255,0.8)", margin: 0 }}>
+              De l&apos;extérieur, tout va bien. De l&apos;intérieur, quelque chose s&apos;est éteint
+              depuis longtemps — et vous êtes probablement le seul à le savoir.
+            </p>
+          </div>
+
+          <div className="ba-table" data-reveal="">
+            <div className="ba-headrow">
+              <span className="ba-h ba-h-before">Aujourd&apos;hui</span>
+              <span className="ba-h" aria-hidden="true" />
+              <span className="ba-h ba-h-after">Ce qui devient possible</span>
+            </div>
+            {vecu.map((v, i) => (
+              <div className="ba-row" key={i}>
+                <p className="ba-before">{v.before}</p>
+                <span className="ba-arrow" aria-hidden="true">
+                  <svg width="22" height="14" viewBox="0 0 22 14" fill="none">
+                    <path d="M1 7h19M15 1l5 6-5 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <p className="ba-after">{v.after}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 48 }}>
+            <Link href="/contact" className="btn btn-gold btn-lg">
+              Réserver mon appel découverte <Arrow />
+            </Link>
           </div>
         </div>
       </section>
@@ -1223,6 +1331,47 @@ export default function Home() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          13 · FAQ
+          ══════════════════════════════════════════════════════ */}
+      <section id="faq" className="section" style={{ background: "var(--paper)", position: "relative" }}>
+        <span className="section-num">13 — FAQ</span>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <Eyebrow style={{ marginBottom: 24 }}>Questions fréquentes</Eyebrow>
+              <h2>
+                Tout ce que vous
+                <br />
+                <em className="display-italic">voulez savoir.</em>
+              </h2>
+            </div>
+            <p>
+              Et si votre question n&apos;y figure pas, l&apos;appel découverte est le meilleur
+              endroit pour en parler.
+            </p>
+          </div>
+
+          <div className="faq-list">
+            {faqs.map((f, i) => (
+              <details className="faq-item" key={i} data-reveal="">
+                <summary className="faq-q">
+                  <span>{f.q}</span>
+                  <span className="faq-icon" aria-hidden="true" />
+                </summary>
+                <div className="faq-a">{f.r}</div>
+              </details>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 52 }}>
+            <Link href="/contact" className="btn btn-primary btn-lg">
+              Réserver mon appel découverte <Arrow />
+            </Link>
           </div>
         </div>
       </section>

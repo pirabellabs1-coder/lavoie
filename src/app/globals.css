@@ -885,15 +885,6 @@ footer { margin-top: 0; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ─── ACCUEIL : police Poppins ────────────────────────────
-   Sur la page d'accueil, le texte courant (sans-serif) passe en
-   Poppins pour un rendu plus net et moderne. Les grands titres
-   décoratifs en serif (var(--serif)) restent inchangés. */
-.home-poppins {
-  --sans: var(--font-poppins), system-ui, -apple-system, sans-serif;
-  font-family: var(--font-poppins), system-ui, -apple-system, sans-serif;
-}
-
 /* ─── ACCUEIL : bande immersive Centre HUT (4 visuels) ──── */
 .hut-strip {
   display: grid;
@@ -953,7 +944,7 @@ footer { margin-top: 0; }
 .hut-cap .t {
   display: block;
   margin-top: 6px;
-  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-family: var(--serif);
   font-size: 16px;
   font-weight: 500;
   color: #fff;
@@ -1005,7 +996,7 @@ footer { margin-top: 0; }
   transition: background 0.4s var(--ease-out), border-color 0.4s var(--ease-out), transform 0.4s var(--ease-out);
 }
 .parcours-node span {
-  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-family: var(--serif);
   font-weight: 600;
   font-size: 16px;
   color: var(--gold);
@@ -1045,7 +1036,7 @@ footer { margin-top: 0; }
   margin-bottom: 14px;
 }
 .parcours-title {
-  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-family: var(--serif);
   font-weight: 600;
   font-size: 19px;
   color: var(--navy-ink);
@@ -1080,7 +1071,7 @@ footer { margin-top: 0; }
 .parti-stat { padding: 6px 16px; }
 .parti-stat + .parti-stat { border-left: 1px solid rgba(255,255,255,0.15); }
 .parti-stat-n {
-  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-family: var(--serif);
   font-weight: 600;
   font-size: clamp(30px, 3.6vw, 46px);
   color: var(--gold);
@@ -1127,6 +1118,143 @@ footer { margin-top: 0; }
 .offre-card--featured:hover {
   border-color: var(--gold);
   background: rgba(245,196,34,0.13);
+}
+
+/* ─── ACCUEIL : tableau avant / après ──────────────────── */
+.ba-table {
+  max-width: 900px;
+  margin: 0 auto;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+}
+.ba-headrow,
+.ba-row {
+  display: grid;
+  grid-template-columns: 1fr 58px 1fr;
+  align-items: stretch;
+}
+.ba-headrow .ba-h:not(.ba-h-after),
+.ba-row > :not(.ba-after) {
+  border-right: 1px solid rgba(255,255,255,0.13);
+}
+.ba-headrow {
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.ba-h {
+  padding: 15px 26px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.ba-h-before { color: rgba(255,255,255,0.5); }
+.ba-h-after { color: var(--gold); }
+.ba-row {
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+  transition: background 0.3s var(--ease-out);
+}
+.ba-row:last-child { border-bottom: 0; }
+.ba-row:hover { background: rgba(255,255,255,0.035); }
+.ba-before {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 26px;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.66);
+}
+.ba-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+}
+.ba-after {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 26px;
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.42;
+  color: var(--white);
+}
+@media (max-width: 680px) {
+  .ba-headrow { display: none; }
+  .ba-row { grid-template-columns: 1fr; padding: 4px 0 10px; }
+  .ba-before { padding: 16px 20px 4px; }
+  .ba-arrow { transform: rotate(90deg); padding: 4px 0; }
+  .ba-after { padding: 4px 20px 8px; }
+}
+
+/* ─── ACCUEIL : FAQ (accordéon natif <details>) ────────── */
+.faq-list {
+  max-width: 840px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.faq-item {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  overflow: hidden;
+  transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+.faq-item:hover { border-color: rgba(15,29,110,0.24); }
+.faq-item[open] {
+  border-color: rgba(245,196,34,0.55);
+  box-shadow: 0 18px 44px -26px rgba(20,40,120,0.22);
+}
+.faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  cursor: pointer;
+  list-style: none;
+  padding: 22px 24px;
+  font-family: var(--serif);
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.3;
+  color: var(--navy-ink);
+  transition: color 0.25s;
+}
+.faq-q::-webkit-details-marker { display: none; }
+.faq-item:hover .faq-q { color: var(--blue); }
+.faq-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  background: var(--gold);
+  transition: transform 0.3s var(--ease-out), opacity 0.3s;
+}
+.faq-icon::before { top: 7px; left: 0; width: 16px; height: 2px; }
+.faq-icon::after { top: 0; left: 7px; width: 2px; height: 16px; }
+.faq-item[open] .faq-icon::after { transform: scaleY(0); opacity: 0; }
+.faq-a {
+  padding: 0 24px 24px;
+  max-width: 720px;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--mute);
 }
 
 /* ─── FORMS ───────────────────────────────────────────── */
