@@ -419,19 +419,33 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
+          MARQUEE
+          ══════════════════════════════════════════════════════ */}
+      <Marquee
+        duration={80}
+        items={[
+          "Bienveillance radicale",
+          "L'Eau comme maître",
+          "Excellence Authentique Unique",
+          "Discrétion absolue",
+          "Présence pleine",
+          "Enracinement & élévation",
+        ]}
+      />
+
+      {/* ══════════════════════════════════════════════════════
           01b · CENTRE HUT — bande immersive (4 visuels)
           ══════════════════════════════════════════════════════ */}
       <section
-        className="sec-blue"
         style={{
-          background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)",
-          color: "var(--white)",
+          background: "#ffffff",
+          color: "var(--navy-ink)",
           position: "relative",
           overflow: "hidden",
         }}
       >
         <div className="container" style={{ textAlign: "center", paddingTop: 64, paddingBottom: 34 }}>
-          <p className="eyebrow" data-reveal="" style={{ justifyContent: "center", color: "var(--gold)", margin: "0 0 14px" }}>
+          <p className="eyebrow" data-reveal="" style={{ justifyContent: "center", color: "var(--navy)", margin: "0 0 14px" }}>
             <span className="dot" style={{ background: "var(--gold)" }} />Le Centre HUT · Sarthe<span className="dot" style={{ background: "var(--gold)" }} />
           </p>
           <h2
@@ -444,7 +458,7 @@ export default function Home() {
               letterSpacing: "-0.02em",
               margin: "0 auto",
               maxWidth: 720,
-              color: "var(--white)",
+              color: "var(--navy-ink)",
             }}
           >
             Un écrin de nature pour se transformer
@@ -456,7 +470,7 @@ export default function Home() {
               fontFamily: "var(--sans)",
               fontSize: 15,
               lineHeight: 1.7,
-              color: "rgba(255,255,255,0.78)",
+              color: "var(--mute)",
               maxWidth: 560,
               margin: "16px auto 0",
             }}
@@ -485,26 +499,11 @@ export default function Home() {
         </div>
 
         <div className="container" style={{ textAlign: "center", paddingTop: 32, paddingBottom: 62 }}>
-          <Link href="/centre-hut" className="btn btn-ghost-white" data-reveal="">
+          <Link href="/centre-hut" className="btn btn-ghost" data-reveal="">
             Visiter le Centre HUT <Arrow />
           </Link>
         </div>
       </section>
-
-      {/* ══════════════════════════════════════════════════════
-          MARQUEE
-          ══════════════════════════════════════════════════════ */}
-      <Marquee
-        duration={80}
-        items={[
-          "Bienveillance radicale",
-          "L'Eau comme maître",
-          "Excellence Authentique Unique",
-          "Discrétion absolue",
-          "Présence pleine",
-          "Enracinement & élévation",
-        ]}
-      />
 
       {/* ══════════════════════════════════════════════════════
           02 · STATS
