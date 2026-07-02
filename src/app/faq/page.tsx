@@ -127,22 +127,14 @@ export default function FAQ() {
                 <h2 className="display" style={{ fontSize: 36, color: "var(--navy)", margin: 0 }}>{cat.titre}</h2>
               </div>
 
-              <div style={{ borderTop: "1px solid var(--line)" }}>
+              <div className="faq-list" style={{ maxWidth: "none" }}>
                 {cat.questions.map((item, qi) => (
-                  <details key={qi} style={{ borderBottom: "1px solid var(--line)" }}>
-                    <summary style={{
-                      listStyle: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 24,
-                      padding: "28px 0",
-                      cursor: "pointer",
-                    }}>
-                      <span className="display" style={{ fontSize: 22, color: "var(--navy)", lineHeight: 1.3 }}>{item.q}</span>
-                      <span style={{ width: 32, height: 32, border: "1px solid var(--navy)", display: "grid", placeItems: "center", flexShrink: 0, color: "var(--navy)", fontSize: 20, transition: "transform .3s, background .3s, color .3s" }}>+</span>
+                  <details className="faq-item" key={qi}>
+                    <summary className="faq-q">
+                      <span>{item.q}</span>
+                      <span className="faq-icon" aria-hidden="true" />
                     </summary>
-                    <p style={{ fontSize: 16, lineHeight: 1.8, color: "var(--mute)", margin: "0 0 28px", maxWidth: 680 }}>{item.r}</p>
+                    <div className="faq-a">{item.r}</div>
                   </details>
                 ))}
               </div>
@@ -150,7 +142,7 @@ export default function FAQ() {
           ))}
 
           {/* Question non trouvée */}
-          <div className="sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", padding: "48px 40px", textAlign: "center" }}>
+          <div className="sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", padding: "48px 40px", textAlign: "center", borderRadius: 20 }}>
             <h3 className="display" style={{ fontSize: 32, color: "var(--white)", margin: "0 0 16px" }}>
               Vous ne trouvez pas votre réponse ?
             </h3>

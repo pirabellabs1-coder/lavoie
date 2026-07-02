@@ -96,7 +96,7 @@ export default function Blog() {
       {/* ARTICLE FEATURED */}
       <section style={{ background: "var(--white)", padding: "56px 0 0" }}>
         <div className="container">
-          <div className="rg-2" style={{ border: "1px solid var(--line)", marginBottom: 0 }}>
+          <div className="rg-2" style={{ border: "1px solid var(--line)", borderRadius: 18, overflow: "hidden", marginBottom: 0 }}>
             <div className="blog-featured-img" style={{ background: "var(--paper)", display: "grid", placeItems: "center", minHeight: 320, borderRight: "1px solid var(--line)" }}>
               <div style={{ textAlign: "center" }}>
                 <span style={{ fontSize: 64, color: "var(--gold)", lineHeight: 1 }}>✦</span>
@@ -128,9 +128,9 @@ export default function Blog() {
       {/* GRILLE ARTICLES */}
       <section className="section" style={{ background: "var(--white)", paddingTop: 0 }}>
         <div className="container">
-          <div className="rg-3" style={{ gap: 1, background: "var(--line)", border: "1px solid var(--line)", borderTop: 0 }}>
+          <div className="rg-3" style={{ gap: 20, marginTop: 24, alignItems: "stretch" }}>
             {articles.slice(1).map((a, i) => (
-              <div key={i} style={{ background: "var(--white)", display: "flex", flexDirection: "column" }}>
+              <div key={i} className="card-hover" style={{ background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div style={{ aspectRatio: "16/9", background: "var(--paper)", display: "grid", placeItems: "center", borderBottom: "1px solid var(--line)" }}>
                   <span style={{ fontSize: 32, color: "var(--gold)" }}>✦</span>
                 </div>
