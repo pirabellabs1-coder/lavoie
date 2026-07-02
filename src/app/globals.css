@@ -293,6 +293,36 @@ section { position: relative; }
 }
 .logo-mark { height: 52px; width: auto; flex-shrink: 0; }
 .logo-word { display: flex; flex-direction: column; }
+
+/* CTA flottant permanent (conversion) — bouton de réservation */
+.floating-cta {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--navy-ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-decoration: none;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity .35s var(--ease-out), transform .35s var(--ease-out), background .2s;
+}
+.floating-cta.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.floating-cta:hover { background: var(--gold-light); }
+@media (max-width: 600px) {
+  .floating-cta { bottom: 14px; right: 14px; left: 14px; justify-content: center; padding: 15px 20px; }
+}
 .logo:hover { opacity: 0.75; }
 .logo .num {
   font-style: italic;

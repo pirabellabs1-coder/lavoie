@@ -349,18 +349,24 @@ export default function Home() {
                   Découverte Domoïna
                 </Link>
               </div>
-              <span
+              <div
                 style={{
-                  display: "block",
-                  marginTop: 18,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginTop: 20,
                   fontFamily: "var(--sans)",
-                  fontSize: 10.5,
-                  letterSpacing: ".1em",
-                  color: "rgba(255,255,255,0.55)",
+                  fontSize: 12.5,
+                  color: "rgba(255,255,255,0.72)",
+                  flexWrap: "wrap",
                 }}
               >
-                Appel offert · Sans engagement
-              </span>
+                <span style={{ color: "var(--gold)", letterSpacing: 2, fontSize: 13 }}>★★★★★</span>
+                <span>
+                  <strong style={{ color: "var(--white)", fontWeight: 600 }}>4,9/5</strong> sur Google ·{" "}
+                  <strong style={{ color: "var(--white)", fontWeight: 600 }}>500+</strong> accompagnés · Sans engagement
+                </span>
+              </div>
             </div>
 
             </div>
@@ -474,50 +480,7 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          03 · MANIFESTE
-          ══════════════════════════════════════════════════════ */}
-      <section style={{ background: "var(--paper)", padding: "140px 0", position: "relative" }}>
-        <span className="section-num">03 — La Voie 2 la Conscience</span>
-        <div className="container-narrow" style={{ textAlign: "center" }}>
-          <Eyebrow centered style={{ marginBottom: 36 }}>
-            La Voie 2 la Conscience
-          </Eyebrow>
-          <p
-            data-reveal=""
-            className="mega"
-            style={{
-              fontSize: "clamp(22px,2.6vw,42px)",
-              lineHeight: 1.18,
-              margin: 0,
-              fontWeight: 300,
-              color: "var(--navy-ink)",
-            }}
-          >
-            Un espace sacré dédié à votre transformation intérieure et à{" "}
-            <em style={{ color: "var(--gold)", fontStyle: "italic" }}>
-              l&apos;éveil de votre plein potentiel.
-            </em>
-          </p>
-          <hr className="filet" style={{ margin: "44px auto 28px" }} />
-          <p
-            style={{
-              fontSize: 16,
-              lineHeight: 1.85,
-              color: "var(--navy-ink)",
-              margin: "0 auto",
-              maxWidth: 620,
-            }}
-          >
-            La Voie 2 la Conscience est née d&apos;une vision profonde : créer un pont entre le
-            monde matériel et spirituel, permettant à chaque âme de retrouver sa véritable essence.
-            Fondée par Domoïna, thérapeute reconnue, notre approche allie sagesse ancestrale
-            et techniques modernes pour vous accompagner dans votre voyage de transformation.
-          </p>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          PARTI PRIS — une spiritualité incarnée dans la relation
+          03 · PARTI PRIS — une spiritualité incarnée dans la relation
           ══════════════════════════════════════════════════════ */}
       <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", color: "var(--white)", position: "relative" }}>
         <span className="section-num" style={{ color: "rgba(255,255,255,0.7)" }}>Notre parti pris</span>

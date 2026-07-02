@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import CursorGlow from "@/components/CursorGlow";
 import RevealObserver from "@/components/RevealObserver";
+import FloatingCTA from "@/components/FloatingCTA";
 import JsonLd from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 import { organizationLd, founderLd, websiteLd } from "@/lib/jsonld";
@@ -105,6 +106,7 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <FloatingCTA />
       </body>
     </html>
   );
