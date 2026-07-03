@@ -412,7 +412,7 @@ export default function Home() {
             <div data-reveal="" data-reveal-delay="1" style={{ position: "relative", maxWidth: 540, width: "100%", margin: "0 auto" }}>
               <div className="img-zoom" style={{ position: "relative", border: "1px solid rgba(255,255,255,0.28)", boxShadow: "0 40px 90px -45px rgba(0,0,0,0.5)" }}>
                 <Placeholder
-                  style={{ aspectRatio: "4/5" }}
+                  style={{ aspectRatio: "1/1.05" }}
                   src="/domoina.jpg"
                   alt="Domoïna Ramiadana — thérapeute initiatique"
                   objectPosition="top center"
@@ -571,7 +571,7 @@ export default function Home() {
           >
             Ici, la spiritualité ne se contemple pas&nbsp;:{" "}
             <em style={{ color: "var(--gold)", fontStyle: "italic" }}>elle s&apos;incarne.</em>
-            {" "}Elle se vit, et se mesure à votre capacité à habiter vos relations —
+            {" "}Elle se vit, et se mesure à votre capacité à vivre vos relations —
             professionnelles, familiales, amoureuses — de manière consciente.
           </p>
           <p style={{ fontSize: 15.5, lineHeight: 1.8, color: "rgba(255,255,255,0.78)", maxWidth: 620, margin: "28px auto 34px" }}>
@@ -758,7 +758,7 @@ export default function Home() {
             <div data-reveal="" style={{ position: "relative" }} className="img-zoom">
               <Placeholder
                 mark="02"
-                style={{ aspectRatio: "4/5", background: "var(--paper-alt)" }}
+                style={{ aspectRatio: "1/1.05", background: "var(--paper-alt)" }}
                 src="/domoina.jpg"
                 alt="Portrait de Domoïna Ramiadana, thérapeute initiatique"
                 objectPosition="top center"

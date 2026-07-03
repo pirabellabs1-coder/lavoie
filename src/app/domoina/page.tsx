@@ -84,7 +84,7 @@ export default function DomoinaPage() {
             </div>
             <Placeholder
               mark="01"
-              style={{ aspectRatio: "3/4", background: "var(--paper-alt)" }}
+              style={{ aspectRatio: "1/1.05", background: "var(--paper-alt)" }}
               src="/domoina.jpg"
               alt="Portrait de Domoïna Ramiadana — thérapeute initiatique"
               objectPosition="top center"
