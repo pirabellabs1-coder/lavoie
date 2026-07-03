@@ -18,9 +18,19 @@ export function organizationLd(): Record<string, unknown> {
     image: `${SITE.url}${SITE.ogImage}`,
     logo: `${SITE.url}${SITE.ogImage}`,
     priceRange: "€€€",
+    slogan: "De l'épuisement à l'équilibre — une réussite qui a du sens.",
+    serviceType: [
+      "Accompagnement initiatique",
+      "Coaching de dirigeants",
+      "Thérapie initiatique",
+      "Retraites de transformation",
+    ],
     founder: { "@id": FOUNDER_ID },
     address: {
       "@type": "PostalAddress",
+      streetAddress: SITE.address.street,
+      addressLocality: SITE.address.locality,
+      postalCode: SITE.address.postalCode,
       addressRegion: SITE.address.region,
       addressCountry: SITE.address.country,
     },
@@ -34,6 +44,23 @@ export function organizationLd(): Record<string, unknown> {
       { "@type": "AdministrativeArea", name: "Sarthe" },
     ],
     knowsLanguage: ["fr"],
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "09:00",
+        closes: "18:00",
+      },
+    ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Offre Gold — Immersions",
+      itemListElement: [
+        { "@type": "OfferCatalog", name: "Immersion Essence", description: "Accompagnement initiatique sur 3 mois." },
+        { "@type": "OfferCatalog", name: "Immersion Expansion", description: "Accompagnement initiatique sur 6 mois." },
+        { "@type": "OfferCatalog", name: "Immersion Royale", description: "Accompagnement initiatique sur 9 à 12 mois." },
+      ],
+    },
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: SITE.rating.value,
@@ -51,18 +78,26 @@ export function founderLd(): Record<string, unknown> {
     "@context": "https://schema.org",
     "@type": "Person",
     "@id": FOUNDER_ID,
-    name: SITE.founder,
+    name: "Domoïna Ramiadana",
+    alternateName: SITE.founder,
     jobTitle: "Thérapeute initiatique · Fondatrice",
+    description:
+      "Thérapeute initiatique des dirigeants, cadres et thérapeutes. Fondatrice de La Voie 2 la Conscience et du Centre HUT. Plus de 21 ans d'accompagnement holistique.",
     worksFor: { "@id": ORG_ID },
     url: `${SITE.url}/domoina`,
+    image: `${SITE.url}/domoina.jpg`,
+    knowsLanguage: ["fr"],
     knowsAbout: [
       "Accompagnement initiatique",
       "Transformation personnelle",
       "Méthode AIME",
       "Voie Initiatique de l'Eau (V.I.E.)",
       "Cycle des Saisons",
+      "Méthode Ki-Zola",
       "Coaching de dirigeants",
+      "Blessure originelle",
     ],
+    sameAs: ["https://www.linkedin.com/in/domoina-ramiadana/"],
   };
 }
 

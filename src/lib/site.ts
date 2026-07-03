@@ -16,6 +16,9 @@ export const SITE = {
   // Centre HUT — Sarthe (48°10′ N · 0°06′ E)
   geo: { latitude: 48.1667, longitude: 0.1 },
   address: {
+    street: "50 Rue Principale",
+    locality: "Rouperroux-le-Coquet",
+    postalCode: "72110",
     region: "Sarthe",
     country: "FR",
   },
