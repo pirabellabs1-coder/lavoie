@@ -21,6 +21,7 @@ const nav: NavItem[] = [
     label: "Programmes",
     children: [
       { href: "/offre-gold", label: "Offre Gold", desc: "Trois niveaux d'engagement" },
+      { href: "/formations", label: "Formations en ligne", desc: "9 formations, dès 10 €" },
       { href: "/masterclass", label: "Masterclass", desc: "Pour celles qui transmettent" },
     ],
   },
