@@ -62,12 +62,20 @@ export default function LeadMagnetForm({ source = "Guide gratuit" }: { source?: 
           </svg>
         </div>
         <p className="display" style={{ fontSize: 26, margin: "0 0 8px", color: "var(--navy)" }}>
-          C&apos;est noté, {prenom || "merci"}&nbsp;!
+          C&apos;est prêt, {prenom || "merci"}&nbsp;!
         </p>
-        <p style={{ color: "var(--mute)", fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>
-          Vous recevrez le guide par e-mail très vite, à l&apos;adresse indiquée.
-          Pensez à vérifier vos courriers indésirables.
+        <p style={{ color: "var(--mute)", fontSize: 14.5, lineHeight: 1.6, margin: "0 0 22px" }}>
+          Votre guide est disponible ci-dessous. Une copie vous est aussi envoyée par e-mail —
+          pensez à vérifier vos courriers indésirables.
         </p>
+        <a
+          href="/guide-crise-silencieuse.pdf"
+          download
+          className="btn btn-primary"
+          style={{ width: "100%", justifyContent: "center" }}
+        >
+          Télécharger le guide <Arrow />
+        </a>
       </div>
     );
   }
