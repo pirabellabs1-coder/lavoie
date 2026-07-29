@@ -3,8 +3,10 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import Marquee from "@/components/Marquee";
 import NewsletterForm from "@/components/NewsletterForm";
+import FormationCard from "@/components/FormationCard";
 import JsonLd from "@/components/JsonLd";
 import { faqLd } from "@/lib/jsonld";
+import { FORMATIONS } from "@/lib/formations";
 
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
@@ -1118,6 +1120,40 @@ export default function Home() {
           <div style={{ textAlign: "center", marginTop: 52 }}>
             <Link href="/offre-gold" className="btn btn-gold">
               Découvrir l&apos;Offre Gold complète <Arrow />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          08b · FORMATIONS EN LIGNE (aperçu)
+          ══════════════════════════════════════════════════════ */}
+      <section className="section" style={{ background: "var(--paper)", position: "relative" }}>
+        <span className="section-num">Formations en ligne</span>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <Eyebrow style={{ marginBottom: 24 }}>Pas encore prêt pour l&apos;immersion&nbsp;?</Eyebrow>
+              <h2>Commencez par une<br /><em className="display-italic">formation en ligne.</em></h2>
+            </div>
+            <p>
+              Explorez un sujet à votre rythme, chez vous, dès 10 €. Un premier pas simple
+              vers un travail plus profond — et un guide offert pour démarrer.
+            </p>
+          </div>
+
+          <div className="rg-3" style={{ gap: 20, alignItems: "stretch" }}>
+            {[FORMATIONS[0], FORMATIONS[3], FORMATIONS[7]].map((f, i) => (
+              <FormationCard key={i} f={f} />
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", marginTop: 52, flexWrap: "wrap" }}>
+            <Link href="/formations" className="btn btn-primary btn-lg">
+              Voir les 9 formations <Arrow />
+            </Link>
+            <Link href="/formations#guide" className="btn btn-ghost">
+              Recevoir le guide gratuit
             </Link>
           </div>
         </div>

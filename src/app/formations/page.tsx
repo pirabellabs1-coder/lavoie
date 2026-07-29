@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/jsonld";
 import { FORMATIONS } from "@/lib/formations";
+import FormationCard from "@/components/FormationCard";
 import LeadMagnetForm from "@/components/LeadMagnetForm";
 
 export const metadata: Metadata = {
@@ -61,7 +61,7 @@ export default function FormationsPage() {
       </section>
 
       {/* LEAD MAGNET — guide gratuit */}
-      <section className="section sec-blue" style={{ background: MARINE, color: "var(--white)", position: "relative", overflow: "hidden" }}>
+      <section id="guide" className="section sec-blue" style={{ background: MARINE, color: "var(--white)", position: "relative", overflow: "hidden", scrollMarginTop: 90 }}>
         <div
           aria-hidden="true"
           style={{ position: "absolute", inset: 0, background: "radial-gradient(70% 55% at 50% -8%, rgba(245,196,34,0.12) 0%, transparent 60%)", pointerEvents: "none" }}
@@ -120,39 +120,7 @@ export default function FormationsPage() {
 
           <div className="rg-3" style={{ gap: 20, alignItems: "stretch" }}>
             {FORMATIONS.map((f, i) => (
-              <a
-                key={i}
-                href={f.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-hover"
-                style={{ display: "flex", flexDirection: "column", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, textDecoration: "none", position: "relative", overflow: "hidden" }}
-              >
-                <div style={{ position: "relative", aspectRatio: "1 / 1", background: "var(--paper-alt)" }}>
-                  <Image
-                    src={f.image}
-                    alt={`Couverture — ${f.titre}`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                  {f.featured && (
-                    <span className="pill pill-gold" style={{ position: "absolute", top: 14, left: 14, fontSize: 9, zIndex: 2 }}>★ Le plus complet</span>
-                  )}
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, padding: "22px 24px 24px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
-                    <span className="pill" style={{ background: "rgba(15,29,110,0.06)", color: "var(--blue)", borderColor: "rgba(15,29,110,0.18)" }}>{f.tag}</span>
-                    {f.livre && <span className="pill" style={{ fontSize: 9 }}>Aussi en livre</span>}
-                  </div>
-                  <h3 className="display" style={{ fontSize: 20, color: "var(--navy)", margin: "0 0 10px", lineHeight: 1.25 }}>{f.titre}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--mute)", margin: "0 0 22px", flexGrow: 1 }}>{f.benefice}</p>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 16, borderTop: "1px solid var(--line)" }}>
-                    <span style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 16, color: "var(--navy)" }}>Dès 10 €</span>
-                    <span className="link-underline" style={{ color: "var(--blue)", fontWeight: 500, fontSize: 13 }}>Découvrir <Arrow size={12} /></span>
-                  </div>
-                </div>
-              </a>
+              <FormationCard key={i} f={f} />
             ))}
           </div>
 
