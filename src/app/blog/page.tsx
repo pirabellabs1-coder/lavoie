@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ARTICLES as articles } from "@/lib/articles";
 
 export const metadata: Metadata = {
@@ -97,13 +98,10 @@ export default function Blog() {
       <section style={{ background: "var(--white)", padding: "56px 0 0" }}>
         <div className="container">
           <div className="rg-2" style={{ border: "1px solid var(--line)", borderRadius: 18, overflow: "hidden", marginBottom: 0 }}>
-            <div className="blog-featured-img" style={{ background: "var(--paper)", display: "grid", placeItems: "center", minHeight: 320, borderRight: "1px solid var(--line)" }}>
-              <div style={{ textAlign: "center" }}>
-                <span style={{ fontSize: 64, color: "var(--gold)", lineHeight: 1 }}>✦</span>
-                <p className="small" style={{ fontSize: 10.5, letterSpacing: ".2em", textTransform: "uppercase", color: "var(--mute)", margin: "12px 0 0", fontFamily: "var(--mono)" }}>
-                  Image de l&apos;article
-                </p>
-              </div>
+            <div className="blog-featured-img" style={{ position: "relative", background: "var(--paper-alt)", minHeight: 320, borderRight: "1px solid var(--line)" }}>
+              {articles[0].image && (
+                <Image src={articles[0].image} alt={articles[0].titre} fill sizes="(max-width: 768px) 100vw, 55vw" style={{ objectFit: "cover" }} priority />
+              )}
             </div>
             <div style={{ padding: "48px 44px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
@@ -131,8 +129,10 @@ export default function Blog() {
           <div className="rg-3" style={{ gap: 20, marginTop: 24, alignItems: "stretch" }}>
             {articles.slice(1).map((a, i) => (
               <div key={i} className="card-hover" style={{ background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-                <div style={{ aspectRatio: "16/9", background: "var(--paper)", display: "grid", placeItems: "center", borderBottom: "1px solid var(--line)" }}>
-                  <span style={{ fontSize: 32, color: "var(--gold)" }}>✦</span>
+                <div style={{ position: "relative", aspectRatio: "16/9", background: "var(--paper-alt)", borderBottom: "1px solid var(--line)" }}>
+                  {a.image && (
+                    <Image src={a.image} alt={a.titre} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+                  )}
                 </div>
                 <div style={{ padding: "28px 28px 32px", display: "flex", flexDirection: "column", flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>

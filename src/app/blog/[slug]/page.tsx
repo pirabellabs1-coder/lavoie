@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ARTICLES, ARTICLE_SLUGS, getArticle, type Block } from "@/lib/articles";
+
+const MARINE = "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)";
 
 export function generateStaticParams() {
   return ARTICLE_SLUGS.map((slug) => ({ slug }));
@@ -70,6 +73,19 @@ function ContentBlock({ block }: { block: Block }) {
           ))}
         </ul>
       );
+    case "image":
+      return (
+        <figure style={{ margin: "40px 0" }}>
+          <div style={{ position: "relative", aspectRatio: "16 / 10", borderRadius: 14, overflow: "hidden", border: "1px solid var(--line)" }}>
+            <Image src={block.src} alt={block.alt} fill sizes="(max-width: 768px) 100vw, 720px" style={{ objectFit: "cover" }} />
+          </div>
+          {block.caption && (
+            <figcaption style={{ fontSize: 12.5, color: "var(--mute)", textAlign: "center", margin: "12px 0 0", fontFamily: "var(--sans)", fontStyle: "italic" }}>
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
     default:
       return <p style={{ margin: "0 0 24px" }}>{renderInline(block.t)}</p>;
   }
@@ -131,14 +147,20 @@ export default async function ArticlePage({
       {/* COUVERTURE ARTICLE */}
       <div className="sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)", padding: "0 0 16px" }}>
         <div className="container-narrow">
-          <div style={{ aspectRatio: "16/9", background: "repeating-linear-gradient(135deg, rgba(200,168,75,0.06) 0 14px, rgba(200,168,75,0.02) 14px 28px)", border: "1px solid rgba(255,255,255,0.08)", display: "grid", placeItems: "center" }}>
-            <div style={{ textAlign: "center" }}>
-              <span style={{ fontSize: 56, color: "var(--gold)", lineHeight: 1 }}>✦</span>
-              <p style={{ fontSize: 10.5, letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "var(--sans)", margin: "14px 0 0" }}>
-                {article.categorie}
-              </p>
+          {article.image ? (
+            <div style={{ position: "relative", aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}>
+              <Image src={article.image} alt={article.titre} fill sizes="(max-width: 900px) 100vw, 820px" style={{ objectFit: "cover" }} priority />
             </div>
-          </div>
+          ) : (
+            <div style={{ aspectRatio: "16/9", background: "repeating-linear-gradient(135deg, rgba(200,168,75,0.06) 0 14px, rgba(200,168,75,0.02) 14px 28px)", border: "1px solid rgba(255,255,255,0.08)", display: "grid", placeItems: "center" }}>
+              <div style={{ textAlign: "center" }}>
+                <span style={{ fontSize: 56, color: "var(--gold)", lineHeight: 1 }}>✦</span>
+                <p style={{ fontSize: 10.5, letterSpacing: ".22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "var(--sans)", margin: "14px 0 0" }}>
+                  {article.categorie}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -154,6 +176,29 @@ export default async function ArticlePage({
             {article.content.map((block, i) => (
               <ContentBlock key={i} block={block} />
             ))}
+          </div>
+
+          {/* CTA fin d'article */}
+          <div className="sec-blue" style={{ background: MARINE, borderRadius: 18, padding: "clamp(32px, 4vw, 48px)", marginTop: 56, textAlign: "center", overflow: "hidden" }}>
+            <p className="eyebrow" style={{ justifyContent: "center", color: "var(--gold)", margin: "0 0 18px" }}>
+              <span className="dot" style={{ background: "var(--gold)" }} />Aller plus loin<span className="dot" style={{ background: "var(--gold)" }} />
+            </p>
+            <h3 className="display" style={{ fontSize: "clamp(24px, 2.6vw, 34px)", color: "var(--white)", margin: "0 0 16px", lineHeight: 1.15 }}>
+              Et si vous faisiez le premier pas&nbsp;?
+            </h3>
+            <p style={{ fontSize: 15.5, lineHeight: 1.7, color: "rgba(255,255,255,0.78)", maxWidth: 520, margin: "0 auto 28px" }}>
+              L&apos;appel découverte est offert — 45 minutes, sans engagement — pour comprendre votre
+              situation et voir ensemble ce qui est juste pour vous.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/contact" className="btn btn-gold">
+                Réserver un appel offert
+                <svg className="arrow" width={14} height={14} viewBox="0 0 16 16" fill="none"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" strokeWidth="1.2" /></svg>
+              </Link>
+              <Link href="/formations" className="btn btn-ghost-white">
+                Voir les formations
+              </Link>
+            </div>
           </div>
 
           {/* AUTEUR */}
