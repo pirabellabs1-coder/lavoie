@@ -7,6 +7,7 @@ import FormationCard from "@/components/FormationCard";
 import JsonLd from "@/components/JsonLd";
 import { faqLd } from "@/lib/jsonld";
 import { FORMATIONS } from "@/lib/formations";
+import { getRecentArticles } from "@/lib/articles";
 
 export const metadata: Metadata = {
   title: "La Voie 2 la Conscience — Accompagnement initiatique premium",
@@ -1410,6 +1411,57 @@ export default function Home() {
           <div style={{ textAlign: "center", marginTop: 52 }}>
             <Link href="/contact" className="btn btn-primary btn-lg">
               Réserver mon appel découverte <Arrow />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          13b · JOURNAL (aperçu)
+          ══════════════════════════════════════════════════════ */}
+      <section className="section" style={{ background: "var(--white)", position: "relative" }}>
+        <span className="section-num">Journal</span>
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <Eyebrow style={{ marginBottom: 24 }}>Le journal</Eyebrow>
+              <h2>Lire,<br /><em className="display-italic">avant de venir.</em></h2>
+            </div>
+            <p>
+              Réflexions et repères sur la transformation, le couple, le sens et l&apos;équilibre —
+              pour nourrir votre cheminement, à votre rythme.
+            </p>
+          </div>
+
+          <div className="rg-3" style={{ gap: 20, alignItems: "stretch" }}>
+            {getRecentArticles(3).map((a, i) => (
+              <Link
+                key={i}
+                href={`/blog/${a.slug}`}
+                data-reveal=""
+                data-reveal-delay={String(i)}
+                className="card-hover"
+                style={{ display: "flex", flexDirection: "column", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, overflow: "hidden", textDecoration: "none" }}
+              >
+                <Placeholder style={{ aspectRatio: "16/9" }} src={a.image} alt={a.titre} sizes="(max-width: 768px) 100vw, 33vw" />
+                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, padding: "24px 26px 26px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+                    <span className="pill" style={{ fontSize: 9.5 }}>{a.categorie}</span>
+                    <span style={{ fontSize: 11, color: "var(--mute)", fontFamily: "var(--mono)" }}>{a.lecture}</span>
+                  </div>
+                  <h3 className="display" style={{ fontSize: 20, color: "var(--navy)", margin: "0 0 14px", lineHeight: 1.3, flexGrow: 1 }}>{a.titre}</h3>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 14, borderTop: "1px solid var(--line)" }}>
+                    <span style={{ fontSize: 11, color: "var(--mute)", fontFamily: "var(--mono)" }}>{a.date}</span>
+                    <span className="link-underline" style={{ color: "var(--gold)", fontWeight: 500, fontSize: 12 }}>Lire <Arrow size={11} /></span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 52 }}>
+            <Link href="/blog" className="btn btn-ghost">
+              Voir tout le journal <Arrow />
             </Link>
           </div>
         </div>
