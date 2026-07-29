@@ -11,6 +11,7 @@ export type Formation = {
   benefice: string;
   tag: string;
   url: string;
+  image: string;
   featured?: boolean;
   livre?: boolean;
 };
@@ -22,6 +23,7 @@ export const FORMATIONS: Formation[] = [
       "Réconcilier vos polarités intérieures pour une réussite qui ne s'oppose plus à votre vie personnelle.",
     tag: "Éveil & leadership",
     url: `${STORE_URL}/polarite`,
+    image: "/formations/f1.jpg",
     featured: true,
   },
   {
@@ -30,6 +32,7 @@ export const FORMATIONS: Formation[] = [
       "Comprendre ce qui nourrit — ou éteint — le désir, dans le couple comme en soi.",
     tag: "Couple & désir",
     url: `${STORE_URL}/le-paradoxe-du-desir`,
+    image: "/formations/f2.jpg",
   },
   {
     titre: "Comment le cadre vous rend-il libre ?",
@@ -37,6 +40,7 @@ export const FORMATIONS: Formation[] = [
       "Faire du cadre non pas une contrainte, mais la condition même de votre liberté intérieure.",
     tag: "Liberté intérieure",
     url: `${STORE_URL}/comment-le-cadre-vous-rend-t-il-plus-libre`,
+    image: "/formations/f3.jpg",
   },
   {
     titre: "Blessures originelles — De la compassion à l'excellence",
@@ -44,6 +48,7 @@ export const FORMATIONS: Formation[] = [
       "Transformer votre blessure originelle en source d'Excellence Authentique Unique.",
     tag: "Transformation",
     url: `${STORE_URL}/de-la-compassion-a-lexcellence-authentique`,
+    image: "/formations/f4.jpg",
   },
   {
     titre: "Fragments de vie amoureuse — La puissance du (par)Don",
@@ -51,6 +56,7 @@ export const FORMATIONS: Formation[] = [
       "Le don et le pardon comme chemins de guérison amoureuse. Existe aussi en livre.",
     tag: "Couple & désir",
     url: `${STORE_URL}/fragment-de-vie-amoureuse`,
+    image: "/formations/f5.jpg",
     livre: true,
   },
   {
@@ -59,6 +65,7 @@ export const FORMATIONS: Formation[] = [
       "Décrypter les attentes tues qui fragilisent le couple — et les dénouer.",
     tag: "Couple & désir",
     url: `${STORE_URL}/prd_bumvzh`,
+    image: "/formations/f6.jpg",
   },
   {
     titre: "Cultiver l'ordre et l'équilibre",
@@ -66,6 +73,7 @@ export const FORMATIONS: Formation[] = [
       "Remettre de l'ordre dans votre quotidien pour que la transformation tienne dans la durée.",
     tag: "Équilibre de vie",
     url: `${STORE_URL}/cutiver-lordre-et-lequilibre`,
+    image: "/formations/f7.jpg",
   },
   {
     titre: "Retrouver du sens grâce aux cycles des saisons",
@@ -73,6 +81,7 @@ export const FORMATIONS: Formation[] = [
       "Vivre en harmonie avec vos saisons intérieures : lâcher-prise, racines, élan, rayonnement.",
     tag: "Cycle des Saisons",
     url: `${STORE_URL}/retrouver-du-sens-grace-aux-cycles-des-saisons`,
+    image: "/formations/f8.jpg",
   },
   {
     titre: "Apprendre à pardonner et se libérer de la rancœur",
@@ -80,5 +89,6 @@ export const FORMATIONS: Formation[] = [
       "Déposer le poids de la rancœur et retrouver une véritable paix intérieure.",
     tag: "Point d'entrée",
     url: `${STORE_URL}/aprendre-a-pardonner-et-se-liberer-de-la-rancoeur`,
+    image: "/formations/f9.jpg",
   },
 ];

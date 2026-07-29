@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/jsonld";
 import { FORMATIONS } from "@/lib/formations";
@@ -125,18 +126,31 @@ export default function FormationsPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="card-hover"
-                style={{ display: "flex", flexDirection: "column", padding: "30px 28px 26px", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, textDecoration: "none", position: "relative" }}
+                style={{ display: "flex", flexDirection: "column", background: "var(--white)", border: "1px solid var(--line)", borderRadius: 16, textDecoration: "none", position: "relative", overflow: "hidden" }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
-                  <span className="pill" style={{ background: "rgba(15,29,110,0.06)", color: "var(--blue)", borderColor: "rgba(15,29,110,0.18)" }}>{f.tag}</span>
-                  {f.featured && <span className="pill pill-gold" style={{ fontSize: 9 }}>★ Le plus complet</span>}
-                  {f.livre && <span className="pill" style={{ fontSize: 9 }}>Aussi en livre</span>}
+                <div style={{ position: "relative", aspectRatio: "1 / 1", background: "var(--paper-alt)" }}>
+                  <Image
+                    src={f.image}
+                    alt={`Couverture — ${f.titre}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                  {f.featured && (
+                    <span className="pill pill-gold" style={{ position: "absolute", top: 14, left: 14, fontSize: 9, zIndex: 2 }}>★ Le plus complet</span>
+                  )}
                 </div>
-                <h3 className="display" style={{ fontSize: 21, color: "var(--navy)", margin: "0 0 12px", lineHeight: 1.25 }}>{f.titre}</h3>
-                <p style={{ fontSize: 14.5, lineHeight: 1.62, color: "var(--mute)", margin: "0 0 24px", flexGrow: 1 }}>{f.benefice}</p>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 18, borderTop: "1px solid var(--line)" }}>
-                  <span style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 16, color: "var(--navy)" }}>Dès 10 €</span>
-                  <span className="link-underline" style={{ color: "var(--blue)", fontWeight: 500, fontSize: 13 }}>Découvrir <Arrow size={12} /></span>
+                <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, padding: "22px 24px 24px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+                    <span className="pill" style={{ background: "rgba(15,29,110,0.06)", color: "var(--blue)", borderColor: "rgba(15,29,110,0.18)" }}>{f.tag}</span>
+                    {f.livre && <span className="pill" style={{ fontSize: 9 }}>Aussi en livre</span>}
+                  </div>
+                  <h3 className="display" style={{ fontSize: 20, color: "var(--navy)", margin: "0 0 10px", lineHeight: 1.25 }}>{f.titre}</h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.6, color: "var(--mute)", margin: "0 0 22px", flexGrow: 1 }}>{f.benefice}</p>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 16, borderTop: "1px solid var(--line)" }}>
+                    <span style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 16, color: "var(--navy)" }}>Dès 10 €</span>
+                    <span className="link-underline" style={{ color: "var(--blue)", fontWeight: 500, fontSize: 13 }}>Découvrir <Arrow size={12} /></span>
+                  </div>
                 </div>
               </a>
             ))}
