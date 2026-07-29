@@ -1150,7 +1150,7 @@ export default function Home() {
 
           <div style={{ display: "flex", gap: 14, justifyContent: "center", marginTop: 52, flexWrap: "wrap" }}>
             <Link href="/formations" className="btn btn-primary btn-lg">
-              Voir les 9 formations <Arrow />
+              Voir toutes les formations <Arrow />
             </Link>
             <Link href="/formations#guide" className="btn btn-ghost">
               Recevoir le guide gratuit

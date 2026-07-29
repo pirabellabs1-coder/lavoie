@@ -110,7 +110,7 @@ export default function FormationsPage() {
           <div className="section-head">
             <div>
               <Eyebrow style={{ marginBottom: 24 }}>Le catalogue</Eyebrow>
-              <h2>Neuf formations<br /><em className="display-italic">pour avancer.</em></h2>
+              <h2>Nos formations<br /><em className="display-italic">pour avancer.</em></h2>
             </div>
             <p>
               Chaque formation ouvre une porte : couple, désir, blessure originelle, cycles de vie,
