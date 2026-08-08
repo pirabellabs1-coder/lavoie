@@ -69,8 +69,9 @@ export default function EvenementsPage() {
               <h2>Nos événements<br /><em className="display-italic">à venir.</em></h2>
             </div>
             <p>
-              Chaque rendez-vous ouvre une porte : couple, désir, blessure originelle, cycles de vie,
-              pardon, leadership. Un premier pas concret, vécu en groupe.
+              Les quatre stages du Cycle des Saisons au Centre HUT, le jeûne initiatique et
+              l&apos;accompagnement en ligne. Chaque rendez-vous ouvre une porte — et se vit
+              en groupe restreint.
             </p>
           </div>
 

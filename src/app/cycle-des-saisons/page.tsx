@@ -43,35 +43,39 @@ const FAQ = [
     a: "Une formation transmet des clés. Le Cycle des Saisons vous les fait traverser. Le travail engage le corps, l'eau, la parole en cercle et le temps long — pas seulement la compréhension intellectuelle, qui est nécessaire mais notoirement insuffisante pour changer un schéma.",
   },
   {
-    q: "Le jeûne initiatique d'automne est-il obligatoire ?",
-    a: "Il constitue la porte d'entrée naturelle du cycle en préparant le corps et l'intention, mais il peut aussi se vivre indépendamment. Il n'est pas une condition d'accès aux trois autres stages.",
+    q: "Le jeûne initiatique d'automne fait-il partie du cycle ?",
+    a: "Non. Le cycle s'ouvre avec le stage Automne « Naître à soi », en septembre. Le jeûne initiatique est un rendez-vous autonome, qui peut préparer le corps et l'intention en amont — mais il n'est ni une étape du cycle ni une condition d'accès.",
   },
 ];
 
 const SAISONS_SENS = [
   {
     saison: "Automne",
-    mot: "Préparer",
+    element: "Terre",
+    mot: "Accepter",
     texte:
-      "On dépouille. Le corps s'allège, l'agenda se vide, et l'intention se formule enfin avec des mots à soi.",
+      "Les fondations, le consentement, les racines, l'ancrage, la juste place. L'automne ouvre le chemin : celui de l'acceptation et de l'observation.",
   },
   {
     saison: "Hiver",
+    element: "Eau",
     mot: "Descendre",
     texte:
-      "On va sous la surface, là où les schémas prennent racine — dans la mémoire, la lignée, ce qui a été transmis sans être dit.",
+      "La mémoire, les profondeurs, les émotions, les lignées, la purification. L'hiver conduit vers les racines invisibles.",
   },
   {
     saison: "Printemps",
+    element: "Air",
     mot: "Manifester",
     texte:
-      "Ce qui a mûri dans le silence cherche à prendre forme. On ose la parole, le geste, la décision.",
+      "Le souffle, l'ouverture, l'émergence, l'inspiration. Le printemps accompagne la naissance d'une nouvelle manière d'être.",
   },
   {
     saison: "Été",
+    element: "Feu",
     mot: "Rayonner",
     texte:
-      "On célèbre, on ancre, on laisse l'équilibre produire ses effets — sans avoir à les fabriquer.",
+      "La révélation, l'incarnation, la transmission. L'été révèle ce qui est désormais prêt à être pleinement vécu.",
   },
 ];
 
@@ -164,9 +168,9 @@ export default function CycleDesSaisonsPage() {
             rend tout cela soutenable. Le corps finit par facturer ce que l&apos;agenda a refusé.
           </p>
           <p style={{ fontSize: 16.5, lineHeight: 1.8, color: "var(--mute)", margin: 0 }}>
-            Le Cycle des Saisons remet ce mouvement à l&apos;endroit. Quatre rendez-vous dans
-            l&apos;année, chacun avec sa fonction propre, qui suivent le rythme de vos saisons
-            intérieures plutôt que celui de vos objectifs.
+            Le Cycle des Saisons remet ce mouvement à l&apos;endroit. Quatre rencontres jalonnent
+            l&apos;année, au rythme des équinoxes et des solstices, dans le cadre naturel du Centre
+            HUT — chacune avec sa fonction propre, chacune sous le signe d&apos;un élément.
           </p>
 
           <div style={{ marginTop: 52, display: "flex", flexDirection: "column", gap: 1, background: "var(--line)", border: "1px solid var(--line)", borderRadius: 14, overflow: "hidden" }}>
@@ -174,6 +178,8 @@ export default function CycleDesSaisonsPage() {
               <div key={s.saison} style={{ background: "var(--white)", padding: "26px 30px", display: "flex", gap: 24, alignItems: "baseline", flexWrap: "wrap" }}>
                 <span className="small" style={{ letterSpacing: ".18em", textTransform: "uppercase", color: "var(--gold)", fontSize: 10.5, fontWeight: 600, minWidth: 96 }}>
                   {s.saison}
+                  <br />
+                  <span style={{ color: "var(--mute)", fontWeight: 400 }}>{s.element}</span>
                 </span>
                 <span className="display" style={{ fontSize: 22, color: "var(--navy)", minWidth: 150 }}>{s.mot}</span>
                 <span style={{ fontSize: 15.5, lineHeight: 1.65, color: "var(--mute)", flex: 1, minWidth: 240 }}>{s.texte}</span>

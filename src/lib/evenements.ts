@@ -33,8 +33,12 @@ export type Evenement = {
   accroche: string;
   /** Thème court affiché en pastille. */
   tag: string;
-  /** Date lisible, ex. « 18–21 mars 2026 ». */
+  /** Date lisible, ex. « 17–20 septembre 2026 ». */
   date: string;
+  /** Début ISO 8601 avec fuseau — n'émettre que si la date est confirmée. */
+  debutISO?: string;
+  /** Fin ISO 8601 avec fuseau. */
+  finISO?: string;
   /** Durée ou créneau, ex. « 4 jours ». Optionnel. */
   heure?: string;
   /** Lieu, ex. « Centre HUT, Sarthe (72) ». */
@@ -73,7 +77,61 @@ export type Evenement = {
 
 const CENTRE_HUT = "Centre HUT, Sarthe (72)";
 
-export const EVENEMENTS: Evenement[] = [
+const TOUS: Evenement[] = [
+  {
+    slug: "stage-automne-naitre-a-soi",
+    href: "/evenements/stage-automne-naitre-a-soi",
+    titre: "Automne — Naître à soi",
+    titreLong: "Stage Automne — Naître à soi en ce nouveau cycle",
+    accroche:
+      "Accepter ce qui est pour découvrir ce qui cherche à naître. Le premier stage du Cycle des Saisons 2026–2027.",
+    tag: "Cycle des Saisons",
+    date: "17–20 septembre 2026",
+    debutISO: "2026-09-17T17:00:00+02:00",
+    finISO: "2026-09-20T18:00:00+02:00",
+    heure: "4 jours (+ options J0 et J+1)",
+    lieu: "Centre HUT, Rouperroux-le-Coquet (72)",
+    prix: "Tarifs sur la billetterie",
+    url: "https://www.eventbrite.fr/e/stage-automne-naitre-a-soi-en-ce-nouveau-cycle-tickets-1991547637595",
+    image: "/evenements/stage-automne.png",
+    featured: true,
+    cycle: true,
+    rang: 1,
+    metaDescription:
+      "Stage Automne au Centre HUT (17–20 septembre 2026) : accepter son histoire pour poser les fondations d'un nouveau cycle. Premier stage du Cycle des Saisons.",
+    devise: "Et si l'automne était le moment où tout commence ?",
+    intro: [
+      "Dans la nature, l'automne n'est pas une fin. Les feuilles tombent, les arbres cessent de lutter, la terre accueille ce qui doit mourir pour préparer une vie nouvelle. C'est un commencement déguisé en clôture.",
+      "Ce premier stage du Cycle des Saisons ouvre le chemin par un geste que l'on saute presque toujours : accepter ce qui est. Reconnaître son histoire, ses héritages, ses blessures et ses schémas — sans chercher à les fuir ni à les corriger dans l'instant. Car il est impossible de retrouver sa juste place sans avoir d'abord consenti à voir d'où l'on vient.",
+      "Il ne s'agit pas de devenir une meilleure version de vous-même. Il s'agit de retrouver la cohérence entre votre histoire, votre corps, votre âme et les Lois du Vivant. À l'équinoxe, quand lumière et obscurité s'équilibrent exactement, la saison rappelle qu'aucune transformation ne naît du rejet d'une partie de soi.",
+      "Anciens et nouveaux se retrouvent ici autour d'une même intention : regarder son histoire avec vérité, pour bâtir des fondations solides sur lesquelles reposera toute l'année.",
+    ],
+    verbes: [
+      { mot: "Accepter", texte: "Cesser de lutter contre son histoire pour commencer à dialoguer avec elle." },
+      { mot: "Observer", texte: "Reconnaître les schémas de compensation qui orientent encore votre vie à votre insu." },
+      { mot: "Consentir", texte: "Poser les fondations, l'ancrage et la juste place — l'élément Terre de ce premier passage." },
+    ],
+    vivrez: [
+      { t: "Le cercle d'ouverture", b: "Pose du cadre, engagement conscient envers votre processus, et formulation d'une intention claire pour l'année qui s'ouvre." },
+      { t: "La cartographie de la blessure originelle", b: "Comprendre pourquoi les schémas se répètent malgré la lucidité, et comment les héritages familiaux et transgénérationnels agissent encore." },
+      { t: "Le rituel Ki-Zola — Voie Initiatique de l'Eau", b: "Un rituel de passage de deux à trois heures : l'eau comme mémoire vivante et purificatrice, marquant l'entrée dans le nouveau cycle." },
+      { t: "Le miroir du groupe", b: "Les anciens partagent leur chemin, les nouveaux reçoivent leur vécu. Ce que je vois dans l'autre m'appartient." },
+      { t: "Votre Excellence Authentique Unique", b: "Un atelier de clôture pour identifier ce que le stage a révélé et sceller votre engagement pour le cycle." },
+      { t: "Le silence et la nature", b: "Temps personnels, marche, écriture, silence profond le soir. Le Centre HUT fait une partie du travail." },
+    ],
+    pourQui: [
+      "Vous entrez pour la première fois dans le Cycle des Saisons et vous voulez en poser les fondations.",
+      "Vous avez déjà fait un cycle et vous revenez en poursuivre le chemin avec le cercle.",
+      "Vous êtes lucide sur votre histoire — et vous reproduisez pourtant les mêmes schémas.",
+    ],
+    faq: [
+      { q: "Je n'ai jamais fait ce type de travail. Est-ce pour moi ?", a: "Oui. Le stage accueille chaque année de nouveaux participants aux côtés des anciens, et c'est précisément ce mélange qui fait sa force : les nouveaux reçoivent l'expérience du cercle, les anciens réancrent leur chemin en le transmettant." },
+      { q: "Devrai-je partager des choses personnelles devant le groupe ?", a: "Rien n'est imposé. Les cercles de parole se vivent sur la base du volontariat, et le cadre posé dès l'ouverture protège chacun. Vous avancez au rythme que vous choisissez." },
+      { q: "Que recouvrent les options J0 et J+1 ?", a: "J0 (mercredi 16 septembre) permet d'arriver la veille pour déposer le rythme extérieur avant la plongée. J+1 (lundi 21 septembre) offre une journée d'intégration pour ne pas retourner brutalement au quotidien. Chacune est facultative, avec un supplément de 150 €." },
+      { q: "Comment se déroulent les quatre jours ?", a: "Le stage ouvre le jeudi 17 septembre à 17h et se clôture le dimanche 20 à 18h. Le programme alterne enseignements, cercles de parole, pratiques corporelles, temps de silence, repas partagés et le rituel Ki-Zola. C'est une structure guidante, pas un script rigide." },
+      { q: "Puis-je annuler mon inscription ?", a: "Le remboursement est possible jusqu'à 28 jours avant l'événement, selon les conditions indiquées sur la billetterie." },
+    ],
+  },
   {
     slug: "jeune-initiatique-automne",
     href: "/evenements/jeune-initiatique-automne",
@@ -87,10 +145,8 @@ export const EVENEMENTS: Evenement[] = [
     prix: "Tarif sur demande",
     url: EVENTBRITE_ORGANISATEUR,
     image: "/evenements/jeune-automne.png",
-    // Rattaché au cycle : l'affiche Printemps annonce « troisième stage du CDS »,
-    // ce qui place l'Automne en premier des quatre. À confirmer avec Domoïna.
-    cycle: true,
-    rang: 1,
+    // Hors Cycle des Saisons : le premier stage du cycle est « Naître à soi »
+    // (septembre). Le jeûne reste un rendez-vous autonome de préparation.
     metaDescription:
       "Jeûne initiatique d'automne avec Domoïna : purifier le corps, clarifier ses intentions et préparer une nouvelle année du Vivant. Places limitées.",
     devise: "Préparer le corps pour accueillir une nouvelle année du Vivant.",
@@ -117,7 +173,7 @@ export const EVENEMENTS: Evenement[] = [
     ],
     faq: [
       { q: "Faut-il avoir déjà jeûné pour participer ?", a: "Non. Le protocole est progressif et encadré du début à la fin. Les personnes qui n'ont jamais jeûné sont accompagnées avec une attention particulière lors de la descente alimentaire et de la reprise." },
-      { q: "Le jeûne initiatique fait-il partie du Cycle des Saisons ?", a: "Il en est la porte d'entrée naturelle : il prépare le corps et l'intention avant l'entrée dans le cycle des quatre stages. Il peut aussi se vivre seul, indépendamment du cycle." },
+      { q: "Le jeûne initiatique fait-il partie du Cycle des Saisons ?", a: "Non. Le cycle s'ouvre avec le stage Automne « Naître à soi », en septembre. Le jeûne est un rendez-vous autonome : il peut préparer le corps et l'intention en amont, ou se vivre pour lui-même, indépendamment du cycle." },
       { q: "Y a-t-il un suivi médical ?", a: "Un échange préalable permet de vérifier que le jeûne est adapté à votre situation. Certaines conditions de santé le contre-indiquent : parlons-en avant votre inscription." },
     ],
   },
@@ -174,11 +230,12 @@ export const EVENEMENTS: Evenement[] = [
     accroche:
       "Émerger, incarner, oser, rayonner : manifester ce qui veut naître, ce que vous êtes devenu·e. Troisième stage du CDS 2026–2027.",
     tag: "Cycle des Saisons",
-    // ⚠ Date lue sur l'affiche : « 18–21 MARS 2026 (+ option J0 & J+1) ».
-    // Elle est déjà passée et contredit la mention « CDS 2026–2027 » —
-    // à confirmer (mars 2027 ?).
-    date: "18–21 mars 2026 (+ option J0 & J+1)",
-    heure: "4 jours",
+    // L'affiche imprime « 18–21 MARS 2026 » : coquille confirmée par Domoïna,
+    // le cycle 2026–2027 démarre en septembre 2026 donc le printemps est en 2027.
+    date: "18–21 mars 2027",
+    debutISO: "2027-03-18T17:00:00+01:00",
+    finISO: "2027-03-21T18:00:00+01:00",
+    heure: "4 jours (+ option J0 et J+1)",
     lieu: CENTRE_HUT,
     prix: "Tarif sur demande",
     url: EVENTBRITE_ORGANISATEUR,
@@ -305,6 +362,15 @@ export const EVENEMENTS: Evenement[] = [
       { q: "Faut-il se souvenir de tous ses rêves ?", a: "Non, et c'est même rarement le cas au début. Se souvenir de ses rêves est une capacité qui se réveille avec la pratique — c'est l'une des premières choses que le groupe travaille." },
     ],
   },
+];
+
+/**
+ * Ordre d'affichage : les quatre stages du Cycle des Saisons dans l'ordre
+ * initiatique, puis les rendez-vous autonomes (jeûne, Canal des Rêves).
+ */
+export const EVENEMENTS: Evenement[] = [
+  ...TOUS.filter((e) => e.cycle).sort((a, b) => (a.rang ?? 0) - (b.rang ?? 0)),
+  ...TOUS.filter((e) => !e.cycle),
 ];
 
 /** Slugs des événements qui ont leur page sous /evenements/<slug>. */

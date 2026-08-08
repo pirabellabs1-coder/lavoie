@@ -106,6 +106,8 @@ export default async function EvenementPage({
             image: e.image,
             lieu: e.lieu,
             offerUrl: e.url,
+            startDate: e.debutISO,
+            endDate: e.finISO,
           }),
           faqLd(e.faq),
         ]}
