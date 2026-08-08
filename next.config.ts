@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "plus.unsplash.com" },
     ],
   },
+  // L'ancien catalogue de formations numériques a été remplacé par l'agenda
+  // des événements (billetterie en ligne) → on préserve le jus SEO des liens
+  // existants vers /formations.
+  async redirects() {
+    return [
+      { source: "/formations", destination: "/evenements", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

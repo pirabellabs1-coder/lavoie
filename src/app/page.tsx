@@ -3,10 +3,10 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import Marquee from "@/components/Marquee";
 import NewsletterForm from "@/components/NewsletterForm";
-import FormationCard from "@/components/FormationCard";
+import EvenementCard from "@/components/EvenementCard";
 import JsonLd from "@/components/JsonLd";
 import { faqLd } from "@/lib/jsonld";
-import { FORMATIONS } from "@/lib/formations";
+import { EVENEMENTS } from "@/lib/evenements";
 import { getRecentArticles } from "@/lib/articles";
 
 export const metadata: Metadata = {
@@ -1127,38 +1127,40 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          08b · FORMATIONS EN LIGNE (aperçu)
+          08b · ÉVÉNEMENTS (aperçu) — masqué tant que l'agenda est vide
           ══════════════════════════════════════════════════════ */}
-      <section className="section" style={{ background: "var(--paper)", position: "relative" }}>
-        <span className="section-num">Formations en ligne</span>
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <Eyebrow style={{ marginBottom: 24 }}>Pas encore prêt pour l&apos;immersion&nbsp;?</Eyebrow>
-              <h2>Commencez par une<br /><em className="display-italic">formation en ligne.</em></h2>
+      {EVENEMENTS.length > 0 && (
+        <section className="section" style={{ background: "var(--paper)", position: "relative" }}>
+          <span className="section-num">Événements</span>
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <Eyebrow style={{ marginBottom: 24 }}>Pas encore prêt pour l&apos;immersion&nbsp;?</Eyebrow>
+                <h2>Retrouvez-nous lors<br /><em className="display-italic">d&apos;un événement.</em></h2>
+              </div>
+              <p>
+                Ateliers, conférences et journées d&apos;immersion : un premier pas concret, vécu
+                en groupe — et un guide offert pour démarrer.
+              </p>
             </div>
-            <p>
-              Explorez un sujet à votre rythme, chez vous, dès 10 €. Un premier pas simple
-              vers un travail plus profond — et un guide offert pour démarrer.
-            </p>
-          </div>
 
-          <div className="rg-3" style={{ gap: 20, alignItems: "stretch" }}>
-            {[FORMATIONS[0], FORMATIONS[3], FORMATIONS[7]].map((f, i) => (
-              <FormationCard key={i} f={f} />
-            ))}
-          </div>
+            <div className="rg-3" style={{ gap: 20, alignItems: "stretch" }}>
+              {EVENEMENTS.slice(0, 3).map((e, i) => (
+                <EvenementCard key={i} e={e} />
+              ))}
+            </div>
 
-          <div style={{ display: "flex", gap: 14, justifyContent: "center", marginTop: 52, flexWrap: "wrap" }}>
-            <Link href="/formations" className="btn btn-primary btn-lg">
-              Voir toutes les formations <Arrow />
-            </Link>
-            <Link href="/formations#guide" className="btn btn-ghost">
-              Recevoir le guide gratuit
-            </Link>
+            <div style={{ display: "flex", gap: 14, justifyContent: "center", marginTop: 52, flexWrap: "wrap" }}>
+              <Link href="/evenements" className="btn btn-primary btn-lg">
+                Voir tous les événements <Arrow />
+              </Link>
+              <Link href="/cycle-des-saisons" className="btn btn-ghost">
+                Le Cycle des Saisons
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ══════════════════════════════════════════════════════
           11 · TÉMOIGNAGES — on navy for contrast

@@ -21,7 +21,9 @@ const nav: NavItem[] = [
     label: "Programmes",
     children: [
       { href: "/offre-gold", label: "Offre Gold", desc: "Trois niveaux d'engagement" },
-      { href: "/formations", label: "Formations en ligne", desc: "À votre rythme, dès 10 €" },
+      { href: "/cycle-des-saisons", label: "Cycle des Saisons", desc: "Une année initiatique, 4 stages" },
+      { href: "/evenements", label: "Événements", desc: "Toutes les prochaines dates" },
+      { href: "/canal-des-reves", label: "Canal des Rêves", desc: "Analyse de rêves en groupe" },
       { href: "/masterclass", label: "Masterclass", desc: "Pour celles qui transmettent" },
     ],
   },

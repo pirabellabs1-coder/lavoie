@@ -195,8 +195,8 @@ export default async function ArticlePage({
                 Réserver un appel offert
                 <svg className="arrow" width={14} height={14} viewBox="0 0 16 16" fill="none"><path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" strokeWidth="1.2" /></svg>
               </Link>
-              <Link href="/formations" className="btn btn-ghost-white">
-                Voir les formations
+              <Link href="/evenements" className="btn btn-ghost-white">
+                Voir les événements
               </Link>
             </div>
           </div>

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/site";
 import { ARTICLE_SLUGS as BLOG_SLUGS } from "@/lib/articles";
 import { DOC_SLUGS } from "@/lib/documents";
+import { EVENEMENT_SLUGS } from "@/lib/evenements";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -9,7 +10,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routes: { path: string; priority: number; freq: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
     { path: "/", priority: 1.0, freq: "weekly" },
     { path: "/offre-gold", priority: 0.9, freq: "monthly" },
-    { path: "/formations", priority: 0.8, freq: "monthly" },
+    { path: "/cycle-des-saisons", priority: 0.9, freq: "monthly" },
+    { path: "/evenements", priority: 0.8, freq: "weekly" },
+    { path: "/canal-des-reves", priority: 0.7, freq: "monthly" },
     { path: "/methodes", priority: 0.8, freq: "monthly" },
     { path: "/domoina", priority: 0.8, freq: "monthly" },
     { path: "/centre-hut", priority: 0.8, freq: "monthly" },
@@ -37,6 +40,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
+  const evenementEntries: MetadataRoute.Sitemap = EVENEMENT_SLUGS.map((slug) => ({
+    url: `${SITE.url}/evenements/${slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
   const docEntries: MetadataRoute.Sitemap = DOC_SLUGS.map((slug) => ({
     url: `${SITE.url}/cadre-deontologique/${slug}`,
     lastModified: now,
@@ -44,5 +54,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.2,
   }));
 
-  return [...staticEntries, ...blogEntries, ...docEntries];
+  return [...staticEntries, ...evenementEntries, ...blogEntries, ...docEntries];
 }

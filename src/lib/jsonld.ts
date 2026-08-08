@@ -164,6 +164,91 @@ export function articleLd(opts: {
   };
 }
 
+/**
+ * Événement (stage, jeûne, accompagnement) — vise les résultats enrichis
+ * « Événements » de Google. `startDate` n'est émis que si la date est connue :
+ * un Event sans date valide est rejeté par Google, mieux vaut l'omettre.
+ */
+export function eventLd(opts: {
+  name: string;
+  description: string;
+  path: string;
+  image: string;
+  startDate?: string;
+  endDate?: string;
+  online?: boolean;
+  lieu: string;
+  offerUrl: string;
+  price?: number;
+  currency?: string;
+}): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: opts.name,
+    description: opts.description,
+    url: `${SITE.url}${opts.path}`,
+    image: `${SITE.url}${opts.image}`,
+    inLanguage: "fr-FR",
+    organizer: { "@id": ORG_ID },
+    performer: { "@id": FOUNDER_ID },
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: opts.online
+      ? "https://schema.org/OnlineEventAttendanceMode"
+      : "https://schema.org/OfflineEventAttendanceMode",
+    location: opts.online
+      ? { "@type": "VirtualLocation", url: opts.offerUrl }
+      : {
+          "@type": "Place",
+          name: opts.lieu,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: SITE.address.street,
+            addressLocality: SITE.address.locality,
+            postalCode: SITE.address.postalCode,
+            addressRegion: SITE.address.region,
+            addressCountry: SITE.address.country,
+          },
+        },
+    ...(opts.startDate ? { startDate: opts.startDate } : {}),
+    ...(opts.endDate ? { endDate: opts.endDate } : {}),
+    offers: {
+      "@type": "Offer",
+      url: opts.offerUrl,
+      availability: "https://schema.org/InStock",
+      ...(opts.price !== undefined
+        ? { price: opts.price, priceCurrency: opts.currency ?? "EUR" }
+        : {}),
+    },
+  };
+}
+
+/** Programme en plusieurs sessions (Cycle des Saisons) — Course + ItemList. */
+export function courseLd(opts: {
+  name: string;
+  description: string;
+  path: string;
+  sessions: { name: string; description: string; path: string }[];
+}): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: opts.name,
+    description: opts.description,
+    url: `${SITE.url}${opts.path}`,
+    inLanguage: "fr-FR",
+    provider: { "@id": ORG_ID },
+    hasCourseInstance: opts.sessions.map((s) => ({
+      "@type": "CourseInstance",
+      name: s.name,
+      description: s.description,
+      url: `${SITE.url}${s.path}`,
+      courseMode: "Onsite",
+      courseWorkload: "P4D",
+    })),
+  };
+}
+
 /** Témoignage vidéo (VideoObject). */
 export function videoLd(opts: {
   name: string;
