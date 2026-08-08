@@ -93,7 +93,7 @@ const TOUS: Evenement[] = [
     lieu: "Centre HUT, Rouperroux-le-Coquet (72)",
     prix: "Tarifs sur la billetterie",
     url: "https://www.eventbrite.fr/e/stage-automne-naitre-a-soi-en-ce-nouveau-cycle-tickets-1991547637595",
-    image: "/evenements/stage-automne.png",
+    image: "/evenements/stage-automne.jpg",
     featured: true,
     cycle: true,
     rang: 1,
@@ -330,7 +330,7 @@ const TOUS: Evenement[] = [
     lieu: "En ligne · groupe Telegram privé",
     prix: "60 € par mois",
     url: "mailto:serviceclientsv2c@gmail.com?subject=Canal%20des%20R%C3%AAves%20%E2%80%94%20r%C3%A9server%20ma%20place",
-    image: "/evenements/canal-des-reves.png",
+    image: "/evenements/canal-des-reves.jpg",
     metaDescription:
       "Canal des Rêves : analyse de rêves en groupe sur Telegram avec Domoïna. Décodez vos rêves, recevez des analyses personnalisées. 60 € par mois.",
     devise: "Vos rêves sont des messages. Écoutez-les. Ils vous guident.",

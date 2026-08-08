@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: "Cycle des Saisons — Une année initiatique en quatre stages",
     description:
       "Quatre stages immersifs au Centre HUT pour traverser une année initiatique complète, au rythme des saisons intérieures.",
-    images: [{ url: "/evenements/stage-printemps.png" }],
+    images: [{ url: "/evenements/stage-automne.jpg" }],
   },
 };
 

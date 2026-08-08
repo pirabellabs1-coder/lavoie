@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "Canal des Rêves — Analyse de rêves en groupe",
     description:
       "Vos rêves sont des messages. Apprenez à les décoder dans un groupe privé, avec des analyses personnalisées.",
-    images: [{ url: "/evenements/canal-des-reves.png" }],
+    images: [{ url: "/evenements/canal-des-reves.jpg" }],
   },
 };
 
