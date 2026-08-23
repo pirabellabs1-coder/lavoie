@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useProtection } from "@/components/Protection";
 
 function Arrow() {
   return (
@@ -13,6 +14,7 @@ function Arrow() {
 export default function NewsletterForm() {
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
+  const { champ, donnees } = useProtection();
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -26,7 +28,7 @@ export default function NewsletterForm() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prenom, email }),
+        body: JSON.stringify({ prenom, email, ...donnees() }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -90,6 +92,7 @@ export default function NewsletterForm() {
         borderTop: "3px solid var(--gold)",
       }}
     >
+      {champ}
       <p
         className="small"
         style={{

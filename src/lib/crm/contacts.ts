@@ -1,4 +1,5 @@
 import { getDb } from "./db";
+import type { Origine } from "@/lib/attribution";
 
 /**
  * Le parcours d'un prospect, du premier contact jusqu'à la conversion.
@@ -39,6 +40,12 @@ export type Contact = {
   desabonne_le: Date | null;
   cree_le: Date;
   maj_le: Date;
+  // Attribution — renseignée au premier formulaire, jamais écrasée ensuite.
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  referent: string | null;
+  page_entree: string | null;
 };
 
 export type Evenement = {
@@ -75,16 +82,20 @@ export async function enregistrerContact(entree: {
   message?: string;
   statut?: StatutCle;
   libelleEvenement: string;
+  /** Provenance transmise par le navigateur (voir `src/lib/attribution.ts`). */
+  origine?: Origine;
 }): Promise<{ id: string; nouveau: boolean } | null> {
   const sql = await getDb();
   if (!sql) return null;
 
   const email = entree.email.trim().toLowerCase();
   const statutVoulu = entree.statut ?? "lead";
+  const o = entree.origine ?? {};
 
   try {
     const rows = await sql<{ id: string; est_nouveau: boolean }[]>`
-      INSERT INTO contacts (email, prenom, nom, telephone, source, interet, message, statut)
+      INSERT INTO contacts (email, prenom, nom, telephone, source, interet, message, statut,
+                            utm_source, utm_medium, utm_campaign, referent, page_entree)
       VALUES (
         ${email},
         ${entree.prenom || null},
@@ -93,9 +104,21 @@ export async function enregistrerContact(entree: {
         ${entree.source || null},
         ${entree.interet || null},
         ${entree.message || null},
-        ${statutVoulu}
+        ${statutVoulu},
+        ${o.utm_source || null},
+        ${o.utm_medium || null},
+        ${o.utm_campaign || null},
+        ${o.referent || null},
+        ${o.page_entree || null}
       )
       ON CONFLICT (email) DO UPDATE SET
+        -- L'attribution du premier contact fait foi : on ne complète que ce
+        -- qui manque encore.
+        utm_source   = COALESCE(contacts.utm_source, EXCLUDED.utm_source),
+        utm_medium   = COALESCE(contacts.utm_medium, EXCLUDED.utm_medium),
+        utm_campaign = COALESCE(contacts.utm_campaign, EXCLUDED.utm_campaign),
+        referent     = COALESCE(contacts.referent, EXCLUDED.referent),
+        page_entree  = COALESCE(contacts.page_entree, EXCLUDED.page_entree),
         prenom    = COALESCE(NULLIF(EXCLUDED.prenom, ''), contacts.prenom),
         nom       = COALESCE(NULLIF(EXCLUDED.nom, ''), contacts.nom),
         telephone = COALESCE(NULLIF(EXCLUDED.telephone, ''), contacts.telephone),

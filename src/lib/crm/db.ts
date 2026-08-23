@@ -114,6 +114,70 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
     )
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS campagnes (
+      id            BIGSERIAL PRIMARY KEY,
+      sujet         TEXT NOT NULL,
+      corps         TEXT NOT NULL,
+      -- Critères de ciblage, sérialisés (voir src/lib/crm/campagnes.ts).
+      segment       JSONB NOT NULL DEFAULT '{}'::jsonb,
+      -- brouillon · programmee · en_cours · envoyee
+      statut        TEXT NOT NULL DEFAULT 'brouillon',
+      programmee_le TIMESTAMPTZ,
+      envoyee_le    TIMESTAMPTZ,
+      cree_le       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS questionnaires (
+      id           BIGSERIAL PRIMARY KEY,
+      contact_id   BIGINT NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+      jeton        TEXT NOT NULL UNIQUE,
+      reponses     JSONB NOT NULL,
+      score        INT NOT NULL DEFAULT 0,
+      eligible     BOOLEAN NOT NULL DEFAULT FALSE,
+      -- Prérequis à valider avant l'entretien, et rendez-vous associé.
+      rdv_le       TIMESTAMPTZ,
+      prerequis_le TIMESTAMPTZ,
+      annule_le    TIMESTAMPTZ,
+      cree_le      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  // ─── Évolutions du schéma ──────────────────────────────────────────────
+  // Ajoutées après coup, donc en ALTER : les bases déjà en service se mettent
+  // à niveau au premier démarrage, sans migration à lancer à la main.
+
+  // D'où vient réellement le contact (campagne, site référent, page d'arrivée).
+  await sql`
+    ALTER TABLE contacts
+      ADD COLUMN IF NOT EXISTS utm_source   TEXT,
+      ADD COLUMN IF NOT EXISTS utm_medium   TEXT,
+      ADD COLUMN IF NOT EXISTS utm_campaign TEXT,
+      ADD COLUMN IF NOT EXISTS referent     TEXT,
+      ADD COLUMN IF NOT EXISTS page_entree  TEXT
+  `;
+
+  // Ce que devient l'e-mail une fois parti : identifiant Resend, ouverture, clic.
+  await sql`
+    ALTER TABLE envois
+      ADD COLUMN IF NOT EXISTS message_id  TEXT,
+      ADD COLUMN IF NOT EXISTS ouvert_le   TIMESTAMPTZ,
+      ADD COLUMN IF NOT EXISTS clique_le   TIMESTAMPTZ,
+      ADD COLUMN IF NOT EXISTS campagne_id BIGINT REFERENCES campagnes(id) ON DELETE SET NULL
+  `;
+
+  // Un même contact ne reçoit jamais deux fois la même campagne, même si le
+  // worker repasse au milieu d'un envoi interrompu.
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_envois_campagne_contact
+    ON envois (campagne_id, contact_id)
+    WHERE campagne_id IS NOT NULL
+  `;
+
+  await sql`CREATE INDEX IF NOT EXISTS idx_envois_message ON envois (message_id)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_questionnaires_contact ON questionnaires (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_evenements_contact ON evenements (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_cree ON contacts (cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_statut ON contacts (statut)`;

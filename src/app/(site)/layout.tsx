@@ -5,6 +5,7 @@ import CursorGlow from "@/components/CursorGlow";
 import RevealObserver from "@/components/RevealObserver";
 import FloatingCTA from "@/components/FloatingCTA";
 import JsonLd from "@/components/JsonLd";
+import CaptureOrigine from "@/components/CaptureOrigine";
 import { organizationLd, founderLd, websiteLd } from "@/lib/jsonld";
 
 /**
@@ -19,6 +20,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <ScrollProgress />
       <CursorGlow />
       <RevealObserver />
+      <CaptureOrigine />
       <Navbar />
       <main>{children}</main>
       <Footer />

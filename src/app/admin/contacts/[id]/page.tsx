@@ -2,7 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Cadre from "../../Cadre";
 import { STATUTS, STATUT_LABEL, obtenirContact, nomAffiche } from "@/lib/crm/contacts";
-import { actionChangerStatut, actionEnregistrerNote } from "./actions";
+import { actionChangerStatut, actionDefinirRdv, actionEnregistrerNote } from "./actions";
+import { dernierQuestionnaire } from "@/lib/crm/questionnaires";
+import { QUESTIONS } from "@/lib/questionnaire";
+import { enClair, pourChamp } from "@/lib/heure";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +31,7 @@ export default async function FicheContact({
   const donnees = await obtenirContact(id);
   if (!donnees) notFound();
   const { contact, timeline } = donnees;
+  const copie = await dernierQuestionnaire(id);
 
   return (
     <Cadre
@@ -81,6 +85,119 @@ export default async function FicheContact({
               </tbody>
             </table>
           </div>
+
+          {(contact.utm_source || contact.utm_campaign || contact.referent || contact.page_entree) && (
+            <div className="adm-carte">
+              <p className="adm-titre">D&apos;où il vient</p>
+              <table className="adm-t">
+                <tbody>
+                  {contact.utm_source ? (
+                    <tr>
+                      <td style={{ width: 130, color: "var(--adm-mute)" }}>Campagne</td>
+                      <td>
+                        {[contact.utm_source, contact.utm_medium, contact.utm_campaign]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </td>
+                    </tr>
+                  ) : null}
+                  {contact.referent ? (
+                    <tr>
+                      <td style={{ color: "var(--adm-mute)" }}>Site référent</td>
+                      <td style={{ wordBreak: "break-all" }}>{contact.referent}</td>
+                    </tr>
+                  ) : null}
+                  {contact.page_entree ? (
+                    <tr>
+                      <td style={{ color: "var(--adm-mute)" }}>Page d&apos;arrivée</td>
+                      <td>{contact.page_entree}</td>
+                    </tr>
+                  ) : null}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {copie && (
+            <div className="adm-carte">
+              <p className="adm-titre">Questionnaire de préparation</p>
+
+              <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 16 }}>
+                <span className="adm-tag" data-s={copie.eligible ? "client" : "nouveau"}>
+                  {copie.score}/100 · {copie.eligible ? "Éligible" : "À orienter"}
+                </span>
+                <span style={{ fontSize: 12, color: "var(--adm-mute)" }}>
+                  envoyé le {dateLongue(copie.cree_le)}
+                </span>
+              </div>
+
+              <table className="adm-t" style={{ marginBottom: 16 }}>
+                <tbody>
+                  <tr>
+                    <td style={{ width: 130, color: "var(--adm-mute)" }}>Prérequis</td>
+                    <td>
+                      {copie.prerequis_le ? (
+                        <>Confirmés le {enClair(copie.prerequis_le)}</>
+                      ) : (
+                        <span style={{ color: "var(--adm-bad)" }}>Pas encore confirmés</span>
+                      )}
+                    </td>
+                  </tr>
+                  {copie.annule_le && (
+                    <tr>
+                      <td style={{ color: "var(--adm-mute)" }}>Annulation</td>
+                      <td style={{ color: "var(--adm-bad)" }}>
+                        Rendez-vous annulé le {enClair(copie.annule_le)}
+                      </td>
+                    </tr>
+                  )}
+                  <tr>
+                    <td style={{ color: "var(--adm-mute)" }}>Lien personnel</td>
+                    <td style={{ wordBreak: "break-all", fontSize: 12 }}>
+                      /prerequis/{copie.jeton}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <form action={actionDefinirRdv} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <input type="hidden" name="contact" value={contact.id} />
+                <input type="hidden" name="questionnaire" value={copie.id} />
+                <input
+                  type="datetime-local"
+                  name="quand"
+                  className="adm-champ"
+                  defaultValue={pourChamp(copie.rdv_le)}
+                  style={{ width: "auto", flex: "1 1 220px" }}
+                />
+                <button type="submit" className="adm-btn">
+                  {copie.rdv_le ? "Modifier le rendez-vous" : "Fixer le rendez-vous"}
+                </button>
+              </form>
+              <p style={{ color: "var(--adm-mute)", fontSize: 12, margin: "10px 0 0" }}>
+                Heure de Paris. Sans prérequis confirmés la veille, le rendez-vous est
+                annulé automatiquement et la personne prévenue.
+              </p>
+
+              <details style={{ marginTop: 18 }}>
+                <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--adm-mute)" }}>
+                  Voir les {Object.keys(copie.reponses).length} réponses
+                </summary>
+                <dl style={{ margin: "14px 0 0", display: "grid", gap: 12 }}>
+                  {QUESTIONS.filter((q) => copie.reponses[q.cle]).map((q) => (
+                    <div key={q.cle}>
+                      <dt style={{ fontSize: 12, color: "var(--adm-mute)" }}>{q.titre}</dt>
+                      <dd style={{ margin: "2px 0 0", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+                        {Array.isArray(copie.reponses[q.cle])
+                          ? (copie.reponses[q.cle] as string[]).join(", ")
+                          : (copie.reponses[q.cle] as string)}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </details>
+            </div>
+          )}
 
           {contact.message && (
             <div className="adm-carte">

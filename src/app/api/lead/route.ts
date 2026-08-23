@@ -1,6 +1,9 @@
 import { Resend } from "resend";
 import { SITE } from "@/lib/site";
 import { enregistrerContact } from "@/lib/crm/contacts";
+import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
+import { depuisCorps } from "@/lib/attribution";
+import { habiller, lienDesinscription } from "@/lib/crm/email";
 import { inscrireASequence } from "@/lib/crm/sequences";
 
 // Destinataire des leads (guide gratuit / lead magnet).
@@ -18,6 +21,9 @@ export async function POST(req: Request) {
   } catch {
     return Response.json({ error: "Requête invalide." }, { status: 400 });
   }
+
+  const verdict = controlerFormulaire(req, data);
+  if (!verdict.ok) return reponseRefus(verdict);
 
   const prenom = String(data.prenom ?? "").trim();
   const email = String(data.email ?? "").trim();
@@ -38,6 +44,7 @@ export async function POST(req: Request) {
     source,
     statut: "lead",
     libelleEvenement: `Guide demandé — ${source}`,
+    origine: depuisCorps(data.origine),
   });
   if (contact) await inscrireASequence(contact.id, "guide");
 
@@ -71,20 +78,27 @@ export async function POST(req: Request) {
   }
 
   // 2) Envoi du guide à l'inscrit (best-effort : n'échoue pas la requête).
+  // Le pied de page et le lien de désinscription sont posés par `habiller`.
   try {
-    await resend.emails.send({
-      from: FROM,
-      to: email,
-      subject: "Votre guide — Sortir de la crise silencieuse",
-      text:
+    const { html, text } = habiller({
+      email,
+      apercu: "Votre guide est prêt à télécharger.",
+      texte:
         `Bonjour ${prenom},\n\n` +
         `Merci pour votre confiance. Voici votre guide gratuit à télécharger :\n` +
         `${GUIDE_URL}\n\n` +
         `Prenez-le comme une conversation, à votre rythme. Et si vous souhaitez en parler, ` +
         `l'appel découverte de 45 minutes est offert : ${SITE.url}/contact\n\n` +
         `Avec toute ma présence,\n` +
-        `Domoïna Ramiadana — La Voie 2 la Conscience\n\n` +
-        `—\nPour ne plus recevoir ces messages : ${SITE.url}/desinscription?e=${encodeURIComponent(email)}\n`,
+        `Domoïna Ramiadana — La Voie 2 la Conscience`,
+    });
+    await resend.emails.send({
+      from: FROM,
+      to: email,
+      subject: "Votre guide — Sortir de la crise silencieuse",
+      html,
+      text,
+      headers: { "List-Unsubscribe": `<${lienDesinscription(email)}>` },
     });
   } catch {
     // L'inscrit dispose de toute façon du téléchargement immédiat sur le site.

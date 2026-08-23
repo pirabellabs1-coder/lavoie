@@ -1,4 +1,6 @@
 import { traiterEcheances } from "@/lib/crm/sequences";
+import { appliquerClauseAnnulation, envoyerRapportHebdomadaire } from "@/lib/crm/rappels";
+import { traiterCampagnes } from "@/lib/crm/campagnes";
 
 /**
  * Worker des séquences — appelé par Vercel Cron (voir vercel.json).
@@ -18,11 +20,20 @@ export async function GET(req: Request) {
   }
 
   const debut = Date.now();
+  // L'annulation d'abord : inutile d'envoyer un rappel de prérequis à quelqu'un
+  // dont le rendez-vous vient de tomber.
+  const annules = await appliquerClauseAnnulation();
   const resultat = await traiterEcheances(200);
+  const campagnes = await traiterCampagnes(200);
+  // Le lundi seulement — la fonction se charge elle-même de vérifier le jour.
+  const rapport = await envoyerRapportHebdomadaire();
 
   return Response.json({
     ok: true,
     ...resultat,
+    annules,
+    campagnes,
+    rapport,
     duree_ms: Date.now() - debut,
   });
 }

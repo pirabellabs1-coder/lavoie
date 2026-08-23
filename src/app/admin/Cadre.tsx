@@ -5,6 +5,7 @@ const LIENS = [
   { href: "/admin", label: "Vue d'ensemble" },
   { href: "/admin/contacts", label: "Contacts" },
   { href: "/admin/sequences", label: "Séquences" },
+  { href: "/admin/campagnes", label: "Campagnes" },
   { href: "/admin/envois", label: "Envois" },
 ];
 

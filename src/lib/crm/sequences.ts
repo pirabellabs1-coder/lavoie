@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { getDb } from "./db";
+import { habiller, lienDesinscription, personnaliser } from "./email";
 import { SITE } from "../site";
 
 /**
@@ -120,6 +121,48 @@ export const SEQUENCES_PAR_DEFAUT: SequenceGraine[] = [
       },
     ],
   },
+  {
+    cle: "prerequis",
+    nom: "Prérequis avant l'entretien",
+    description:
+      "Se déclenche quand un questionnaire de préparation est jugé éligible. Pose le cadre, demande la confirmation, puis relance. S'arrête d'elle-même dès que les prérequis sont confirmés.",
+    declencheur: "prerequis",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Avant votre entretien, {{prenom}} : deux choses à faire",
+        corps:
+          `Bonjour {{prenom}},\n\nNous vous remercions d'avoir pris le temps de remplir le questionnaire de préparation.\n\nAprès étude de vos réponses, vous êtes éligible à la consultation d'entretien offerte proposée par Domoïna. Avant que cette rencontre puisse avoir lieu, deux prérequis sont à valider.\n\n1. Visionner la vidéo sur la gratuité :\nhttps://youtube.com/live/tMXW3wfZqqI\nCe visionnage vous permettra de vous présenter avec un positionnement de responsabilité vis-à-vis de vos questions et de vos attentes envers le Guide.\n\n2. Récupérer le livret sur le Cadre :\nhttps://formation-untout.com/comment-le-cadre-vous-rend-t-il-plus-libre\n\nUne fois ces deux éléments lus et écoutés, confirmez-le en un clic, au plus tard la veille de votre rendez-vous :\n{{lien_prerequis}}\n\nCette démarche vous évite de vous présenter dans la posture que Domoïna appelle « l'addiction à la consommation d'enseignements et d'accompagnements », sans rien donner de votre propre énergie. C'est vous qui donnez votre énergie, et non le Guide.\n\nDomoïna travaille en étroite collaboration avec un prêtre du Fa, qui réalisera votre consultation une fois ces prérequis confirmés. Cette consultation spirituelle avec l'oracle agit comme un diagnostic, en complément de ce que vous ferez avec Domoïna. Il vous appartiendra ensuite de poursuivre ou non.\n\nSans confirmation de votre part, nous serons dans l'obligation d'annuler votre demande, afin de libérer la place pour ceux qui sont prêts à avancer.\n\nRecevez ce message comme le commencement d'une véritable transformation, pour vous comme pour votre lignée.` +
+          SIGNATURE,
+      },
+      {
+        ordre: 2,
+        delai_jours: 3,
+        sujet: "Vos prérequis ne sont pas encore confirmés",
+        corps:
+          `Bonjour {{prenom}},\n\nSauf erreur, vous n'avez pas encore confirmé avoir visionné la vidéo sur la gratuité et récupéré le livret sur le Cadre.\n\nLa confirmation se fait en un clic :\n{{lien_prerequis}}\n\nRappel des deux éléments :\n· la vidéo : https://youtube.com/live/tMXW3wfZqqI\n· le livret : https://formation-untout.com/comment-le-cadre-vous-rend-t-il-plus-libre\n\nSans confirmation la veille du rendez-vous, celui-ci est annulé automatiquement. Ce n'est pas une sanction : c'est le cadre, et il vaut aussi pour nous.` +
+          SIGNATURE,
+      },
+    ],
+  },
+  {
+    cle: "orientation",
+    nom: "Orientation après questionnaire",
+    description:
+      "Se déclenche quand un questionnaire de préparation n'atteint pas le seuil d'éligibilité. Oriente vers le livret sur le Cadre et les stages, sans promettre d'entretien.",
+    declencheur: "orientation",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Votre questionnaire est bien arrivé, {{prenom}}",
+        corps:
+          `Bonjour {{prenom}},\n\nMerci d'avoir pris le temps de répondre à ce questionnaire. Vos réponses ont été lues.\n\nÀ ce stade du chemin, l'entretien avec Domoïna ne serait pas le plus juste pour vous — non par manque d'intérêt de notre part, mais parce qu'il suppose un cadre déjà posé, faute de quoi l'échange tourne à la consommation d'un conseil de plus.\n\nDeux portes vous sont ouvertes dès maintenant :\n\n· Le livret sur le Cadre, qui explique pourquoi une contrainte choisie rend plus libre :\nhttps://formation-untout.com/comment-le-cadre-vous-rend-t-il-plus-libre\n\n· Les stages au Centre HUT, quatre jours au rythme des saisons, où le travail se fait dans le corps et non dans la tête :\n${SITE.url}/evenements\n\nQuand ces deux étapes auront été traversées, reprenez le questionnaire : nous le relirons avec plaisir.` +
+          SIGNATURE,
+      },
+    ],
+  },
 ];
 
 /** Installe les scénarios manquants. Idempotent, n'écrase jamais l'existant. */
@@ -184,17 +227,7 @@ export async function inscrireASequence(contactId: string, cle: string): Promise
   }
 }
 
-function rendre(gabarit: string, contact: { prenom: string | null; email: string }): string {
-  return gabarit
-    .replace(/\{\{\s*prenom\s*\}\}/g, contact.prenom || "")
-    .replace(/\{\{\s*email\s*\}\}/g, contact.email)
-    // Un « Bonjour , » disgracieux si le prénom est inconnu.
-    .replace(/Bonjour\s+,/g, "Bonjour,");
-}
-
-function lienDesinscription(email: string): string {
-  return `${SITE.url}/desinscription?e=${encodeURIComponent(email)}`;
-}
+const rendre = personnaliser;
 
 type AEnvoyer = {
   inscription_id: string;
@@ -205,6 +238,8 @@ type AEnvoyer = {
   etape: number;
   sujet: string;
   corps: string;
+  /** Jeton du dernier questionnaire, pour le lien de confirmation des prérequis. */
+  jeton: string | null;
 };
 
 /**
@@ -228,11 +263,17 @@ export async function traiterEcheances(
   try {
     dues = await sql<AEnvoyer[]>`
       SELECT i.id AS inscription_id, i.contact_id, i.sequence_id, i.etape_suivante AS etape,
-             c.email, c.prenom, e.sujet, e.corps
+             c.email, c.prenom, e.sujet, e.corps, q.jeton
       FROM inscriptions i
       JOIN contacts c        ON c.id = i.contact_id
       JOIN sequences s       ON s.id = i.sequence_id
       JOIN sequence_etapes e ON e.sequence_id = i.sequence_id AND e.ordre = i.etape_suivante
+      LEFT JOIN LATERAL (
+        SELECT jeton FROM questionnaires
+        WHERE contact_id = c.id
+        ORDER BY cree_le DESC
+        LIMIT 1
+      ) q ON TRUE
       WHERE i.statut = 'active'
         AND i.echeance <= NOW()
         AND s.active = TRUE
@@ -247,29 +288,32 @@ export async function traiterEcheances(
 
   for (const d of dues) {
     const sujet = rendre(d.sujet, d);
-    const corps =
-      rendre(d.corps, d) +
-      `\n\n—\nPour ne plus recevoir ces messages : ${lienDesinscription(d.email)}`;
+    const { html, text } = habiller({ texte: rendre(d.corps, d), email: d.email });
 
     let erreur: string | null = null;
+    let messageId: string | null = null;
     try {
-      const { error } = await resend.emails.send({
+      const { data, error } = await resend.emails.send({
         from: EXPEDITEUR,
         to: d.email,
         subject: sujet,
-        text: corps,
+        html,
+        text,
         headers: { "List-Unsubscribe": `<${lienDesinscription(d.email)}>` },
       });
       if (error) erreur = error.message ?? "Erreur Resend";
+      // L'identifiant Resend relie l'ouverture et le clic à cet envoi précis
+      // (voir /api/webhooks/resend).
+      messageId = data?.id ?? null;
     } catch (e) {
       erreur = e instanceof Error ? e.message : "Erreur inconnue";
     }
 
     try {
       await sql`
-        INSERT INTO envois (contact_id, sequence_id, etape, destinataire, sujet, statut, erreur)
+        INSERT INTO envois (contact_id, sequence_id, etape, destinataire, sujet, statut, erreur, message_id)
         VALUES (${d.contact_id}, ${d.sequence_id}, ${d.etape}, ${d.email}, ${sujet},
-                ${erreur ? "echec" : "envoye"}, ${erreur})
+                ${erreur ? "echec" : "envoye"}, ${erreur}, ${messageId})
       `;
 
       if (erreur) {
@@ -393,6 +437,8 @@ export type LigneEnvoi = {
   statut: string;
   erreur: string | null;
   envoye_le: Date;
+  ouvert_le: Date | null;
+  clique_le: Date | null;
 };
 
 export async function listerEnvois(limite = 200): Promise<LigneEnvoi[]> {
@@ -400,7 +446,8 @@ export async function listerEnvois(limite = 200): Promise<LigneEnvoi[]> {
   if (!sql) return [];
   try {
     return await sql<LigneEnvoi[]>`
-      SELECT id, contact_id, destinataire, sujet, statut, erreur, envoye_le
+      SELECT id, contact_id, destinataire, sujet, statut, erreur, envoye_le,
+             ouvert_le, clique_le
       FROM envois ORDER BY envoye_le DESC LIMIT ${limite}
     `;
   } catch (e) {

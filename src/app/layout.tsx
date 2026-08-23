@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 
@@ -89,7 +90,11 @@ export default function RootLayout({
       lang="fr"
       className={`${cormorant.variable} ${inter.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Mesure d'audience sans cookie ni donnée personnelle. */}
+        <Analytics />
+      </body>
     </html>
   );
 }

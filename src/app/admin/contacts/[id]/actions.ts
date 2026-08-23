@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { COOKIE_SESSION, sessionValide } from "@/lib/crm/auth";
 import { changerStatut, enregistrerNote, estStatutValide } from "@/lib/crm/contacts";
+import { definirRdv } from "@/lib/crm/questionnaires";
+import { depuisParis } from "@/lib/heure";
 
 /**
  * Les Server Actions sont des points d'entrée publics : la session est
@@ -23,6 +25,26 @@ export async function actionChangerStatut(formData: FormData) {
   revalidatePath(`/admin/contacts/${id}`);
   revalidatePath("/admin/contacts");
   revalidatePath("/admin");
+}
+
+/**
+ * Fixe la date du rendez-vous portée par le dernier questionnaire. C'est elle
+ * qui déclenche, ou non, la clause d'annulation la veille.
+ */
+export async function actionDefinirRdv(formData: FormData) {
+  if (!(await exigerSession())) return;
+  const contactId = String(formData.get("contact") ?? "");
+  const questionnaireId = String(formData.get("questionnaire") ?? "");
+  const quand = String(formData.get("quand") ?? "").trim();
+  if (!questionnaireId) return;
+
+  // Un champ vidé retire le rendez-vous ; une saisie illisible ne change rien.
+  // La saisie est lue en heure de Paris, pas en heure du serveur.
+  const date = quand ? depuisParis(quand) : null;
+  if (quand && !date) return;
+
+  await definirRdv(questionnaireId, date);
+  revalidatePath(`/admin/contacts/${contactId}`);
 }
 
 export async function actionEnregistrerNote(formData: FormData) {

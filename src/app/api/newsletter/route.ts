@@ -1,5 +1,7 @@
 import { after } from "next/server";
 import { enregistrerContact } from "@/lib/crm/contacts";
+import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
+import { depuisCorps } from "@/lib/attribution";
 import { inscrireASequence } from "@/lib/crm/sequences";
 
 /**
@@ -13,6 +15,9 @@ export async function POST(req: Request) {
   } catch {
     return Response.json({ error: "Requête invalide." }, { status: 400 });
   }
+
+  const verdict = controlerFormulaire(req, data);
+  if (!verdict.ok) return reponseRefus(verdict);
 
   const prenom = String(data.prenom ?? "").trim();
   const email = String(data.email ?? "").trim();
@@ -29,6 +34,7 @@ export async function POST(req: Request) {
     prenom,
     source: "Lettres",
     statut: "lead",
+    origine: depuisCorps(data.origine),
     libelleEvenement: "Inscription aux Lettres",
   });
 

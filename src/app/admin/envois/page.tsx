@@ -13,9 +13,27 @@ function dateLongue(d: Date | string): string {
   });
 }
 
+/** Libellé et couleur de chaque état d'envoi. */
+const ETATS: Record<string, { texte: string; ton: string }> = {
+  envoye: { texte: "Envoyé", ton: "lead" },
+  livre: { texte: "Livré", ton: "client" },
+  echec: { texte: "Échec", ton: "perdu" },
+  rejete: { texte: "Rejeté", ton: "perdu" },
+  plainte: { texte: "Indésirable", ton: "perdu" },
+};
+
+function pourcentage(part: number, total: number): string {
+  if (!total) return "—";
+  return `${Math.round((part / total) * 100)} %`;
+}
+
 export default async function EnvoisPage() {
   const envois = isDbConfigured() ? await listerEnvois(300) : [];
   const echecs = envois.filter((e) => e.statut === "echec").length;
+  // Le taux se calcule sur les seuls e-mails effectivement partis.
+  const partis = envois.filter((e) => e.statut !== "echec").length;
+  const ouverts = envois.filter((e) => e.ouvert_le).length;
+  const cliques = envois.filter((e) => e.clique_le).length;
 
   return (
     <Cadre
@@ -23,7 +41,8 @@ export default async function EnvoisPage() {
       titre="Envois"
       sousTitre={
         isDbConfigured()
-          ? `${envois.length} e-mail${envois.length > 1 ? "s" : ""} · ${echecs} en échec`
+          ? `${envois.length} e-mail${envois.length > 1 ? "s" : ""} · ${echecs} en échec · ` +
+            `${pourcentage(ouverts, partis)} ouverts · ${pourcentage(cliques, partis)} cliqués`
           : undefined
       }
     >
@@ -54,6 +73,7 @@ export default async function EnvoisPage() {
                   <th>Destinataire</th>
                   <th>Sujet</th>
                   <th>État</th>
+                  <th>Suivi</th>
                 </tr>
               </thead>
               <tbody>
@@ -71,13 +91,22 @@ export default async function EnvoisPage() {
                     </td>
                     <td>{e.sujet}</td>
                     <td>
-                      <span className="adm-tag" data-s={e.statut === "envoye" ? "client" : "perdu"}>
-                        {e.statut === "envoye" ? "Envoyé" : "Échec"}
+                      <span className="adm-tag" data-s={(ETATS[e.statut] ?? ETATS.echec).ton}>
+                        {(ETATS[e.statut] ?? { texte: e.statut }).texte}
                       </span>
                       {e.erreur && (
                         <div style={{ fontSize: 11, color: "var(--adm-bad)", marginTop: 3 }}>
                           {e.erreur}
                         </div>
+                      )}
+                    </td>
+                    <td style={{ whiteSpace: "nowrap" }}>
+                      {e.clique_le ? (
+                        <span className="adm-tag" data-s="appel">Cliqué</span>
+                      ) : e.ouvert_le ? (
+                        <span className="adm-tag" data-s="contacte">Ouvert</span>
+                      ) : (
+                        <span style={{ color: "var(--adm-mute)", fontSize: 12 }}>—</span>
                       )}
                     </td>
                   </tr>

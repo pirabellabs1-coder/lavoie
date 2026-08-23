@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import CalendlyInline from "@/components/CalendlyInline";
+import { useProtection } from "@/components/Protection";
 import { SOCIALS } from "@/lib/social";
 import SocialIcon from "@/components/SocialIcon";
 
@@ -39,6 +40,7 @@ export default function ContactPage() {
     prenom: "", nom: "", email: "", tel: "",
     situation: "", niveau: "", rgpd: false,
   });
+  const { champ, donnees } = useProtection();
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -56,7 +58,7 @@ export default function ContactPage() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, ...donnees() }),
       });
       if (!res.ok) throw new Error();
       setSubmitted(true);
@@ -118,6 +120,13 @@ export default function ContactPage() {
             Quarante-cinq minutes, offertes et sans engagement. Une conversation simple
             pour comprendre où vous en êtes — et envisager le chemin juste.
           </p>
+          <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--mute)", maxWidth: 560, margin: "20px auto 0" }}>
+            Vous pouvez aussi commencer par le{" "}
+            <Link href="/questionnaire" style={{ color: "var(--blue)", textDecoration: "underline" }}>
+              questionnaire de préparation
+            </Link>{" "}
+            : une quinzaine de minutes qui déterminent la suite du parcours.
+          </p>
         </div>
       </section>
 
@@ -145,6 +154,7 @@ export default function ContactPage() {
 
             {/* FORM */}
             <form onSubmit={onSubmit} className="contact-form" style={{ background: "var(--white)", padding: 56, border: "1px solid var(--line)", borderRadius: 18, boxShadow: "0 30px 70px -40px rgba(20,40,120,0.22)" }}>
+              {champ}
               <Eyebrow style={{ marginBottom: 28 }}>Formulaire confidentiel</Eyebrow>
               <h2 className="display" style={{ fontSize: 36, margin: "0 0 40px", lineHeight: 1.15 }}>
                 Vos coordonnées,<br />

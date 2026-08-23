@@ -2,6 +2,8 @@ import { Resend } from "resend";
 import { after } from "next/server";
 import { SITE } from "@/lib/site";
 import { enregistrerContact } from "@/lib/crm/contacts";
+import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
+import { depuisCorps } from "@/lib/attribution";
 import { inscrireASequence } from "@/lib/crm/sequences";
 
 // Destinataire du formulaire.
@@ -27,6 +29,9 @@ export async function POST(req: Request) {
   } catch {
     return Response.json({ error: "Requête invalide." }, { status: 400 });
   }
+
+  const verdict = controlerFormulaire(req, data);
+  if (!verdict.ok) return reponseRefus(verdict);
 
   const prenom = String(data.prenom ?? "").trim();
   const nom = String(data.nom ?? "").trim();
@@ -55,6 +60,7 @@ export async function POST(req: Request) {
     message: situation,
     statut: "contacte",
     libelleEvenement: "Demande d'appel découverte",
+    origine: depuisCorps(data.origine),
   });
   if (contact) {
     await inscrireASequence(contact.id, "appel");

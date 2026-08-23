@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useProtection } from "@/components/Protection";
 
 function Arrow() {
   return (
@@ -18,6 +19,7 @@ function Arrow() {
 export default function LeadMagnetForm({ source = "Guide gratuit" }: { source?: string }) {
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
+  const { champ, donnees } = useProtection();
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -30,7 +32,7 @@ export default function LeadMagnetForm({ source = "Guide gratuit" }: { source?: 
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prenom, email, source }),
+        body: JSON.stringify({ prenom, email, source, ...donnees() }),
       });
       if (!res.ok) throw new Error();
       setDone(true);
@@ -82,6 +84,7 @@ export default function LeadMagnetForm({ source = "Guide gratuit" }: { source?: 
 
   return (
     <form className="lead-form" onSubmit={onSubmit}>
+      {champ}
       <div className="field" style={{ marginBottom: 12 }}>
         <input
           type="text"
