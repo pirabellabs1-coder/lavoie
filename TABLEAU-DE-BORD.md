@@ -43,6 +43,85 @@ ne sont lues qu'au démarrage : sans ce redéploiement, rien ne change.
 
 ---
 
+## Le questionnaire de préparation
+
+Adresse à partager : <https://www.lavoie2laconscience.com/questionnaire>
+
+Il remplace le Typeform. Mêmes questions, en quatre étapes, mais les réponses
+arrivent dans votre base et s'affichent dans la fiche de la personne, sous le
+score.
+
+**Le score.** Chaque copie est notée sur 100. L'engagement déclaré pèse le plus
+lourd (prêt à investir du temps, prêt à se remettre en question : 45 points),
+puis l'antériorité du travail personnel et la pratique en cours (20 points), la
+blessure déjà identifiée (8), le soin apporté aux réponses écrites (15), et la
+capacité d'investissement seulement à la marge (12). Au-dessus de **60**, la
+personne est déclarée éligible à l'entretien offert.
+
+Ces poids sont un point de départ, pas une vérité. Ils se modifient dans
+`src/lib/questionnaire.ts`, dans un seul tableau nommé `BAREMES`, avec le seuil
+juste en dessous.
+
+**Ce qui part ensuite, tout seul :**
+
+| Score | Séquence déclenchée | Contenu |
+| --- | --- | --- |
+| 60 et plus | Prérequis avant l'entretien | vidéo sur la gratuité, livret sur le Cadre, lien de confirmation, relance à J+3 |
+| moins de 60 | Orientation après questionnaire | renvoi vers le livret et les stages, sans promesse d'entretien |
+
+## Le cadre avant l'entretien
+
+La personne éligible reçoit un **lien personnel** : un bouton à cliquer une fois
+la vidéo vue et le livret pris. Plus d'e-mail de confirmation à lire et à
+pointer — la date s'inscrit dans sa fiche, et la relance s'arrête d'elle-même.
+
+**Pour que la clause d'annulation s'applique**, il faut renseigner la date du
+rendez-vous dans la fiche du contact, encadré « Questionnaire de préparation ».
+Sans date, rien n'est annulé. Avec une date, le worker annule automatiquement
+tout rendez-vous à moins de 24 heures dont les prérequis ne sont pas confirmés,
+prévient la personne, et l'inscrit dans sa chronologie.
+
+## Campagnes
+
+Onglet **Campagnes** : les e-mails que vous décidez d'écrire, par opposition aux
+séquences qui partent seules.
+
+Le ciblage se combine : statut dans le parcours, source du formulaire, campagne
+d'origine, ancienneté, ou « n'a jamais ouvert un e-mail » pour les réveils. Sans
+aucun critère, la campagne part à toute la liste ; les désabonnés sont toujours
+exclus.
+
+**Comptez toujours les destinataires avant d'envoyer.** Le bouton est là pour
+ça, et un envoi de masse ne se rattrape pas. Pour un premier essai, ciblez une
+campagne d'origine qui n'existe pas : vous verrez le mécanisme sans écrire à
+personne.
+
+L'envoi part par paquets et reprend là où il s'est arrêté ; personne ne reçoit
+deux fois le même message. Une campagne en cours peut être arrêtée à tout
+moment — ce qui est parti est parti, le reste ne part pas.
+
+## Le suivi des envois
+
+Le journal des envois indique maintenant si chaque e-mail a été **livré, ouvert
+ou cliqué**, et l'en-tête de la page affiche les taux. Une adresse qui rebondit
+définitivement ou une personne qui signale un message comme indésirable est
+désinscrite automatiquement : c'est ce qui protège la réputation du domaine, et
+donc la délivrabilité de tous les autres messages.
+
+**Ce suivi demande un dernier réglage.** Dans Resend → Webhooks → Add endpoint,
+posez l'adresse `https://www.lavoie2laconscience.com/api/webhooks/resend`.
+Resend affiche alors un secret commençant par `whsec_` : collez-le dans une
+variable `RESEND_WEBHOOK_SECRET` sur Vercel, puis redéployez. Tant qu'elle
+manque, l'adresse répond 503 et refuse tout — personne ne peut y injecter de
+faux événements.
+
+## Le point du lundi
+
+Chaque lundi matin, un e-mail part vers `contact@lavoie2laconscience.com` avec
+sept chiffres : nouveaux contacts, total, clients, questionnaires reçus et
+éligibles, prérequis confirmés, rendez-vous de la semaine, e-mails partis et
+taux d'ouverture.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,
@@ -71,6 +150,8 @@ installés d'office :
 | Suite du guide gratuit | quelqu'un télécharge le guide | 4 e-mails sur 16 jours |
 | Bienvenue aux Lettres | inscription aux Lettres | 2 e-mails sur 7 jours |
 | Suite d'une demande d'appel | formulaire de contact rempli | accusé de réception + relance à J+4 |
+| Prérequis avant l'entretien | questionnaire jugé éligible | le cadre + le lien de confirmation, relance à J+3 |
+| Orientation après questionnaire | questionnaire sous le seuil | renvoi vers le livret et les stages |
 
 Le sujet, le texte et le délai de chaque étape se modifient directement depuis
 le tableau de bord. `{{prenom}}` est remplacé par le prénom du destinataire.
