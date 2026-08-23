@@ -1,4 +1,8 @@
 import { Resend } from "resend";
+import { after } from "next/server";
+import { SITE } from "@/lib/site";
+import { enregistrerContact } from "@/lib/crm/contacts";
+import { inscrireASequence } from "@/lib/crm/sequences";
 
 // Destinataire du formulaire.
 const TO = "contact@lavoie2laconscience.com";
@@ -39,6 +43,28 @@ export async function POST(req: Request) {
     return Response.json({ error: "Adresse e-mail invalide." }, { status: 400 });
   }
 
+  // Enregistrement au CRM avant l'envoi : la demande est conservée même si
+  // l'e-mail échoue. Sans base configurée, renvoie null sans rien casser.
+  const contact = await enregistrerContact({
+    email,
+    prenom,
+    nom,
+    telephone: tel,
+    source: "Formulaire de contact",
+    interet: NIVEAUX[niveau] || "Non précisé",
+    message: situation,
+    statut: "contacte",
+    libelleEvenement: "Demande d'appel découverte",
+  });
+  if (contact) {
+    await inscrireASequence(contact.id, "appel");
+    // L'accusé de réception est dû immédiatement.
+    after(async () => {
+      const { traiterEcheances } = await import("@/lib/crm/sequences");
+      await traiterEcheances(20);
+    });
+  }
+
   if (!process.env.RESEND_API_KEY) {
     return Response.json(
       { error: "Service e-mail non configuré (RESEND_API_KEY manquante)." },
@@ -59,7 +85,8 @@ export async function POST(req: Request) {
       `Email     : ${email}\n` +
       `Téléphone : ${tel}\n` +
       `Niveau    : ${NIVEAUX[niveau] || "Non précisé"}\n\n` +
-      `Message :\n${situation}\n`,
+      `Message :\n${situation}\n` +
+      (contact ? `\n→ Fiche : ${SITE.url}/admin/contacts/${contact.id}\n` : ""),
   });
 
   if (error) {

@@ -1,5 +1,7 @@
 import { Resend } from "resend";
 import { SITE } from "@/lib/site";
+import { enregistrerContact } from "@/lib/crm/contacts";
+import { inscrireASequence } from "@/lib/crm/sequences";
 
 // Destinataire des leads (guide gratuit / lead magnet).
 const TO = "contact@lavoie2laconscience.com";
@@ -28,6 +30,17 @@ export async function POST(req: Request) {
     return Response.json({ error: "Adresse e-mail invalide." }, { status: 400 });
   }
 
+  // Enregistrement au CRM avant tout envoi : le lead est conservé même si
+  // l'e-mail échoue. Sans base configurée, renvoie null sans rien casser.
+  const contact = await enregistrerContact({
+    email,
+    prenom,
+    source,
+    statut: "lead",
+    libelleEvenement: `Guide demandé — ${source}`,
+  });
+  if (contact) await inscrireASequence(contact.id, "guide");
+
   if (!process.env.RESEND_API_KEY) {
     return Response.json(
       { error: "Service e-mail non configuré (RESEND_API_KEY manquante)." },
@@ -48,7 +61,9 @@ export async function POST(req: Request) {
       `Ressource : ${source}\n` +
       `Prénom    : ${prenom}\n` +
       `Email     : ${email}\n\n` +
-      `→ Ajoutez-le à votre liste / séquence.\n`,
+      (contact
+        ? `→ Fiche : ${SITE.url}/admin/contacts/${contact.id}\n`
+        : `→ Ajoutez-le à votre liste / séquence.\n`),
   });
 
   if (error) {
@@ -68,7 +83,8 @@ export async function POST(req: Request) {
         `Prenez-le comme une conversation, à votre rythme. Et si vous souhaitez en parler, ` +
         `l'appel découverte de 45 minutes est offert : ${SITE.url}/contact\n\n` +
         `Avec toute ma présence,\n` +
-        `Domoïna Ramiadana — La Voie 2 la Conscience\n`,
+        `Domoïna Ramiadana — La Voie 2 la Conscience\n\n` +
+        `—\nPour ne plus recevoir ces messages : ${SITE.url}/desinscription?e=${encodeURIComponent(email)}\n`,
     });
   } catch {
     // L'inscrit dispose de toute façon du téléchargement immédiat sur le site.

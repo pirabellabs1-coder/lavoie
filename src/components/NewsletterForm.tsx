@@ -11,11 +11,34 @@ function Arrow() {
 }
 
 export default function NewsletterForm() {
+  const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setDone(true);
+    if (sending) return;
+    setSending(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prenom, email }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErrorMsg(data.error || "L'inscription a échoué. Réessayez.");
+        setSending(false);
+        return;
+      }
+      setDone(true);
+    } catch {
+      setErrorMsg("Connexion impossible. Réessayez dans un instant.");
+      setSending(false);
+    }
   };
 
   if (done) {
@@ -50,7 +73,7 @@ export default function NewsletterForm() {
           Inscription confirmée.
         </p>
         <p style={{ color: "var(--mute)", fontSize: 14 }}>
-          Vous recevrez la prochaine lettre d&apos;hiver.
+          Un e-mail de bienvenue vient de partir.
         </p>
       </div>
     );
@@ -87,17 +110,35 @@ export default function NewsletterForm() {
         <em className="display-italic">d&apos;hiver</em>.
       </h3>
       <div className="field" style={{ marginBottom: 14 }}>
-        <input type="text" required placeholder="Prénom" />
+        <input
+          type="text"
+          required
+          placeholder="Prénom"
+          value={prenom}
+          onChange={(e) => setPrenom(e.target.value)}
+          autoComplete="given-name"
+        />
       </div>
       <div className="field" style={{ marginBottom: 22 }}>
-        <input type="email" required placeholder="Adresse email" />
+        <input
+          type="email"
+          required
+          placeholder="Adresse email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+        />
       </div>
+      {errorMsg && (
+        <p style={{ color: "#b3261e", fontSize: 13, margin: "0 0 14px" }}>{errorMsg}</p>
+      )}
       <button
         type="submit"
         className="btn btn-primary"
-        style={{ width: "100%", justifyContent: "center" }}
+        disabled={sending}
+        style={{ width: "100%", justifyContent: "center", opacity: sending ? 0.6 : 1 }}
       >
-        M&apos;inscrire aux Lettres <Arrow />
+        {sending ? "Inscription…" : "M'inscrire aux Lettres"} <Arrow />
       </button>
       <p
         className="small muted"

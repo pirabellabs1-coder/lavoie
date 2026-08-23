@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ScrollProgress from "@/components/ScrollProgress";
-import CursorGlow from "@/components/CursorGlow";
-import RevealObserver from "@/components/RevealObserver";
-import FloatingCTA from "@/components/FloatingCTA";
-import JsonLd from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
-import { organizationLd, founderLd, websiteLd } from "@/lib/jsonld";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -97,17 +89,7 @@ export default function RootLayout({
       lang="fr"
       className={`${cormorant.variable} ${inter.variable}`}
     >
-      <body>
-        <JsonLd data={[organizationLd(), founderLd(), websiteLd()]} />
-        <div className="cursor-glow" aria-hidden="true" />
-        <ScrollProgress />
-        <CursorGlow />
-        <RevealObserver />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <FloatingCTA />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
