@@ -17,6 +17,7 @@ type Icone =
   | "contacts"
   | "questionnaire"
   | "rdv"
+  | "stages"
   | "offres"
   | "sequences"
   | "campagnes"
@@ -43,6 +44,11 @@ function Trait({ nom }: { nom: Icone }) {
       <>
         <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
         <path d="M3.5 10h17M8 3.2v3.6M16 3.2v3.6" />
+      </>
+    ),
+    stages: (
+      <>
+        <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" />
       </>
     ),
     offres: (
@@ -108,6 +114,7 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
       { href: "/admin/contacts", label: "Contacts", icone: "contacts" },
       { href: "/admin/questionnaires", label: "Questionnaires", icone: "questionnaire" },
       { href: "/admin/rendez-vous", label: "Rendez-vous", icone: "rdv" },
+      { href: "/admin/stages", label: "Stages", icone: "stages" },
     ],
   },
   {

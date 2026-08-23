@@ -194,6 +194,35 @@ taux d'acceptation sur toutes les propositions tranchées.
 > Le paiement en ligne n'est pas branché : accepter une proposition n'encaisse
 > rien. C'est la décision Stripe ou Chariow qui tranchera ce point.
 
+## Les stages
+
+Onglet **Stages**. Chaque stage du catalogue y apparaît avec sa jauge :
+confirmées sur places, demandes à traiter, liste d'attente.
+
+**Le formulaire est en bas de chaque page de stage.** Il dit franchement ce
+qu'il est : une demande de place, pas une inscription payée. La personne entre
+dans le fichier, reçoit un accusé de réception, et le secrétariat est prévenu.
+Le règlement continue de passer par la billetterie — c'est la confirmation qui
+porte le lien.
+
+Quand les places sont prises, le formulaire bascule tout seul en **liste
+d'attente**, et le message change en conséquence. Les demandes en cours
+comptent comme des places prises : on ne promet jamais deux fois la même place.
+
+Le parcours d'une place :
+
+`Demande` → `Confirmée` → `Venue`, avec `Liste d'attente` et `Annulée` sur les
+côtés. Confirmer quelqu'un le fait passer en **client** dans le fichier.
+
+**Deux e-mails partent tout seuls.** Sept jours avant, les personnes confirmées
+reçoivent la logistique — le texte se règle stage par stage, dans « Régler ce
+stage ». Deux jours après, un mot de retour qui invite à répondre : c'est là que
+se récoltent les témoignages.
+
+> Les inscriptions déjà passées par Eventbrite ne remontent pas : la
+> billetterie n'expose pas ses données sans clé d'API. Seules les demandes
+> faites depuis le site entrent dans le fichier.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,

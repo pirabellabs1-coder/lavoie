@@ -10,6 +10,7 @@ import {
   getEvenement,
   type Evenement,
 } from "@/lib/evenements";
+import DemandeDePlace from "@/components/DemandeDePlace";
 
 const MARINE = "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)";
 
@@ -282,6 +283,10 @@ export default async function EvenementPage({
           <p className="small" style={{ textAlign: "center", margin: "26px 0 0", color: "var(--mute)", fontSize: 12.5, letterSpacing: ".04em" }}>
             ✦ Places limitées · Groupe intime, uni et sécurisé ✦
           </p>
+
+          <div style={{ maxWidth: 620, margin: "48px auto 0" }}>
+            <DemandeDePlace slug={e.slug} titre={e.titreLong} complet={e.complet} />
+          </div>
         </div>
       </section>
 

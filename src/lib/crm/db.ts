@@ -115,6 +115,36 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS stages (
+      id         BIGSERIAL PRIMARY KEY,
+      -- Reprend le slug du catalogue (src/lib/evenements.ts).
+      slug       TEXT NOT NULL UNIQUE,
+      titre      TEXT NOT NULL,
+      debut_le   TIMESTAMPTZ,
+      places     INT NOT NULL DEFAULT 12,
+      actif      BOOLEAN NOT NULL DEFAULT TRUE,
+      -- Ce qui part à J-7 aux personnes confirmées.
+      logistique TEXT,
+      cree_le    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS participations (
+      id            BIGSERIAL PRIMARY KEY,
+      stage_id      BIGINT NOT NULL REFERENCES stages(id) ON DELETE CASCADE,
+      contact_id    BIGINT NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+      -- demande · confirmee · attente · annulee · venue
+      statut        TEXT NOT NULL DEFAULT 'demande',
+      message       TEXT,
+      logistique_le TIMESTAMPTZ,
+      retour_le     TIMESTAMPTZ,
+      cree_le       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (stage_id, contact_id)
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS offres (
       id                  BIGSERIAL PRIMARY KEY,
       contact_id          BIGINT NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
@@ -231,6 +261,7 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   await sql`CREATE INDEX IF NOT EXISTS idx_questionnaires_contact ON questionnaires (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_offres_contact ON offres (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_offres_suivi ON offres (statut, envoyee_le)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_participations_stage ON participations (stage_id, statut)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_evenements_contact ON evenements (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_cree ON contacts (cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_statut ON contacts (statut)`;
