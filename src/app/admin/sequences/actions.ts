@@ -1,13 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
-import { COOKIE_SESSION, sessionValide } from "@/lib/crm/auth";
+import { identiteAvecDroit } from "@/lib/crm/session";
 import { basculerSequence, majEtape } from "@/lib/crm/sequences";
 
 async function exigerSession(): Promise<boolean> {
-  const jar = await cookies();
-  return sessionValide(jar.get(COOKIE_SESSION)?.value);
+  return (await identiteAvecDroit("sequences")) !== null;
 }
 
 export async function actionBasculer(formData: FormData) {

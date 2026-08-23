@@ -1,16 +1,20 @@
 import Link from "next/link";
 import DeconnexionBouton from "./DeconnexionBouton";
+import { exigerIdentite } from "@/lib/crm/session";
+import { peut, type Droit } from "@/lib/crm/utilisateurs";
 
-const LIENS = [
+/** `droit` absent = visible par tout le monde. */
+const LIENS: { href: string; label: string; droit?: Droit }[] = [
   { href: "/admin", label: "Vue d'ensemble" },
   { href: "/admin/contacts", label: "Contacts" },
-  { href: "/admin/sequences", label: "Séquences" },
-  { href: "/admin/campagnes", label: "Campagnes" },
+  { href: "/admin/sequences", label: "Séquences", droit: "sequences" },
+  { href: "/admin/campagnes", label: "Campagnes", droit: "campagnes" },
   { href: "/admin/envois", label: "Envois" },
+  { href: "/admin/comptes", label: "Comptes", droit: "comptes" },
 ];
 
 /** Coquille commune : barre latérale, titre de page et zone de contenu. */
-export default function Cadre({
+export default async function Cadre({
   actif,
   titre,
   sousTitre,
@@ -23,6 +27,9 @@ export default function Cadre({
   actions?: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const qui = await exigerIdentite();
+  const liens = LIENS.filter((l) => !l.droit || peut(qui.role, l.droit));
+
   return (
     <div className="adm-shell">
       <aside className="adm-side">
@@ -31,13 +38,18 @@ export default function Cadre({
           <span>Tableau de bord</span>
         </div>
         <nav className="adm-nav">
-          {LIENS.map((l) => (
+          {liens.map((l) => (
             <Link key={l.href} href={l.href} className={l.href === actif ? "actif" : ""}>
               {l.label}
             </Link>
           ))}
         </nav>
         <div style={{ marginTop: "auto", paddingTop: 18 }}>
+          <p style={{ fontSize: 11.5, color: "var(--adm-mute)", margin: "0 0 12px", lineHeight: 1.5 }}>
+            Connecté : <strong style={{ color: "var(--adm-ink)" }}>{qui.nom}</strong>
+            <br />
+            {qui.principal ? "mot de passe principal" : qui.role}
+          </p>
           <Link
             href="/"
             className="adm-btn fantome petit"

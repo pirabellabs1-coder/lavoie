@@ -54,19 +54,49 @@ export async function motDePasseValide(saisi: string): Promise<boolean> {
   return egalConstant(a, b);
 }
 
-export async function creerSession(): Promise<{ valeur: string; maxAge: number }> {
+/** L'identité portée par le cookie. `"0"` désigne la clé de secours. */
+export type Session = { utilisateurId: string; expiration: number };
+
+export const ACCES_PRINCIPAL = "0";
+
+export async function creerSession(
+  utilisateurId: string = ACCES_PRINCIPAL,
+): Promise<{ valeur: string; maxAge: number }> {
   const expiration = Date.now() + DUREE_MS;
-  const signature = await signer(String(expiration));
-  return { valeur: `${expiration}.${signature}`, maxAge: Math.floor(DUREE_MS / 1000) };
+  const charge = `${utilisateurId}.${expiration}`;
+  const signature = await signer(charge);
+  return { valeur: `${charge}.${signature}`, maxAge: Math.floor(DUREE_MS / 1000) };
+}
+
+/**
+ * Relit le cookie. Deux formes sont acceptées : la nouvelle, qui porte
+ * l'identifiant du compte, et l'ancienne (`expiration.signature`), le temps que
+ * les sessions ouvertes avant la mise à jour arrivent à expiration.
+ */
+export async function lireSession(cookie: string | undefined): Promise<Session | null> {
+  if (!cookie || !secret()) return null;
+  // La signature est hexadécimale : découper sur les points est sans risque.
+  const bouts = cookie.split(".");
+
+  if (bouts.length === 3) {
+    const [utilisateurId, expiration, signature] = bouts;
+    if (!/^\d+$/.test(utilisateurId) || !/^\d+$/.test(expiration)) return null;
+    if (Number(expiration) < Date.now()) return null;
+    if (!egalConstant(await signer(`${utilisateurId}.${expiration}`), signature)) return null;
+    return { utilisateurId, expiration: Number(expiration) };
+  }
+
+  if (bouts.length === 2) {
+    const [expiration, signature] = bouts;
+    if (!/^\d+$/.test(expiration)) return null;
+    if (Number(expiration) < Date.now()) return null;
+    if (!egalConstant(await signer(expiration), signature)) return null;
+    return { utilisateurId: ACCES_PRINCIPAL, expiration: Number(expiration) };
+  }
+
+  return null;
 }
 
 export async function sessionValide(cookie: string | undefined): Promise<boolean> {
-  if (!cookie || !secret()) return false;
-  const sep = cookie.lastIndexOf(".");
-  if (sep < 1) return false;
-  const expiration = cookie.slice(0, sep);
-  const signature = cookie.slice(sep + 1);
-  if (!/^\d+$/.test(expiration)) return false;
-  if (Number(expiration) < Date.now()) return false;
-  return egalConstant(await signer(expiration), signature);
+  return (await lireSession(cookie)) !== null;
 }

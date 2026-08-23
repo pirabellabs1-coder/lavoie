@@ -33,8 +33,12 @@ Dans **Settings → Environment Variables**, ajouter :
 | `CRON_SECRET` | une longue chaîne aléatoire | recommandé |
 | `RESEND_FROM` | `La Voie 2 la Conscience <contact@lavoie2laconscience.com>` | recommandé |
 
-Choisissez un mot de passe long et unique : c'est la seule protection du
-fichier clients. Le changer déconnecte immédiatement toutes les sessions.
+Choisissez un mot de passe long et unique : c'est la clé de secours du fichier
+clients. Le changer déconnecte immédiatement toutes les sessions.
+
+Une fois le tableau de bord ouvert, créez un compte nominatif par personne
+depuis l'onglet **Comptes** (voir plus bas) : ce mot de passe principal n'a
+alors plus à circuler.
 
 ## 3. Redéployer
 
@@ -121,6 +125,46 @@ Chaque lundi matin, un e-mail part vers `contact@lavoie2laconscience.com` avec
 sept chiffres : nouveaux contacts, total, clients, questionnaires reçus et
 éligibles, prérequis confirmés, rendez-vous de la semaine, e-mails partis et
 taux d'ouverture.
+
+## Les comptes
+
+Onglet **Comptes**, réservé au propriétaire. Chacun a désormais son accès, avec
+son e-mail comme identifiant.
+
+| Rôle | Ce qu'il peut faire |
+| --- | --- |
+| **Propriétaire** | tout : campagnes, séquences, export du fichier, sauvegarde, gestion des comptes |
+| **Secrétariat** | contacts, questionnaires, rendez-vous, journal des envois — rien d'autre |
+
+Retirer l'accès à quelqu'un se fait en un clic et ne change rien pour les
+autres. Le compte n'est pas supprimé : sa trace reste, et l'accès se rend aussi
+facilement qu'il se retire.
+
+**Le mot de passe principal reste la clé de secours.** `ADMIN_PASSWORD` ouvre
+toujours le tableau de bord avec tous les droits, en laissant le champ e-mail
+vide. Il ne passe pas par la base : c'est ce qui garantit de pouvoir entrer même
+si la base est momentanément injoignable. Il doit rester entre les mains de
+Domoïna seule.
+
+Les mots de passe des comptes ne sont jamais enregistrés tels quels, seulement
+une empreinte qui ne permet pas de les retrouver. Un mot de passe oublié se
+remplace depuis la page Comptes ; il ne se relit pas.
+
+## La sauvegarde
+
+Une copie complète de la base part chaque jour par e-mail vers
+`contact@lavoie2laconscience.com` : la sauvegarde au format JSON et la liste des
+contacts au format CSV, ouvrable dans Excel.
+
+Rien ne part si rien n'a changé depuis la veille — une base au repos n'inonde
+pas la boîte. Et les empreintes de mots de passe des comptes ne sont jamais
+exportées : après une restauration, il faudra redonner un mot de passe à chacun.
+
+Le bouton **Télécharger maintenant**, sur la vue d'ensemble, produit la même
+copie à la demande.
+
+> Rangez ces fichiers ailleurs que dans la boîte de réception. Une sauvegarde
+> qui vit au même endroit que le reste n'en est pas une.
 
 ## Ce que fait le tableau de bord
 

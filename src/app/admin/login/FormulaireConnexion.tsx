@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function FormulaireConnexion({ suite }: { suite?: string }) {
   const router = useRouter();
+  const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState("");
   const [enCours, setEnCours] = useState(false);
@@ -18,7 +19,7 @@ export default function FormulaireConnexion({ suite }: { suite?: string }) {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ motDePasse }),
+        body: JSON.stringify({ email, motDePasse }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -37,6 +38,23 @@ export default function FormulaireConnexion({ suite }: { suite?: string }) {
 
   return (
     <form onSubmit={envoyer}>
+      <label className="adm-label" htmlFor="email">
+        E-mail
+      </label>
+      <input
+        id="email"
+        type="email"
+        className="adm-champ"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        autoComplete="username"
+        autoFocus
+        placeholder="votre adresse"
+      />
+      <p style={{ color: "var(--adm-mute)", fontSize: 11.5, margin: "6px 0 16px" }}>
+        À laisser vide pour entrer avec le mot de passe principal.
+      </p>
+
       <label className="adm-label" htmlFor="mdp">
         Mot de passe
       </label>
@@ -47,7 +65,6 @@ export default function FormulaireConnexion({ suite }: { suite?: string }) {
         value={motDePasse}
         onChange={(e) => setMotDePasse(e.target.value)}
         autoComplete="current-password"
-        autoFocus
         required
       />
       {erreur && (

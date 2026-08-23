@@ -1,10 +1,12 @@
-import { cookies } from "next/headers";
-import { COOKIE_SESSION, sessionValide } from "@/lib/crm/auth";
+import { identiteAvecDroit } from "@/lib/crm/session";
 import { exporterCsv } from "@/lib/crm/contacts";
 
+/**
+ * Le fichier clients complet : réservé au propriétaire. Le secrétariat travaille
+ * dans le tableau de bord, il n'a pas besoin d'emporter la base entière.
+ */
 export async function GET() {
-  const jar = await cookies();
-  if (!(await sessionValide(jar.get(COOKIE_SESSION)?.value))) {
+  if (!(await identiteAvecDroit("export"))) {
     return new Response("Non autorisé", { status: 401 });
   }
 

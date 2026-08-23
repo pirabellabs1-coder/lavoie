@@ -1,6 +1,10 @@
 import Link from "next/link";
 import Cadre from "./Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
+import { exigerIdentite } from "@/lib/crm/session";
+import { peut } from "@/lib/crm/utilisateurs";
+import { derniereSauvegarde } from "@/lib/crm/sauvegarde";
+import { enClair } from "@/lib/heure";
 import {
   STATUTS,
   STATUT_LABEL,
@@ -16,9 +20,16 @@ function dateCourte(d: Date | string): string {
   return v.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" });
 }
 
-export default async function AdminAccueil() {
+type Params = Promise<Record<string, string | string[] | undefined>>;
+
+export default async function AdminAccueil({ searchParams }: { searchParams: Params }) {
+  const qui = await exigerIdentite();
+  const params = await searchParams;
+  const refuse = params.refuse === "1";
   const stats = await statistiques();
   const derniers = await listerContacts({ limite: 8 });
+
+  const sauvegarde = peut(qui.role, "sauvegarde") ? await derniereSauvegarde() : null;
 
   if (!isDbConfigured() || !stats) {
     return (
@@ -50,6 +61,13 @@ export default async function AdminAccueil() {
         </Link>
       }
     >
+      {refuse && (
+        <div className="adm-alerte">
+          Cette page est réservée. Si vous pensez qu&apos;elle devrait vous être ouverte,
+          demandez à Domoïna de changer votre rôle.
+        </div>
+      )}
+
       <div className="adm-grille adm-g4" style={{ marginBottom: 18 }}>
         <div className="adm-carte adm-kpi">
           <div className="n">{stats.total}</div>
@@ -133,6 +151,26 @@ export default async function AdminAccueil() {
           )}
         </div>
       </div>
+
+      {sauvegarde !== null && (
+        <div className="adm-carte" style={{ marginTop: 14 }}>
+          <p className="adm-titre">Sauvegarde</p>
+          <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 320px", lineHeight: 1.6 }}>
+              Dernière copie le <strong>{enClair(sauvegarde.cree_le)}</strong> —{" "}
+              {sauvegarde.contacts_n} contacts, {Math.round(sauvegarde.taille / 1024)} Ko
+              {sauvegarde.envoyee ? ", envoyée par e-mail" : ", non envoyée par e-mail"}.
+              <span style={{ display: "block", color: "var(--adm-mute)", fontSize: 12, marginTop: 4 }}>
+                Une copie part chaque jour par e-mail, sauf si rien n&apos;a changé depuis
+                la veille.
+              </span>
+            </div>
+            <a href="/api/admin/sauvegarde" className="adm-btn fantome">
+              Télécharger maintenant
+            </a>
+          </div>
+        </div>
+      )}
 
       <div className="adm-carte">
         <p className="adm-titre">Derniers arrivés</p>

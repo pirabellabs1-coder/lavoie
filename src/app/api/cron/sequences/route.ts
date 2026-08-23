@@ -1,6 +1,7 @@
 import { traiterEcheances } from "@/lib/crm/sequences";
 import { appliquerClauseAnnulation, envoyerRapportHebdomadaire } from "@/lib/crm/rappels";
 import { traiterCampagnes } from "@/lib/crm/campagnes";
+import { sauvegardeQuotidienne } from "@/lib/crm/sauvegarde";
 
 /**
  * Worker des séquences — appelé par Vercel Cron (voir vercel.json).
@@ -27,6 +28,8 @@ export async function GET(req: Request) {
   const campagnes = await traiterCampagnes(200);
   // Le lundi seulement — la fonction se charge elle-même de vérifier le jour.
   const rapport = await envoyerRapportHebdomadaire();
+  // En dernier : la sauvegarde reflète ainsi tout ce que ce passage a produit.
+  const sauvegarde = await sauvegardeQuotidienne();
 
   return Response.json({
     ok: true,
@@ -34,6 +37,7 @@ export async function GET(req: Request) {
     annules,
     campagnes,
     rapport,
+    sauvegarde,
     duree_ms: Date.now() - debut,
   });
 }

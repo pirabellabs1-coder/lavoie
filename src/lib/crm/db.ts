@@ -115,6 +115,32 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS utilisateurs (
+      id                    BIGSERIAL PRIMARY KEY,
+      email                 TEXT NOT NULL UNIQUE,
+      nom                   TEXT NOT NULL,
+      -- pbkdf2$iterations$sel$empreinte — jamais le mot de passe lui-même.
+      empreinte             TEXT NOT NULL,
+      role                  TEXT NOT NULL DEFAULT 'secretariat',
+      actif                 BOOLEAN NOT NULL DEFAULT TRUE,
+      cree_le               TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      derniere_connexion_le TIMESTAMPTZ
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS sauvegardes (
+      id         BIGSERIAL PRIMARY KEY,
+      -- Empreinte du contenu : deux jours identiques ne repartent pas deux fois.
+      empreinte  TEXT NOT NULL,
+      contacts_n INT NOT NULL DEFAULT 0,
+      taille     INT NOT NULL DEFAULT 0,
+      envoyee    BOOLEAN NOT NULL DEFAULT FALSE,
+      cree_le    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS campagnes (
       id            BIGSERIAL PRIMARY KEY,
       sujet         TEXT NOT NULL,

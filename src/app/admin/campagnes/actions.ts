@@ -3,8 +3,7 @@
 import { after } from "next/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
-import { COOKIE_SESSION, sessionValide } from "@/lib/crm/auth";
+import { identiteAvecDroit } from "@/lib/crm/session";
 import {
   arreterCampagne,
   creerCampagne,
@@ -14,8 +13,7 @@ import {
 import { depuisParis } from "@/lib/heure";
 
 async function exigerSession(): Promise<boolean> {
-  const jar = await cookies();
-  return sessionValide(jar.get(COOKIE_SESSION)?.value);
+  return (await identiteAvecDroit("campagnes")) !== null;
 }
 
 /** Reconstruit le segment à partir des champs du formulaire. */

@@ -1,6 +1,7 @@
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
 import { listerSequences } from "@/lib/crm/sequences";
+import { exigerDroit } from "@/lib/crm/session";
 import { actionBasculer, actionMajEtape } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +13,8 @@ const DECLENCHEURS: Record<string, string> = {
 };
 
 export default async function SequencesPage() {
+  await exigerDroit("sequences");
+
   const sequences = isDbConfigured() ? await listerSequences() : [];
 
   return (

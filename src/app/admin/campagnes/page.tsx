@@ -1,5 +1,6 @@
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
+import { exigerDroit } from "@/lib/crm/session";
 import { STATUTS } from "@/lib/crm/contacts";
 import {
   compterSegment,
@@ -27,6 +28,8 @@ function premier(v: string | string[] | undefined): string {
 }
 
 export default async function CampagnesPage({ searchParams }: { searchParams: Params }) {
+  await exigerDroit("campagnes");
+
   const params = await searchParams;
   const branchee = isDbConfigured();
   const campagnes = branchee ? await listerCampagnes() : [];

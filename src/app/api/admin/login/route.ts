@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { COOKIE_SESSION, authConfiguree, creerSession, motDePasseValide } from "@/lib/crm/auth";
+import { authentifier } from "@/lib/crm/utilisateurs";
 
 /** Petit garde-fou anti force brute, par instance. */
 const tentatives = new Map<string, { n: number; jusqua: number }>();
@@ -39,14 +40,26 @@ export async function POST(req: Request) {
   }
 
   const motDePasse = String(data.motDePasse ?? "");
-  if (!(await motDePasseValide(motDePasse))) {
+  const email = String(data.email ?? "").trim();
+
+  // Un compte nominatif d'abord ; à défaut, la clé de secours ADMIN_PASSWORD,
+  // qui reste le seul moyen d'entrer si la base est momentanément injoignable.
+  let utilisateurId: string | null = null;
+  if (email) {
+    const compte = await authentifier(email, motDePasse);
+    if (compte) utilisateurId = compte.id;
+  }
+  if (!utilisateurId && !(await motDePasseValide(motDePasse))) {
     const n = (etat && Date.now() < etat.jusqua ? etat.n : 0) + 1;
     tentatives.set(ip, { n, jusqua: Date.now() + BLOCAGE_MS });
-    return Response.json({ error: "Mot de passe incorrect." }, { status: 401 });
+    return Response.json(
+      { error: email ? "Identifiants incorrects." : "Mot de passe incorrect." },
+      { status: 401 },
+    );
   }
 
   tentatives.delete(ip);
-  const session = await creerSession();
+  const session = await creerSession(utilisateurId ?? undefined);
   const jar = await cookies();
   jar.set(COOKIE_SESSION, session.valeur, {
     httpOnly: true,
