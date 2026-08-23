@@ -141,6 +141,70 @@ export async function dernierQuestionnaire(
   }
 }
 
+export type LigneQuestionnaire = {
+  id: string;
+  contact_id: string;
+  prenom: string | null;
+  nom: string | null;
+  email: string;
+  score: number;
+  eligible: boolean;
+  rdv_le: Date | null;
+  prerequis_le: Date | null;
+  annule_le: Date | null;
+  cree_le: Date;
+};
+
+/** Les copies reçues, la plus récente d'abord. `filtre` restreint l'affichage. */
+export async function listerQuestionnaires(
+  filtre?: "eligibles" | "attente",
+): Promise<LigneQuestionnaire[]> {
+  const sql = await getDb();
+  if (!sql) return [];
+  const eligibles = filtre === "eligibles";
+  const attente = filtre === "attente";
+  try {
+    return await sql<LigneQuestionnaire[]>`
+      SELECT q.id, q.contact_id, c.prenom, c.nom, c.email,
+             q.score, q.eligible, q.rdv_le, q.prerequis_le, q.annule_le, q.cree_le
+      FROM questionnaires q
+      JOIN contacts c ON c.id = q.contact_id
+      WHERE (${eligibles} = FALSE OR q.eligible = TRUE)
+        AND (${attente} = FALSE
+             OR (q.eligible = TRUE AND q.prerequis_le IS NULL AND q.annule_le IS NULL))
+      ORDER BY q.cree_le DESC
+      LIMIT 300
+    `;
+  } catch (e) {
+    console.error("[crm] listerQuestionnaires:", e);
+    return [];
+  }
+}
+
+/**
+ * Les rendez-vous fixés, à venir d'abord. Les passés restent visibles trente
+ * jours : c'est la fenêtre pendant laquelle on a encore besoin de s'y référer.
+ */
+export async function listerRendezVous(): Promise<LigneQuestionnaire[]> {
+  const sql = await getDb();
+  if (!sql) return [];
+  try {
+    return await sql<LigneQuestionnaire[]>`
+      SELECT q.id, q.contact_id, c.prenom, c.nom, c.email,
+             q.score, q.eligible, q.rdv_le, q.prerequis_le, q.annule_le, q.cree_le
+      FROM questionnaires q
+      JOIN contacts c ON c.id = q.contact_id
+      WHERE q.rdv_le IS NOT NULL
+        AND q.rdv_le > NOW() - INTERVAL '30 days'
+      ORDER BY (q.rdv_le < NOW()), q.rdv_le ASC
+      LIMIT 200
+    `;
+  } catch (e) {
+    console.error("[crm] listerRendezVous:", e);
+    return [];
+  }
+}
+
 /** Fixe (ou efface) la date du rendez-vous, saisie depuis la fiche du contact. */
 export async function definirRdv(id: string, quand: Date | null): Promise<boolean> {
   const sql = await getDb();

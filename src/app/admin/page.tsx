@@ -1,10 +1,7 @@
 import Link from "next/link";
 import Cadre from "./Cadre";
+import { Barres, CourbeInscriptions, Entonnoir, Jauge, Tuile } from "./Graphes";
 import { isDbConfigured } from "@/lib/crm/db";
-import { exigerIdentite } from "@/lib/crm/session";
-import { peut } from "@/lib/crm/utilisateurs";
-import { derniereSauvegarde } from "@/lib/crm/sauvegarde";
-import { enClair } from "@/lib/heure";
 import {
   STATUTS,
   STATUT_LABEL,
@@ -12,6 +9,10 @@ import {
   nomAffiche,
   statistiques,
 } from "@/lib/crm/contacts";
+import { exigerIdentite } from "@/lib/crm/session";
+import { peut } from "@/lib/crm/utilisateurs";
+import { derniereSauvegarde } from "@/lib/crm/sauvegarde";
+import { enClair } from "@/lib/heure";
 
 export const dynamic = "force-dynamic";
 
@@ -20,15 +21,19 @@ function dateCourte(d: Date | string): string {
   return v.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" });
 }
 
+function taux(part: number, total: number): number {
+  return total ? Math.round((part / total) * 100) : 0;
+}
+
 type Params = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function AdminAccueil({ searchParams }: { searchParams: Params }) {
   const qui = await exigerIdentite();
   const params = await searchParams;
   const refuse = params.refuse === "1";
+
   const stats = await statistiques();
   const derniers = await listerContacts({ limite: 8 });
-
   const sauvegarde = peut(qui.role, "sauvegarde") ? await derniereSauvegarde() : null;
 
   if (!isDbConfigured() || !stats) {
@@ -46,9 +51,27 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
     );
   }
 
-  const max = Math.max(1, ...stats.parJour.map((j) => j.n));
-  const maxEntonnoir = Math.max(1, ...STATUTS.map((s) => stats.parStatut[s.cle] ?? 0));
-  const tauxClient = stats.total ? Math.round((stats.parStatut.client / stats.total) * 100) : 0;
+  const evolution =
+    stats.nouveaux30jAvant > 0
+      ? ((stats.nouveaux30j - stats.nouveaux30jAvant) / stats.nouveaux30jAvant) * 100
+      : null;
+
+  // Douze points hebdomadaires pour l'esquisse : la courbe complète est en dessous.
+  const esquisse = stats.parJour
+    .slice(-24)
+    .reduce<number[]>((acc, jour, i) => {
+      const bloc = Math.floor(i / 2);
+      acc[bloc] = (acc[bloc] ?? 0) + jour.n;
+      return acc;
+    }, []);
+
+  const entonnoir = STATUTS.filter((s) => s.cle !== "perdu").map((s) => ({
+    cle: s.cle,
+    label: s.label,
+    n: stats.parStatut[s.cle] ?? 0,
+  }));
+
+  const tauxOuverture = taux(stats.ouverts30j, stats.envoyes30j);
 
   return (
     <Cadre
@@ -68,92 +91,138 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
         </div>
       )}
 
-      <div className="adm-grille adm-g4" style={{ marginBottom: 18 }}>
-        <div className="adm-carte adm-kpi">
-          <div className="n">{stats.total}</div>
-          <div className="l">Contacts au total</div>
-          <div className="s">{stats.actifs} joignables · {stats.desabonnes} désabonnés</div>
+      <div className="adm-grille adm-g4" style={{ marginBottom: 14 }}>
+        <Tuile
+          label="Contacts"
+          valeur={stats.total}
+          detail={`${stats.actifs} joignables · ${stats.desabonnes} désabonnés`}
+        />
+        <Tuile
+          label="Nouveaux sur 30 jours"
+          valeur={stats.nouveaux30j}
+          detail={`dont ${stats.nouveaux7j} cette semaine`}
+          delta={evolution}
+          serie={esquisse}
+        />
+        <Tuile
+          label="Clients"
+          valeur={stats.parStatut.client ?? 0}
+          detail={`${taux(stats.parStatut.client ?? 0, stats.total)} % des contacts`}
+        />
+        <Tuile
+          label="E-mails sur 30 jours"
+          valeur={stats.envoyes30j}
+          detail={
+            stats.envoyes30j
+              ? `${tauxOuverture} % ouverts · ${taux(stats.cliques30j, stats.envoyes30j)} % cliqués`
+              : "aucun envoi sur la période"
+          }
+        />
+      </div>
+
+      <div className="adm-grille adm-g-large" style={{ marginBottom: 14 }}>
+        <div className="adm-carte">
+          <p className="adm-titre">
+            Inscriptions jour par jour{" "}
+            <span className="appoint">— trente derniers jours</span>
+          </p>
+          <CourbeInscriptions points={stats.parJour} />
         </div>
-        <div className="adm-carte adm-kpi">
-          <div className="n">{stats.nouveaux7j}</div>
-          <div className="l">Nouveaux sur 7 jours</div>
-          <div className="s">{stats.nouveaux30j} sur 30 jours</div>
-        </div>
-        <div className="adm-carte adm-kpi">
-          <div className="n">{stats.parStatut.client ?? 0}</div>
-          <div className="l">Clients</div>
-          <div className="s">{tauxClient}% des contacts</div>
-        </div>
-        <div className="adm-carte adm-kpi">
-          <div className="n">{stats.envoyes30j}</div>
-          <div className="l">E-mails envoyés (30 j)</div>
-          <div className="s">
-            {stats.enAttente} en attente
-            {stats.echecs30j > 0 && (
-              <> · <span style={{ color: "var(--adm-bad)" }}>{stats.echecs30j} en échec</span></>
-            )}
-          </div>
+
+        <div className="adm-carte">
+          <p className="adm-titre">Le parcours</p>
+          <Entonnoir etages={entonnoir} />
+          <p style={{ color: "var(--adm-mute)", fontSize: 12, margin: "16px 0 0", lineHeight: 1.6 }}>
+            {stats.parStatut.perdu ?? 0} personne{(stats.parStatut.perdu ?? 0) > 1 ? "s" : ""} sans
+            suite, hors entonnoir.
+          </p>
         </div>
       </div>
 
-      <div className="adm-grille adm-g2" style={{ marginBottom: 18 }}>
+      <div className="adm-grille adm-g3" style={{ marginBottom: 14 }}>
         <div className="adm-carte">
-          <p className="adm-titre">Le parcours, du premier contact au client</p>
-          <div className="adm-entonnoir">
-            {STATUTS.map((s) => {
-              const n = stats.parStatut[s.cle] ?? 0;
-              return (
-                <div className="adm-etage" key={s.cle}>
-                  <span className="nom" title={s.aide}>{s.label}</span>
-                  <span className="barre">
-                    <i style={{ width: `${Math.round((n / maxEntonnoir) * 100)}%` }} />
-                  </span>
-                  <span className="val">{n}</span>
-                </div>
-              );
-            })}
+          <p className="adm-titre">D&apos;où ils viennent</p>
+          <Barres
+            lignes={stats.parSource.map((s) => ({ nom: s.source, n: s.n }))}
+            vide="Aucune source enregistrée pour l'instant."
+          />
+        </div>
+
+        <div className="adm-carte">
+          <p className="adm-titre">Questionnaires</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <span style={{ fontSize: 12.5, color: "var(--adm-ink-2)" }}>Reçus sur 30 jours</span>
+                <span style={{ fontWeight: 650, fontVariantNumeric: "tabular-nums" }}>
+                  {stats.questionnaires30j}
+                </span>
+              </div>
+              <div style={{ marginTop: 8 }}>
+                <Jauge part={taux(stats.eligibles30j, stats.questionnaires30j)} />
+              </div>
+              <p style={{ color: "var(--adm-mute)", fontSize: 12, margin: "8px 0 0" }}>
+                {stats.eligibles30j} éligible{stats.eligibles30j > 1 ? "s" : ""} à l&apos;entretien,
+                soit {taux(stats.eligibles30j, stats.questionnaires30j)} % des copies.
+              </p>
+            </div>
+
+            <div style={{ borderTop: "1px solid var(--adm-line)", paddingTop: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <span style={{ fontSize: 12.5, color: "var(--adm-ink-2)" }}>
+                  Prérequis en attente
+                </span>
+                <span
+                  style={{
+                    fontWeight: 650,
+                    fontVariantNumeric: "tabular-nums",
+                    color: stats.prerequisEnAttente > 0 ? "var(--adm-warn)" : "inherit",
+                  }}
+                >
+                  {stats.prerequisEnAttente}
+                </span>
+              </div>
+              <p style={{ color: "var(--adm-mute)", fontSize: 12, margin: "6px 0 0", lineHeight: 1.6 }}>
+                Personnes déclarées éligibles qui n&apos;ont pas encore confirmé la vidéo et le
+                livret.
+              </p>
+            </div>
           </div>
         </div>
 
         <div className="adm-carte">
-          <p className="adm-titre">Inscriptions des 30 derniers jours</p>
-          <div className="adm-histo">
-            {stats.parJour.map((j) => (
-              <div
-                key={j.jour}
-                style={{ height: `${Math.max(2, Math.round((j.n / max) * 100))}%` }}
-                title={`${j.jour} — ${j.n} inscription${j.n > 1 ? "s" : ""}`}
-              />
-            ))}
-          </div>
-          <p style={{ color: "var(--adm-mute)", fontSize: 12, margin: "10px 0 22px" }}>
-            {stats.nouveaux30j} au total sur la période · pic à {max} en une journée
-          </p>
-
-          <p className="adm-titre">D&apos;où viennent-ils</p>
-          {stats.parSource.length === 0 ? (
-            <p style={{ color: "var(--adm-mute)", fontSize: 13, margin: 0 }}>Aucune donnée.</p>
-          ) : (
-            <div className="adm-entonnoir">
-              {stats.parSource.map((s) => {
-                const maxS = Math.max(1, ...stats.parSource.map((x) => x.n));
-                return (
-                  <div className="adm-etage" key={s.source}>
-                    <span className="nom">{s.source}</span>
-                    <span className="barre">
-                      <i style={{ width: `${Math.round((s.n / maxS) * 100)}%`, background: "var(--adm-gold)" }} />
-                    </span>
-                    <span className="val">{s.n}</span>
-                  </div>
-                );
-              })}
+          <p className="adm-titre">Les jours qui viennent</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div>
+              <span className="l" style={{ color: "var(--adm-mute)", fontSize: 12.5 }}>
+                Rendez-vous sous sept jours
+              </span>
+              <div style={{ fontSize: 26, fontWeight: 650, letterSpacing: "-.02em" }}>
+                {stats.rdv7j}
+              </div>
             </div>
-          )}
+            <div style={{ borderTop: "1px solid var(--adm-line)", paddingTop: 14 }}>
+              <span style={{ color: "var(--adm-mute)", fontSize: 12.5 }}>
+                E-mails automatiques en attente
+              </span>
+              <div style={{ fontSize: 26, fontWeight: 650, letterSpacing: "-.02em" }}>
+                {stats.enAttente}
+              </div>
+              {stats.echecs30j > 0 && (
+                <p style={{ color: "var(--adm-bad)", fontSize: 12, margin: "8px 0 0" }}>
+                  {stats.echecs30j} envoi{stats.echecs30j > 1 ? "s" : ""} en échec sur 30 jours.
+                </p>
+              )}
+            </div>
+            <Link href="/admin/rendez-vous" className="adm-btn fantome petit">
+              Voir les rendez-vous
+            </Link>
+          </div>
         </div>
       </div>
 
       {sauvegarde !== null && (
-        <div className="adm-carte" style={{ marginTop: 14 }}>
+        <div className="adm-carte" style={{ marginBottom: 14 }}>
           <p className="adm-titre">Sauvegarde</p>
           <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
             <div style={{ flex: "1 1 320px", lineHeight: 1.6 }}>
@@ -161,8 +230,8 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
               {sauvegarde.contacts_n} contacts, {Math.round(sauvegarde.taille / 1024)} Ko
               {sauvegarde.envoyee ? ", envoyée par e-mail" : ", non envoyée par e-mail"}.
               <span style={{ display: "block", color: "var(--adm-mute)", fontSize: 12, marginTop: 4 }}>
-                Une copie part chaque jour par e-mail, sauf si rien n&apos;a changé depuis
-                la veille.
+                Une copie part chaque jour par e-mail, sauf si rien n&apos;a changé depuis la
+                veille.
               </span>
             </div>
             <a href="/api/admin/sauvegarde" className="adm-btn fantome">
@@ -193,7 +262,9 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
               <tbody>
                 {derniers.map((c) => (
                   <tr key={c.id}>
-                    <td><Link href={`/admin/contacts/${c.id}`}>{nomAffiche(c)}</Link></td>
+                    <td>
+                      <Link href={`/admin/contacts/${c.id}`}>{nomAffiche(c)}</Link>
+                    </td>
                     <td style={{ color: "var(--adm-mute)" }}>{c.email}</td>
                     <td style={{ color: "var(--adm-mute)" }}>{c.source || "—"}</td>
                     <td>

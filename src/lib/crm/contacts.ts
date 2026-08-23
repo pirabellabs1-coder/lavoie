@@ -284,9 +284,17 @@ export type Statistiques = {
   parJour: { jour: string; n: number }[];
   nouveaux7j: number;
   nouveaux30j: number;
+  /** Les trente jours d'avant, pour situer les trente derniers. */
+  nouveaux30jAvant: number;
   envoyes30j: number;
   echecs30j: number;
+  ouverts30j: number;
+  cliques30j: number;
   enAttente: number;
+  questionnaires30j: number;
+  eligibles30j: number;
+  prerequisEnAttente: number;
+  rdv7j: number;
 };
 
 /** Agrège tout ce qu'affiche la page d'accueil du tableau de bord. */
@@ -312,15 +320,32 @@ export async function statistiques(): Promise<Statistiques | null> {
       LEFT JOIN contacts c ON c.cree_le::date = d.jour::date
       GROUP BY d.jour ORDER BY d.jour
     `;
-    const [recents] = await sql<{ j7: string; j30: string }[]>`
+    const [recents] = await sql<{ j7: string; j30: string; avant: string }[]>`
       SELECT COUNT(*) FILTER (WHERE cree_le > NOW() - INTERVAL '7 days')  AS j7,
-             COUNT(*) FILTER (WHERE cree_le > NOW() - INTERVAL '30 days') AS j30
+             COUNT(*) FILTER (WHERE cree_le > NOW() - INTERVAL '30 days') AS j30,
+             COUNT(*) FILTER (WHERE cree_le > NOW() - INTERVAL '60 days'
+                                AND cree_le <= NOW() - INTERVAL '30 days') AS avant
       FROM contacts
     `;
-    const [mails] = await sql<{ envoyes: string; echecs: string }[]>`
-      SELECT COUNT(*) FILTER (WHERE statut = 'envoye') AS envoyes,
-             COUNT(*) FILTER (WHERE statut = 'echec')  AS echecs
+    const [mails] = await sql<
+      { envoyes: string; echecs: string; ouverts: string; cliques: string }[]
+    >`
+      SELECT COUNT(*) FILTER (WHERE statut <> 'echec')       AS envoyes,
+             COUNT(*) FILTER (WHERE statut = 'echec')        AS echecs,
+             COUNT(*) FILTER (WHERE ouvert_le IS NOT NULL)   AS ouverts,
+             COUNT(*) FILTER (WHERE clique_le IS NOT NULL)   AS cliques
       FROM envois WHERE envoye_le > NOW() - INTERVAL '30 days'
+    `;
+
+    const [copies] = await sql<
+      { recus: string; eligibles: string; attente: string; rdv: string }[]
+    >`
+      SELECT COUNT(*) FILTER (WHERE cree_le > NOW() - INTERVAL '30 days') AS recus,
+             COUNT(*) FILTER (WHERE cree_le > NOW() - INTERVAL '30 days' AND eligible) AS eligibles,
+             COUNT(*) FILTER (WHERE eligible AND prerequis_le IS NULL AND annule_le IS NULL) AS attente,
+             COUNT(*) FILTER (WHERE rdv_le > NOW() AND rdv_le < NOW() + INTERVAL '7 days'
+                                AND annule_le IS NULL) AS rdv
+      FROM questionnaires
     `;
     const [attente] = await sql<{ n: string }[]>`
       SELECT COUNT(*) AS n FROM inscriptions WHERE statut = 'active'
@@ -342,9 +367,16 @@ export async function statistiques(): Promise<Statistiques | null> {
       parJour: jours.map((j) => ({ jour: j.jour, n: Number(j.n) })),
       nouveaux7j: Number(recents?.j7 ?? 0),
       nouveaux30j: Number(recents?.j30 ?? 0),
+      nouveaux30jAvant: Number(recents?.avant ?? 0),
       envoyes30j: Number(mails?.envoyes ?? 0),
       echecs30j: Number(mails?.echecs ?? 0),
+      ouverts30j: Number(mails?.ouverts ?? 0),
+      cliques30j: Number(mails?.cliques ?? 0),
       enAttente: Number(attente?.n ?? 0),
+      questionnaires30j: Number(copies?.recus ?? 0),
+      eligibles30j: Number(copies?.eligibles ?? 0),
+      prerequisEnAttente: Number(copies?.attente ?? 0),
+      rdv7j: Number(copies?.rdv ?? 0),
     };
   } catch (e) {
     console.error("[crm] statistiques:", e);

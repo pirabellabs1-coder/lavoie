@@ -3,17 +3,112 @@ import DeconnexionBouton from "./DeconnexionBouton";
 import { exigerIdentite } from "@/lib/crm/session";
 import { peut, type Droit } from "@/lib/crm/utilisateurs";
 
-/** `droit` absent = visible par tout le monde. */
-const LIENS: { href: string; label: string; droit?: Droit }[] = [
-  { href: "/admin", label: "Vue d'ensemble" },
-  { href: "/admin/contacts", label: "Contacts" },
-  { href: "/admin/sequences", label: "Séquences", droit: "sequences" },
-  { href: "/admin/campagnes", label: "Campagnes", droit: "campagnes" },
-  { href: "/admin/envois", label: "Envois" },
-  { href: "/admin/comptes", label: "Comptes", droit: "comptes" },
+/**
+ * Coquille commune du tableau de bord : barre latérale, titre de page, contenu.
+ *
+ * La navigation est groupée par intention plutôt qu'à plat — on cherche « les
+ * gens » ou « ce qu'on leur envoie », pas une liste alphabétique. Les entrées
+ * qu'un rôle n'a pas le droit d'ouvrir ne s'affichent pas ; le contrôle réel se
+ * fait dans chaque page, masquer un lien ne protège rien.
+ */
+
+type Icone = "vue" | "contacts" | "questionnaire" | "rdv" | "sequences" | "campagnes" | "envois" | "comptes";
+
+function Trait({ nom }: { nom: Icone }) {
+  const chemins: Record<Icone, React.ReactNode> = {
+    vue: <path d="M3 12h4l2.5-7 3 14 2.5-7H21" />,
+    contacts: (
+      <>
+        <circle cx="9" cy="8" r="3.2" />
+        <path d="M3.5 19c.6-3.2 2.9-5 5.5-5s4.9 1.8 5.5 5" />
+        <path d="M16 8.2a3 3 0 0 1 0 5.6M17.5 19c-.2-1.6-.7-2.9-1.5-3.9" />
+      </>
+    ),
+    questionnaire: (
+      <>
+        <path d="M6 3h9l4 4v14H6z" />
+        <path d="M9.5 12l1.8 1.8 3.4-3.6" />
+      </>
+    ),
+    rdv: (
+      <>
+        <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+        <path d="M3.5 10h17M8 3.2v3.6M16 3.2v3.6" />
+      </>
+    ),
+    sequences: (
+      <>
+        <circle cx="6" cy="6.5" r="2.2" />
+        <circle cx="6" cy="17.5" r="2.2" />
+        <path d="M6 8.8v6.4M9 6.5h6.5a2.5 2.5 0 0 1 0 5H9M9 17.5h9" />
+      </>
+    ),
+    campagnes: (
+      <>
+        <path d="M3.5 6.5h17v11h-17z" />
+        <path d="M3.5 7.5l8.5 6 8.5-6" />
+      </>
+    ),
+    envois: (
+      <>
+        <path d="M21 4L3 11l7 3 3 7z" />
+        <path d="M10 14l4-4" />
+      </>
+    ),
+    comptes: (
+      <>
+        <circle cx="12" cy="8" r="3.4" />
+        <path d="M5 20c.7-3.7 3.4-5.6 7-5.6s6.3 1.9 7 5.6" />
+      </>
+    ),
+  };
+
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {chemins[nom]}
+    </svg>
+  );
+}
+
+type Entree = { href: string; label: string; icone: Icone; droit?: Droit };
+
+const GROUPES: { titre: string; entrees: Entree[] }[] = [
+  {
+    titre: "Pilotage",
+    entrees: [{ href: "/admin", label: "Vue d'ensemble", icone: "vue" }],
+  },
+  {
+    titre: "Les gens",
+    entrees: [
+      { href: "/admin/contacts", label: "Contacts", icone: "contacts" },
+      { href: "/admin/questionnaires", label: "Questionnaires", icone: "questionnaire" },
+      { href: "/admin/rendez-vous", label: "Rendez-vous", icone: "rdv" },
+    ],
+  },
+  {
+    titre: "Ce qu'on leur envoie",
+    entrees: [
+      { href: "/admin/sequences", label: "Séquences", icone: "sequences", droit: "sequences" },
+      { href: "/admin/campagnes", label: "Campagnes", icone: "campagnes", droit: "campagnes" },
+      { href: "/admin/envois", label: "Envois", icone: "envois" },
+    ],
+  },
+  {
+    titre: "Réglages",
+    entrees: [{ href: "/admin/comptes", label: "Comptes", icone: "comptes", droit: "comptes" }],
+  },
 ];
 
-/** Coquille commune : barre latérale, titre de page et zone de contenu. */
 export default async function Cadre({
   actif,
   titre,
@@ -28,7 +123,11 @@ export default async function Cadre({
   children: React.ReactNode;
 }) {
   const qui = await exigerIdentite();
-  const liens = LIENS.filter((l) => !l.droit || peut(qui.role, l.droit));
+
+  const groupes = GROUPES.map((g) => ({
+    ...g,
+    entrees: g.entrees.filter((e) => !e.droit || peut(qui.role, e.droit)),
+  })).filter((g) => g.entrees.length > 0);
 
   return (
     <div className="adm-shell">
@@ -37,24 +136,32 @@ export default async function Cadre({
           La Voie 2 la Conscience
           <span>Tableau de bord</span>
         </div>
+
         <nav className="adm-nav">
-          {liens.map((l) => (
-            <Link key={l.href} href={l.href} className={l.href === actif ? "actif" : ""}>
-              {l.label}
-            </Link>
+          {groupes.map((g) => (
+            <div key={g.titre} style={{ display: "contents" }}>
+              <p className="groupe">{g.titre}</p>
+              {g.entrees.map((e) => (
+                <Link
+                  key={e.href}
+                  href={e.href}
+                  className={e.href === actif ? "actif" : ""}
+                  aria-current={e.href === actif ? "page" : undefined}
+                >
+                  <Trait nom={e.icone} />
+                  {e.label}
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
-        <div style={{ marginTop: "auto", paddingTop: 18 }}>
-          <p style={{ fontSize: 11.5, color: "var(--adm-mute)", margin: "0 0 12px", lineHeight: 1.5 }}>
-            Connecté : <strong style={{ color: "var(--adm-ink)" }}>{qui.nom}</strong>
-            <br />
+
+        <div className="adm-pied">
+          <p className="adm-qui">
+            <strong>{qui.nom}</strong>
             {qui.principal ? "mot de passe principal" : qui.role}
           </p>
-          <Link
-            href="/"
-            className="adm-btn fantome petit"
-            style={{ width: "100%", justifyContent: "center", marginBottom: 8 }}
-          >
+          <Link href="/" className="adm-btn fantome petit">
             Voir le site
           </Link>
           <DeconnexionBouton />

@@ -12,7 +12,6 @@ export default function DeconnexionBouton() {
       type="button"
       className="adm-btn fantome petit"
       disabled={enCours}
-      style={{ width: "100%", justifyContent: "center" }}
       onClick={async () => {
         setEnCours(true);
         await fetch("/api/admin/logout", { method: "POST" });
