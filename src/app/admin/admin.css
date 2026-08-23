@@ -71,9 +71,14 @@
   padding: 22px 14px 18px;
   display: flex;
   flex-direction: column;
-  position: sticky;
+  /* Fixe, et non « collante » : le site vitrine pose `overflow-x: hidden` sur
+     html et body, ce qui suffit à neutraliser `position: sticky` pour tout ce
+     qui est en dessous. Le fixe ne dépend, lui, d'aucun ancêtre. */
+  position: fixed;
   top: 0;
-  height: 100vh;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
   overflow-y: auto;
 }
 
@@ -147,7 +152,13 @@
 .adm-pied .adm-btn { width: 100%; justify-content: center; margin-bottom: 8px; }
 .adm-pied form { margin: 0; }
 
-.adm-main { flex: 1; min-width: 0; padding: 28px clamp(16px, 3vw, 40px) 72px; }
+.adm-main {
+  flex: 1;
+  min-width: 0;
+  padding: 28px clamp(16px, 3vw, 40px) 72px;
+  /* La place réservée à la barre fixe. */
+  margin-left: 244px;
+}
 
 .adm-head {
   display: flex;
@@ -397,7 +408,7 @@ textarea.adm-champ { min-height: 96px; resize: vertical; line-height: 1.6; }
   .adm-pied { margin: 0 0 0 auto; padding: 0; display: flex; gap: 8px; align-items: center; }
   .adm-pied .adm-btn { width: auto; margin-bottom: 0; }
   .adm-qui { display: none; }
-  .adm-main { padding: 20px 16px 56px; }
+  .adm-main { padding: 20px 16px 56px; margin-left: 0; }
   .adm-table-scroll { margin: 0 -16px; padding: 0 16px; }
 }
 

@@ -12,7 +12,16 @@ import { peut, type Droit } from "@/lib/crm/utilisateurs";
  * fait dans chaque page, masquer un lien ne protège rien.
  */
 
-type Icone = "vue" | "contacts" | "questionnaire" | "rdv" | "sequences" | "campagnes" | "envois" | "comptes";
+type Icone =
+  | "vue"
+  | "contacts"
+  | "questionnaire"
+  | "rdv"
+  | "offres"
+  | "sequences"
+  | "campagnes"
+  | "envois"
+  | "comptes";
 
 function Trait({ nom }: { nom: Icone }) {
   const chemins: Record<Icone, React.ReactNode> = {
@@ -34,6 +43,12 @@ function Trait({ nom }: { nom: Icone }) {
       <>
         <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
         <path d="M3.5 10h17M8 3.2v3.6M16 3.2v3.6" />
+      </>
+    ),
+    offres: (
+      <>
+        <path d="M4 7.5h16v11H4z" />
+        <path d="M8.5 7.5V6a3.5 3.5 0 0 1 7 0v1.5M9.5 13h5" />
       </>
     ),
     sequences: (
@@ -94,6 +109,10 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
       { href: "/admin/questionnaires", label: "Questionnaires", icone: "questionnaire" },
       { href: "/admin/rendez-vous", label: "Rendez-vous", icone: "rdv" },
     ],
+  },
+  {
+    titre: "Vendre",
+    entrees: [{ href: "/admin/offres", label: "Propositions", icone: "offres", droit: "offres" }],
   },
   {
     titre: "Ce qu'on leur envoie",

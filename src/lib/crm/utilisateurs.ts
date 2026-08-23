@@ -24,7 +24,8 @@ export const ROLES: { cle: Role; label: string; aide: string }[] = [
   {
     cle: "proprietaire",
     label: "Propriétaire",
-    aide: "Tout, y compris les campagnes, l'export du fichier et la gestion des comptes.",
+    aide:
+      "Tout, y compris les propositions et leurs montants, les campagnes, l'export du fichier et la gestion des comptes.",
   },
   {
     cle: "secretariat",
@@ -35,11 +36,17 @@ export const ROLES: { cle: Role; label: string; aide: string }[] = [
 
 /** Ce que chaque rôle a le droit de faire, en plus du socle commun. */
 const DROITS: Record<Role, string[]> = {
-  proprietaire: ["campagnes", "sequences", "export", "comptes", "sauvegarde"],
+  proprietaire: ["campagnes", "sequences", "export", "comptes", "sauvegarde", "offres"],
   secretariat: [],
 };
 
-export type Droit = "campagnes" | "sequences" | "export" | "comptes" | "sauvegarde";
+export type Droit =
+  | "campagnes"
+  | "sequences"
+  | "export"
+  | "comptes"
+  | "sauvegarde"
+  | "offres";
 
 export function peut(role: string, droit: Droit): boolean {
   return (DROITS[role as Role] ?? []).includes(droit);

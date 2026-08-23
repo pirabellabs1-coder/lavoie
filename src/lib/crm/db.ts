@@ -115,6 +115,31 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS offres (
+      id                  BIGSERIAL PRIMARY KEY,
+      contact_id          BIGINT NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+      -- Lien personnel de consultation, tiré au sort.
+      jeton               TEXT NOT NULL UNIQUE,
+      intitule            TEXT NOT NULL,
+      -- En centimes : jamais de flottant sur de l'argent.
+      montant_cents       BIGINT NOT NULL DEFAULT 0,
+      echeancier          TEXT,
+      probabilite         INT NOT NULL DEFAULT 50,
+      message             TEXT,
+      -- brouillon · envoyee · vue · acceptee · refusee · expiree
+      statut              TEXT NOT NULL DEFAULT 'brouillon',
+      valide_jusqu_au     DATE,
+      envoyee_le          TIMESTAMPTZ,
+      vue_le              TIMESTAMPTZ,
+      vues                INT NOT NULL DEFAULT 0,
+      repondue_le         TIMESTAMPTZ,
+      relances            INT NOT NULL DEFAULT 0,
+      derniere_relance_le TIMESTAMPTZ,
+      cree_le             TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS utilisateurs (
       id                    BIGSERIAL PRIMARY KEY,
       email                 TEXT NOT NULL UNIQUE,
@@ -204,6 +229,8 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
 
   await sql`CREATE INDEX IF NOT EXISTS idx_envois_message ON envois (message_id)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_questionnaires_contact ON questionnaires (contact_id, cree_le DESC)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_offres_contact ON offres (contact_id, cree_le DESC)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_offres_suivi ON offres (statut, envoyee_le)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_evenements_contact ON evenements (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_cree ON contacts (cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_statut ON contacts (statut)`;

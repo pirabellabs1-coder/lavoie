@@ -166,6 +166,34 @@ copie à la demande.
 > Rangez ces fichiers ailleurs que dans la boîte de réception. Une sauvegarde
 > qui vit au même endroit que le reste n'en est pas une.
 
+## Les propositions
+
+Onglet **Propositions**, réservé au propriétaire — il est question d'argent.
+
+Une proposition se prépare depuis la fiche d'un contact : intitulé, montant,
+échéancier, chances de signature, date de validité, et le texte que vous lui
+adressez. Elle reste en brouillon tant que vous ne l'envoyez pas.
+
+**Ce n'est pas un e-mail, c'est une page.** La personne reçoit un lien
+personnel, ouvre la proposition, la relit, la fait lire autour d'elle, et répond
+d'un clic : « j'accepte » ou « ce ne sera pas maintenant ». Un accord fait
+passer le contact en client ; un refus le sort du parcours.
+
+Vous voyez **combien de fois elle a été ouverte**, et quand. Une proposition
+ouverte quatre fois sans réponse ne se relance pas comme une proposition jamais
+ouverte — et le texte des relances automatiques en tient compte.
+
+**Les relances partent seules** : trois jours après l'envoi, puis huit jours.
+Sans réponse au bout de quinze jours, la proposition est classée et le contact
+repasse en « perdu » — sauf s'il est déjà client d'autre chose.
+
+En haut de la page, quatre chiffres : ce qui est en jeu, le même montant pondéré
+par les chances que vous avez estimées, ce qui a été signé ce mois-ci, et le
+taux d'acceptation sur toutes les propositions tranchées.
+
+> Le paiement en ligne n'est pas branché : accepter une proposition n'encaisse
+> rien. C'est la décision Stripe ou Chariow qui tranchera ce point.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,

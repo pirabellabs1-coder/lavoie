@@ -6,6 +6,10 @@ import { actionChangerStatut, actionDefinirRdv, actionEnregistrerNote } from "./
 import { dernierQuestionnaire } from "@/lib/crm/questionnaires";
 import { QUESTIONS } from "@/lib/questionnaire";
 import { enClair, pourChamp } from "@/lib/heure";
+import { exigerIdentite } from "@/lib/crm/session";
+import { peut } from "@/lib/crm/utilisateurs";
+import { ETATS, euros, offresDuContact } from "@/lib/crm/offres";
+import { actionAnnulerOffre, actionCreerOffre, actionEnvoyerOffre } from "../../offres/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -22,16 +26,24 @@ function dateLongue(d: Date | string): string {
 
 export default async function FicheContact({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { id } = await params;
+  const messages = await searchParams;
+  const erreur = Array.isArray(messages.erreur) ? messages.erreur[0] : messages.erreur;
+  const offreFaite = messages.offre === "creee" || messages.offre === "envoyee";
   if (!/^\d+$/.test(id)) notFound();
 
   const donnees = await obtenirContact(id);
   if (!donnees) notFound();
   const { contact, timeline } = donnees;
   const copie = await dernierQuestionnaire(id);
+  const qui = await exigerIdentite();
+  const commercial = peut(qui.role, "offres");
+  const offres = commercial ? await offresDuContact(id) : [];
 
   return (
     <Cadre
@@ -45,6 +57,15 @@ export default async function FicheContact({
         </>
       }
     >
+      {erreur && <div className="adm-alerte">{erreur}</div>}
+      {offreFaite && (
+        <div className="adm-alerte">
+          {messages.offre === "envoyee"
+            ? "La proposition est partie."
+            : "La proposition est prête. Elle ne partira que lorsque vous l'enverrez."}
+        </div>
+      )}
+
       {contact.desabonne_le && (
         <div className="adm-alerte">
           <strong>Ce contact s&apos;est désabonné</strong> le {dateLongue(contact.desabonne_le)}.
@@ -195,6 +216,135 @@ export default async function FicheContact({
                     </div>
                   ))}
                 </dl>
+              </details>
+            </div>
+          )}
+
+          {commercial && (
+            <div className="adm-carte">
+              <p className="adm-titre">Propositions</p>
+
+              {offres.length > 0 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
+                  {offres.map((o) => (
+                    <div
+                      key={o.id}
+                      style={{
+                        border: "1px solid var(--adm-line)",
+                        borderRadius: 10,
+                        padding: "12px 14px",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "baseline" }}>
+                        <strong>{o.intitule}</strong>
+                        <span style={{ fontWeight: 650, whiteSpace: "nowrap" }}>
+                          {euros(o.montant_cents)}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, flexWrap: "wrap" }}>
+                        <span className="adm-tag" data-s={(ETATS[o.statut] ?? ETATS.brouillon).ton}>
+                          {(ETATS[o.statut] ?? { texte: o.statut }).texte}
+                        </span>
+                        <span style={{ fontSize: 11.5, color: "var(--adm-mute)" }}>
+                          {o.probabilite} % de chances
+                          {o.envoyee_le && ` · envoyée le ${enClair(o.envoyee_le)}`}
+                          {o.vues > 0 && ` · ouverte ${o.vues} fois`}
+                          {o.relances > 0 && ` · ${o.relances} relance${o.relances > 1 ? "s" : ""}`}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
+                        {o.statut === "brouillon" && (
+                          <form action={actionEnvoyerOffre}>
+                            <input type="hidden" name="id" value={o.id} />
+                            <input type="hidden" name="retour" value={`/admin/contacts/${contact.id}`} />
+                            <button type="submit" className="adm-btn petit">Envoyer</button>
+                          </form>
+                        )}
+                        {["brouillon", "envoyee", "vue"].includes(o.statut) && (
+                          <form action={actionAnnulerOffre}>
+                            <input type="hidden" name="id" value={o.id} />
+                            <input type="hidden" name="retour" value={`/admin/contacts/${contact.id}`} />
+                            <button type="submit" className="adm-btn fantome petit">Classer</button>
+                          </form>
+                        )}
+                        {o.envoyee_le && (
+                          <span style={{ fontSize: 11.5, color: "var(--adm-mute)", alignSelf: "center", wordBreak: "break-all" }}>
+                            /proposition/{o.jeton.slice(0, 12)}…
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <details open={offres.length === 0}>
+                <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--adm-mute)", marginBottom: 12 }}>
+                  Préparer une proposition
+                </summary>
+
+                <form action={actionCreerOffre} style={{ display: "grid", gap: 12 }}>
+                  <input type="hidden" name="contact" value={contact.id} />
+
+                  <label style={{ display: "block" }}>
+                    <span className="adm-label">Intitulé</span>
+                    <input
+                      type="text"
+                      name="intitule"
+                      required
+                      maxLength={200}
+                      className="adm-champ"
+                      placeholder="Immersion Expansion · 6 mois"
+                      defaultValue={contact.interet ?? ""}
+                    />
+                  </label>
+
+                  <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
+                    <label style={{ display: "block" }}>
+                      <span className="adm-label">Montant (€)</span>
+                      <input type="text" name="montant" required className="adm-champ" placeholder="4800" inputMode="decimal" />
+                    </label>
+                    <label style={{ display: "block" }}>
+                      <span className="adm-label">Chances (%)</span>
+                      <input type="number" name="probabilite" min={0} max={100} step={5} defaultValue={50} className="adm-champ" />
+                    </label>
+                    <label style={{ display: "block" }}>
+                      <span className="adm-label">Valable jusqu&apos;au</span>
+                      <input type="date" name="validite" className="adm-champ" />
+                    </label>
+                  </div>
+
+                  <label style={{ display: "block" }}>
+                    <span className="adm-label">Échéancier</span>
+                    <input
+                      type="text"
+                      name="echeancier"
+                      maxLength={200}
+                      className="adm-champ"
+                      placeholder="1 600 € à l'inscription, puis 2 × 1 600 €"
+                    />
+                  </label>
+
+                  <label style={{ display: "block" }}>
+                    <span className="adm-label">Ce que vous lui dites</span>
+                    <textarea
+                      name="message"
+                      rows={7}
+                      className="adm-champ"
+                      placeholder={"Ce que nous avons vu ensemble, ce que contient l'accompagnement, ce qu'il demande de vous…"}
+                      style={{ lineHeight: 1.6 }}
+                    />
+                  </label>
+
+                  <label style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13 }}>
+                    <input type="checkbox" name="envoyer" />
+                    Envoyer tout de suite
+                  </label>
+
+                  <div>
+                    <button type="submit" className="adm-btn">Enregistrer la proposition</button>
+                  </div>
+                </form>
               </details>
             </div>
           )}
