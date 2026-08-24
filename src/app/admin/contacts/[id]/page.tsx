@@ -2,7 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Cadre from "../../Cadre";
 import { STATUTS, STATUT_LABEL, obtenirContact, nomAffiche } from "@/lib/crm/contacts";
-import { actionChangerStatut, actionDefinirRdv, actionEnregistrerNote } from "./actions";
+import {
+  actionChangerStatut,
+  actionDefinirRdv,
+  actionEnregistrerNote,
+  actionGenererParrainage,
+} from "./actions";
 import { dernierQuestionnaire } from "@/lib/crm/questionnaires";
 import { QUESTIONS } from "@/lib/questionnaire";
 import { enClair, pourChamp } from "@/lib/heure";
@@ -10,6 +15,7 @@ import { exigerIdentite } from "@/lib/crm/session";
 import { peut } from "@/lib/crm/utilisateurs";
 import { ETATS, euros, offresDuContact } from "@/lib/crm/offres";
 import { actionAnnulerOffre, actionCreerOffre, actionEnvoyerOffre } from "../../offres/actions";
+import { filleuls, lienParrainage } from "@/lib/crm/parrainage";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +50,7 @@ export default async function FicheContact({
   const qui = await exigerIdentite();
   const commercial = peut(qui.role, "offres");
   const offres = commercial ? await offresDuContact(id) : [];
+  const mesFilleuls = await filleuls(id);
 
   return (
     <Cadre
@@ -138,6 +145,59 @@ export default async function FicheContact({
               </table>
             </div>
           )}
+
+          <div className="adm-carte">
+            <p className="adm-titre">Parrainage</p>
+
+            {contact.parrain_id && (
+              <p style={{ margin: "0 0 14px", lineHeight: 1.6 }}>
+                Amené par{" "}
+                <Link href={`/admin/contacts/${contact.parrain_id}`}>un autre contact</Link>.
+              </p>
+            )}
+
+            {contact.jeton_parrainage ? (
+              <>
+                <span className="adm-label">Son lien à partager</span>
+                <input
+                  type="text"
+                  readOnly
+                  className="adm-champ"
+                  value={lienParrainage(contact.jeton_parrainage)}
+                  style={{ fontSize: 12.5 }}
+                />
+                <p style={{ color: "var(--adm-mute)", fontSize: 12, margin: "8px 0 0" }}>
+                  Toute personne qui s&apos;inscrit après avoir suivi ce lien lui est
+                  automatiquement rattachée.
+                </p>
+              </>
+            ) : (
+              <form action={actionGenererParrainage}>
+                <input type="hidden" name="id" value={contact.id} />
+                <p style={{ color: "var(--adm-mute)", fontSize: 13, margin: "0 0 12px", lineHeight: 1.6 }}>
+                  Aucun lien de parrainage pour l&apos;instant. Créez-en un pour lui permettre
+                  d&apos;amener des proches.
+                </p>
+                <button type="submit" className="adm-btn fantome">Créer son lien de parrainage</button>
+              </form>
+            )}
+
+            {mesFilleuls.length > 0 && (
+              <div style={{ marginTop: 18 }}>
+                <span className="adm-label">A amené {mesFilleuls.length} personne{mesFilleuls.length > 1 ? "s" : ""}</span>
+                <ul style={{ margin: "8px 0 0", padding: 0, listStyle: "none", display: "grid", gap: 6 }}>
+                  {mesFilleuls.map((f) => (
+                    <li key={f.id} style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                      <Link href={`/admin/contacts/${f.id}`}>{f.nom}</Link>
+                      <span className="adm-tag" data-s={f.statut}>
+                        {STATUT_LABEL[f.statut] ?? f.statut}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
 
           {copie && (
             <div className="adm-carte">

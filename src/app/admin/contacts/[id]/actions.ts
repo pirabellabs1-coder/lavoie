@@ -47,6 +47,16 @@ export async function actionDefinirRdv(formData: FormData) {
   revalidatePath(`/admin/contacts/${contactId}`);
 }
 
+/** Crée (ou révèle) le code de parrainage d'un contact, à copier pour lui. */
+export async function actionGenererParrainage(formData: FormData) {
+  if (!(await exigerSession())) return;
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { codeParrainage } = await import("@/lib/crm/parrainage");
+  await codeParrainage(id);
+  revalidatePath(`/admin/contacts/${id}`);
+}
+
 export async function actionEnregistrerNote(formData: FormData) {
   if (!(await exigerSession())) return;
   const id = String(formData.get("id") ?? "");

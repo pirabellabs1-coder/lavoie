@@ -46,6 +46,9 @@ export type Contact = {
   utm_campaign: string | null;
   referent: string | null;
   page_entree: string | null;
+  // Parrainage : son propre code, et qui l'a amené.
+  jeton_parrainage: string | null;
+  parrain_id: string | null;
 };
 
 export type Evenement = {
@@ -142,6 +145,14 @@ export async function enregistrerContact(entree: {
       INSERT INTO evenements (contact_id, type, libelle)
       VALUES (${row.id}, 'formulaire', ${entree.libelleEvenement})
     `;
+
+    // Rattachement au parrain, s'il y a lieu. La fonction ne fait rien si le
+    // contact a déjà un parrain ou si le code est inconnu, donc on peut
+    // l'appeler sans condition supplémentaire.
+    if (o.parrain) {
+      const { rattacherFilleul } = await import("./parrainage");
+      await rattacherFilleul(String(row.id), o.parrain);
+    }
 
     return { id: String(row.id), nouveau: row.est_nouveau };
   } catch (e) {

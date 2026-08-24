@@ -4,6 +4,7 @@ import { traiterCampagnes } from "@/lib/crm/campagnes";
 import { sauvegardeQuotidienne } from "@/lib/crm/sauvegarde";
 import { relancerOffres } from "@/lib/crm/offres";
 import { accompagnerLesStages } from "@/lib/crm/stages";
+import { reveillerLesDormants } from "@/lib/crm/reveil";
 
 /**
  * Worker des séquences — appelé par Vercel Cron (voir vercel.json).
@@ -30,6 +31,7 @@ export async function GET(req: Request) {
   const campagnes = await traiterCampagnes(200);
   const offres = await relancerOffres();
   const stages = await accompagnerLesStages();
+  const reveil = await reveillerLesDormants();
   // Le lundi seulement — la fonction se charge elle-même de vérifier le jour.
   const rapport = await envoyerRapportHebdomadaire();
   // En dernier : la sauvegarde reflète ainsi tout ce que ce passage a produit.
@@ -42,6 +44,7 @@ export async function GET(req: Request) {
     campagnes,
     offres,
     stages,
+    reveil,
     rapport,
     sauvegarde,
     duree_ms: Date.now() - debut,

@@ -244,6 +244,28 @@ qui vous autorise à publier le nom.
 stage, l'e-mail automatique invite maintenant à déposer un témoignage — le canal
 et la récolte sont branchés l'un sur l'autre.
 
+## Parrainage & réveil
+
+Onglet **Parrainage & réveil**, sous « Les gens ». Deux mécaniques qui font
+revenir du monde sans effort de votre part.
+
+**Le parrainage.** Chaque contact peut recevoir un lien personnel, à copier
+depuis sa fiche (encart « Parrainage »). Toute personne qui arrive par ce lien
+et laisse ses coordonnées lui est automatiquement rattachée — ni l'un ni l'autre
+n'a rien à saisir. Le rattachement se fait au premier contact et ne s'écrase
+jamais : un parrain, une fois, définitivement. La page liste les parrains, le
+nombre de personnes qu'ils ont amenées, et combien sont devenues clientes.
+
+**Le réveil des dormants.** Une liste qui gonfle sans se nettoyer coûte de
+l'argent et abîme la délivrabilité de tout le monde. Après six mois sans le
+moindre signe, une dernière lettre part — une seule. Trente jours plus tard,
+faute de réaction, le contact sort de la liste active : il reste dans le
+fichier, il ne reçoit simplement plus rien. Les clients ne sont jamais
+concernés. Tout se fait tout seul, chaque jour.
+
+Les deux chiffres du haut disent où en est la liste : combien de contacts
+sommeillent, et combien sont en sursis après leur réveil.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,

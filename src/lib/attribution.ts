@@ -14,6 +14,8 @@ export type Origine = {
   utm_campaign?: string;
   referent?: string;
   page_entree?: string;
+  /** Code du parrain, retenu du paramètre `?parrain=` au premier passage. */
+  parrain?: string;
 };
 
 const CLE = "v2c_origine";
@@ -35,23 +37,38 @@ export function capturer(): void {
       utm_medium: borner(params.get("utm_medium")),
       utm_campaign: borner(params.get("utm_campaign")),
     };
+    const parrain = borner(params.get("parrain"));
     const porteUneCampagne = Boolean(
       campagne.utm_source || campagne.utm_medium || campagne.utm_campaign,
     );
 
-    const deja = window.localStorage.getItem(CLE);
-    if (deja && !porteUneCampagne) return;
+    const brut = window.localStorage.getItem(CLE);
+    const deja: Origine = brut ? (JSON.parse(brut) as Origine) : {};
+
+    // Rien à faire si rien de neuf : ni campagne, ni un parrain encore inconnu.
+    const nouveauParrain = parrain && !deja.parrain;
+    if (brut && !porteUneCampagne && !nouveauParrain) return;
 
     const referent =
       document.referrer && !document.referrer.startsWith(window.location.origin)
         ? borner(document.referrer)
         : undefined;
 
-    const origine: Origine = {
-      ...campagne,
-      referent,
-      page_entree: borner(window.location.pathname),
-    };
+    const origine: Origine = porteUneCampagne
+      ? {
+          ...campagne,
+          referent,
+          page_entree: borner(window.location.pathname),
+          // Le premier parrain fait foi : une nouvelle campagne ne l'efface pas.
+          parrain: deja.parrain ?? parrain,
+        }
+      : {
+          // Sans campagne, on ne touche qu'au parrain manquant.
+          ...deja,
+          parrain: deja.parrain ?? parrain,
+          page_entree: deja.page_entree ?? borner(window.location.pathname),
+          referent: deja.referent ?? referent,
+        };
 
     window.localStorage.setItem(CLE, JSON.stringify(origine));
   } catch {
@@ -88,5 +105,6 @@ export function depuisCorps(v: unknown): Origine {
     utm_campaign: champ("utm_campaign"),
     referent: champ("referent"),
     page_entree: champ("page_entree"),
+    parrain: champ("parrain"),
   };
 }

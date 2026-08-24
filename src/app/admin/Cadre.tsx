@@ -20,6 +20,7 @@ type Icone =
   | "rdv"
   | "stages"
   | "temoignages"
+  | "parrainage"
   | "offres"
   | "sequences"
   | "campagnes"
@@ -57,6 +58,13 @@ function Trait({ nom }: { nom: Icone }) {
       <>
         <path d="M4 5.5h16v11H8l-4 3.5z" />
         <path d="M8 9h8M8 12h5" />
+      </>
+    ),
+    parrainage: (
+      <>
+        <circle cx="7" cy="8" r="2.6" />
+        <circle cx="16.5" cy="8" r="2.6" />
+        <path d="M2.5 19c.5-2.8 2.3-4.3 4.5-4.3s4 1.5 4.5 4.3M12.5 19c.5-2.8 2.3-4.3 4.5-4.3s3.6 1.3 4.2 3.6" />
       </>
     ),
     offres: (
@@ -124,6 +132,7 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
       { href: "/admin/rendez-vous", label: "Rendez-vous", icone: "rdv" },
       { href: "/admin/stages", label: "Stages", icone: "stages" },
       { href: "/admin/temoignages", label: "Témoignages", icone: "temoignages" },
+      { href: "/admin/parrainage", label: "Parrainage & réveil", icone: "parrainage" },
     ],
   },
   {

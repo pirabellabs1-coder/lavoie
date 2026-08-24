@@ -247,15 +247,22 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   // Ajoutées après coup, donc en ALTER : les bases déjà en service se mettent
   // à niveau au premier démarrage, sans migration à lancer à la main.
 
-  // D'où vient réellement le contact (campagne, site référent, page d'arrivée).
+  // D'où vient réellement le contact (campagne, site référent, page d'arrivée),
+  // qui l'a parrainé, son propre code de parrainage, et la date du dernier
+  // e-mail de réveil (pour ne pas le relancer sans fin).
   await sql`
     ALTER TABLE contacts
-      ADD COLUMN IF NOT EXISTS utm_source   TEXT,
-      ADD COLUMN IF NOT EXISTS utm_medium   TEXT,
-      ADD COLUMN IF NOT EXISTS utm_campaign TEXT,
-      ADD COLUMN IF NOT EXISTS referent     TEXT,
-      ADD COLUMN IF NOT EXISTS page_entree  TEXT
+      ADD COLUMN IF NOT EXISTS utm_source        TEXT,
+      ADD COLUMN IF NOT EXISTS utm_medium        TEXT,
+      ADD COLUMN IF NOT EXISTS utm_campaign      TEXT,
+      ADD COLUMN IF NOT EXISTS referent          TEXT,
+      ADD COLUMN IF NOT EXISTS page_entree       TEXT,
+      ADD COLUMN IF NOT EXISTS jeton_parrainage  TEXT,
+      ADD COLUMN IF NOT EXISTS parrain_id        BIGINT REFERENCES contacts(id) ON DELETE SET NULL,
+      ADD COLUMN IF NOT EXISTS reveille_le        TIMESTAMPTZ
   `;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS idx_contacts_parrainage ON contacts (jeton_parrainage) WHERE jeton_parrainage IS NOT NULL`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_contacts_parrain ON contacts (parrain_id) WHERE parrain_id IS NOT NULL`;
 
   // Ce que devient l'e-mail une fois parti : identifiant Resend, ouverture, clic.
   await sql`
