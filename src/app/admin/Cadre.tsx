@@ -2,6 +2,7 @@ import Link from "next/link";
 import DeconnexionBouton from "./DeconnexionBouton";
 import { exigerIdentite } from "@/lib/crm/session";
 import { peut, type Droit } from "@/lib/crm/utilisateurs";
+import { compterEnAttente } from "@/lib/crm/temoignages";
 
 /**
  * Coquille commune du tableau de bord : barre latérale, titre de page, contenu.
@@ -18,6 +19,7 @@ type Icone =
   | "questionnaire"
   | "rdv"
   | "stages"
+  | "temoignages"
   | "offres"
   | "sequences"
   | "campagnes"
@@ -49,6 +51,12 @@ function Trait({ nom }: { nom: Icone }) {
     stages: (
       <>
         <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" />
+      </>
+    ),
+    temoignages: (
+      <>
+        <path d="M4 5.5h16v11H8l-4 3.5z" />
+        <path d="M8 9h8M8 12h5" />
       </>
     ),
     offres: (
@@ -101,7 +109,7 @@ function Trait({ nom }: { nom: Icone }) {
   );
 }
 
-type Entree = { href: string; label: string; icone: Icone; droit?: Droit };
+type Entree = { href: string; label: string; icone: Icone; droit?: Droit; pastille?: number };
 
 const GROUPES: { titre: string; entrees: Entree[] }[] = [
   {
@@ -115,6 +123,7 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
       { href: "/admin/questionnaires", label: "Questionnaires", icone: "questionnaire" },
       { href: "/admin/rendez-vous", label: "Rendez-vous", icone: "rdv" },
       { href: "/admin/stages", label: "Stages", icone: "stages" },
+      { href: "/admin/temoignages", label: "Témoignages", icone: "temoignages" },
     ],
   },
   {
@@ -149,10 +158,17 @@ export default async function Cadre({
   children: React.ReactNode;
 }) {
   const qui = await exigerIdentite();
+  const enAttente = await compterEnAttente();
 
   const groupes = GROUPES.map((g) => ({
     ...g,
-    entrees: g.entrees.filter((e) => !e.droit || peut(qui.role, e.droit)),
+    entrees: g.entrees
+      .filter((e) => !e.droit || peut(qui.role, e.droit))
+      .map((e) =>
+        e.href === "/admin/temoignages" && enAttente > 0
+          ? { ...e, pastille: enAttente }
+          : e,
+      ),
   })).filter((g) => g.entrees.length > 0);
 
   return (
@@ -176,6 +192,7 @@ export default async function Cadre({
                 >
                   <Trait nom={e.icone} />
                   {e.label}
+                  {e.pastille ? <span className="adm-pastille">{e.pastille}</span> : null}
                 </Link>
               ))}
             </div>

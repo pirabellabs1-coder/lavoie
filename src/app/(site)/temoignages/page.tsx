@@ -3,6 +3,10 @@ import Link from "next/link";
 import VideoTestimonial from "@/components/VideoTestimonial";
 import JsonLd from "@/components/JsonLd";
 import { videoLd, breadcrumbLd } from "@/lib/jsonld";
+import { temoignagesPublies } from "@/lib/crm/temoignages";
+import DeposerTemoignage from "@/components/DeposerTemoignage";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Témoignages — Paroles de transformation",
@@ -68,7 +72,13 @@ const temoignages = [
   { nom: "Patrick Gervais", date: "il y a 10 mois", texte: "Merci pour l'accompagnement." },
 ];
 
-export default function Temoignages() {
+export default async function Temoignages() {
+  // Les témoignages validés en base passent devant les avis Google historiques.
+  const publies = await temoignagesPublies();
+  const tousTemoignages = [
+    ...publies.map((t) => ({ nom: t.nom, date: t.contexte ?? "", texte: t.texte })),
+    ...temoignages,
+  ];
   return (
     <div className="page-fade">
       <JsonLd
@@ -133,7 +143,7 @@ export default function Temoignages() {
       <section className="section sec-blue" style={{ background: "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)" }}>
         <div className="container">
           <div className="rg-3" style={{ gap: 16 }}>
-            {temoignages.map((t, i) => (
+            {tousTemoignages.map((t, i) => (
               <div key={i} className="card-marine" data-reveal="" data-reveal-delay={String(i % 3)} style={{
                 padding: "30px 28px",
                 display: "flex",
@@ -145,7 +155,7 @@ export default function Temoignages() {
                   </span>
                   <div>
                     <p style={{ fontSize: 14, fontWeight: 500, color: "var(--white)", margin: 0 }}>{t.nom}</p>
-                    <p className="small" style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: 11.5 }}>{t.date}</p>
+                    {t.date && <p className="small" style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: 11.5 }}>{t.date}</p>}
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 3, marginBottom: 14 }}>
@@ -173,6 +183,25 @@ export default function Temoignages() {
           <p className="num" style={{ fontSize: 44, color: "var(--navy)", margin: "0 0 8px" }}>4.9 / 5</p>
           <p style={{ fontSize: 15, color: "var(--mute)", margin: "0 0 8px" }}>Basé sur les avis Google vérifiés</p>
           <p className="small" style={{ letterSpacing: ".16em", textTransform: "uppercase", color: "var(--gold)", margin: 0, fontSize: 10.5 }}>✓ Avis certifiés Google</p>
+        </div>
+      </section>
+
+      {/* DÉPÔT */}
+      <section className="section" style={{ background: "var(--paper)" }}>
+        <div className="container-narrow">
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <Eyebrow style={{ marginBottom: 22 }}>Votre tour</Eyebrow>
+            <h2 className="display" style={{ fontSize: "clamp(26px, 3vw, 40px)", margin: "0 0 16px", lineHeight: 1.1 }}>
+              Vous avez cheminé <em className="display-italic">avec Domoïna&nbsp;?</em>
+            </h2>
+            <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "var(--mute)", maxWidth: 540, margin: "0 auto" }}>
+              Un mot de vous peut être exactement ce qu&apos;une autre personne attend pour
+              franchir le pas. Chaque témoignage est lu avant d&apos;être publié.
+            </p>
+          </div>
+          <div style={{ maxWidth: 620, margin: "0 auto" }}>
+            <DeposerTemoignage />
+          </div>
         </div>
       </section>
 

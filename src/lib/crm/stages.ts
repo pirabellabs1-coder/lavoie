@@ -355,7 +355,8 @@ export async function accompagnerLesStages(): Promise<{ logistique: number; reto
           `Bonjour ${d.prenom ?? ""},\n\n` +
           `Quelques jours ont passé depuis « ${d.titre} ». C'est souvent maintenant que les choses se déposent — pas pendant, après.\n\n` +
           `Si vous voulez me dire un mot de ce qui a bougé, répondez simplement à cet e-mail. Je lis tout, et ces retours nourrissent les stages suivants.\n\n` +
-          `Et si vous souhaitez poursuivre, le chemin complet est ici : ${SITE.url}/cycle-des-saisons\n\n` +
+          `Et si votre expérience peut éclairer quelqu'un qui hésite encore, vous pouvez la déposer ici : ${SITE.url}/temoignages\n\n` +
+          `Pour poursuivre le chemin, le parcours complet est là : ${SITE.url}/cycle-des-saisons\n\n` +
           `Avec toute ma présence,\n` +
           `Domoïna Ramiadana — La Voie 2 la Conscience`,
       });

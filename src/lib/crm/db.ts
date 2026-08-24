@@ -115,6 +115,23 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS temoignages (
+      id          BIGSERIAL PRIMARY KEY,
+      -- Rattaché à un contact quand il vient d'un lien personnel ; anonyme sinon.
+      contact_id  BIGINT REFERENCES contacts(id) ON DELETE SET NULL,
+      nom         TEXT NOT NULL,
+      texte       TEXT NOT NULL,
+      note        INT,
+      contexte    TEXT,
+      -- attente · publie · masque
+      statut      TEXT NOT NULL DEFAULT 'attente',
+      consentement BOOLEAN NOT NULL DEFAULT FALSE,
+      cree_le     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      publie_le   TIMESTAMPTZ
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS stages (
       id         BIGSERIAL PRIMARY KEY,
       -- Reprend le slug du catalogue (src/lib/evenements.ts).
@@ -262,6 +279,7 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   await sql`CREATE INDEX IF NOT EXISTS idx_offres_contact ON offres (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_offres_suivi ON offres (statut, envoyee_le)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_participations_stage ON participations (stage_id, statut)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_temoignages_statut ON temoignages (statut, publie_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_evenements_contact ON evenements (contact_id, cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_cree ON contacts (cree_le DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_statut ON contacts (statut)`;

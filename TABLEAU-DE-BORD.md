@@ -223,6 +223,27 @@ se récoltent les témoignages.
 > billetterie n'expose pas ses données sans clé d'API. Seules les demandes
 > faites depuis le site entrent dans le fichier.
 
+## Les témoignages
+
+Onglet **Témoignages**. La page publique affichait jusqu'ici des avis écrits en
+dur dans le code — chaque ajout demandait une modification et un déploiement.
+Désormais, une personne peut déposer son témoignage depuis le bas de la page
+`/temoignages`, avec une note en étoiles et son contexte.
+
+**Rien n'est publié tout seul.** Le texte entre en file d'attente, et le petit
+chiffre doré à côté de « Témoignages » dans la barre latérale compte ceux qui
+vous attendent. Vous les relisez, puis « Publier » les met en ligne aussitôt,
+en tête de la page, devant les avis Google historiques. « Retirer du site » les
+masque sans les effacer ; « Supprimer » est définitif, à réserver aux doublons
+et aux dépôts indésirables.
+
+Le consentement à la publication est demandé au dépôt, et enregistré : c'est ce
+qui vous autorise à publier le nom.
+
+**C'est le mot de retour post-stage qui les fait venir.** Deux jours après un
+stage, l'e-mail automatique invite maintenant à déposer un témoignage — le canal
+et la récolte sont branchés l'un sur l'autre.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,

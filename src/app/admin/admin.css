@@ -129,6 +129,22 @@
 .adm-nav a:hover { background: rgba(255, 255, 255, .07); color: #fff; }
 .adm-nav a.actif { background: rgba(255, 255, 255, .12); color: #fff; font-weight: 600; }
 .adm-nav a.actif svg { opacity: 1; }
+.adm-pastille {
+  margin-left: auto;
+  background: var(--adm-gold);
+  color: #17110a;
+  border-radius: 999px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.adm-nav a.actif .adm-pastille { background: #fff; color: var(--adm-side); }
+
 .adm-nav a.actif::before {
   content: "";
   position: absolute;
