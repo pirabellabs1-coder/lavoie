@@ -140,7 +140,7 @@ export default async function EvenementPage({
           </p>
 
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            <a href={e.url} target="_blank" rel="noopener noreferrer" className="btn btn-gold">
+            <a href="#reserver" className="btn btn-gold">
               Réserver ma place <Arrow />
             </a>
             <Link href="/contact" className="btn btn-ghost-white">
@@ -273,7 +273,7 @@ export default async function EvenementPage({
         <div className="container">
           <InfosPratiques e={e} />
           <div style={{ display: "flex", gap: 14, justifyContent: "center", marginTop: 40, flexWrap: "wrap" }}>
-            <a href={e.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg">
+            <a href="#reserver" className="btn btn-primary btn-lg">
               Réserver ma place <Arrow />
             </a>
             <Link href="/contact" className="btn btn-ghost">
@@ -284,7 +284,7 @@ export default async function EvenementPage({
             ✦ Places limitées · Groupe intime, uni et sécurisé ✦
           </p>
 
-          <div style={{ maxWidth: 620, margin: "48px auto 0" }}>
+          <div id="reserver" style={{ maxWidth: 620, margin: "48px auto 0", scrollMarginTop: 90 }}>
             <DemandeDePlace slug={e.slug} titre={e.titreLong} complet={e.complet} />
           </div>
         </div>

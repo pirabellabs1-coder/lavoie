@@ -6,7 +6,14 @@ import { enregistrerQuestionnaire } from "@/lib/crm/questionnaires";
 import { inscrireASequence } from "@/lib/crm/sequences";
 import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
 import { depuisCorps } from "@/lib/attribution";
-import { evaluer, manquantes, QUESTIONS, type Reponses } from "@/lib/questionnaire";
+import {
+  evaluer,
+  manquantes,
+  QUESTIONS,
+  router,
+  SEQUENCE_DE_ROUTE,
+  type Reponses,
+} from "@/lib/questionnaire";
 
 /**
  * Réception du questionnaire de préparation au premier rendez-vous.
@@ -100,7 +107,8 @@ export async function POST(req: Request) {
     // La séquence n'est lancée qu'une fois la copie enregistrée : c'est elle
     // qui porte le jeton du lien de confirmation.
     if (copie) {
-      await inscrireASequence(contact.id, evaluation.eligible ? "prerequis" : "orientation");
+      const route = router(reponses, evaluation.eligible);
+      await inscrireASequence(contact.id, SEQUENCE_DE_ROUTE[route]);
       after(async () => {
         const { traiterEcheances } = await import("@/lib/crm/sequences");
         await traiterEcheances(20);

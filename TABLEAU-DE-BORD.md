@@ -266,6 +266,36 @@ concernés. Tout se fait tout seul, chaque jour.
 Les deux chiffres du haut disent où en est la liste : combien de contacts
 sommeillent, et combien sont en sursis après leur réveil.
 
+## Le routage par revenu
+
+Le questionnaire aiguille désormais chaque personne selon son revenu **et** son
+score, vers l'une de trois routes :
+
+| Profil | Route | Séquence e-mail | Destination |
+| --- | --- | --- | --- |
+| Score élevé (qualifié) | **Appel direct** | Prérequis | l'entretien avec Domoïna |
+| Revenu > 2 000 €, non qualifié | **Stages** | Suite web-conférence → stages | réserver un stage sur le site |
+| Revenu ≤ 2 000 € | **Formations** | Suite web-conférence → cercles | les cercles à 70 €/mois (hub `bit.ly/4pT5ITp`) |
+
+Le revenu modeste prime sur le score : on ne pousse pas un accompagnement
+premium à quelqu'un dont on sait qu'il ne rentre pas dans le budget — on
+l'oriente vers un cercle accessible, plus juste pour lui.
+
+Les deux nouvelles séquences reprennent **votre copie Mailchimp** (la séquence
+de la web-conférence des 9 Clés) : l'histoire de la blessure originelle, le Rêve
+Conscient, la prospérité, le menu complet des portes d'entrée. Rien n'a été
+réinventé — le texte est porté tel quel, et il part maintenant de votre domaine
+vérifié (Resend) au lieu d'une adresse Gmail, ce qui améliore la délivrabilité.
+
+Tout se modifie depuis l'onglet **Séquences**, comme les autres.
+
+## Les stages, centralisés
+
+Le bouton « Réserver ma place » de chaque page de stage ouvre maintenant le
+formulaire du site, plus la billetterie externe. La demande entre dans le
+fichier, le secrétariat confirme, et le règlement se fait à part. Plus besoin de
+passer par Eventbrite pour réserver.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,

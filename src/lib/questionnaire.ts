@@ -391,3 +391,41 @@ export function evaluer(reponses: Reponses): Evaluation {
   const score = Math.min(100, Math.round((total / TOTAL_MAXIMUM) * 100));
   return { score, eligible: score >= SEUIL_ELIGIBILITE, details };
 }
+
+// ─── Routage par profil ─────────────────────────────────────────────────────
+//
+// Trois destinations, décidées à l'arrivée du questionnaire :
+//
+//   · appel     — les personnes qualifiées (score suffisant) : entretien
+//                 individuel offert avec Domoïna. C'est le haut de gamme.
+//   · stages    — non qualifiées mais avec les moyens (revenu > 2 000 €) :
+//                 orientées vers la réservation d'un stage en présentiel.
+//   · formations — revenu ≤ 2 000 € : orientées vers les groupes accessibles
+//                 (les cercles à 70 €/mois), plus adaptés à leur situation.
+//
+// Le revenu prime sur le score pour la tranche basse : quelqu'un de très
+// engagé mais aux revenus modestes est mieux servi par un cercle à 70 €/mois
+// que par une proposition d'accompagnement qu'il ne pourra pas suivre.
+
+export type Route = "appel" | "stages" | "formations";
+
+/** La séquence e-mail correspondant à chaque route. */
+export const SEQUENCE_DE_ROUTE: Record<Route, string> = {
+  appel: "prerequis",
+  stages: "stages",
+  formations: "formations",
+};
+
+export function revenuModeste(reponses: Reponses): boolean {
+  return reponses.revenu === "0 – 2 000 €";
+}
+
+/**
+ * Décide la route d'une copie. `eligible` vient du score (voir `evaluer`).
+ * Le revenu modeste l'emporte : on ne pousse pas un accompagnement premium à
+ * quelqu'un dont on sait qu'il ne rentre pas dans le budget.
+ */
+export function router(reponses: Reponses, eligible: boolean): Route {
+  if (revenuModeste(reponses)) return "formations";
+  return eligible ? "appel" : "stages";
+}
