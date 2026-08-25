@@ -274,7 +274,8 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS page_entree       TEXT,
       ADD COLUMN IF NOT EXISTS jeton_parrainage  TEXT,
       ADD COLUMN IF NOT EXISTS parrain_id        BIGINT REFERENCES contacts(id) ON DELETE SET NULL,
-      ADD COLUMN IF NOT EXISTS reveille_le        TIMESTAMPTZ
+      ADD COLUMN IF NOT EXISTS reveille_le        TIMESTAMPTZ,
+      ADD COLUMN IF NOT EXISTS confirme_le        TIMESTAMPTZ
   `;
   await sql`CREATE UNIQUE INDEX IF NOT EXISTS idx_contacts_parrainage ON contacts (jeton_parrainage) WHERE jeton_parrainage IS NOT NULL`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_parrain ON contacts (parrain_id) WHERE parrain_id IS NOT NULL`;

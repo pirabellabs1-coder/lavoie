@@ -4,7 +4,7 @@ import { enregistrerContact } from "@/lib/crm/contacts";
 import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
 import { depuisCorps } from "@/lib/attribution";
 import { habiller, lienDesinscription } from "@/lib/crm/email";
-import { inscrireASequence } from "@/lib/crm/sequences";
+import { creerJeton, mettreEnAttente } from "@/lib/crm/optin";
 
 // Destinataire des leads (guide gratuit / lead magnet).
 const TO = "contact@lavoie2laconscience.com";
@@ -46,7 +46,12 @@ export async function POST(req: Request) {
     libelleEvenement: `Guide demandé — ${source}`,
     origine: depuisCorps(data.origine),
   });
-  if (contact) await inscrireASequence(contact.id, "guide");
+  // Double opt-in : le guide part tout de suite (il est demandé), mais la suite
+  // — mes Lettres et repères — n'arrive qu'après confirmation par le lien.
+  if (contact) await mettreEnAttente(contact.id);
+  const lienConfirmation = `${SITE.url}/confirmer?t=${encodeURIComponent(
+    await creerJeton({ email, sequence: "guide", source }),
+  )}`;
 
   if (!process.env.RESEND_API_KEY) {
     return Response.json(
@@ -87,8 +92,10 @@ export async function POST(req: Request) {
         `Bonjour ${prenom},\n\n` +
         `Merci pour votre confiance. Voici votre guide gratuit à télécharger :\n` +
         `${GUIDE_URL}\n\n` +
-        `Prenez-le comme une conversation, à votre rythme. Et si vous souhaitez en parler, ` +
-        `l'appel découverte de 45 minutes est offert : ${SITE.url}/contact\n\n` +
+        `Prenez-le comme une conversation, à votre rythme.\n\n` +
+        `Et si vous souhaitez recevoir la suite — mes Lettres et quelques repères pour aller plus loin — confirmez votre inscription en un clic :\n` +
+        `${lienConfirmation}\n\n` +
+        `Sans ce clic, vous gardez le guide et vous ne recevrez rien d'autre.\n\n` +
         `Avec toute ma présence,\n` +
         `Domoïna Ramiadana — La Voie 2 la Conscience`,
     });

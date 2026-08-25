@@ -346,6 +346,24 @@ ligne mais détachés de l'identité. Chaque accès et chaque effacement laisse 
 trace dans le journal. Cela couvre l'obligation légale de répondre aux demandes
 d'accès et de suppression — automatiquement, et dans les délais.
 
+## Le double opt-in
+
+Les inscriptions marketing passent désormais par une **confirmation en un clic**.
+
+**Les Lettres** : la personne s'inscrit, reçoit un e-mail avec un lien à cliquer,
+et ce n'est qu'après ce clic que la séquence de bienvenue démarre. Tant qu'elle
+n'a pas confirmé, aucun message ne part et elle n'entre pas dans les campagnes.
+
+**Le guide** : le guide part tout de suite (il est demandé), mais l'e-mail
+contient un lien pour confirmer et recevoir la suite. Sans clic, la personne
+garde son guide et ne reçoit rien d'autre.
+
+Pourquoi : une adresse mal tapée ou fausse ne confirme jamais, donc elle
+n'encombre pas la liste et n'abîme pas la délivrabilité. Et le clic, horodaté
+dans la chronologie du contact, vaut **preuve de consentement** en cas de
+contrôle. Les autres formulaires — contact, questionnaire, demande de stage —
+n'y passent pas : ce sont des demandes explicites, où le consentement est direct.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,

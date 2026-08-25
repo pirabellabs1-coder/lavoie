@@ -111,6 +111,7 @@ async function destinataires(
       SELECT c.id, c.email, c.prenom
       FROM contacts c
       WHERE c.desabonne_le IS NULL
+        AND c.consentement = TRUE
         AND c.email <> ''
         AND (${statuts}::text[] IS NULL OR c.statut = ANY(${statuts}::text[]))
         AND (${source}::text IS NULL OR c.source = ${source})

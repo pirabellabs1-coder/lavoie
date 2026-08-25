@@ -1,12 +1,12 @@
-import { after } from "next/server";
 import { enregistrerContact } from "@/lib/crm/contacts";
 import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
 import { depuisCorps } from "@/lib/attribution";
-import { inscrireASequence } from "@/lib/crm/sequences";
+import { envoyerConfirmation, mettreEnAttente } from "@/lib/crm/optin";
 
 /**
- * Inscription aux Lettres. Jusqu'ici le formulaire n'envoyait rien du tout :
- * il affichait une confirmation et l'adresse était perdue.
+ * Inscription aux Lettres, en double opt-in : on enregistre le contact, on le
+ * met en attente de confirmation, et on lui envoie un lien à cliquer. La
+ * séquence de bienvenue ne démarre qu'une fois ce clic effectué.
  */
 export async function POST(req: Request) {
   let data: Record<string, unknown>;
@@ -39,14 +39,17 @@ export async function POST(req: Request) {
   });
 
   if (contact) {
-    await inscrireASequence(contact.id, "lettres");
-    // L'étape 1 est due immédiatement : on la traite après la réponse plutôt
-    // que d'attendre le passage quotidien du worker.
-    after(async () => {
-      const { traiterEcheances } = await import("@/lib/crm/sequences");
-      await traiterEcheances(20);
+    await mettreEnAttente(contact.id);
+    await envoyerConfirmation({
+      email,
+      prenom,
+      sequence: "lettres",
+      source: "Lettres",
+      contexte: "votre inscription aux Lettres",
     });
   }
 
-  return Response.json({ ok: true });
+  // Réponse identique quoi qu'il arrive : le message côté site invite à aller
+  // confirmer dans la boîte mail.
+  return Response.json({ ok: true, confirmation: true });
 }

@@ -72,10 +72,11 @@ export default function NewsletterForm() {
           className="display"
           style={{ fontSize: 26, margin: "0 0 8px", color: "var(--navy)" }}
         >
-          Inscription confirmée.
+          Presque terminé.
         </p>
-        <p style={{ color: "var(--mute)", fontSize: 14 }}>
-          Un e-mail de bienvenue vient de partir.
+        <p style={{ color: "var(--mute)", fontSize: 14, lineHeight: 1.65 }}>
+          Un e-mail vient de partir : cliquez sur le lien qu&apos;il contient pour confirmer
+          votre inscription. Sans ce clic, vous ne recevrez rien — pensez à vos indésirables.
         </p>
       </div>
     );
