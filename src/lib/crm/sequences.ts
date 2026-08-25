@@ -535,6 +535,16 @@ export async function traiterEcheances(
   return { envoyes, echecs, ignores };
 }
 
+export type EtapeVue = {
+  id: string;
+  ordre: number;
+  delai_jours: number;
+  sujet: string;
+  corps: string;
+  envoyes: number;
+  ouverts: number;
+};
+
 export type SequenceVue = {
   id: string;
   cle: string;
@@ -542,8 +552,9 @@ export type SequenceVue = {
   description: string | null;
   declencheur: string;
   active: boolean;
-  etapes: { id: string; ordre: number; delai_jours: number; sujet: string; corps: string }[];
+  etapes: EtapeVue[];
   inscrits: number;
+  termines: number;
 };
 
 export async function listerSequences(): Promise<SequenceVue[]> {
@@ -556,14 +567,29 @@ export async function listerSequences(): Promise<SequenceVue[]> {
     `;
     const out: SequenceVue[] = [];
     for (const s of seqs) {
-      const etapes = await sql<SequenceVue["etapes"]>`
-        SELECT id, ordre, delai_jours, sujet, corps FROM sequence_etapes
-        WHERE sequence_id = ${s.id} ORDER BY ordre
+      // Les étapes, avec pour chacune le nombre d'e-mails partis et ouverts —
+      // c'est ce qui donne au pipeline sa lecture « où en sont les gens ».
+      const etapes = await sql<EtapeVue[]>`
+        SELECT e.id, e.ordre, e.delai_jours, e.sujet, e.corps,
+               COUNT(v.id) FILTER (WHERE v.statut <> 'echec')::int AS envoyes,
+               COUNT(v.id) FILTER (WHERE v.ouvert_le IS NOT NULL)::int AS ouverts
+        FROM sequence_etapes e
+        LEFT JOIN envois v ON v.sequence_id = ${s.id} AND v.etape = e.ordre
+        WHERE e.sequence_id = ${s.id}
+        GROUP BY e.id
+        ORDER BY e.ordre
       `;
-      const [c] = await sql<{ n: string }[]>`
-        SELECT COUNT(*) AS n FROM inscriptions WHERE sequence_id = ${s.id} AND statut = 'active'
+      const [c] = await sql<{ actifs: number; termines: number }[]>`
+        SELECT COUNT(*) FILTER (WHERE statut = 'active')::int   AS actifs,
+               COUNT(*) FILTER (WHERE statut = 'terminee')::int AS termines
+        FROM inscriptions WHERE sequence_id = ${s.id}
       `;
-      out.push({ ...s, etapes, inscrits: Number(c?.n ?? 0) });
+      out.push({
+        ...s,
+        etapes,
+        inscrits: Number(c?.actifs ?? 0),
+        termines: Number(c?.termines ?? 0),
+      });
     }
     return out;
   } catch (e) {

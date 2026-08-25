@@ -435,3 +435,124 @@ textarea.adm-champ { min-height: 96px; resize: vertical; line-height: 1.6; }
 @media (prefers-reduced-motion: reduce) {
   .adm * { transition: none !important; }
 }
+
+/* ═══ Pipeline des séquences (façon n8n) ═══════════════════════════════════ */
+
+/* Vue « qui reçoit quoi » — les catégories de personnes. */
+.seq-routes { display: grid; gap: 10px; }
+.seq-route {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  gap: 0 14px;
+  align-items: center;
+  padding: 12px 14px 12px 0;
+  border: 1px solid var(--adm-line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.seq-route .liseré { align-self: stretch; border-radius: 4px; }
+.seq-route .cat { font-weight: 600; font-size: 13.5px; }
+.seq-route .cond { color: var(--adm-mute); font-size: 12px; margin-top: 2px; }
+.seq-route .vers { color: var(--adm-ink-2); font-size: 12.5px; }
+.seq-route .vers b { color: var(--adm-ink); }
+.seq-route .compte { text-align: right; white-space: nowrap; }
+.seq-route .compte .n { font-weight: 650; font-variant-numeric: tabular-nums; font-size: 15px; }
+.seq-route .compte .l { color: var(--adm-mute); font-size: 11px; }
+
+.seq-groupe-titre {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--adm-mute); margin: 18px 0 8px;
+}
+.seq-groupe-titre:first-child { margin-top: 0; }
+
+/* Le pipeline horizontal d'une séquence. */
+.seq-pipe {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding: 6px 2px 14px;
+  scrollbar-width: thin;
+}
+.seq-decl, .seq-mail, .seq-fin {
+  flex: none;
+  border-radius: 12px;
+  padding: 12px 14px;
+  width: 210px;
+  position: relative;
+}
+.seq-decl {
+  background: var(--adm-side);
+  color: #fff;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 84px;
+}
+.seq-decl .t { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; opacity: .6; }
+.seq-decl .q { font-size: 13px; font-weight: 600; margin-top: 4px; line-height: 1.35; }
+
+.seq-mail {
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-line-fort);
+  border-top: 3px solid var(--seq-ton, var(--adm-accent));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 84px;
+}
+.seq-mail .rang {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--seq-ton, var(--adm-accent));
+}
+.seq-mail .obj {
+  font-size: 12.5px; font-weight: 600; line-height: 1.4; color: var(--adm-ink);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.seq-mail .stats { margin-top: auto; display: flex; gap: 12px; font-size: 11px; color: var(--adm-mute); }
+.seq-mail .stats b { color: var(--adm-ink); font-variant-numeric: tabular-nums; }
+
+.seq-fin {
+  background: var(--adm-surface-2);
+  align-self: center;
+  min-height: 60px;
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--adm-mute);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px dashed var(--adm-line-fort);
+}
+
+/* Le connecteur entre deux nœuds, avec la pastille de délai. */
+.seq-conn {
+  flex: none;
+  align-self: center;
+  width: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--adm-line-fort);
+}
+.seq-conn .ligne { width: 100%; height: 2px; background: var(--adm-line-fort); border-radius: 2px; }
+.seq-conn .delai {
+  font-size: 10.5px; font-weight: 600; color: var(--adm-mute);
+  background: var(--adm-bg); padding: 1px 6px; border-radius: 999px; white-space: nowrap;
+}
+
+/* L'éditeur d'étapes, replié par défaut. */
+.seq-edit summary {
+  cursor: pointer; font-size: 13px; color: var(--adm-mute);
+  padding: 6px 0; user-select: none;
+}
+.seq-edit summary:hover { color: var(--adm-ink); }
+.seq-edit-grille { display: grid; gap: 14px; margin-top: 12px; }
+
+@media (max-width: 700px) {
+  .seq-route { grid-template-columns: 4px 1fr; }
+  .seq-route .compte { grid-column: 2; text-align: left; margin-top: 6px; }
+}
