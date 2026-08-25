@@ -23,7 +23,9 @@ export type SequenceGraine = {
   etapes: EtapeGraine[];
 };
 
-const HUB_CERCLES = "https://bit.ly/4pT5ITp";
+const HUB_CERCLES = "https://bit.ly/4pT5ITp"; // groupes & événements
+const BOUTIQUE = "https://formation-untout.com/"; // la boutique de formations
+const EBOOKS = "https://bit.ly/4auR80h"; // ebooks & formations accessibles (< 20 €)
 
 const SIGNATURE = `\n\nAvec toute ma présence,\nDomoïna Ramiadana — La Voie 2 la Conscience\n${SITE.url}`;
 
@@ -167,57 +169,65 @@ export const SEQUENCES_PAR_DEFAUT: SequenceGraine[] = [
   },
   {
     cle: "formations",
-    nom: "Suite web-conférence — cercles accessibles",
+    nom: "Suite web-conférence — ressources accessibles",
     description:
-      "Pour les revenus modestes (≤ 2 000 €). Reprend la séquence de la web-conférence des 9 Clés et oriente vers les cercles à 70 €/mois, plus adaptés que l'accompagnement individuel.",
+      "Pour les revenus modestes (≤ 2 000 €). Reprend la séquence « Cold Lead Nurturing » de Mailchimp et oriente vers la boutique de formations, les ebooks accessibles et les cercles à 70 €/mois.",
     declencheur: "formations",
     etapes: [
       {
         ordre: 1,
         delai_jours: 0,
-        sujet: "Votre chemin intérieur mérite d'être entendu",
+        sujet: "Un premier pas, à votre rythme",
         corps:
-          `Bonjour {{prenom}},\n\nMerci pour ce que vous avez partagé.\n\nJe sens dans votre démarche une vraie recherche intérieure. Quelque chose qui cherche à se comprendre, à se déposer, à trouver un fil.\n\nJe voulais vous écrire pour vous dire : il existe un chemin à votre mesure. Pas besoin de tout changer d'un coup. Le chemin commence là où vous êtes.\n\nDans les prochains jours, je vais vous partager des ressources, des témoignages et des portes d'entrée concrètes pour commencer votre transformation.` +
+          `Bonjour {{prenom}},\n\nMerci d'avoir pris le temps de vous présenter. Votre chemin intérieur a de la valeur, quelle que soit votre situation aujourd'hui.\n\nJe propose des ressources accessibles pour commencer à explorer — des ebooks et des formations pensés pour vous offrir des clés concrètes, à votre rythme et à votre budget.\n\nDécouvrir la boutique : ${BOUTIQUE}` +
           SIGNATURE,
       },
       {
         ordre: 2,
         delai_jours: 3,
-        sujet: "L'histoire que j'ai portée pendant plus de 35 ans…",
+        sujet: "Je vous offre l'extrait de mon livre",
         corps:
-          `Bonjour {{prenom}},\n\nPendant toute mon enfance, j'ai cru que j'avais failli mourir à l'âge de 6 ans. Je racontais que j'avais voulu rattraper un bracelet, que j'avais failli tomber du 14e étage. Cette histoire, je l'ai portée en moi comme une évidence. Elle expliquait ma force, mon besoin de maîtrise, mon exigence intérieure.\n\nEt puis un jour, à l'âge adulte, tout s'est effondré. Lors du décès de ma mère, j'ai découvert la vérité.\n\nCe n'était pas moi. C'était mon petit frère. Il avait 3 ans, il a failli tomber du 6e étage. Et c'est moi, à 6 ans, qui lui ai sauvé la vie.\n\nMon esprit avait réécrit l'histoire pour survivre émotionnellement. C'est ce que j'appelle une blessure originelle. Nous construisons souvent toute notre zone d'excellence sur un traumatisme non reconnu.\n\nSi cela résonne en vous, nous traversons exactement ce travail dans mes cercles : ${HUB_CERCLES}` +
+          `Bonjour {{prenom}},\n\nAvant d'aller plus loin, je voulais vous offrir quelque chose : l'extrait de mon livre « Fragments de vie amoureuse », dans lequel je partage mon propre parcours de transformation, mes blessures et mes passages fondateurs.\n\nCe n'est pas un livre de recettes. C'est une traversée authentique.\n\nTélécharger l'extrait offert : ${BOUTIQUE}\n\nLisez-le à votre rythme. Et si quelque chose résonne, je suis là.` +
           SIGNATURE,
       },
       {
         ordre: 3,
         delai_jours: 6,
-        sujet: "Rêver en conscience : vos nuits comme boussole",
+        sujet: "Pendant des années, j'ai cru à une histoire qui n'était pas la mienne…",
         corps:
-          `Bonjour {{prenom}},\n\nChaque nuit, quelque chose en vous continue de travailler. Vos rêves ne sont pas de simples images nocturnes : ils sont un langage, une boussole intérieure qui parle de vos peurs, vos désirs, vos blocages et votre chemin de vie.\n\nAvec ma méthode du Rêve Conscient, vous apprenez à les lire, à les traverser, à en extraire ce qu'ils portent pour vous. Le cercle inclut un espace d'échanges en groupe, des rendez-vous d'analyse en visio, et un apprentissage progressif et personnalisé.\n\nTarif : 70 €/mois — une porte d'entrée accessible pour commencer.\n\nRejoindre le cercle : ${HUB_CERCLES}` +
+          `Bonjour {{prenom}},\n\nPendant toute mon enfance, j'ai cru que j'avais failli mourir à l'âge de 6 ans. Je racontais que j'avais voulu rattraper un bracelet, que j'avais failli tomber du 14e étage. Cette histoire, je l'ai portée en moi comme une évidence. Elle expliquait ma force, mon besoin de contrôle, mon exigence intérieure.\n\nEt puis un jour, à l'âge adulte, tout s'est effondré. Lors du décès de ma mère, j'ai découvert la vérité.\n\nCe n'était pas moi. C'était mon petit frère. Il avait 3 ans, il a failli tomber du 6e étage. Et c'est moi, à 6 ans, qui lui ai sauvé la vie.\n\nMon esprit avait réécrit l'histoire pour survivre émotionnellement. C'est ce que j'appelle une blessure originelle. Nous construisons souvent toute notre zone d'excellence sur un traumatisme non reconnu. Ces schémas peuvent se comprendre, puis se libérer.\n\nMes ressources vous donnent les premiers outils pour commencer : ${EBOOKS}` +
           SIGNATURE,
       },
       {
         ordre: 4,
         delai_jours: 9,
-        sujet: "Ce que vous portez sans le savoir",
+        sujet: "Ce que vous appelez « blocage » n'est pas ce que vous croyez",
         corps:
-          `Bonjour {{prenom}},\n\nCertains schémas ne viennent pas de vous. Ils ont été transmis — par votre famille, votre lignée, vos ancêtres — sans que personne n'ait eu conscience de ce qu'il portait. La peur du manque, la difficulté à recevoir, la fidélité inconsciente à la douleur du clan.\n\nDans le cercle « Se libérer des mémoires transgénérationnelles qui limitent son évolution », nous traversons ensemble ces héritages invisibles pour les libérer consciemment.\n\nDécouvrir le cercle et les prochaines dates : ${HUB_CERCLES}` +
+          `Bonjour {{prenom}},\n\nCe que vous appelez « blocage », « chaos » ou « schéma qui se répète »... n'est pas un défaut. C'est une organisation autour d'une blessure. Une tentative de survie qui a fait son travail — et qui aujourd'hui appelle à être rencontrée autrement.\n\nL'enfant non reconnu devient performant. Celui qui a connu l'abandon devient sauveur. Celui qui a été humilié devient brillant.\n\nCes schémas peuvent se comprendre, puis se libérer.\n\nDécouvrir les ressources : ${EBOOKS}` +
           SIGNATURE,
       },
       {
         ordre: 5,
         delai_jours: 12,
-        sujet: "Pourquoi vous sabotez votre prospérité",
+        sujet: "Rêver en conscience : vos nuits ont quelque chose à vous dire",
         corps:
-          `Bonjour {{prenom}},\n\nEt si votre relation à l'argent était votre plus vieille blessure ? Pas un manque de compétences, pas un manque de travail. Une croyance enfouie. Une fidélité inconsciente à la pauvreté du clan. Une peur de trahir en réussissant.\n\nDans le cercle « L'argent est à mon service et non l'inverse », nous explorons ensemble ces croyances limitantes et les libérons à la racine.\n\nDécouvrir le cercle : ${HUB_CERCLES}` +
+          `Bonjour {{prenom}},\n\nChaque nuit, quelque chose en vous continue de travailler. Vos rêves portent des messages — sur vos peurs, vos désirs, vos blocages, votre chemin.\n\nJ'ai créé des ressources pour commencer à les décoder, même sans accompagnement individuel.\n\nDécouvrir les ressources sur l'analyse des rêves : ${EBOOKS}` +
           SIGNATURE,
       },
       {
         ordre: 6,
-        delai_jours: 16,
-        sujet: "Un chemin à votre mesure existe",
+        delai_jours: 15,
+        sujet: "Des contenus offerts pour nourrir votre chemin",
         corps:
-          `Bonjour {{prenom}},\n\nVoici toutes les portes d'entrée disponibles pour continuer votre chemin :\n\n• Analyse des Rêves — 70 €/mois\n• Se libérer des mémoires transgénérationnelles\n• Sortir de l'abus — se relever sans perdre sa douceur\n• L'argent à mon service\n• Sexualité infinie et consciente : une autre approche du tantra\n• Stages en présentiel — à partir de 550 € (solstices et équinoxes)\n\nTous les cercles et événements : ${HUB_CERCLES}\n\nEt si vous sentez l'appel d'un accompagnement individuel plus profond, écrivez-nous : ${SITE.url}/contact` +
+          `Bonjour {{prenom}},\n\nJe voulais vous partager quelques ressources gratuites pour continuer à avancer :\n\n• L'extrait de mon livre « Fragments de vie amoureuse » (si vous ne l'avez pas encore téléchargé)\n• Mes contenus sur les 4 piliers de transformation\n• Les témoignages de personnes qui ont traversé ce chemin : ${SITE.url}/temoignages\n\nEt pour les ebooks et formations accessibles : ${EBOOKS}` +
+          SIGNATURE,
+      },
+      {
+        ordre: 7,
+        delai_jours: 18,
+        sujet: "Un dernier message avant de faire une pause",
+        corps:
+          `{{prenom}},\n\nJe ne veux pas encombrer votre boîte mail. Mais avant de faire une pause dans nos échanges, je voulais vous laisser ces trois portes d'entrée :\n\n• Ebooks et formations accessibles (moins de 20 €) : ${EBOOKS}\n• Groupes thématiques et événements : ${HUB_CERCLES}\n• Mon site et son contenu gratuit : ${SITE.url}\n\nEt quand vous vous sentirez prêt(e) pour aller plus loin, je serai là.` +
           SIGNATURE,
       },
     ],
@@ -263,9 +273,46 @@ export const SEQUENCES_PAR_DEFAUT: SequenceGraine[] = [
       },
     ],
   },
+  {
+    cle: "suivi_entretien",
+    nom: "Suite d'un entretien",
+    description:
+      "Se déclenche quand le statut d'un contact passe à « Appel fait ». Remercie après l'échange et propose la suite, sans presser.",
+    declencheur: "suivi_entretien",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Merci pour cet échange, {{prenom}}",
+        corps:
+          `Bonjour {{prenom}},\n\nMerci pour le temps que nous venons de partager. Ces échanges comptent : ils posent, souvent, la première pierre d'un vrai mouvement intérieur.\n\nLaissez maintenant décanter ce qui s'est dit. Les choses justes ne se décident pas dans l'instant — elles se déposent, puis elles s'imposent d'elles-mêmes.\n\nSi une question monte d'ici quelques jours, répondez simplement à cet e-mail. Je lis tout.` +
+          SIGNATURE,
+      },
+      {
+        ordre: 2,
+        delai_jours: 4,
+        sujet: "Ce qui se dépose après un premier pas",
+        corps:
+          `Bonjour {{prenom}},\n\nQuelques jours ont passé depuis notre échange. C'est souvent maintenant que les choses prennent leur place — pas pendant, après.\n\nSi vous sentez l'appel de poursuivre, la voie qui vous conviendra dépend de là où vous en êtes : un cercle pour avancer en groupe, un stage pour traverser dans le corps, ou un accompagnement individuel plus profond.\n\nDites-moi simplement ce qui résonne, et nous regarderons ensemble ce qui est juste pour vous.` +
+          SIGNATURE,
+      },
+    ],
+  },
 ];
 
 /** Installe les scénarios manquants. Idempotent, n'écrase jamais l'existant. */
+/**
+ * Séquences dont le contenu a été révisé après un premier semis, à rafraîchir
+ * une fois — mais seulement si elles n'ont pas été retouchées à la main.
+ * La détection se fait sur le sujet de la première étape : tant qu'il vaut
+ * encore l'ancien texte semé, la séquence est réputée intacte et peut être
+ * remplacée. Dès que quelqu'un l'a modifiée depuis le tableau de bord, on n'y
+ * touche plus.
+ */
+const GRAINES_A_RAFRAICHIR: Record<string, string> = {
+  formations: "Votre chemin intérieur mérite d'être entendu",
+};
+
 export async function semerSequences(): Promise<void> {
   const sql = await getDb();
   if (!sql) return;
@@ -278,14 +325,42 @@ export async function semerSequences(): Promise<void> {
         RETURNING id
       `;
       const creee = rows[0];
-      if (!creee) continue;
+
+      if (creee) {
+        for (const e of g.etapes) {
+          await sql`
+            INSERT INTO sequence_etapes (sequence_id, ordre, delai_jours, sujet, corps)
+            VALUES (${creee.id}, ${e.ordre}, ${e.delai_jours}, ${e.sujet}, ${e.corps})
+            ON CONFLICT (sequence_id, ordre) DO NOTHING
+          `;
+        }
+        continue;
+      }
+
+      // La séquence existait déjà : on ne la rafraîchit que si elle est prévue
+      // pour et qu'elle est restée intacte depuis son semis.
+      const ancienSujet = GRAINES_A_RAFRAICHIR[g.cle];
+      if (!ancienSujet) continue;
+
+      const [etat] = await sql<{ id: string; sujet: string | null }[]>`
+        SELECT s.id, e.sujet
+        FROM sequences s
+        LEFT JOIN sequence_etapes e ON e.sequence_id = s.id AND e.ordre = 1
+        WHERE s.cle = ${g.cle}
+      `;
+      if (!etat || etat.sujet !== ancienSujet) continue;
+
+      await sql`DELETE FROM sequence_etapes WHERE sequence_id = ${etat.id}`;
       for (const e of g.etapes) {
         await sql`
           INSERT INTO sequence_etapes (sequence_id, ordre, delai_jours, sujet, corps)
-          VALUES (${creee.id}, ${e.ordre}, ${e.delai_jours}, ${e.sujet}, ${e.corps})
-          ON CONFLICT (sequence_id, ordre) DO NOTHING
+          VALUES (${etat.id}, ${e.ordre}, ${e.delai_jours}, ${e.sujet}, ${e.corps})
         `;
       }
+      await sql`
+        UPDATE sequences SET nom = ${g.nom}, description = ${g.description}
+        WHERE id = ${etat.id}
+      `;
     }
   } catch (e) {
     console.error("[crm] semerSequences:", e);

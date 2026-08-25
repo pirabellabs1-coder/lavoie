@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { COOKIE_SESSION, sessionValide } from "@/lib/crm/auth";
@@ -22,6 +23,18 @@ export async function actionChangerStatut(formData: FormData) {
   const statut = String(formData.get("statut") ?? "");
   if (!id || !estStatutValide(statut)) return;
   await changerStatut(id, statut);
+
+  // Marquer « Appel fait » déclenche la suite d'entretien — une seule fois par
+  // contact (l'inscription ignore les doublons), et le premier e-mail part sans
+  // attendre le passage quotidien du worker.
+  if (statut === "appel") {
+    const { inscrireASequence, traiterEcheances } = await import("@/lib/crm/sequences");
+    await inscrireASequence(id, "suivi_entretien");
+    after(async () => {
+      await traiterEcheances(20);
+    });
+  }
+
   revalidatePath(`/admin/contacts/${id}`);
   revalidatePath("/admin/contacts");
   revalidatePath("/admin");

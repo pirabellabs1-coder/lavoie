@@ -296,6 +296,29 @@ formulaire du site, plus la billetterie externe. La demande entre dans le
 fichier, le secrétariat confirme, et le règlement se fait à part. Plus besoin de
 passer par Eventbrite pour réserver.
 
+## Fin de migration Mailchimp
+
+Les trois dernières automatisations Mailchimp sont traitées :
+
+**Cold Lead Nurturing** — c'est la séquence accessible (« à votre rythme et à
+votre budget »). Elle remplace désormais le contenu de la route ≤ 2 000 €
+(séquence **Formations**), avec les vraies destinations : la boutique
+`formation-untout.com`, les ebooks à moins de 20 € (`bit.ly/4auR80h`) et les
+cercles à 70 €/mois (`bit.ly/4pT5ITp`). Sept e-mails, portés verbatim — dont le
+« Ce que vous appelez blocage n'est pas ce que vous croyez ».
+
+**Post-appointment follow-up** — devient la séquence **Suite d'un entretien**.
+Elle part toute seule quand vous passez un contact à « Appel fait » : un
+remerciement, puis une proposition de suite quelques jours après. (La version
+Mailchimp n'avait jamais servi ; le texte est écrit dans la voix de Domoïna.)
+
+**Appointment booking confirmation & reminder** — déjà couvert nativement, en
+mieux : la demande de place envoie un accusé de réception, la logistique part
+sept jours avant le stage, et le rendez-vous est rappelé la veille. Rien à
+migrer.
+
+Toutes les séquences se modifient depuis l'onglet **Séquences**.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,
