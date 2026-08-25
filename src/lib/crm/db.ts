@@ -201,6 +201,21 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS journal (
+      id         BIGSERIAL PRIMARY KEY,
+      -- Qui : identifiant du compte, ou 0 pour la clé de secours.
+      acteur_id  TEXT NOT NULL,
+      acteur_nom TEXT NOT NULL,
+      action     TEXT NOT NULL,
+      cible      TEXT,
+      details    TEXT,
+      ip         TEXT,
+      cree_le    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS idx_journal_date ON journal (cree_le DESC)`;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS sauvegardes (
       id         BIGSERIAL PRIMARY KEY,
       -- Empreinte du contenu : deux jours identiques ne repartent pas deux fois.

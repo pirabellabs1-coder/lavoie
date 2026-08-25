@@ -25,7 +25,8 @@ type Icone =
   | "sequences"
   | "campagnes"
   | "envois"
-  | "comptes";
+  | "comptes"
+  | "journal";
 
 function Trait({ nom }: { nom: Icone }) {
   const chemins: Record<Icone, React.ReactNode> = {
@@ -98,6 +99,12 @@ function Trait({ nom }: { nom: Icone }) {
         <path d="M5 20c.7-3.7 3.4-5.6 7-5.6s6.3 1.9 7 5.6" />
       </>
     ),
+    journal: (
+      <>
+        <path d="M5 4h11l3 3v13H5z" />
+        <path d="M8.5 10h7M8.5 13.5h7M8.5 17h4" />
+      </>
+    ),
   };
 
   return (
@@ -149,7 +156,10 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
   },
   {
     titre: "Réglages",
-    entrees: [{ href: "/admin/comptes", label: "Comptes", icone: "comptes", droit: "comptes" }],
+    entrees: [
+      { href: "/admin/comptes", label: "Comptes", icone: "comptes", droit: "comptes" },
+      { href: "/admin/journal", label: "Journal", icone: "journal", droit: "comptes" },
+    ],
   },
 ];
 

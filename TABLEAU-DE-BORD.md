@@ -319,6 +319,33 @@ migrer.
 
 Toutes les séquences se modifient depuis l'onglet **Séquences**.
 
+## Le journal
+
+Onglet **Journal**, réservé au propriétaire. Il enregistre les actions qui
+comptent : connexions, changements de statut, export du fichier, sauvegardes
+téléchargées, propositions préparées et envoyées, campagnes créées, comptes
+gérés, et droits RGPD exercés. À côté de chaque entrée : qui, quoi, quand. Ce
+n'est pas là pour surveiller le travail courant, mais pour pouvoir répondre à
+« qui a fait ça » le jour où la question se pose.
+
+## Le RGPD en libre-service
+
+Une page publique **/mes-donnees** (lien en pied de site) permet à n'importe qui
+d'exercer ses droits sans vous solliciter :
+
+1. La personne saisit son adresse. Un lien personnel, valable une heure, part
+   vers cette boîte — et seulement si un contact existe (on ne révèle jamais qui
+   est dans le fichier).
+2. Depuis ce lien, elle voit ce que vous savez d'elle, peut **télécharger toutes
+   ses données** (droit d'accès) ou les **effacer définitivement** (droit à
+   l'oubli).
+
+L'effacement supprime la fiche, la chronologie, les réponses au questionnaire,
+les inscriptions et les propositions ; les témoignages déjà publiés restent en
+ligne mais détachés de l'identité. Chaque accès et chaque effacement laisse une
+trace dans le journal. Cela couvre l'obligation légale de répondre aux demandes
+d'accès et de suppression — automatiquement, et dans les délais.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,

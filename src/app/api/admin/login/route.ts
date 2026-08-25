@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { COOKIE_SESSION, authConfiguree, creerSession, motDePasseValide } from "@/lib/crm/auth";
 import { authentifier } from "@/lib/crm/utilisateurs";
+import { tracer } from "@/lib/crm/journal";
 
 /** Petit garde-fou anti force brute, par instance. */
 const tentatives = new Map<string, { n: number; jusqua: number }>();
@@ -45,9 +46,13 @@ export async function POST(req: Request) {
   // Un compte nominatif d'abord ; à défaut, la clé de secours ADMIN_PASSWORD,
   // qui reste le seul moyen d'entrer si la base est momentanément injoignable.
   let utilisateurId: string | null = null;
+  let nomActeur = "Accès principal";
   if (email) {
     const compte = await authentifier(email, motDePasse);
-    if (compte) utilisateurId = compte.id;
+    if (compte) {
+      utilisateurId = compte.id;
+      nomActeur = compte.nom;
+    }
   }
   if (!utilisateurId && !(await motDePasseValide(motDePasse))) {
     const n = (etat && Date.now() < etat.jusqua ? etat.n : 0) + 1;
@@ -68,6 +73,13 @@ export async function POST(req: Request) {
     path: "/",
     maxAge: session.maxAge,
   });
+
+  await tracer(
+    { id: utilisateurId ?? "0", nom: nomActeur, role: "", principal: !utilisateurId },
+    "connexion",
+    null,
+    utilisateurId ? null : "via le mot de passe principal",
+  );
 
   return Response.json({ ok: true });
 }

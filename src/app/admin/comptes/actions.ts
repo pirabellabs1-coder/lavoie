@@ -9,6 +9,7 @@ import {
   creerUtilisateur,
   estRoleValide,
 } from "@/lib/crm/utilisateurs";
+import { tracer } from "@/lib/crm/journal";
 
 /**
  * Toutes ces actions sont réservées au propriétaire. La vérification est refaite
@@ -17,7 +18,8 @@ import {
  */
 
 export async function actionCreerCompte(donnees: FormData) {
-  if (!(await identiteAvecDroit("comptes"))) return;
+  const qui = await identiteAvecDroit("comptes");
+  if (!qui) return;
 
   const email = String(donnees.get("email") ?? "");
   const nom = String(donnees.get("nom") ?? "");
@@ -26,6 +28,7 @@ export async function actionCreerCompte(donnees: FormData) {
   if (!estRoleValide(role)) return;
 
   const resultat = await creerUtilisateur({ email, nom, motDePasse, role });
+  if (resultat.ok) await tracer(qui, "compte_cree", `${nom} (${email})`, role);
   revalidatePath("/admin/comptes");
 
   // L'erreur repasse par l'URL : la page reste servie par le serveur, sans état
@@ -50,17 +53,20 @@ export async function actionBasculerCompte(donnees: FormData) {
   }
 
   await basculerUtilisateur(id, actif);
+  await tracer(qui, "compte_bascule", `compte ${id}`, actif ? "accès rendu" : "accès retiré");
   revalidatePath("/admin/comptes");
 }
 
 export async function actionChangerMotDePasse(donnees: FormData) {
-  if (!(await identiteAvecDroit("comptes"))) return;
+  const qui = await identiteAvecDroit("comptes");
+  if (!qui) return;
 
   const id = String(donnees.get("id") ?? "");
   const motDePasse = String(donnees.get("motDePasse") ?? "");
   if (!id) return;
 
   const ok = await changerMotDePasse(id, motDePasse);
+  if (ok) await tracer(qui, "compte_mdp", `compte ${id}`);
   revalidatePath("/admin/comptes");
   if (!ok) {
     redirect(

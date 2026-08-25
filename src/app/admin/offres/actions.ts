@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { identiteAvecDroit } from "@/lib/crm/session";
 import { annulerOffre, creerOffre, enCentimes, envoyerOffre } from "@/lib/crm/offres";
+import { tracer } from "@/lib/crm/journal";
 
 /**
  * Les propositions engagent de l'argent et partent au nom de Domoïna : elles
@@ -11,7 +12,8 @@ import { annulerOffre, creerOffre, enCentimes, envoyerOffre } from "@/lib/crm/of
  */
 
 export async function actionCreerOffre(donnees: FormData) {
-  if (!(await identiteAvecDroit("offres"))) return;
+  const qui = await identiteAvecDroit("offres");
+  if (!qui) return;
 
   const contactId = String(donnees.get("contact") ?? "");
   const intitule = String(donnees.get("intitule") ?? "").trim().slice(0, 200);
@@ -37,6 +39,7 @@ export async function actionCreerOffre(donnees: FormData) {
     message,
     valideJusquAu: validite || null,
   });
+  if (id) await tracer(qui, "offre_creee", intitule);
 
   if (id && envoyer) {
     const parti = await envoyerOffre(id);
@@ -55,12 +58,14 @@ export async function actionCreerOffre(donnees: FormData) {
 }
 
 export async function actionEnvoyerOffre(donnees: FormData) {
-  if (!(await identiteAvecDroit("offres"))) return;
+  const qui = await identiteAvecDroit("offres");
+  if (!qui) return;
   const id = String(donnees.get("id") ?? "");
   const retour = String(donnees.get("retour") ?? "/admin/offres");
   if (!id) return;
 
   const parti = await envoyerOffre(id);
+  if (parti) await tracer(qui, "offre_envoyee", `offre ${id}`);
   revalidatePath("/admin/offres");
   revalidatePath(retour);
   redirect(

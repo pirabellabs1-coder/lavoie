@@ -7,6 +7,8 @@ import { COOKIE_SESSION, sessionValide } from "@/lib/crm/auth";
 import { changerStatut, enregistrerNote, estStatutValide } from "@/lib/crm/contacts";
 import { definirRdv } from "@/lib/crm/questionnaires";
 import { depuisParis } from "@/lib/heure";
+import { identite } from "@/lib/crm/session";
+import { tracer } from "@/lib/crm/journal";
 
 /**
  * Les Server Actions sont des points d'entrée publics : la session est
@@ -23,6 +25,7 @@ export async function actionChangerStatut(formData: FormData) {
   const statut = String(formData.get("statut") ?? "");
   if (!id || !estStatutValide(statut)) return;
   await changerStatut(id, statut);
+  await tracer(await identite(), "statut", `contact ${id}`, statut);
 
   // Marquer « Appel fait » déclenche la suite d'entretien — une seule fois par
   // contact (l'inscription ignore les doublons), et le premier e-mail part sans

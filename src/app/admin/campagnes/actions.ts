@@ -11,6 +11,7 @@ import {
   type Segment,
 } from "@/lib/crm/campagnes";
 import { depuisParis } from "@/lib/heure";
+import { tracer } from "@/lib/crm/journal";
 
 async function exigerSession(): Promise<boolean> {
   return (await identiteAvecDroit("campagnes")) !== null;
@@ -53,7 +54,8 @@ export async function actionCompter(donnees: FormData) {
 }
 
 export async function actionCreerCampagne(donnees: FormData) {
-  if (!(await exigerSession())) return;
+  const qui = await identiteAvecDroit("campagnes");
+  if (!qui) return;
 
   const sujet = String(donnees.get("sujet") ?? "").trim().slice(0, 200);
   const corps = String(donnees.get("corps") ?? "").trim().slice(0, 20000);
@@ -69,6 +71,7 @@ export async function actionCreerCampagne(donnees: FormData) {
     segment: lireSegment(donnees),
     programmeeLe,
   });
+  if (id) await tracer(qui, "campagne_creee", sujet);
 
   // Une campagne immédiate ne doit pas attendre le passage quotidien du worker.
   if (id && !programmeeLe) {

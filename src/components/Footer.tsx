@@ -171,6 +171,7 @@ export default function Footer() {
             <span style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
               <Link href="/mentions-legales">Mentions légales</Link>
               <Link href="/politique-confidentialite">Confidentialité</Link>
+              <Link href="/mes-donnees">Mes données</Link>
               <Link href="/cadre-deontologique">Déontologie</Link>
             </span>
           </div>
