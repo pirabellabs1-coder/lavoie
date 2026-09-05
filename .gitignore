@@ -33,11 +33,33 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# vercel
-.vercel
+# vercel — le dossier de liaison, et ses copies de sauvegarde
+.vercel*
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
+# Documents et images de travail déposés à la racine — rapports, CV, photos,
+# PDF clients. Ils n'ont rien à faire dans un dépôt public : les images du site
+# vivent dans public/, les documents éditoriaux dans src/lib/. La règle ne vaut
+# qu'à la racine (le « / » initial), pour ne jamais masquer un vrai fichier du
+# projet. Un fichier légitime s'ajoute malgré tout avec « git add -f ».
+/*.pdf
+/*.doc
+/*.docx
+/*.odt
+/*.xls
+/*.xlsx
+/*.ppt
+/*.pptx
+/*.csv
+/*.zip
+/*.jpg
+/*.jpeg
+/*.png
+/*.gif
+/*.webp
+/*.heic
+/*.mp4
+/*.mov
