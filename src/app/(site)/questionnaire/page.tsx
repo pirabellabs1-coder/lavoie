@@ -4,7 +4,7 @@ import FormulaireQuestionnaire from "@/components/FormulaireQuestionnaire";
 export const metadata: Metadata = {
   title: "Préparation du premier rendez-vous",
   description:
-    "Le questionnaire à remplir avant tout entretien avec Domoïna. Vos réponses déterminent la suite du parcours.",
+    "Le premier pas de la préparation de votre rendez-vous avec Domoïna. Un quart d'heure pour tirer le meilleur de votre premier entretien.",
   // Page atteinte par lien personnel, pas par une recherche.
   robots: { index: false, follow: false },
   alternates: { canonical: "/questionnaire" },
@@ -52,9 +52,9 @@ export default function QuestionnairePage() {
               margin: "0 auto",
             }}
           >
-            Une trentaine de questions, environ quinze minutes. Prenez-les au sérieux :
-            elles servent à savoir si un entretien avec Domoïna est le pas juste pour
-            vous maintenant, ou si un autre chemin vous conviendrait mieux.
+            Comptez un quart d&apos;heure. Ce questionnaire est le premier pas de la
+            préparation de votre rendez-vous : il vous permet d&apos;arriver au clair sur
+            ce qui vous amène, et de tirer le meilleur de ce premier entretien.
           </p>
         </div>
       </section>

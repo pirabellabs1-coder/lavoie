@@ -125,7 +125,7 @@ export default function ContactPage() {
             <Link href="/questionnaire" style={{ color: "var(--blue)", textDecoration: "underline" }}>
               questionnaire de préparation
             </Link>{" "}
-            : une quinzaine de minutes qui déterminent la suite du parcours.
+            : un quart d&apos;heure pour tirer le meilleur de votre premier rendez-vous.
           </p>
         </div>
       </section>
