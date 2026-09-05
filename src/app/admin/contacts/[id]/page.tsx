@@ -185,7 +185,13 @@ export default async function FicheContact({
 
             {automate && !contact.desabonne_le && (
               <form action={actionInscrireContact} className="fiche-seq-ajout">
-                <select name="cle" className="adm-champ" required defaultValue="">
+                <select
+                  name="cle"
+                  className="adm-champ"
+                  required
+                  defaultValue=""
+                  aria-label="Catégorie de personnes à laquelle ajouter ce contact"
+                >
                   <option value="" disabled>
                     Ajouter à une catégorie…
                   </option>

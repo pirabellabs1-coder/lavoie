@@ -413,11 +413,13 @@ confirmation est écartée elle aussi — une case cochée par vous ne remplace 
 son clic ; une personne déjà en cours de séquence n'est pas remise au début
 (une séquence qu'elle a terminée, si — c'est bien le but quand on la rajoute) ;
 une séquence en pause, absente ou vidée de ses e-mails refuse les ajouts au
-lieu de les faire attendre dans le vide. Dans tous ces cas, le compte rendu
-dit exactement combien de personnes ont été écartées, et pourquoi.
+lieu de les faire attendre dans le vide. Pour une liste collée, le compte rendu
+dit combien de personnes ont été écartées et pourquoi ; pour un ajout en masse,
+les écartés le sont par le ciblage lui-même, avant même d'être comptés.
 
-Les premiers e-mails d'une liste saisie à la main partent dans la foulée. Pour
-un ajout en masse, les envois suivent le rythme du worker : 200 par jour, à 8 h.
+Les vingt premiers e-mails d'une liste saisie à la main partent dans la foulée ;
+le reste, comme les ajouts en masse, suit le rythme du worker : 200 par jour,
+à 8 h.
 
 ## Ce que fait le tableau de bord
 

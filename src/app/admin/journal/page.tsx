@@ -20,6 +20,10 @@ const LIBELLES: Record<string, string> = {
   compte_mdp: "Mot de passe d'un compte changé",
   rgpd_acces: "Accès RGPD (téléchargement)",
   rgpd_effacement: "Effacement RGPD",
+  sequence_ajout_manuel: "Personnes ajoutées à la main dans une séquence",
+  sequence_ajout_masse: "Ajout en masse dans une séquence",
+  sequence_ajout_fiche: "Personne ajoutée à une séquence depuis sa fiche",
+  sequence_retrait: "Personne retirée d'une séquence",
 };
 
 type Params = Promise<Record<string, string | string[] | undefined>>;

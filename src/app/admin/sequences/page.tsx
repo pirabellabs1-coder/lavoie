@@ -15,6 +15,9 @@ import {
 } from "./actions";
 
 export const dynamic = "force-dynamic";
+// Un collage de cinquante personnes enchaîne quelques centaines d'allers-retours
+// avec la base, puis les premiers envois : la minute est la marge nécessaire.
+export const maxDuration = 60;
 
 type Params = Promise<Record<string, string | string[] | undefined>>;
 
