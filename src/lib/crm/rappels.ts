@@ -23,6 +23,8 @@ type Chiffres = {
   eligibles: number;
   prerequis: number;
   rdv: number;
+  /** Nombre de passages du worker sur la semaine — six ou sept, normalement. */
+  passages: number;
 };
 
 /**
@@ -54,7 +56,8 @@ export async function envoyerRapportHebdomadaire(): Promise<boolean> {
            AND eligible)::int AS eligibles,
         (SELECT COUNT(*) FROM questionnaires WHERE prerequis_le >= NOW() - INTERVAL '7 days')::int AS prerequis,
         (SELECT COUNT(*) FROM questionnaires WHERE rdv_le > NOW()
-           AND rdv_le < NOW() + INTERVAL '7 days' AND annule_le IS NULL)::int AS rdv
+           AND rdv_le < NOW() + INTERVAL '7 days' AND annule_le IS NULL)::int AS rdv,
+        (SELECT COUNT(*) FROM passages WHERE cree_le >= NOW() - INTERVAL '7 days')::int AS passages
     `;
     if (!ligne) return false;
     c = ligne;
@@ -78,7 +81,9 @@ export async function envoyerRapportHebdomadaire(): Promise<boolean> {
       `· ${c.prerequis} personnes ont confirmé leurs prérequis\n` +
       `· ${c.rdv} rendez-vous prévus dans les sept prochains jours\n\n` +
       `E-mails\n` +
-      `· ${c.envoyes} partis, ${tauxOuverture} % ouverts\n\n` +
+      `· ${c.envoyes} partis, ${tauxOuverture} % ouverts\n` +
+      `· le worker est passé ${c.passages} fois cette semaine` +
+      `${c.passages < 6 ? " — il devrait passer chaque matin" : ""}\n\n` +
       `Le détail est dans le tableau de bord : ${SITE.url}/admin`,
   });
 

@@ -5,6 +5,7 @@ import { sauvegardeQuotidienne } from "@/lib/crm/sauvegarde";
 import { relancerOffres } from "@/lib/crm/offres";
 import { accompagnerLesStages } from "@/lib/crm/stages";
 import { reveillerLesDormants } from "@/lib/crm/reveil";
+import { enregistrerPassage } from "@/lib/crm/passages";
 
 /**
  * Worker des séquences — appelé par Vercel Cron (voir vercel.json).
@@ -37,6 +38,23 @@ export async function GET(req: Request) {
   // En dernier : la sauvegarde reflète ainsi tout ce que ce passage a produit.
   const sauvegarde = await sauvegardeQuotidienne();
 
+  const dureeMs = Date.now() - debut;
+
+  // Le témoin : sans cette ligne, un worker qui cesse de passer ne se remarque
+  // que le jour où quelqu'un s'étonne du silence.
+  await enregistrerPassage({
+    dureeMs,
+    ok: resultat.echecs === 0,
+    resume: [
+      `${resultat.envoyes} e-mail(s) de séquence`,
+      `${campagnes.envoyes} de campagne`,
+      `${stages.logistique} logistique, ${stages.relances} relance(s), ${stages.suites} suite(s)`,
+      `${annules} rendez-vous annulé(s)`,
+      `${reveil.reveils} réveil(s), ${reveil.sorties} sortie(s)`,
+      resultat.echecs ? `${resultat.echecs} échec(s)` : "aucun échec",
+    ].join(" · "),
+  });
+
   return Response.json({
     ok: true,
     ...resultat,
@@ -47,6 +65,6 @@ export async function GET(req: Request) {
     reveil,
     rapport,
     sauvegarde,
-    duree_ms: Date.now() - debut,
+    duree_ms: dureeMs,
   });
 }

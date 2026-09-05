@@ -12,6 +12,7 @@ import {
 import { exigerIdentite } from "@/lib/crm/session";
 import { peut } from "@/lib/crm/utilisateurs";
 import { derniereSauvegarde } from "@/lib/crm/sauvegarde";
+import { dernierPassage, enSilence } from "@/lib/crm/passages";
 import { enClair } from "@/lib/heure";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,8 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
   const stats = await statistiques();
   const derniers = await listerContacts({ limite: 8 });
   const sauvegarde = peut(qui.role, "sauvegarde") ? await derniereSauvegarde() : null;
+  const passage = await dernierPassage();
+  const silencieux = isDbConfigured() && enSilence(passage);
 
   if (!isDbConfigured() || !stats) {
     return (
@@ -89,6 +92,26 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
           Cette page est réservée. Si vous pensez qu&apos;elle devrait vous être ouverte,
           demandez à Domoïna de changer votre rôle.
         </div>
+      )}
+
+      {/* Le témoin du worker : tout ce qui part tout seul dépend de lui. */}
+      {silencieux ? (
+        <div className="adm-alerte" style={{ borderColor: "var(--adm-bad)" }}>
+          <strong>Rien ne part plus automatiquement.</strong> Le dernier passage du worker
+          remonte à {passage ? enClair(passage.cree_le) : "trop longtemps"} — il devrait
+          tourner chaque matin à 8 h. Vérifiez les tâches planifiées et la variable{" "}
+          <code>CRON_SECRET</code> dans les réglages Vercel : tant qu&apos;il ne passe pas,
+          aucune séquence, aucune campagne et aucun rappel ne partent.
+        </div>
+      ) : passage ? (
+        <p className="adm-temoin">
+          Worker passé {enClair(passage.cree_le)} · {passage.resume}
+        </p>
+      ) : (
+        <p className="adm-temoin en-attente">
+          Aucun passage du worker enregistré pour l&apos;instant — le premier a lieu demain
+          matin à 8 h.
+        </p>
       )}
 
       <div className="adm-grille adm-g4" style={{ marginBottom: 14 }}>

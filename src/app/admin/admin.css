@@ -374,6 +374,17 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-btn.petit { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
 .adm-btn.danger { background: var(--adm-bad); border-color: var(--adm-bad); }
 
+/* Le témoin discret du worker, au-dessus des chiffres. */
+.adm-temoin {
+  margin: 0 0 14px; font-size: 12px; color: var(--adm-mute);
+  display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;
+}
+.adm-temoin::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--adm-ok); flex: none;
+}
+.adm-temoin.en-attente::before { background: var(--adm-line-fort); }
+
 /* L'aperçu d'un e-mail, dans son propre bac à sable. */
 .apercu-mail {
   width: 100%; height: 460px; border: 1px solid var(--adm-line-fort);

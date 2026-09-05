@@ -289,6 +289,18 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS campagne_id BIGINT REFERENCES campagnes(id) ON DELETE SET NULL
   `;
 
+  // Le témoin du worker : une ligne par passage, pour voir tout de suite le
+  // jour où il cesse de passer (voir `passages.ts`).
+  await sql`
+    CREATE TABLE IF NOT EXISTS passages (
+      id       BIGSERIAL PRIMARY KEY,
+      duree_ms INT NOT NULL DEFAULT 0,
+      ok       BOOLEAN NOT NULL DEFAULT TRUE,
+      resume   TEXT,
+      cree_le  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
   // Le suivi d'une place : la relance d'une demande qui traîne, et l'entrée
   // dans la séquence d'après-stage. Deux dates, pour n'agir qu'une fois.
   await sql`

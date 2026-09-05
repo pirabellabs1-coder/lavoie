@@ -328,6 +328,22 @@ vérifié (Resend) au lieu d'une adresse Gmail, ce qui améliore la délivrabili
 
 Tout se modifie depuis l'onglet **Séquences**, comme les autres.
 
+## Le témoin du worker
+
+Tout ce qui part tout seul — séquences, campagnes, relances, logistique des
+stages, réveil des dormants, sauvegarde — dépend d'un seul appel planifié, à
+8 h. S'il cesse, rien ne casse bruyamment : les e-mails s'arrêtent simplement
+de partir. Une variable `CRON_SECRET` recopiée de travers ou un changement de
+plan chez l'hébergeur suffisent.
+
+Chaque passage laisse donc une trace, et l'accueil du tableau de bord affiche
+la dernière : une ligne discrète avec ce qui est parti, ou **un bandeau rouge
+au-delà de 36 heures de silence**. Le point du lundi rappelle aussi combien de
+fois le worker est passé dans la semaine — six ou sept, normalement.
+
+Ce n'est pas de la surveillance : personne n'est réveillé la nuit. C'est un
+témoin, à l'endroit où vous regardez de toute façon.
+
 ## Remettre le fichier à zéro
 
 Onglet **Comptes**, tout en bas, encadré rouge. Il retire d'un coup les
