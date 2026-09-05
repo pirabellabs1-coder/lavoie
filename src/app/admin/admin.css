@@ -374,6 +374,12 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-btn.petit { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
 .adm-btn.danger { background: var(--adm-bad); border-color: var(--adm-bad); }
 
+/* L'aperçu d'un e-mail, dans son propre bac à sable. */
+.apercu-mail {
+  width: 100%; height: 460px; border: 1px solid var(--adm-line-fort);
+  border-radius: 8px; background: #fff; display: block;
+}
+
 /* La zone rouge : ce qui ne se rattrape pas doit se voir de loin. */
 .zone-rouge { border: 1px solid var(--adm-bad); }
 .zone-rouge .adm-titre { color: var(--adm-bad); }

@@ -12,6 +12,7 @@ import {
   actionAjouterPersonnes,
   actionBasculer,
   actionCompterCible,
+  actionEssaiEtape,
   actionMajEtape,
 } from "./actions";
 
@@ -183,7 +184,7 @@ export default async function SequencesPage({ searchParams }: { searchParams: Pa
 
                 {ouvert && fait && (
                   <div className="adm-alerte" style={{ marginBottom: 12 }}>
-                    <strong>Ajout effectué&nbsp;:</strong> {fait}.
+                    {fait}
                   </div>
                 )}
                 {ouvert && souci && (
@@ -419,6 +420,7 @@ export default async function SequencesPage({ searchParams }: { searchParams: Pa
                     {s.etapes.map((e) => (
                       <form key={e.id} action={actionMajEtape} className="adm-carte" style={{ background: "var(--adm-surface-2)" }}>
                         <input type="hidden" name="id" value={e.id} />
+                        <input type="hidden" name="cle" value={s.cle} />
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
                           <strong style={{ fontSize: 13 }}>E-mail {e.ordre}</strong>
                           <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12.5, color: "var(--adm-mute)" }}>
@@ -439,9 +441,19 @@ export default async function SequencesPage({ searchParams }: { searchParams: Pa
                         <input name="sujet" className="adm-champ" defaultValue={e.sujet} style={{ marginBottom: 10 }} />
                         <label className="adm-label">Message</label>
                         <textarea name="corps" className="adm-champ" defaultValue={e.corps} style={{ minHeight: 150 }} />
-                        <button type="submit" className="adm-btn petit" style={{ marginTop: 10 }}>
-                          Enregistrer cet e-mail
-                        </button>
+                        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
+                          <button type="submit" className="adm-btn petit">
+                            Enregistrer cet e-mail
+                          </button>
+                          <button
+                            type="submit"
+                            formAction={actionEssaiEtape}
+                            formNoValidate
+                            className="adm-btn fantome petit"
+                          >
+                            M&apos;envoyer un essai
+                          </button>
+                        </div>
                       </form>
                     ))}
                   </div>

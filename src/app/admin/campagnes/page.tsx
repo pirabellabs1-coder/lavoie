@@ -11,8 +11,15 @@ import {
   type Segment,
 } from "@/lib/crm/campagnes";
 import { ETATS_PARTICIPATION, listerStages } from "@/lib/crm/stages";
+import { adresseParDefaut, construireApercu, PRENOM_EXEMPLE } from "@/lib/crm/essai";
 import { enClair } from "@/lib/heure";
-import { actionArreterCampagne, actionCompter, actionCreerCampagne } from "./actions";
+import {
+  actionApercuMail,
+  actionArreterCampagne,
+  actionCompter,
+  actionCreerCampagne,
+  actionEnvoyerEssai,
+} from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -62,6 +69,22 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
     stage_etats: etatsChoisis,
   });
   const nombre = apercu && branchee ? await compterSegment(segment) : null;
+
+  // L'aperçu de l'e-mail lui-même : même chemin que l'envoi réel, rendu dans
+  // une iframe cloisonnée plutôt qu'injecté dans la page.
+  const essaiParDefaut = await adresseParDefaut();
+  const essaiOk = premier(params.essai_ok);
+  const souci = premier(params.souci);
+  const sujetSaisi = premier(params.sujet);
+  const corpsSaisi = premier(params.corps);
+  const apercuMail =
+    premier(params.voir) === "1" && sujetSaisi && corpsSaisi
+      ? construireApercu({
+          sujet: sujetSaisi,
+          corps: corpsSaisi,
+          email: premier(params.essai) || essaiParDefaut,
+        })
+      : null;
 
   return (
     <Cadre
@@ -248,6 +271,72 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
               pour ce ciblage : {decrireSegment(segment, titresDesStages)}.
             </div>
           )}
+
+          {/* ─── Voir avant d'envoyer ─── */}
+          <fieldset
+            id="apercu"
+            style={{ border: "1px solid var(--adm-line)", borderRadius: 8, padding: 16 }}
+          >
+            <legend style={{ fontSize: 12, color: "var(--adm-mute)", padding: "0 6px" }}>
+              Avant d&apos;envoyer
+            </legend>
+
+            {essaiOk && (
+              <div className="adm-alerte" style={{ margin: "0 0 12px" }}>
+                L&apos;essai est parti à <strong>{essaiOk}</strong>. Son objet est préfixé de
+                « [Essai] » : ce n&apos;est pas ce que recevront les destinataires.
+              </div>
+            )}
+            {souci && (
+              <div className="adm-alerte" style={{ margin: "0 0 12px" }}>
+                {souci}
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
+              <button
+                type="submit"
+                formAction={actionApercuMail}
+                formNoValidate
+                className="adm-btn fantome petit"
+              >
+                Voir l&apos;aperçu
+              </button>
+              <label style={{ flex: 1, minWidth: 220 }}>
+                <span className="adm-label">M&apos;envoyer un essai à</span>
+                <input
+                  type="email"
+                  name="essai"
+                  className="adm-champ"
+                  defaultValue={premier(params.essai) || essaiParDefaut}
+                />
+              </label>
+              <button
+                type="submit"
+                formAction={actionEnvoyerEssai}
+                formNoValidate
+                className="adm-btn fantome petit"
+              >
+                Envoyer l&apos;essai
+              </button>
+            </div>
+
+            {apercuMail && (
+              <div style={{ marginTop: 14 }}>
+                <p style={{ margin: "0 0 8px", fontSize: 12.5, color: "var(--adm-mute)" }}>
+                  Objet : <strong style={{ color: "var(--adm-ink)" }}>{apercuMail.sujet}</strong>
+                  {" · "}
+                  <code>{"{{prenom}}"}</code> est remplacé ici par « {PRENOM_EXEMPLE} ».
+                </p>
+                <iframe
+                  title="Aperçu de l'e-mail"
+                  srcDoc={apercuMail.html}
+                  sandbox=""
+                  className="apercu-mail"
+                />
+              </div>
+            )}
+          </fieldset>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button type="submit" formAction={actionCompter} className="adm-btn fantome">

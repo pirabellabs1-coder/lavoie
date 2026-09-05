@@ -31,15 +31,12 @@ function lireSegment(donnees: FormData): Segment {
 }
 
 /**
- * « Compter les destinataires » : on repasse par l'URL plutôt que par un état
- * client, ce qui rend le compte partageable et le formulaire rechargeable.
+ * Le formulaire tel qu'il repart dans l'URL : rien n'est perdu quand la page
+ * se recharge pour afficher un compte, un aperçu ou un essai.
  */
-export async function actionCompter(donnees: FormData) {
-  if (!(await exigerSession())) return;
+function paramsDuFormulaire(donnees: FormData): URLSearchParams {
   const segment = lireSegment(donnees);
-
   const params = new URLSearchParams();
-  params.set("apercu", "1");
   const sujet = String(donnees.get("sujet") ?? "");
   const corps = String(donnees.get("corps") ?? "");
   if (sujet) params.set("sujet", sujet);
@@ -53,8 +50,57 @@ export async function actionCompter(donnees: FormData) {
   for (const e of segment.stage_etats ?? []) params.append("stage_etats", e);
   const quand = String(donnees.get("quand") ?? "");
   if (quand) params.set("quand", quand);
+  const essai = String(donnees.get("essai") ?? "");
+  if (essai) params.set("essai", essai);
+  return params;
+}
 
+/**
+ * « Compter les destinataires » : on repasse par l'URL plutôt que par un état
+ * client, ce qui rend le compte partageable et le formulaire rechargeable.
+ */
+export async function actionCompter(donnees: FormData) {
+  if (!(await exigerSession())) return;
+  const params = paramsDuFormulaire(donnees);
+  params.set("apercu", "1");
   redirect(`/admin/campagnes?${params.toString()}`);
+}
+
+/** « Voir l'aperçu » : le même chemin que l'envoi, mais rendu dans la page. */
+export async function actionApercuMail(donnees: FormData) {
+  if (!(await exigerSession())) return;
+  const params = paramsDuFormulaire(donnees);
+  params.set("voir", "1");
+  redirect(`/admin/campagnes?${params.toString()}#apercu`);
+}
+
+/**
+ * « M'envoyer un essai » : un seul e-mail, à une seule adresse, marqué comme
+ * tel dans son objet. C'est le dernier filet avant un envoi de masse.
+ */
+export async function actionEnvoyerEssai(donnees: FormData) {
+  const qui = await identiteAvecDroit("campagnes");
+  if (!qui) return;
+
+  const params = paramsDuFormulaire(donnees);
+  const sujet = String(donnees.get("sujet") ?? "").trim().slice(0, 200);
+  const corps = String(donnees.get("corps") ?? "").trim().slice(0, 20000);
+  const destinataire = String(donnees.get("essai") ?? "").trim().toLowerCase();
+
+  if (!sujet || !corps) {
+    params.set("souci", "Écrivez l'objet et le message avant de demander un essai.");
+    redirect(`/admin/campagnes?${params.toString()}#apercu`);
+  }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(destinataire)) {
+    params.set("souci", "Indiquez une adresse valide pour recevoir l'essai.");
+    redirect(`/admin/campagnes?${params.toString()}#apercu`);
+  }
+
+  const { envoyerEssai } = await import("@/lib/crm/essai");
+  const erreur = await envoyerEssai({ sujet, corps, destinataire });
+  if (erreur) params.set("souci", `L'essai n'est pas parti : ${erreur}`);
+  else params.set("essai_ok", destinataire);
+  redirect(`/admin/campagnes?${params.toString()}#apercu`);
 }
 
 export async function actionCreerCampagne(donnees: FormData) {

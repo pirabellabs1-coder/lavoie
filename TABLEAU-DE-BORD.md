@@ -107,6 +107,12 @@ Ce même critère existe dans l'onglet **Séquences**, panneau « Ajouter des
 personnes » : de quoi faire entrer d'un coup les venus d'un stage dans une
 séquence — un suivi, une invitation au suivant.
 
+**Regardez l'e-mail avant qu'il parte.** L'encadré « Avant d'envoyer » montre le
+message tel qu'il arrivera — gabarit, liens, prénom remplacé —, et l'envoie à
+votre adresse en un clic. L'objet de cet essai est préfixé de « [Essai] », donc
+aucun risque de le confondre avec un vrai départ. Le même bouton existe sur
+chaque e-mail des séquences, dans l'onglet Séquences.
+
 **Comptez toujours les destinataires avant d'envoyer.** Le bouton est là pour
 ça, et un envoi de masse ne se rattrape pas. Pour un premier essai, ciblez une
 campagne d'origine qui n'existe pas : vous verrez le mécanisme sans écrire à

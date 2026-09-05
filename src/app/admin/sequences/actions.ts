@@ -31,6 +31,33 @@ export async function actionBasculer(formData: FormData) {
   revalidatePath("/admin/sequences");
 }
 
+/**
+ * « M'envoyer un essai » : le texte tel qu'il est dans le formulaire, envoyé à
+ * l'adresse du compte connecté. Ce qu'on lit dans un champ de saisie n'est pas
+ * ce qu'on reçoit dans sa boîte — la seule façon de le savoir est de l'y voir.
+ */
+export async function actionEssaiEtape(formData: FormData) {
+  const qui = await identiteAvecDroit("sequences");
+  if (!qui) return;
+
+  const cle = String(formData.get("cle") ?? "");
+  const sujet = String(formData.get("sujet") ?? "").trim().slice(0, 300);
+  const corps = String(formData.get("corps") ?? "").trim().slice(0, 20000);
+  if (!sujet || !corps) {
+    retour(cle, { souci: "L'objet et le message doivent être remplis." });
+  }
+
+  const { adresseParDefaut, envoyerEssai } = await import("@/lib/crm/essai");
+  const destinataire = await adresseParDefaut();
+  const erreur = await envoyerEssai({ sujet, corps, destinataire });
+  retour(
+    cle,
+    erreur
+      ? { souci: `L'essai n'est pas parti : ${erreur}` }
+      : { fait: `Essai envoyé à ${destinataire}` },
+  );
+}
+
 export async function actionMajEtape(formData: FormData) {
   if (!(await exigerSession())) return;
   const id = String(formData.get("id") ?? "");
@@ -117,7 +144,7 @@ function souci(r: ResultatAjout, masse = false): string | undefined {
 /** Le compte rendu, rangé du bon côté : un échec ne s'annonce pas en succès. */
 function compteRendu(r: ResultatAjout, masse = false): Record<string, string | undefined> {
   const phrase = resumerAjout(r);
-  if (ajoutUtile(r)) return { fait: phrase, souci: souci(r, masse) };
+  if (ajoutUtile(r)) return { fait: `Ajout effectué — ${phrase}.`, souci: souci(r, masse) };
   return {
     souci: [`Personne n'a été ajouté — ${phrase}.`, souci(r, masse)]
       .filter(Boolean)
