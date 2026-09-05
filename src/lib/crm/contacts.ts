@@ -49,6 +49,8 @@ export type Contact = {
   // Parrainage : son propre code, et qui l'a amené.
   jeton_parrainage: string | null;
   parrain_id: string | null;
+  /** Date d'envoi de la demande d'avis, s'il y en a eu une. */
+  avis_demande_le: Date | null;
 };
 
 export type Evenement = {

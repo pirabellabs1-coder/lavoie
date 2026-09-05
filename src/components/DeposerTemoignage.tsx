@@ -9,10 +9,22 @@ import { useProtection } from "@/components/Protection";
  * Rien n'est publié depuis ce formulaire : le texte part en modération. C'est
  * dit clairement, pour que personne ne s'attende à se voir apparaître aussitôt
  * sur la page.
+ *
+ * Sur la page publique, le formulaire est anonyme. Ouvert depuis un lien
+ * personnel, il arrive avec le nom déjà rempli et le jeton qui rattachera le
+ * témoignage à la bonne fiche.
  */
-export default function DeposerTemoignage() {
+export default function DeposerTemoignage({
+  nom = "",
+  jeton,
+  titre,
+}: {
+  nom?: string;
+  jeton?: string;
+  titre?: string;
+} = {}) {
   const { champ, donnees } = useProtection();
-  const [form, setForm] = useState({ nom: "", contexte: "", texte: "" });
+  const [form, setForm] = useState({ nom, contexte: "", texte: "" });
   const [note, setNote] = useState(0);
   const [survol, setSurvol] = useState(0);
   const [accord, setAccord] = useState(false);
@@ -38,6 +50,7 @@ export default function DeposerTemoignage() {
           ...form,
           note: note || undefined,
           consentement: accord,
+          jeton,
           ...donnees(),
         }),
       });
@@ -93,7 +106,7 @@ export default function DeposerTemoignage() {
         Partager mon expérience
       </p>
       <h3 className="display" style={{ fontSize: 26, margin: "0 0 24px", lineHeight: 1.2 }}>
-        Ce que vous avez vécu peut éclairer quelqu&apos;un.
+        {titre ?? "Ce que vous avez vécu peut éclairer quelqu'un."}
       </h3>
 
       <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>

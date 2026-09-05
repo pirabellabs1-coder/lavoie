@@ -4,6 +4,7 @@ import { EVENEMENTS } from "@/lib/evenements";
 import { getDb } from "./db";
 import { habiller } from "./email";
 import { EXPEDITEUR, inscrireASequence } from "./sequences";
+import { lienAvis } from "./avis";
 
 /**
  * Les stages, et qui vient.
@@ -344,8 +345,8 @@ export async function accompagnerLesStages(): Promise<{
 
   // ── Deux jours après ──
   try {
-    const dues = await sql<Due[]>`
-      SELECT p.id, c.email, c.prenom, s.titre, s.debut_le, s.logistique
+    const dues = await sql<(Due & { contact_id: string })[]>`
+      SELECT p.id, p.contact_id, c.email, c.prenom, s.titre, s.debut_le, s.logistique
       FROM participations p
       JOIN stages s   ON s.id = p.stage_id
       JOIN contacts c ON c.id = p.contact_id
@@ -360,6 +361,13 @@ export async function accompagnerLesStages(): Promise<{
 
     for (const d of dues) {
       await sql`UPDATE participations SET retour_le = NOW() WHERE id = ${d.id}`;
+      // Le lien de dépôt est personnel : le témoignage arrive rattaché à sa
+      // fiche, et la personne n'a pas à retaper son nom.
+      const lienDepot = await lienAvis(String(d.contact_id), d.email);
+      await sql`
+        UPDATE contacts SET avis_demande_le = COALESCE(avis_demande_le, NOW())
+        WHERE id = ${d.contact_id}
+      `;
       const { html, text } = habiller({
         email: d.email,
         apercu: "Ce qui se dépose après un stage.",
@@ -367,7 +375,7 @@ export async function accompagnerLesStages(): Promise<{
           `Bonjour ${d.prenom ?? ""},\n\n` +
           `Quelques jours ont passé depuis « ${d.titre} ». C'est souvent maintenant que les choses se déposent — pas pendant, après.\n\n` +
           `Si vous voulez me dire un mot de ce qui a bougé, répondez simplement à cet e-mail. Je lis tout, et ces retours nourrissent les stages suivants.\n\n` +
-          `Et si votre expérience peut éclairer quelqu'un qui hésite encore, vous pouvez la déposer ici : ${SITE.url}/temoignages\n\n` +
+          `Et si votre expérience peut éclairer quelqu'un qui hésite encore, vous pouvez la déposer ici, en quelques lignes : ${lienDepot}\n\n` +
           `Pour poursuivre le chemin, le parcours complet est là : ${SITE.url}/cycle-des-saisons\n\n` +
           `Avec toute ma présence,\n` +
           `Domoïna Ramiadana — La Voie 2 la Conscience`,

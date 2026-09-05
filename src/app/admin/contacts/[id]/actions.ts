@@ -132,6 +132,30 @@ export async function actionInscrireContact(formData: FormData) {
   redirect(`/admin/contacts/${id}?seq=${resultat}`);
 }
 
+/**
+ * Envoie à la personne sa demande d'avis, avec son lien personnel. Le lien
+ * reste affiché sur la fiche : il se copie aussi dans un message privé, ce qui
+ * est souvent la manière la plus naturelle de le demander.
+ */
+export async function actionDemanderAvis(formData: FormData) {
+  const qui = await identite();
+  if (!qui) return;
+
+  const id = String(formData.get("id") ?? "");
+  if (!/^\d+$/.test(id)) return;
+
+  const { demanderAvis } = await import("@/lib/crm/avis");
+  const resultat = await demanderAvis(id, qui.nom);
+  if (resultat.ok) await tracer(qui, "avis_demande", `contact ${id}`);
+
+  revalidatePath(`/admin/contacts/${id}`);
+  redirect(
+    resultat.ok
+      ? `/admin/contacts/${id}?avis=envoye`
+      : `/admin/contacts/${id}?erreur=${encodeURIComponent(resultat.erreur)}`,
+  );
+}
+
 /** Sort la personne d'une séquence en cours. Ce qui est parti reste parti. */
 export async function actionRetirerContact(formData: FormData) {
   const qui = await identiteAvecDroit("sequences");

@@ -328,6 +328,32 @@ vérifié (Resend) au lieu d'une adresse Gmail, ce qui améliore la délivrabili
 
 Tout se modifie depuis l'onglet **Séquences**, comme les autres.
 
+## Demander un avis
+
+La page des témoignages accepte les dépôts de tout le monde, mais anonymement.
+Pour demander un avis à quelqu'un en particulier, chaque fiche contact a
+maintenant un encadré **« Son avis »** :
+
+- un bouton qui lui **envoie la demande par e-mail**, avec son lien personnel ;
+- ce même **lien, affiché pour être copié** — c'est souvent par message privé
+  ou par WhatsApp que la demande passe le mieux.
+
+Le lien personnel connaît déjà son nom : elle n'a rien à retaper, et le
+témoignage arrive **rattaché à sa fiche**, donc à son parcours. Il vaut deux
+mois, puis il expire ; passé ce délai, la personne peut toujours écrire depuis
+la page publique, simplement sans être reconnue.
+
+Rien ne change à la modération : un témoignage déposé n'est jamais en ligne
+avant votre validation.
+
+**Qui a été sollicité sans répondre.** L'onglet Témoignages ouvre sur un
+repli — « 4 personnes sollicitées sans avoir encore répondu » — avec la date de
+la demande et un lien vers chaque fiche, d'où l'on peut renvoyer.
+
+**Après un stage**, l'e-mail de retour envoyé à J+2 porte désormais ce lien
+personnel plutôt que l'adresse générique : le témoignage d'un participant
+revient rattaché à sa fiche, et la demande est comptée comme envoyée.
+
 ## Le témoin du worker
 
 Tout ce qui part tout seul — séquences, campagnes, relances, logistique des

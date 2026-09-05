@@ -39,7 +39,17 @@ export async function POST(req: Request) {
     );
   }
 
-  const ok = await deposerTemoignage({ nom, texte, note, contexte, consentement });
+  // Déposé depuis un lien personnel : le témoignage se rattache à la fiche de
+  // la personne. Un jeton illisible ou périmé ne fait pas échouer le dépôt —
+  // ce qu'elle a écrit compte plus que le lien par lequel elle est arrivée.
+  let contactId: string | null = null;
+  const jeton = String(data.jeton ?? "").trim();
+  if (jeton) {
+    const { contactDuJeton } = await import("@/lib/crm/avis");
+    contactId = (await contactDuJeton(jeton))?.id ?? null;
+  }
+
+  const ok = await deposerTemoignage({ nom, texte, note, contexte, consentement, contactId });
   // Sans base, on renvoie tout de même un succès : le visiteur a joué son rôle,
   // et rien de ce qu'il a écrit ne doit lui revenir comme une erreur.
   return Response.json({ ok: true, enregistre: ok });

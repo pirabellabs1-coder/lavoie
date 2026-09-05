@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Cadre from "../Cadre";
+import { avisEnAttente } from "@/lib/crm/avis";
+import { nomAffiche } from "@/lib/crm/contacts";
 import { isDbConfigured } from "@/lib/crm/db";
 import { exigerIdentite } from "@/lib/crm/session";
 import { listerTemoignages, type Temoignage } from "@/lib/crm/temoignages";
@@ -60,6 +62,8 @@ export default async function TemoignagesPage({
 
   const branchee = isDbConfigured();
   const temoignages: Temoignage[] = branchee ? await listerTemoignages(filtre || undefined) : [];
+  // Sollicités, sans réponse : c'est là que se joue la récolte.
+  const attendus = branchee ? await avisEnAttente(30) : [];
 
   return (
     <Cadre
@@ -77,6 +81,43 @@ export default async function TemoignagesPage({
           <strong>La base de données n&apos;est pas encore branchée.</strong> Ajoutez la
           variable <code>DATABASE_URL</code> dans les réglages Vercel, puis redéployez.
         </div>
+      )}
+
+      {attendus.length > 0 && (
+        <details className="adm-carte" style={{ marginBottom: 14 }}>
+          <summary style={{ cursor: "pointer", fontSize: 13.5 }}>
+            <strong>{attendus.length}</strong> personne{attendus.length > 1 ? "s" : ""} sollicitée
+            {attendus.length > 1 ? "s" : ""} sans avoir encore répondu
+          </summary>
+          <p style={{ fontSize: 12.5, color: "var(--adm-mute)", margin: "10px 0 12px", lineHeight: 1.6 }}>
+            Leur lien personnel reste valable deux mois. Depuis leur fiche, on peut renvoyer la
+            demande — ou copier le lien pour le leur adresser autrement.
+          </p>
+          <div className="adm-table-scroll">
+            <table className="adm-t">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>E-mail</th>
+                  <th>Demandé le</th>
+                </tr>
+              </thead>
+              <tbody>
+                {attendus.map((a) => (
+                  <tr key={a.id}>
+                    <td>
+                      <Link href={`/admin/contacts/${a.id}`}>{nomAffiche(a)}</Link>
+                    </td>
+                    <td style={{ color: "var(--adm-mute)" }}>{a.email}</td>
+                    <td style={{ color: "var(--adm-mute)", whiteSpace: "nowrap" }}>
+                      {enClair(a.avis_demande_le)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
       )}
 
       <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>

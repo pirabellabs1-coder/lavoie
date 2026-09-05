@@ -5,6 +5,7 @@ import { STATUTS, STATUT_LABEL, obtenirContact, nomAffiche } from "@/lib/crm/con
 import {
   actionChangerStatut,
   actionDefinirRdv,
+  actionDemanderAvis,
   actionEnregistrerNote,
   actionGenererParrainage,
   actionInscrireContact,
@@ -20,6 +21,7 @@ import { actionAnnulerOffre, actionCreerOffre, actionEnvoyerOffre } from "../../
 import { filleuls, lienParrainage } from "@/lib/crm/parrainage";
 import { categorie, groupesManuels } from "@/lib/crm/categories";
 import { inscriptionsDuContact } from "@/lib/crm/sequences";
+import { aDejaTemoigne, lienAvis } from "@/lib/crm/avis";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +81,11 @@ export default async function FicheContact({
   // Le secrétariat voit où en est la personne dans ses séquences ; seul le
   // propriétaire peut l'y ajouter ou l'en retirer.
   const inscriptions = await inscriptionsDuContact(id);
+  // Le lien d'avis est personnel : il se copie dans un message autant qu'il
+  // s'envoie par e-mail.
+  const lienDAvis = await lienAvis(contact.id, contact.email);
+  const aTemoigne = await aDejaTemoigne(contact.id);
+  const avisEnvoye = (Array.isArray(messages.avis) ? messages.avis[0] : messages.avis) === "envoye";
 
   return (
     <Cadre
@@ -134,6 +141,48 @@ export default async function FicheContact({
                 {STATUT_LABEL[contact.statut] ?? contact.statut}
               </span>
             </p>
+          </div>
+
+          {/* Demander un avis, par e-mail ou par un lien à recopier. */}
+          <div className="adm-carte">
+            <p className="adm-titre">Son avis</p>
+
+            {avisEnvoye && (
+              <div className="adm-alerte" style={{ marginBottom: 12 }}>
+                La demande est partie. Son lien personnel reste valable deux mois.
+              </div>
+            )}
+
+            <p style={{ margin: "0 0 12px", fontSize: 12.5, color: "var(--adm-mute)", lineHeight: 1.6 }}>
+              {aTemoigne
+                ? "Cette personne a déjà déposé un témoignage — il est dans l'onglet Témoignages."
+                : contact.avis_demande_le
+                  ? `Demande envoyée le ${dateLongue(contact.avis_demande_le)}, sans réponse pour l'instant.`
+                  : "Aucune demande envoyée pour l'instant."}
+            </p>
+
+            <label className="adm-label">Son lien personnel — à copier dans un message</label>
+            <input
+              type="text"
+              readOnly
+              className="adm-champ"
+              value={lienDAvis}
+              style={{ fontSize: 12.5 }}
+              aria-label="Lien personnel pour déposer un avis"
+            />
+            <p style={{ color: "var(--adm-mute)", fontSize: 11.5, margin: "8px 0 12px", lineHeight: 1.6 }}>
+              Ce lien connaît déjà son nom, et rattache le témoignage à cette fiche. Il vaut
+              deux mois.
+            </p>
+
+            {!contact.desabonne_le && (
+              <form action={actionDemanderAvis}>
+                <input type="hidden" name="id" value={contact.id} />
+                <button type="submit" className="adm-btn">
+                  {contact.avis_demande_le ? "Renvoyer la demande" : "Envoyer la demande par e-mail"}
+                </button>
+              </form>
+            )}
           </div>
 
           {/* Les automatisations où se trouve la personne. */}
