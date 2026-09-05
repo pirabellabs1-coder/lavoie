@@ -48,8 +48,10 @@ export function personnaliser(
     (_tout, avant: string) => (prenom ? `${avant}${prenom}` : ""),
   );
   if (!prenom) {
-    // Reste le cas du gabarit qui ouvre sur le prénom : « {{prenom}}, ».
-    texte = texte.replace(/^[ \t]*,[ \t]*/gm, "");
+    // Reste le cas du gabarit qui ouvre sur le prénom : « {{prenom}}, ». La
+    // virgule orpheline part, et avec elle les lignes vides qu'elle laisse en
+    // tête du message.
+    texte = texte.replace(/^[ \t]*,[ \t]*/gm, "").replace(/^\s+/, "");
   }
 
   return texte

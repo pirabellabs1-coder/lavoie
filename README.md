@@ -16,6 +16,20 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Tests
+
+```bash
+npm test          # une passe
+npm run test:watch
+```
+
+Les tests (`tests/`) portent sur la logique pure : le score et le routage du
+questionnaire, la lecture d'une liste d'adresses collée, le ciblage des
+campagnes et le rendu des e-mails. Rien n'y touche la base ni n'envoie de
+message — c'est justement ce qui décide *qui reçoit quoi*, et ce qui se teste
+sans infrastructure. Le mode d'emploi complet du tableau de bord est dans
+[TABLEAU-DE-BORD.md](TABLEAU-DE-BORD.md).
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
