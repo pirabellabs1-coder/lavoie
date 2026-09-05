@@ -552,6 +552,58 @@ textarea.adm-champ { min-height: 96px; resize: vertical; line-height: 1.6; }
 .seq-edit summary:hover { color: var(--adm-ink); }
 .seq-edit-grille { display: grid; gap: 14px; margin-top: 12px; }
 
+/* Ajouter des personnes dans une catégorie. */
+.seq-route .compte .seq-lien-ajout {
+  display: inline-block; margin-top: 6px; font-size: 11.5px; font-weight: 600;
+  color: var(--adm-accent); text-decoration: none; border-bottom: 1px solid transparent;
+}
+.seq-route .compte .seq-lien-ajout:hover { border-bottom-color: currentColor; }
+
+.seq-ajout[open] summary { color: var(--adm-ink); font-weight: 600; }
+.seq-ajout-aide {
+  margin: 6px 0 0; font-size: 12.5px; color: var(--adm-mute); line-height: 1.6;
+}
+.seq-ajout-avert {
+  margin: 8px 0 0; font-size: 12.5px; line-height: 1.6;
+  color: var(--adm-warn); border-left: 3px solid var(--adm-warn);
+  padding: 6px 0 6px 10px;
+}
+.seq-ajout-grille {
+  display: grid; gap: 14px; margin-top: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  align-items: start;
+}
+.seq-ajout-note {
+  margin: 6px 0 10px; font-size: 12px; color: var(--adm-mute); line-height: 1.6;
+}
+.seq-ajout-cible {
+  display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+.seq-ajout-cible .adm-label { margin-bottom: 4px; }
+.seq-ajout-accord {
+  display: flex; gap: 8px; align-items: flex-start;
+  margin: 12px 0; font-size: 12px; color: var(--adm-ink-2); line-height: 1.5;
+}
+.seq-ajout-accord input { margin-top: 2px; flex: none; }
+
+/* Les séquences d'une fiche contact. */
+.fiche-seqs { display: grid; gap: 8px; margin-top: 4px; }
+.fiche-seq {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  gap: 0 12px;
+  align-items: center;
+  padding: 10px 12px 10px 0;
+  border: 1px solid var(--adm-line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.fiche-seq .liseré { align-self: stretch; border-radius: 4px; }
+.fiche-seq .nom { font-weight: 600; font-size: 13px; }
+.fiche-seq .det { color: var(--adm-mute); font-size: 11.5px; margin-top: 2px; line-height: 1.5; }
+.fiche-seq-ajout { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.fiche-seq-ajout .adm-champ { flex: 1; min-width: 180px; }
+
 @media (max-width: 700px) {
   .seq-route { grid-template-columns: 4px 1fr; }
   .seq-route .compte { grid-column: 2; text-align: left; margin-top: 6px; }

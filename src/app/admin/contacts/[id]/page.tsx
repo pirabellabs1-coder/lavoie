@@ -7,6 +7,8 @@ import {
   actionDefinirRdv,
   actionEnregistrerNote,
   actionGenererParrainage,
+  actionInscrireContact,
+  actionRetirerContact,
 } from "./actions";
 import { dernierQuestionnaire } from "@/lib/crm/questionnaires";
 import { QUESTIONS } from "@/lib/questionnaire";
@@ -16,6 +18,8 @@ import { peut } from "@/lib/crm/utilisateurs";
 import { ETATS, euros, offresDuContact } from "@/lib/crm/offres";
 import { actionAnnulerOffre, actionCreerOffre, actionEnvoyerOffre } from "../../offres/actions";
 import { filleuls, lienParrainage } from "@/lib/crm/parrainage";
+import { categorie, groupesManuels } from "@/lib/crm/categories";
+import { inscriptionsDuContact } from "@/lib/crm/sequences";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +34,21 @@ function dateLongue(d: Date | string): string {
   });
 }
 
+/** Ce qu'on répond après une inscription faite depuis la fiche. */
+const RETOURS_SEQ: Record<string, string> = {
+  inscrite:
+    "La personne est entrée dans la séquence. Le premier e-mail part dans la foulée s'il n'a pas de délai.",
+  reprise: "Cette séquence a été remise au début pour cette personne.",
+  deja: "Elle était déjà dans cette séquence : rien n'a été touché.",
+  desabonne: "Cette personne s'est désabonnée : elle ne peut plus être inscrite.",
+  sans_consentement:
+    "Son inscription attend encore sa confirmation par e-mail : tant qu'elle n'a pas cliqué, aucune séquence ne démarre.",
+  sans_accord: "Sans l'accord de la personne concernée, rien n'est envoyé.",
+  en_pause:
+    "Cette séquence est en pause : personne n'y entre tant qu'elle n'est pas réactivée.",
+  impossible: "L'inscription n'a pas pu être faite.",
+};
+
 export default async function FicheContact({
   params,
   searchParams,
@@ -41,6 +60,10 @@ export default async function FicheContact({
   const messages = await searchParams;
   const erreur = Array.isArray(messages.erreur) ? messages.erreur[0] : messages.erreur;
   const offreFaite = messages.offre === "creee" || messages.offre === "envoyee";
+  const seq = Array.isArray(messages.seq) ? messages.seq[0] : messages.seq;
+  // `hasOwn` : sans lui, `?seq=__proto__` renverrait un objet, que React
+  // refuserait d'afficher.
+  const retourSeq = seq && Object.hasOwn(RETOURS_SEQ, seq) ? RETOURS_SEQ[seq] : null;
   if (!/^\d+$/.test(id)) notFound();
 
   const donnees = await obtenirContact(id);
@@ -51,6 +74,10 @@ export default async function FicheContact({
   const commercial = peut(qui.role, "offres");
   const offres = commercial ? await offresDuContact(id) : [];
   const mesFilleuls = await filleuls(id);
+  const automate = peut(qui.role, "sequences");
+  // Le secrétariat voit où en est la personne dans ses séquences ; seul le
+  // propriétaire peut l'y ajouter ou l'en retirer.
+  const inscriptions = await inscriptionsDuContact(id);
 
   return (
     <Cadre
@@ -99,6 +126,98 @@ export default async function FicheContact({
                 {STATUT_LABEL[contact.statut] ?? contact.statut}
               </span>
             </p>
+          </div>
+
+          {/* Les automatisations où se trouve la personne. */}
+          <div className="adm-carte">
+            <p className="adm-titre">Automatisations</p>
+
+            {retourSeq && (
+              <div className="adm-alerte" style={{ marginBottom: 12 }}>
+                {retourSeq}
+              </div>
+            )}
+
+            {inscriptions.length === 0 ? (
+              <p style={{ color: "var(--adm-mute)", fontSize: 12.5, margin: "4px 0 0" }}>
+                Cette personne n&apos;est dans aucune séquence.
+              </p>
+            ) : (
+              <div className="fiche-seqs">
+                {inscriptions.map((i) => {
+                  const c = categorie(i.cle);
+                  return (
+                    <div className="fiche-seq" key={i.sequence_id}>
+                      <span className="liseré" style={{ background: c.ton }} />
+                      <div>
+                        <div className="nom">{i.nom}</div>
+                        <div className="det">
+                          {i.statut === "active" ? (
+                            <>
+                              E-mail {Math.min(i.etape, i.etapes)} sur {i.etapes} · prochain
+                              envoi le {dateLongue(i.echeance)}
+                            </>
+                          ) : i.statut === "terminee" ? (
+                            <>
+                              Terminée · {i.etapes} e-mail{i.etapes > 1 ? "s" : ""} reçu
+                              {i.etapes > 1 ? "s" : ""}
+                            </>
+                          ) : (
+                            <>Arrêtée</>
+                          )}
+                          {!i.sequence_active && " · séquence en pause"}
+                        </div>
+                      </div>
+                      {automate && i.statut === "active" && (
+                        <form action={actionRetirerContact}>
+                          <input type="hidden" name="id" value={contact.id} />
+                          <input type="hidden" name="sequence" value={i.sequence_id} />
+                          <button type="submit" className="adm-btn fantome petit">
+                            Retirer
+                          </button>
+                        </form>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {automate && !contact.desabonne_le && (
+              <form action={actionInscrireContact} className="fiche-seq-ajout">
+                <select name="cle" className="adm-champ" required defaultValue="">
+                  <option value="" disabled>
+                    Ajouter à une catégorie…
+                  </option>
+                  {groupesManuels().map((g) => (
+                    <optgroup key={g.titre} label={g.titre}>
+                      {g.cats.map((c) => (
+                        <option key={c.cle} value={c.cle}>
+                          {c.cat}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+                <input type="hidden" name="id" value={contact.id} />
+                <button type="submit" className="adm-btn">Ajouter</button>
+                <label className="seq-ajout-accord" style={{ flexBasis: "100%", margin: "4px 0 0" }}>
+                  <input type="checkbox" name="accord" required />
+                  <span>
+                    Cette personne a accepté de recevoir ces e-mails. Cet accord est consigné
+                    dans sa chronologie avec mon nom.
+                  </span>
+                </label>
+              </form>
+            )}
+
+            {automate && (
+              <p style={{ color: "var(--adm-mute)", fontSize: 11.5, margin: "10px 0 0", lineHeight: 1.6 }}>
+                {contact.desabonne_le
+                  ? "Cette personne s'est désabonnée : aucune séquence ne peut plus la reprendre."
+                  : "La catégorie choisie décide de la séquence. Une séquence déjà terminée repart du début."}
+              </p>
+            )}
           </div>
 
           <div className="adm-carte">

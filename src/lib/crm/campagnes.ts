@@ -146,6 +146,18 @@ export async function compterSegment(segment: Segment): Promise<number> {
   return liste.length;
 }
 
+/**
+ * Les contacts d'un segment, hors de toute campagne. Sert aux ajouts en masse
+ * dans une séquence (voir `ajouts.ts`) : même ciblage, mêmes exclusions, donc
+ * le compte annoncé avant l'ajout est bien celui qu'on obtient.
+ */
+export async function contactsDuSegment(
+  segment: Segment,
+  limite = 5000,
+): Promise<{ id: string; email: string; prenom: string | null }[]> {
+  return destinataires(segment, null, limite);
+}
+
 export async function listerCampagnes(): Promise<CampagneVue[]> {
   const sql = await getDb();
   if (!sql) return [];

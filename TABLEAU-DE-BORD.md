@@ -364,6 +364,61 @@ dans la chronologie du contact, vaut **preuve de consentement** en cas de
 contrôle. Les autres formulaires — contact, questionnaire, demande de stage —
 n'y passent pas : ce sont des demandes explicites, où le consentement est direct.
 
+## Ajouter des personnes dans une séquence
+
+Tout ce qui vient du site entre tout seul dans la bonne séquence. Reste ce qui
+n'y passe pas : la personne rencontrée en stage, l'adresse notée au téléphone,
+une liste reprise d'un ancien outil. Onglet **Séquences**, chaque catégorie a
+maintenant son panneau **« Ajouter des personnes »**.
+
+**On entre par une catégorie de personnes, jamais par une séquence nue.** La
+catégorie décide de la fiche créée — son statut, sa source — et de la séquence
+qui prend la personne en charge.
+
+| Catégorie | La fiche créée | Ce qu'elle reçoit |
+| --- | --- | --- |
+| A téléchargé le guide | Lead, source « Guide gratuit » | la suite du guide, 4 e-mails |
+| S'est inscrit aux Lettres | Lead, source « Lettres » | la bienvenue aux Lettres |
+| A demandé un appel | Contacté | accusé de réception + relance |
+| Qualifié → appel avec Domoïna | Contacté | les prérequis avant l'entretien |
+| Revenu > 2 000 € → stages | Lead | l'orientation vers les stages |
+| Revenu ≤ 2 000 € → formations | Lead | l'orientation vers les formations |
+| L'appel a eu lieu | Appel fait | le suivi d'entretien |
+
+**Une liste collée.** Une personne par ligne, sous la forme
+`e-mail, prénom, nom`. La virgule, le point-virgule et la tabulation font
+séparateur : un copier-coller de tableur passe tel quel, la forme
+`Jean Dupont <jean@exemple.fr>` des carnets d'adresses aussi. Cinquante
+personnes au plus par collage. Les fiches manquantes sont créées, les fiches
+connues seulement complétées — leur source d'origine n'est jamais réécrite.
+
+**Des contacts déjà dans le fichier.** Pour rattraper une catégorie entière ou
+reprendre une liste importée : on cible par statut, par source et par
+ancienneté, on **compte d'abord**, puis on ajoute. Comme pour les campagnes, le
+bouton « Compter » est là pour ça — un envoi de masse ne se rattrape pas.
+
+**Depuis une fiche.** L'encadré **Automatisations** montre où en est la
+personne dans chaque séquence — quel e-mail, quand part le suivant — permet de
+l'ajouter à une catégorie, et de la retirer d'une séquence en cours.
+
+**La case d'accord n'est pas une formalité.** Elle atteste que ces personnes
+ont accepté de recevoir ces e-mails ; l'ajout est inscrit au journal d'audit
+avec votre nom, et une ligne « consentement » est écrite dans la chronologie de
+chaque personne ajoutée. C'est cette trace qui vaut preuve de consentement pour
+un ajout fait à la main, faute de double opt-in.
+
+**Ce qui ne peut pas arriver :** un désabonné n'est jamais réinscrit ; une
+personne inscrite aux Lettres mais qui n'a pas encore cliqué son lien de
+confirmation est écartée elle aussi — une case cochée par vous ne remplace pas
+son clic ; une personne déjà en cours de séquence n'est pas remise au début
+(une séquence qu'elle a terminée, si — c'est bien le but quand on la rajoute) ;
+une séquence en pause, absente ou vidée de ses e-mails refuse les ajouts au
+lieu de les faire attendre dans le vide. Dans tous ces cas, le compte rendu
+dit exactement combien de personnes ont été écartées, et pourquoi.
+
+Les premiers e-mails d'une liste saisie à la main partent dans la foulée. Pour
+un ajout en masse, les envois suivent le rythme du worker : 200 par jour, à 8 h.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,
@@ -397,7 +452,8 @@ installés d'office :
 
 Le sujet, le texte et le délai de chaque étape se modifient directement depuis
 le tableau de bord. `{{prenom}}` est remplacé par le prénom du destinataire.
-Chaque séquence peut être mise en pause sans rien perdre.
+Chaque séquence peut être mise en pause sans rien perdre. Pour y inscrire
+quelqu'un à la main, voir « Ajouter des personnes dans une séquence ».
 
 **Envois** — le journal de tous les e-mails automatiques partis, avec leur
 état. Un envoi en échec est automatiquement retenté toutes les 6 heures.

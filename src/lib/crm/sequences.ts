@@ -313,92 +313,242 @@ const GRAINES_A_RAFRAICHIR: Record<string, string> = {
   formations: "Votre chemin intérieur mérite d'être entendu",
 };
 
+/**
+ * Le semis n'a lieu qu'une fois par instance : il est idempotent, et les
+ * graines ne changent qu'au déploiement suivant. Sans cette mémoire, un ajout
+ * de cent personnes rejouait neuf requêtes de semis par personne. Même motif
+ * que `schemaReady` dans `db.ts`.
+ */
+let semisFait: Promise<void> | null = null;
+
+type Sql = NonNullable<Awaited<ReturnType<typeof getDb>>>;
+
 export async function semerSequences(): Promise<void> {
   const sql = await getDb();
   if (!sql) return;
-  try {
-    for (const g of SEQUENCES_PAR_DEFAUT) {
-      const rows = await sql<{ id: string }[]>`
-        INSERT INTO sequences (cle, nom, description, declencheur)
-        VALUES (${g.cle}, ${g.nom}, ${g.description}, ${g.declencheur})
-        ON CONFLICT (cle) DO NOTHING
-        RETURNING id
-      `;
-      const creee = rows[0];
+  if (!semisFait) {
+    semisFait = semer(sql).catch((e) => {
+      // Un semis raté ne reste pas mémorisé : la base était peut-être
+      // simplement indisponible, et l'appel suivant doit réessayer.
+      semisFait = null;
+      console.error("[crm] semerSequences:", e);
+    });
+  }
+  return semisFait;
+}
 
-      if (creee) {
-        for (const e of g.etapes) {
-          await sql`
-            INSERT INTO sequence_etapes (sequence_id, ordre, delai_jours, sujet, corps)
-            VALUES (${creee.id}, ${e.ordre}, ${e.delai_jours}, ${e.sujet}, ${e.corps})
-            ON CONFLICT (sequence_id, ordre) DO NOTHING
-          `;
-        }
-        continue;
-      }
+async function semer(sql: Sql): Promise<void> {
+  for (const g of SEQUENCES_PAR_DEFAUT) {
+    const rows = await sql<{ id: string }[]>`
+      INSERT INTO sequences (cle, nom, description, declencheur)
+      VALUES (${g.cle}, ${g.nom}, ${g.description}, ${g.declencheur})
+      ON CONFLICT (cle) DO NOTHING
+      RETURNING id
+    `;
+    const creee = rows[0];
 
-      // La séquence existait déjà : on ne la rafraîchit que si elle est prévue
-      // pour et qu'elle est restée intacte depuis son semis.
-      const ancienSujet = GRAINES_A_RAFRAICHIR[g.cle];
-      if (!ancienSujet) continue;
-
-      const [etat] = await sql<{ id: string; sujet: string | null }[]>`
-        SELECT s.id, e.sujet
-        FROM sequences s
-        LEFT JOIN sequence_etapes e ON e.sequence_id = s.id AND e.ordre = 1
-        WHERE s.cle = ${g.cle}
-      `;
-      if (!etat || etat.sujet !== ancienSujet) continue;
-
-      await sql`DELETE FROM sequence_etapes WHERE sequence_id = ${etat.id}`;
+    if (creee) {
       for (const e of g.etapes) {
         await sql`
           INSERT INTO sequence_etapes (sequence_id, ordre, delai_jours, sujet, corps)
-          VALUES (${etat.id}, ${e.ordre}, ${e.delai_jours}, ${e.sujet}, ${e.corps})
+          VALUES (${creee.id}, ${e.ordre}, ${e.delai_jours}, ${e.sujet}, ${e.corps})
+          ON CONFLICT (sequence_id, ordre) DO NOTHING
         `;
       }
+      continue;
+    }
+
+    // La séquence existait déjà : on ne la rafraîchit que si elle est prévue
+    // pour et qu'elle est restée intacte depuis son semis.
+    const ancienSujet = GRAINES_A_RAFRAICHIR[g.cle];
+    if (!ancienSujet) continue;
+
+    const [etat] = await sql<{ id: string; sujet: string | null }[]>`
+      SELECT s.id, e.sujet
+      FROM sequences s
+      LEFT JOIN sequence_etapes e ON e.sequence_id = s.id AND e.ordre = 1
+      WHERE s.cle = ${g.cle}
+    `;
+    if (!etat || etat.sujet !== ancienSujet) continue;
+
+    await sql`DELETE FROM sequence_etapes WHERE sequence_id = ${etat.id}`;
+    for (const e of g.etapes) {
       await sql`
-        UPDATE sequences SET nom = ${g.nom}, description = ${g.description}
-        WHERE id = ${etat.id}
+        INSERT INTO sequence_etapes (sequence_id, ordre, delai_jours, sujet, corps)
+        VALUES (${etat.id}, ${e.ordre}, ${e.delai_jours}, ${e.sujet}, ${e.corps})
       `;
     }
-  } catch (e) {
-    console.error("[crm] semerSequences:", e);
+    await sql`
+      UPDATE sequences SET nom = ${g.nom}, description = ${g.description}
+      WHERE id = ${etat.id}
+    `;
   }
 }
 
 /**
- * Inscrit un contact à une séquence. Sans effet si le contact y est déjà,
- * s'il s'est désabonné, ou si la séquence est désactivée.
+ * Ce qui est arrivé à une demande d'inscription. Le tableau de bord s'en sert
+ * pour dire à qui ajoute du monde ce qui a été fait, et ce qui ne l'a pas
+ * été — inscrire quelqu'un à une liste d'envoi ne doit jamais être une
+ * opération muette.
  */
-export async function inscrireASequence(contactId: string, cle: string): Promise<void> {
+export type Inscription =
+  /** Entrée neuve dans la séquence. */
+  | "inscrite"
+  /** Séquence terminée ou arrêtée, remise au début. */
+  | "reprise"
+  /** Déjà en cours : rien touché. */
+  | "deja"
+  /** La personne s'est désabonnée : elle ne reçoit plus rien. */
+  | "desabonne"
+  /** Inscription en attente de confirmation (double opt-in) : on n'y touche pas. */
+  | "sans_consentement"
+  /** La séquence est en pause : personne n'y entre. */
+  | "en_pause"
+  /** Séquence inconnue, séquence vide, ou base indisponible. */
+  | "impossible";
+
+/**
+ * Inscrit un contact à une séquence, et dit ce qui s'est passé.
+ *
+ * Par défaut une inscription existante n'est jamais touchée, quel que soit son
+ * état : c'est ce qu'attendent les déclencheurs automatiques, où un second
+ * téléchargement du guide ne doit pas rejouer toute la séquence. L'option
+ * `reprendre` renverse cette règle pour les ajouts faits à la main — quand on
+ * remet quelqu'un dans une séquence qu'il a déjà terminée, c'est bien qu'on
+ * veut la voir repartir du début.
+ */
+export async function inscrireContact(
+  contactId: string,
+  cle: string,
+  options: { reprendre?: boolean; exigerConsentement?: boolean } = {},
+): Promise<Inscription> {
   const sql = await getDb();
-  if (!sql) return;
+  if (!sql) return "impossible";
   try {
     await semerSequences();
-    const [seq] = await sql<{ id: string }[]>`
-      SELECT id FROM sequences WHERE cle = ${cle} AND active = TRUE
+    const [seq] = await sql<{ id: string; active: boolean }[]>`
+      SELECT id, active FROM sequences WHERE cle = ${cle}
     `;
-    if (!seq) return;
+    if (!seq) return "impossible";
+    if (!seq.active) return "en_pause";
 
-    const [contact] = await sql<{ desabonne_le: Date | null }[]>`
-      SELECT desabonne_le FROM contacts WHERE id = ${contactId}
+    const [contact] = await sql<{ desabonne_le: Date | null; consentement: boolean }[]>`
+      SELECT desabonne_le, consentement FROM contacts WHERE id = ${contactId}
     `;
-    if (!contact || contact.desabonne_le) return;
+    if (!contact) return "impossible";
+    if (contact.desabonne_le) return "desabonne";
+
+    // `consentement = FALSE` sans désabonnement, c'est une inscription qui
+    // attend encore son clic de confirmation (`optin.ts`). Un ajout fait à la
+    // main ne passe pas devant ce clic : une case cochée par le secrétariat ne
+    // vaut pas la preuve que le double opt-in fabrique.
+    //
+    // Les déclencheurs automatiques, eux, ne demandent rien : la personne qui
+    // remplit le formulaire de contact doit recevoir son accusé de réception,
+    // même si son inscription aux Lettres, elle, attend toujours.
+    if (options.exigerConsentement && !contact.consentement) return "sans_consentement";
 
     const [premiere] = await sql<{ delai_jours: number }[]>`
       SELECT delai_jours FROM sequence_etapes
       WHERE sequence_id = ${seq.id} ORDER BY ordre ASC LIMIT 1
     `;
-    if (!premiere) return;
+    if (!premiere) return "impossible";
 
-    await sql`
-      INSERT INTO inscriptions (contact_id, sequence_id, etape_suivante, echeance)
-      VALUES (${contactId}, ${seq.id}, 1, NOW() + make_interval(days => ${premiere.delai_jours}))
-      ON CONFLICT (contact_id, sequence_id) DO NOTHING
+    // `xmax = 0` distingue la ligne créée de la ligne relancée. La clause WHERE
+    // du DO UPDATE protège les inscriptions en cours : elles ne renvoient alors
+    // rien du tout, et l'on sait que la personne y était déjà.
+    const lignes = options.reprendre
+      ? await sql<{ nouvelle: boolean }[]>`
+          INSERT INTO inscriptions (contact_id, sequence_id, etape_suivante, echeance)
+          VALUES (${contactId}, ${seq.id}, 1, NOW() + make_interval(days => ${premiere.delai_jours}))
+          ON CONFLICT (contact_id, sequence_id) DO UPDATE
+            SET statut = 'active', etape_suivante = 1, cree_le = NOW(),
+                echeance = NOW() + make_interval(days => ${premiere.delai_jours})
+            WHERE inscriptions.statut <> 'active'
+          RETURNING (xmax = 0) AS nouvelle
+        `
+      : await sql<{ nouvelle: boolean }[]>`
+          INSERT INTO inscriptions (contact_id, sequence_id, etape_suivante, echeance)
+          VALUES (${contactId}, ${seq.id}, 1, NOW() + make_interval(days => ${premiere.delai_jours}))
+          ON CONFLICT (contact_id, sequence_id) DO NOTHING
+          RETURNING TRUE AS nouvelle
+        `;
+
+    if (!lignes.length) return "deja";
+    return lignes[0].nouvelle ? "inscrite" : "reprise";
+  } catch (e) {
+    console.error("[crm] inscrireContact:", e);
+    return "impossible";
+  }
+}
+
+/**
+ * Inscrit un contact à une séquence. Sans effet s'il y est déjà, s'il s'est
+ * désabonné, ou si la séquence est en pause. C'est la porte des déclencheurs
+ * automatiques, qui n'ont rien à faire du détail.
+ */
+export async function inscrireASequence(contactId: string, cle: string): Promise<void> {
+  await inscrireContact(contactId, cle);
+}
+
+/**
+ * Sort un contact d'une séquence en cours, et renvoie le nom de la séquence
+ * quittée — de quoi écrire une chronologie qui dise laquelle. Ce qui est déjà
+ * parti reste parti.
+ */
+export async function retirerDeSequence(
+  contactId: string,
+  sequenceId: string,
+): Promise<string | null> {
+  const sql = await getDb();
+  if (!sql) return null;
+  try {
+    const lignes = await sql<{ nom: string }[]>`
+      UPDATE inscriptions i SET statut = 'arretee'
+      FROM sequences s
+      WHERE s.id = i.sequence_id
+        AND i.contact_id = ${contactId}
+        AND i.sequence_id = ${sequenceId}
+        AND i.statut = 'active'
+      RETURNING s.nom
+    `;
+    return lignes[0]?.nom ?? null;
+  } catch (e) {
+    console.error("[crm] retirerDeSequence:", e);
+    return null;
+  }
+}
+
+export type InscriptionVue = {
+  sequence_id: string;
+  cle: string;
+  nom: string;
+  /** La séquence elle-même tourne-t-elle ? */
+  sequence_active: boolean;
+  statut: string;
+  etape: number;
+  etapes: number;
+  echeance: Date;
+  cree_le: Date;
+};
+
+/** Les séquences où se trouve un contact, en cours d'abord, passées ensuite. */
+export async function inscriptionsDuContact(contactId: string): Promise<InscriptionVue[]> {
+  const sql = await getDb();
+  if (!sql) return [];
+  try {
+    return await sql<InscriptionVue[]>`
+      SELECT i.sequence_id, s.cle, s.nom, s.active AS sequence_active,
+             i.statut, i.etape_suivante AS etape, i.echeance, i.cree_le,
+             (SELECT COUNT(*) FROM sequence_etapes e WHERE e.sequence_id = s.id)::int AS etapes
+      FROM inscriptions i
+      JOIN sequences s ON s.id = i.sequence_id
+      WHERE i.contact_id = ${contactId}
+      ORDER BY (i.statut = 'active') DESC, i.cree_le DESC
     `;
   } catch (e) {
-    console.error("[crm] inscrireASequence:", e);
+    console.error("[crm] inscriptionsDuContact:", e);
+    return [];
   }
 }
 

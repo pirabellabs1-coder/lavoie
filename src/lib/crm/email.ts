@@ -39,8 +39,20 @@ export function personnaliser(
     ? `${SITE.url}/prerequis/${destinataire.jeton}`
     : `${SITE.url}/contact`;
 
-  return gabarit
-    .replace(/\{\{\s*prenom\s*\}\}/g, destinataire.prenom || "")
+  // Le prénom peut manquer — une personne ajoutée à la main sur sa seule
+  // adresse, par exemple. On avale alors la ponctuation qui l'annonçait, sans
+  // quoi l'objet devient « Avez-vous ouvert le guide,  ? ».
+  const prenom = destinataire.prenom?.trim() || "";
+  let texte = gabarit.replace(
+    /([ \t]*[,:—–-]?[ \t]*)\{\{\s*prenom\s*\}\}/g,
+    (_tout, avant: string) => (prenom ? `${avant}${prenom}` : ""),
+  );
+  if (!prenom) {
+    // Reste le cas du gabarit qui ouvre sur le prénom : « {{prenom}}, ».
+    texte = texte.replace(/^[ \t]*,[ \t]*/gm, "");
+  }
+
+  return texte
     .replace(/\{\{\s*email\s*\}\}/g, destinataire.email)
     .replace(/\{\{\s*lien_prerequis\s*\}\}/g, lienPrerequis)
     // Un « Bonjour , » disgracieux si le prénom est inconnu.
