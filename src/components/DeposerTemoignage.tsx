@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useProtection } from "@/components/Protection";
+import { SITE } from "@/lib/site";
 
 /**
  * Déposer un témoignage.
@@ -80,11 +81,23 @@ export default function DeposerTemoignage({
         <p className="display" style={{ fontSize: 26, margin: "0 0 10px", color: "var(--navy)" }}>
           Merci de votre confiance.
         </p>
-        <p style={{ color: "var(--mute)", lineHeight: 1.75, margin: 0 }}>
+        <p style={{ color: "var(--mute)", lineHeight: 1.75, margin: "0 0 22px" }}>
           Votre témoignage a bien été reçu. Il sera lu avant d&apos;être publié — c&apos;est
           notre façon de veiller à ce que chaque mot reste fidèle à ce que vous avez voulu
           dire.
         </p>
+        <p style={{ color: "var(--mute)", lineHeight: 1.75, margin: "0 0 18px", fontSize: 14 }}>
+          Et si le cœur vous en dit, le même mot sur Google aide beaucoup les personnes qui
+          cherchent — c&apos;est souvent là qu&apos;elles regardent en premier.
+        </p>
+        <a
+          href={SITE.avisGoogle}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-ghost btn-sm"
+        >
+          Laisser un avis Google
+        </a>
       </div>
     );
   }

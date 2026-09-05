@@ -173,6 +173,7 @@ export async function demanderAvis(contactId: string, acteur: string): Promise<R
         `Quelques lignes suffisent, et le lien ci-dessous vous connaît déjà — vous n'avez rien à retaper :\n\n` +
         `${lien}\n\n` +
         `Rien n'est publié automatiquement : je relis, et vous pouvez demander le retrait à tout moment.\n\n` +
+        `Et si le cœur vous en dit, le même mot sur Google aide beaucoup les personnes qui cherchent :\n${SITE.avisGoogle}\n\n` +
         `Merci du temps que vous y mettrez, s'il vous semble juste de le faire.`,
     });
 
@@ -195,6 +196,77 @@ export async function demanderAvis(contactId: string, acteur: string): Promise<R
     console.error("[crm] demanderAvis:", e);
     return { ok: false, erreur: "L'envoi a échoué." };
   }
+}
+
+/** Après ce délai sans réponse, un rappel part — un seul, jamais deux. */
+const RELANCE_JOURS = 10;
+
+/**
+ * Le rappel de ceux qui n'ont pas répondu.
+ *
+ * Une demande d'avis se perd dans une boîte comme n'importe quel message, et
+ * le silence dit rarement « non » : il dit « pas maintenant ». On redemande
+ * une fois, dix jours plus tard, avec le même lien — puis plus jamais. Au-delà,
+ * insister abîmerait la relation pour un paragraphe.
+ */
+export async function relancerLesAvis(): Promise<number> {
+  const sql = await getDb();
+  if (!sql) return 0;
+  if (!process.env.RESEND_API_KEY) return 0;
+
+  let envoyes = 0;
+  try {
+    const dus = await sql<{ id: string; prenom: string | null; email: string }[]>`
+      SELECT c.id, c.prenom, c.email
+      FROM contacts c
+      WHERE c.avis_demande_le IS NOT NULL
+        AND c.avis_relance_le IS NULL
+        AND c.avis_demande_le < NOW() - make_interval(days => ${RELANCE_JOURS})
+        AND c.desabonne_le IS NULL
+        AND NOT EXISTS (SELECT 1 FROM temoignages t WHERE t.contact_id = c.id)
+      LIMIT 50
+    `;
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    for (const c of dus) {
+      // La date est posée avant l'envoi : un échec ne doit pas relancer
+      // quelqu'un tous les matins.
+      await sql`UPDATE contacts SET avis_relance_le = NOW() WHERE id = ${c.id}`;
+
+      const lien = await lienAvis(String(c.id), c.email);
+      const { html, text } = habiller({
+        email: c.email,
+        apercu: "Deux lignes suffiraient.",
+        texte:
+          `Bonjour ${c.prenom ?? ""},\n\n` +
+          `Je vous avais demandé un mot sur votre expérience, il y a une dizaine de jours. Le silence est une réponse parfaitement acceptable, et ce message est le dernier sur le sujet.\n\n` +
+          `Si l'envie est là mais que le temps a manqué, deux lignes suffisent :\n\n` +
+          `${lien}\n\n` +
+          `Et si le moment n'est pas le bon, n'y pensez plus : cela ne change rien entre nous.`,
+      });
+
+      try {
+        await resend.emails.send({
+          from: EXPEDITEUR,
+          to: c.email,
+          subject: "Deux lignes, si le cœur vous en dit",
+          html,
+          text,
+        });
+        await sql`
+          INSERT INTO evenements (contact_id, type, libelle)
+          VALUES (${c.id}, 'avis', 'Rappel de la demande d''avis')
+        `;
+        envoyes += 1;
+      } catch (e) {
+        console.error("[crm] relance d'avis non envoyée:", e);
+      }
+    }
+  } catch (e) {
+    console.error("[crm] relancerLesAvis:", e);
+  }
+
+  return envoyes;
 }
 
 export type EnAttente = {

@@ -51,6 +51,8 @@ export type Contact = {
   parrain_id: string | null;
   /** Date d'envoi de la demande d'avis, s'il y en a eu une. */
   avis_demande_le: Date | null;
+  /** Date du rappel, s'il est parti. Il ne part qu'une fois. */
+  avis_relance_le: Date | null;
 };
 
 export type Evenement = {

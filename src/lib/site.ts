@@ -23,6 +23,10 @@ export const SITE = {
     country: "FR",
   },
   rating: { value: 4.9, count: 142 },
+  // La fiche Google, où l'on peut aussi déposer un avis public. Elle est
+  // proposée après le témoignage, jamais à la place : un avis Google ne se
+  // relit pas et ne se retire pas.
+  avisGoogle: "https://maps.app.goo.gl/cgxbmUAhb8BN4oWH9",
   // Réseaux sociaux (sameAs) — enrichit le knowledge graph (SEO / GEO / AIEO).
   sameAs: [
     "https://www.instagram.com/voie2laconscience/",

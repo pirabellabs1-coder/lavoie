@@ -278,7 +278,9 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS confirme_le        TIMESTAMPTZ,
       -- Date de la demande d'avis : sans elle, impossible de savoir qui a été
       -- sollicité et n'a pas répondu.
-      ADD COLUMN IF NOT EXISTS avis_demande_le    TIMESTAMPTZ
+      ADD COLUMN IF NOT EXISTS avis_demande_le    TIMESTAMPTZ,
+      -- Le rappel : une seule fois, dix jours après la demande.
+      ADD COLUMN IF NOT EXISTS avis_relance_le    TIMESTAMPTZ
   `;
   await sql`CREATE UNIQUE INDEX IF NOT EXISTS idx_contacts_parrainage ON contacts (jeton_parrainage) WHERE jeton_parrainage IS NOT NULL`;
   await sql`CREATE INDEX IF NOT EXISTS idx_contacts_parrain ON contacts (parrain_id) WHERE parrain_id IS NOT NULL`;

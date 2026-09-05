@@ -346,6 +346,17 @@ la page publique, simplement sans être reconnue.
 Rien ne change à la modération : un témoignage déposé n'est jamais en ligne
 avant votre validation.
 
+**Un rappel, un seul.** Dix jours après la demande, si la personne n'a rien
+déposé, un dernier message part avec le même lien — puis plus jamais. Le
+silence dit rarement « non » : il dit « pas maintenant ». Mais insister deux
+fois abîmerait la relation pour un paragraphe.
+
+**Et Google.** La fiche Google est proposée *après* le témoignage, jamais à la
+place : dans l'e-mail de demande, dans le rappel, et sur l'écran de
+remerciement une fois le texte déposé. C'est le bon moment pour le demander —
+la personne vient d'écrire, elle n'a plus qu'à recopier. L'adresse se change
+dans `src/lib/site.ts`, ligne `avisGoogle`.
+
 **Qui a été sollicité sans répondre.** L'onglet Témoignages ouvre sur un
 repli — « 4 personnes sollicitées sans avoir encore répondu » — avec la date de
 la demande et un lien vers chaque fiche, d'où l'on peut renvoyer.
