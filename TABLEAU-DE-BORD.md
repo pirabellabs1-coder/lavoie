@@ -344,6 +344,26 @@ fois le worker est passé dans la semaine — six ou sept, normalement.
 Ce n'est pas de la surveillance : personne n'est réveillé la nuit. C'est un
 témoin, à l'endroit où vous regardez de toute façon.
 
+## Restaurer une sauvegarde
+
+Onglet **Comptes**. La sauvegarde quotidienne arrive par e-mail, et se
+télécharge aussi à la demande depuis cet écran. Elle se relit ici : le fichier
+`.json` remet la base dans l'état où elle était le jour de la copie.
+
+**Elle remplace, elle ne complète pas.** Fiches, séquences, stages, places,
+propositions, témoignages, envois et campagnes reviennent tels qu'ils étaient ;
+ce qui a été fait depuis est perdu. Comme pour la remise à zéro, il faut écrire
+le mot `REMPLACER` en toutes lettres. Tout se joue dans une seule transaction :
+au moindre accroc, la base reste exactement comme avant.
+
+Deux choses ne reviennent jamais : les **comptes** du tableau de bord — la
+sauvegarde ne contient pas les mots de passe, volontairement, donc les accès en
+place ne sont pas touchés — et le **journal d'audit**, qui garde son fil, cette
+restauration comprise.
+
+Au-delà de 4 Mo, le fichier ne passe pas par le navigateur : il faut alors une
+restauration à la main, en ligne de commande.
+
 ## Remettre le fichier à zéro
 
 Onglet **Comptes**, tout en bas, encadré rouge. Il retire d'un coup les

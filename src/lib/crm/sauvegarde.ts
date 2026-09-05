@@ -55,6 +55,10 @@ export async function construireSauvegarde(): Promise<Sauvegarde | null> {
       inscriptions,
       envois,
       campagnes,
+      stages,
+      participations,
+      offres,
+      temoignages,
       utilisateurs,
     ] = await Promise.all([
       sql`SELECT * FROM contacts ORDER BY id`,
@@ -65,6 +69,13 @@ export async function construireSauvegarde(): Promise<Sauvegarde | null> {
       sql`SELECT * FROM inscriptions ORDER BY id`,
       sql`SELECT * FROM envois ORDER BY id`,
       sql`SELECT * FROM campagnes ORDER BY id`,
+      // Les stages et ce qui s'y rattache : sans eux, une restauration
+      // ramènerait des fiches sans leurs places, leurs propositions ni leurs
+      // témoignages.
+      sql`SELECT * FROM stages ORDER BY id`,
+      sql`SELECT * FROM participations ORDER BY id`,
+      sql`SELECT * FROM offres ORDER BY id`,
+      sql`SELECT * FROM temoignages ORDER BY id`,
       // Sans la colonne `empreinte` : voir l'en-tête du fichier.
       sql`SELECT id, email, nom, role, actif, cree_le, derniere_connexion_le
           FROM utilisateurs ORDER BY id`,
@@ -81,6 +92,10 @@ export async function construireSauvegarde(): Promise<Sauvegarde | null> {
         inscriptions,
         envois,
         campagnes,
+        stages,
+        participations,
+        offres,
+        temoignages,
         utilisateurs,
       },
     };

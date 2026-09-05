@@ -1,7 +1,7 @@
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
 import { exigerDroit } from "@/lib/crm/session";
-import { listerUtilisateurs, ROLES } from "@/lib/crm/utilisateurs";
+import { listerUtilisateurs, peut, ROLES } from "@/lib/crm/utilisateurs";
 import { enClair } from "@/lib/heure";
 import { compterAvantVidage } from "@/lib/crm/reinitialisation";
 import {
@@ -20,13 +20,15 @@ function premier(v: string | string[] | undefined): string {
 }
 
 export default async function ComptesPage({ searchParams }: { searchParams: Params }) {
-  await exigerDroit("comptes");
+  const qui = await exigerDroit("comptes");
+  const peutSauvegarder = peut(qui.role, "sauvegarde");
 
   const params = await searchParams;
   const erreur = premier(params.erreur);
   const cree = premier(params.cree) === "1";
   const modifie = premier(params.modifie) === "1";
   const vide = premier(params.vide);
+  const restaure = premier(params.restaure);
 
   const comptes = isDbConfigured() ? await listerUtilisateurs() : [];
   // Ce qu'emporterait la remise à zéro, compté avant de rien toucher.
@@ -191,6 +193,67 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
         </p>
       </div>
 
+      {/* ─── Restaurer une sauvegarde ─── */}
+      {peutSauvegarder && (
+        <div className="adm-carte" id="restaurer" style={{ marginTop: 14 }}>
+          <p className="adm-titre">Restaurer une sauvegarde</p>
+          {restaure && (
+            <div className="adm-alerte">
+              <strong>La sauvegarde est en place.</strong> Restauré : {restaure}.
+            </div>
+          )}
+          <p style={{ margin: "0 0 12px", lineHeight: 1.7 }}>
+            Le fichier attendu est celui de la sauvegarde quotidienne, reçu par e-mail, ou
+            celui que vous téléchargez ici :{" "}
+            <a href="/api/admin/sauvegarde">prendre une copie maintenant</a>.
+          </p>
+          <p style={{ margin: "0 0 12px", lineHeight: 1.7 }}>
+            <strong>La restauration remplace, elle ne complète pas.</strong> Les fiches, les
+            séquences, les stages et les envois reviennent exactement tels qu&apos;ils étaient
+            le jour de la copie — ce qui a été fait depuis est perdu. Tout se joue dans une
+            seule transaction : au moindre accroc, la base reste comme avant.
+          </p>
+          <p style={{ margin: "0 0 14px", fontSize: 13, lineHeight: 1.7, color: "var(--adm-mute)" }}>
+            Les comptes ci-dessus ne sont pas touchés (la sauvegarde ne contient pas les mots
+            de passe), et le journal d&apos;audit garde son fil, cette restauration comprise.
+          </p>
+
+          <form
+            action="/api/admin/restauration"
+            method="post"
+            encType="multipart/form-data"
+            className="zone-rouge-form"
+            style={{ borderTop: "1px solid var(--adm-line)" }}
+          >
+            <label style={{ flex: 1, minWidth: 220 }}>
+              <span className="adm-label">Fichier de sauvegarde (.json)</span>
+              <input
+                type="file"
+                name="fichier"
+                accept="application/json,.json"
+                required
+                className="adm-champ"
+              />
+            </label>
+            <label style={{ flex: 1, minWidth: 200 }}>
+              <span className="adm-label">
+                Écrivez <code>REMPLACER</code> pour confirmer
+              </span>
+              <input
+                name="confirmation"
+                className="adm-champ"
+                autoComplete="off"
+                placeholder="REMPLACER"
+                required
+              />
+            </label>
+            <button type="submit" className="adm-btn">
+              Restaurer
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* ─── La remise à zéro. Sans retour possible. ─── */}
       <div className="adm-carte zone-rouge" id="vider" style={{ marginTop: 14 }}>
         <p className="adm-titre">Remettre le fichier à zéro</p>
@@ -231,8 +294,9 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
 
         <p style={{ margin: "0 0 14px", fontSize: 13, lineHeight: 1.7 }}>
           <strong>Prenez une copie d&apos;abord.</strong>{" "}
-          <a href="/api/admin/export">Exporter les contacts en CSV</a> — et la sauvegarde
-          complète part chaque jour par e-mail, en pièce jointe.
+          <a href="/api/admin/sauvegarde">Télécharger la sauvegarde complète</a> — c&apos;est
+          elle, et elle seule, qui se restaure ci-dessus. L&apos;
+          <a href="/api/admin/export">export CSV</a> ne ramène que les contacts.
         </p>
 
         <form action={actionViderLeFichier} className="zone-rouge-form">
