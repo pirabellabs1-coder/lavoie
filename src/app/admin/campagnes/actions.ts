@@ -25,6 +25,8 @@ function lireSegment(donnees: FormData): Segment {
     utm_source: donnees.get("utm_source"),
     depuis_jours: donnees.get("depuis_jours"),
     jamais_ouvert: donnees.get("jamais_ouvert") === "on",
+    stage: donnees.get("stage"),
+    stage_etats: donnees.getAll("stage_etats").map(String),
   });
 }
 
@@ -47,6 +49,8 @@ export async function actionCompter(donnees: FormData) {
   if (segment.utm_source) params.set("utm_source", segment.utm_source);
   if (segment.depuis_jours) params.set("depuis_jours", String(segment.depuis_jours));
   if (segment.jamais_ouvert) params.set("jamais_ouvert", "on");
+  if (segment.stage) params.set("stage", segment.stage);
+  for (const e of segment.stage_etats ?? []) params.append("stage_etats", e);
   const quand = String(donnees.get("quand") ?? "");
   if (quand) params.set("quand", quand);
 

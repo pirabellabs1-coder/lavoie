@@ -5,10 +5,12 @@ import { STATUTS } from "@/lib/crm/contacts";
 import {
   compterSegment,
   decrireSegment,
+  ETATS_STAGE,
   listerCampagnes,
   nettoyerSegment,
   type Segment,
 } from "@/lib/crm/campagnes";
+import { ETATS_PARTICIPATION, listerStages } from "@/lib/crm/stages";
 import { enClair } from "@/lib/heure";
 import { actionArreterCampagne, actionCompter, actionCreerCampagne } from "./actions";
 
@@ -33,6 +35,10 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
   const params = await searchParams;
   const branchee = isDbConfigured();
   const campagnes = branchee ? await listerCampagnes() : [];
+  // Les stages servent de critère de ciblage : on peut être venu à un stage
+  // sans être « client », et vouloir écrire à ce groupe-là.
+  const stages = branchee ? await listerStages() : [];
+  const titresDesStages = Object.fromEntries(stages.map((s) => [s.slug, s.titre]));
 
   // Le formulaire se recharge tel quel après un comptage : rien n'est perdu.
   const apercu = premier(params.apercu) === "1";
@@ -41,12 +47,19 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
     : params.statuts
       ? [String(params.statuts)]
       : [];
+  const etatsChoisis = Array.isArray(params.stage_etats)
+    ? params.stage_etats
+    : params.stage_etats
+      ? [String(params.stage_etats)]
+      : [];
   const segment: Segment = nettoyerSegment({
     statuts: statutsChoisis,
     source: premier(params.source),
     utm_source: premier(params.utm_source),
     depuis_jours: premier(params.depuis_jours),
     jamais_ouvert: premier(params.jamais_ouvert) === "on",
+    stage: premier(params.stage),
+    stage_etats: etatsChoisis,
   });
   const nombre = apercu && branchee ? await compterSegment(segment) : null;
 
@@ -156,6 +169,49 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
               </label>
             </div>
 
+            <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--adm-line)" }}>
+              <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+                <label style={{ display: "block" }}>
+                  <span style={{ display: "block", fontSize: 12, color: "var(--adm-mute)", marginBottom: 6 }}>
+                    Inscrits à un stage
+                  </span>
+                  <select name="stage" className="adm-champ" defaultValue={premier(params.stage)}>
+                    <option value="">Peu importe</option>
+                    <option value="*">N&apos;importe quel stage</option>
+                    {stages.map((st) => (
+                      <option key={st.id} value={st.slug}>
+                        {st.titre}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div>
+                  <span style={{ display: "block", fontSize: 12, color: "var(--adm-mute)", marginBottom: 6 }}>
+                    Où en est leur place — sans coche, tous les états
+                  </span>
+                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                    {ETATS_STAGE.map((e) => (
+                      <label key={e} style={{ display: "flex", gap: 6, alignItems: "center", fontSize: 13 }}>
+                        <input
+                          type="checkbox"
+                          name="stage_etats"
+                          value={e}
+                          defaultChecked={etatsChoisis.includes(e)}
+                        />
+                        {ETATS_PARTICIPATION[e]?.texte ?? e}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {stages.length === 0 && branchee && (
+                <p style={{ fontSize: 12, color: "var(--adm-mute)", margin: "8px 0 0" }}>
+                  Aucun stage en base pour l&apos;instant : le catalogue s&apos;installe au premier
+                  passage dans l&apos;onglet Stages.
+                </p>
+              )}
+            </div>
+
             <label style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13, marginTop: 14 }}>
               <input
                 type="checkbox"
@@ -189,7 +245,7 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
               <strong>
                 {nombre} destinataire{nombre > 1 ? "s" : ""}
               </strong>{" "}
-              pour ce ciblage : {decrireSegment(segment)}.
+              pour ce ciblage : {decrireSegment(segment, titresDesStages)}.
             </div>
           )}
 
@@ -236,7 +292,7 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
                       </div>
                     </td>
                     <td style={{ fontSize: 12, color: "var(--adm-mute)" }}>
-                      {decrireSegment((c.segment ?? {}) as Segment)}
+                      {decrireSegment((c.segment ?? {}) as Segment, titresDesStages)}
                     </td>
                     <td>
                       <span className="adm-tag" data-s={(ETATS[c.statut] ?? ETATS.brouillon).ton}>

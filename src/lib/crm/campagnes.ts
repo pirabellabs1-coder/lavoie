@@ -34,7 +34,18 @@ export type Segment = {
   depuis_jours?: number;
   /** N'a jamais ouvert un seul e-mail. */
   jamais_ouvert?: boolean;
+  /**
+   * Inscrits à un stage : le slug du stage, ou « * » pour n'importe lequel.
+   * Les stages ne sont pas une source ni un statut — on peut être venu à un
+   * stage et rester « lead » —, il leur faut donc leur propre critère.
+   */
+  stage?: string;
+  /** États de participation retenus. Vide = tous, annulées comprises. */
+  stage_etats?: string[];
 };
+
+/** Les états d'une participation, tels qu'ils sont écrits en base. */
+export const ETATS_STAGE = ["demande", "attente", "confirmee", "venue", "annulee"] as const;
 
 export type Campagne = {
   id: string;
@@ -71,18 +82,41 @@ export function nettoyerSegment(brut: unknown): Segment {
   const jours = Number(s.depuis_jours);
   if (Number.isFinite(jours) && jours > 0) segment.depuis_jours = Math.min(3650, Math.round(jours));
   if (s.jamais_ouvert === true) segment.jamais_ouvert = true;
+  if (typeof s.stage === "string" && s.stage.trim()) {
+    segment.stage = s.stage.trim().slice(0, 120);
+  }
+  if (Array.isArray(s.stage_etats)) {
+    const etats = s.stage_etats.filter(
+      (v): v is string => typeof v === "string" && (ETATS_STAGE as readonly string[]).includes(v),
+    );
+    // Tous les états cochés revient à n'en cocher aucun : on ne garde pas un
+    // critère qui ne filtre rien.
+    if (etats.length && etats.length < ETATS_STAGE.length) segment.stage_etats = etats;
+  }
+  // Un état de participation sans stage n'a pas de sens : c'est le stage qui
+  // porte le critère.
+  if (!segment.stage) delete segment.stage_etats;
 
   return segment;
 }
 
-/** Description lisible d'un segment, pour l'afficher dans le tableau de bord. */
-export function decrireSegment(s: Segment): string {
+/**
+ * Description lisible d'un segment, pour l'afficher dans le tableau de bord.
+ * `titresDesStages` traduit les slugs en noms de stage, quand on les a sous la
+ * main : « stage-automne-naitre-a-soi » ne dit rien à personne.
+ */
+export function decrireSegment(s: Segment, titresDesStages: Record<string, string> = {}): string {
   const bouts: string[] = [];
   if (s.statuts?.length) bouts.push(s.statuts.join(", "));
   if (s.source) bouts.push(`source « ${s.source} »`);
   if (s.utm_source) bouts.push(`campagne « ${s.utm_source} »`);
   if (s.depuis_jours) bouts.push(`arrivés depuis moins de ${s.depuis_jours} jours`);
   if (s.jamais_ouvert) bouts.push("n'a jamais ouvert un e-mail");
+  if (s.stage) {
+    const nom = titresDesStages[s.stage] ?? s.stage;
+    const ou = s.stage === "*" ? "inscrits à un stage" : `inscrits au stage « ${nom} »`;
+    bouts.push(s.stage_etats?.length ? `${ou} (${s.stage_etats.join(", ")})` : ou);
+  }
   return bouts.length ? bouts.join(" · ") : "toute la liste";
 }
 
@@ -105,6 +139,8 @@ async function destinataires(
   const utm = segment.utm_source ?? null;
   const jours = segment.depuis_jours ?? null;
   const jamaisOuvert = segment.jamais_ouvert === true;
+  const stage = segment.stage ?? null;
+  const etats = segment.stage_etats?.length ? segment.stage_etats : null;
 
   try {
     return await sql<Destinataire[]>`
@@ -122,6 +158,16 @@ async function destinataires(
           OR NOT EXISTS (
             SELECT 1 FROM envois e
             WHERE e.contact_id = c.id AND e.ouvert_le IS NOT NULL
+          )
+        )
+        AND (
+          ${stage}::text IS NULL
+          OR EXISTS (
+            SELECT 1 FROM participations p
+            JOIN stages st ON st.id = p.stage_id
+            WHERE p.contact_id = c.id
+              AND (${stage}::text = '*' OR st.slug = ${stage}::text)
+              AND (${etats}::text[] IS NULL OR p.statut = ANY(${etats}::text[]))
           )
         )
         AND (

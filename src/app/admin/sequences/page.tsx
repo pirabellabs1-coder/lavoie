@@ -5,6 +5,7 @@ import { categorie } from "@/lib/crm/categories";
 import { compterSegment, nettoyerSegment, type Segment } from "@/lib/crm/campagnes";
 import { MAXIMUM_COLLE, MAXIMUM_MASSE } from "@/lib/crm/ajouts";
 import { STATUTS } from "@/lib/crm/contacts";
+import { ETATS_PARTICIPATION, listerStages } from "@/lib/crm/stages";
 import { exigerDroit } from "@/lib/crm/session";
 import {
   actionAjouterExistants,
@@ -35,6 +36,9 @@ export default async function SequencesPage({ searchParams }: { searchParams: Pa
   const params = await searchParams;
   const branchee = isDbConfigured();
   const sequences = branchee ? await listerSequences() : [];
+  // Les stages servent aussi de porte d'entrée : « tous les venus du stage
+  // d'automne » est une catégorie de personnes comme une autre.
+  const stages = branchee ? await listerStages() : [];
   const triees = [...sequences].sort(
     (a, b) => categorie(a.cle).ordre - categorie(b.cle).ordre,
   );
@@ -49,6 +53,8 @@ export default async function SequencesPage({ searchParams }: { searchParams: Pa
     statuts: premier(params.statut) ? [premier(params.statut)] : [],
     source: premier(params.source),
     depuis_jours: premier(params.depuis_jours),
+    stage: premier(params.stage),
+    stage_etats: premier(params.stage_etat) ? [premier(params.stage_etat)] : [],
   });
   const nombre = apercu && cible && branchee ? await compterSegment(segment) : null;
 
@@ -308,6 +314,37 @@ export default async function SequencesPage({ searchParams }: { searchParams: Pa
                               defaultValue={ouvert ? premier(params.depuis_jours) : ""}
                             />
                           </label>
+                          <label>
+                            <span className="adm-label">Inscrits à un stage</span>
+                            <select
+                              name="stage"
+                              className="adm-champ"
+                              defaultValue={ouvert ? premier(params.stage) : ""}
+                            >
+                              <option value="">Peu importe</option>
+                              <option value="*">N&apos;importe quel stage</option>
+                              {stages.map((st) => (
+                                <option key={st.id} value={st.slug}>
+                                  {st.titre}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                          <label>
+                            <span className="adm-label">Où en est leur place</span>
+                            <select
+                              name="stage_etat"
+                              className="adm-champ"
+                              defaultValue={ouvert ? premier(params.stage_etat) : ""}
+                            >
+                              <option value="">Tous les états</option>
+                              {Object.entries(ETATS_PARTICIPATION).map(([cle, e]) => (
+                                <option key={cle} value={cle}>
+                                  {e.texte}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
                         </div>
 
                         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginTop: 10 }}>
@@ -345,6 +382,12 @@ export default async function SequencesPage({ searchParams }: { searchParams: Pa
                               type="hidden"
                               name="compte_depuis_jours"
                               value={premier(params.depuis_jours)}
+                            />
+                            <input type="hidden" name="compte_stage" value={premier(params.stage)} />
+                            <input
+                              type="hidden"
+                              name="compte_stage_etat"
+                              value={premier(params.stage_etat)}
                             />
                             <label className="seq-ajout-accord">
                               <input type="checkbox" name="accord" required />

@@ -48,13 +48,28 @@ export async function actionMajEtape(formData: FormData) {
 const MAXIMUM_TEXTE = 40000;
 
 /** Le ciblage des contacts déjà connus, reconstruit depuis le formulaire. */
-function lireSegment(donnees: FormData): Segment {
-  const statut = String(donnees.get("statut") ?? "");
+function lireSegment(donnees: FormData, prefixe = ""): Segment {
+  const champ = (nom: string) => donnees.get(prefixe + nom);
+  const statut = String(champ("statut") ?? "");
+  const etat = String(champ("stage_etat") ?? "");
   return nettoyerSegment({
     statuts: statut ? [statut] : [],
-    source: donnees.get("source"),
-    depuis_jours: donnees.get("depuis_jours"),
+    source: champ("source"),
+    depuis_jours: champ("depuis_jours"),
+    stage: champ("stage"),
+    stage_etats: etat ? [etat] : [],
   });
+}
+
+/** Le ciblage, tel qu'il repasse dans l'URL pour recharger le formulaire. */
+function ciblageEnParams(segment: Segment): Record<string, string | undefined> {
+  return {
+    statut: segment.statuts?.[0],
+    source: segment.source,
+    depuis_jours: segment.depuis_jours ? String(segment.depuis_jours) : undefined,
+    stage: segment.stage,
+    stage_etat: segment.stage_etats?.[0],
+  };
 }
 
 /** Retour à la page, panneau de la catégorie ouvert, compte rendu affiché. */
@@ -191,12 +206,7 @@ export async function actionCompterCible(donnees: FormData) {
   const cle = String(donnees.get("cle") ?? "");
   if (!categorie(cle).manuel) return;
   const segment = lireSegment(donnees);
-  retour(cle, {
-    apercu: "1",
-    statut: segment.statuts?.[0],
-    source: segment.source,
-    depuis_jours: segment.depuis_jours ? String(segment.depuis_jours) : undefined,
-  });
+  retour(cle, { apercu: "1", ...ciblageEnParams(segment) });
 }
 
 /** Ajoute d'un coup les contacts déjà connus qui répondent au ciblage. */
@@ -216,17 +226,11 @@ export async function actionAjouterExistants(donnees: FormData) {
 
   // Le compte affiché engage : si le ciblage a bougé depuis, on refuse plutôt
   // que d'ajouter un nombre de personnes que personne n'a vu passer.
-  const compte = nettoyerSegment({
-    statuts: donnees.get("compte_statut") ? [String(donnees.get("compte_statut"))] : [],
-    source: donnees.get("compte_source"),
-    depuis_jours: donnees.get("compte_depuis_jours"),
-  });
+  const compte = lireSegment(donnees, "compte_");
   if (JSON.stringify(compte) !== JSON.stringify(segment)) {
     retour(cle, {
       souci: "Le ciblage a changé depuis le comptage. Recomptez avant d'ajouter.",
-      statut: segment.statuts?.[0],
-      source: segment.source,
-      depuis_jours: segment.depuis_jours ? String(segment.depuis_jours) : undefined,
+      ...ciblageEnParams(segment),
     });
   }
 

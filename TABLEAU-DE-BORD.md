@@ -95,6 +95,18 @@ d'origine, ancienneté, ou « n'a jamais ouvert un e-mail » pour les réveils. 
 aucun critère, la campagne part à toute la liste ; les désabonnés sont toujours
 exclus.
 
+**Les stages sont un critère à part entière.** On peut être venu à un stage sans
+être « client » ni porter la bonne source : le ciblage propose donc la liste des
+stages — un stage précis, ou n'importe lequel — et l'état de la place :
+demande, liste d'attente, confirmée, venue, annulée. Sans coche sur les états,
+tous comptent. « Confirmée + venue » sur le stage d'automne écrit exactement au
+groupe qui était dans la salle ; « demande » seule, à ceux qui ont frappé à la
+porte sans que la place se conclue.
+
+Ce même critère existe dans l'onglet **Séquences**, panneau « Ajouter des
+personnes » : de quoi faire entrer d'un coup les venus d'un stage dans une
+séquence — un suivi, une invitation au suivant.
+
 **Comptez toujours les destinataires avant d'envoyer.** Le bouton est là pour
 ça, et un envoi de masse ne se rattrape pas. Pour un premier essai, ciblez une
 campagne d'origine qui n'existe pas : vous verrez le mécanisme sans écrire à
