@@ -126,6 +126,7 @@ export default function Footer() {
             <div>
               <h5>Accompagnement</h5>
               <Link href="/offre-gold">Offre Gold</Link>
+              <Link href="/cercles">Les cercles</Link>
               <Link href="/methodes">Méthodes</Link>
               <Link href="/centre-hut">Centre HUT</Link>
               <Link href="/domoina">À propos</Link>

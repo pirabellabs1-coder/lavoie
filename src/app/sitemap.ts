@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/offre-gold", priority: 0.9, freq: "monthly" },
     { path: "/cycle-des-saisons", priority: 0.9, freq: "monthly" },
     { path: "/evenements", priority: 0.8, freq: "weekly" },
+    { path: "/cercles", priority: 0.8, freq: "monthly" },
     { path: "/canal-des-reves", priority: 0.7, freq: "monthly" },
     { path: "/methodes", priority: 0.8, freq: "monthly" },
     { path: "/domoina", priority: 0.8, freq: "monthly" },
