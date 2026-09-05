@@ -278,6 +278,27 @@ concernés. Tout se fait tout seul, chaque jour.
 Les deux chiffres du haut disent où en est la liste : combien de contacts
 sommeillent, et combien sont en sursis après leur réveil.
 
+## Autour des stages
+
+Trois choses partent toutes seules, en plus de la logistique envoyée à J-7 :
+
+**La demande sans réponse.** L'accusé de réception promet une confirmation sous
+48 heures ouvrées. Si au bout de **quatre jours** la place est toujours en
+« Demande », un mot part à la personne : le délai vient de nous, son intention
+tient-elle toujours ? Une seule fois, jamais deux, et jamais pour un stage déjà
+passé. C'est aussi ce qui fait remonter les demandes oubliées — la réponse
+arrive dans votre boîte.
+
+**La demande de retour**, deux jours après le stage, qui invite à déposer un
+témoignage.
+
+**La suite du chemin**, cinq jours après le stage : les personnes confirmées ou
+venues entrent dans la séquence **« Après le stage »** — trois e-mails sur un
+mois. L'intégration d'abord (ce qui se referme quand on rentre), puis les
+cercles comme rythme, puis le stage suivant et l'accompagnement individuel. Elle
+s'arrête d'elle-même en cas de désinscription, et se modifie comme les autres
+depuis l'onglet Séquences.
+
 ## Le routage par revenu
 
 Le questionnaire aiguille désormais chaque personne selon son revenu **et** son
@@ -300,6 +321,27 @@ réinventé — le texte est porté tel quel, et il part maintenant de votre dom
 vérifié (Resend) au lieu d'une adresse Gmail, ce qui améliore la délivrabilité.
 
 Tout se modifie depuis l'onglet **Séquences**, comme les autres.
+
+## Remettre le fichier à zéro
+
+Onglet **Comptes**, tout en bas, encadré rouge. Il retire d'un coup les
+personnes et tout ce qui s'y rattache : fiches, chronologies, questionnaires,
+places de stage, propositions, témoignages, inscriptions aux séquences, journal
+des envois et campagnes écrites. C'est fait pour la mise en service — repartir
+d'une page blanche avant que les vraies personnes arrivent.
+
+**Sans retour possible.** Il n'y a pas de corbeille. L'écran compte d'abord ce
+qui partirait, ligne par ligne, et rien ne se déclenche tant que le mot `VIDER`
+n'est pas écrit en toutes lettres. Prenez l'export CSV avant, et gardez la
+sauvegarde quotidienne qui arrive par e-mail : c'est le seul filet.
+
+**Ce qui reste, délibérément** : les séquences et leurs e-mails (c'est du
+réglage, pas de la donnée), le catalogue des stages avec ses places et sa
+logistique, les comptes du tableau de bord, et le journal d'audit — où
+l'opération s'inscrit elle-même, avec le nom de qui l'a faite. Effacer les
+traces en même temps que le reste serait le seul geste vraiment irrattrapable.
+
+Réservé au propriétaire.
 
 ## Les stages, centralisés
 

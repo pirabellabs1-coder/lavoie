@@ -125,6 +125,18 @@ export const CATEGORIES: Record<string, Categorie> = {
     statut: "appel",
     source: "Entretien",
   },
+  apres_stage: {
+    cle: "apres_stage",
+    groupe: "Après un stage",
+    cat: "A vécu un stage",
+    cond: "cinq jours après un stage, pour les places confirmées et les venues",
+    ton: "#0e6b7a",
+    ordre: 8,
+    manuel: true,
+    aide: "Une personne qui a vécu un stage — ici ou ailleurs — et à qui l'on veut proposer la suite.",
+    statut: "client",
+    source: "Stage",
+  },
   orientation: {
     cle: "orientation",
     groupe: "Anciennes",

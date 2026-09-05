@@ -289,6 +289,14 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS campagne_id BIGINT REFERENCES campagnes(id) ON DELETE SET NULL
   `;
 
+  // Le suivi d'une place : la relance d'une demande qui traîne, et l'entrée
+  // dans la séquence d'après-stage. Deux dates, pour n'agir qu'une fois.
+  await sql`
+    ALTER TABLE participations
+      ADD COLUMN IF NOT EXISTS relance_le TIMESTAMPTZ,
+      ADD COLUMN IF NOT EXISTS suite_le   TIMESTAMPTZ
+  `;
+
   // Un même contact ne reçoit jamais deux fois la même campagne, même si le
   // worker repasse au milieu d'un envoi interrompu.
   await sql`

@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site";
 import { EVENEMENTS } from "@/lib/evenements";
 import { getDb } from "./db";
 import { habiller } from "./email";
-import { EXPEDITEUR } from "./sequences";
+import { EXPEDITEUR, inscrireASequence } from "./sequences";
 
 /**
  * Les stages, et qui vient.
@@ -251,6 +251,10 @@ export async function reglerStage(
 
 const AVANT_JOURS = 7;
 const APRES_JOURS = 2;
+/** Une demande sans réponse au bout de ce délai reçoit un mot. */
+const RELANCE_JOURS = 4;
+/** Le temps qu'on laisse avant d'ouvrir la suite du chemin. */
+const SUITE_JOURS = 5;
 
 /**
  * La logistique une semaine avant, le retour deux jours après. Chaque e-mail
@@ -258,14 +262,22 @@ const APRES_JOURS = 2;
  * posée en base avant même de savoir si Resend a réussi, pour qu'un incident
  * ne se transforme jamais en envoi en boucle.
  */
-export async function accompagnerLesStages(): Promise<{ logistique: number; retours: number }> {
+export async function accompagnerLesStages(): Promise<{
+  logistique: number;
+  retours: number;
+  relances: number;
+  suites: number;
+}> {
+  const vide = { logistique: 0, retours: 0, relances: 0, suites: 0 };
   const sql = await getDb();
-  if (!sql) return { logistique: 0, retours: 0 };
-  if (!process.env.RESEND_API_KEY) return { logistique: 0, retours: 0 };
+  if (!sql) return vide;
+  if (!process.env.RESEND_API_KEY) return vide;
 
   const resend = new Resend(process.env.RESEND_API_KEY);
   let logistique = 0;
   let retours = 0;
+  let relances = 0;
+  let suites = 0;
 
   type Due = {
     id: string;
@@ -377,5 +389,84 @@ export async function accompagnerLesStages(): Promise<{ logistique: number; reto
     console.error("[crm] accompagnerLesStages (après):", e);
   }
 
-  return { logistique, retours };
+  // ── Une demande restée sans réponse ──
+  //
+  // L'accusé de réception promet une confirmation sous 48 heures ouvrées.
+  // Quand le délai passe, le silence vient de nous, pas de la personne : on le
+  // dit, et on lui laisse la possibilité de se retirer proprement. Une seule
+  // fois, jamais deux.
+  try {
+    const dues = await sql<Due[]>`
+      SELECT p.id, c.email, c.prenom, s.titre, s.debut_le, s.logistique
+      FROM participations p
+      JOIN stages s   ON s.id = p.stage_id
+      JOIN contacts c ON c.id = p.contact_id
+      WHERE p.statut = 'demande'
+        AND p.relance_le IS NULL
+        AND p.cree_le < NOW() - make_interval(days => ${RELANCE_JOURS})
+        AND (s.debut_le IS NULL OR s.debut_le > NOW())
+        AND c.desabonne_le IS NULL
+      LIMIT 100
+    `;
+
+    for (const d of dues) {
+      await sql`UPDATE participations SET relance_le = NOW() WHERE id = ${d.id}`;
+      const { html, text } = habiller({
+        email: d.email,
+        apercu: `Votre demande de place pour « ${d.titre} » attend toujours.`,
+        texte:
+          `Bonjour ${d.prenom ?? ""},\n\n` +
+          `Vous avez demandé une place pour « ${d.titre} », et nous ne l'avons pas encore confirmée. Ce délai vient de nous.\n\n` +
+          `Deux mots suffisent à débloquer les choses. Si votre intention tient toujours, répondez simplement à ce message : le secrétariat revient vers vous avec les modalités de règlement.\n\n` +
+          `Et si le moment n'est plus le bon, dites-le aussi. Ce n'est pas un reproche, et une autre personne attend peut-être cette place.\n\n` +
+          `À très vite,\n` +
+          `Le secrétariat — La Voie 2 la Conscience`,
+      });
+      try {
+        await resend.emails.send({
+          from: EXPEDITEUR,
+          to: d.email,
+          subject: `Votre place pour « ${d.titre} » — toujours d'actualité ?`,
+          html,
+          text,
+        });
+        relances += 1;
+      } catch (e) {
+        console.error("[crm] relance de demande non envoyée:", e);
+      }
+    }
+  } catch (e) {
+    console.error("[crm] accompagnerLesStages (demandes):", e);
+  }
+
+  // ── Cinq jours après : la suite du chemin ──
+  //
+  // La demande de retour part à J+2 ; celle-ci prend le relais et ouvre le pas
+  // suivant. C'est une séquence et non un e-mail unique : elle s'étale, et
+  // s'arrête d'elle-même si la personne se désabonne.
+  try {
+    const dues = await sql<{ id: string; contact_id: string }[]>`
+      SELECT p.id, p.contact_id
+      FROM participations p
+      JOIN stages s   ON s.id = p.stage_id
+      JOIN contacts c ON c.id = p.contact_id
+      WHERE p.statut IN ('confirmee', 'venue')
+        AND p.suite_le IS NULL
+        AND s.debut_le IS NOT NULL
+        AND s.debut_le < NOW() - make_interval(days => ${SUITE_JOURS})
+        AND s.debut_le > NOW() - INTERVAL '60 days'
+        AND c.desabonne_le IS NULL
+      LIMIT 100
+    `;
+
+    for (const d of dues) {
+      await sql`UPDATE participations SET suite_le = NOW() WHERE id = ${d.id}`;
+      await inscrireASequence(String(d.contact_id), "apres_stage");
+      suites += 1;
+    }
+  } catch (e) {
+    console.error("[crm] accompagnerLesStages (suite):", e);
+  }
+
+  return { logistique, retours, relances, suites };
 }

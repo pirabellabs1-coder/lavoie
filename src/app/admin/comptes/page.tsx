@@ -3,10 +3,12 @@ import { isDbConfigured } from "@/lib/crm/db";
 import { exigerDroit } from "@/lib/crm/session";
 import { listerUtilisateurs, ROLES } from "@/lib/crm/utilisateurs";
 import { enClair } from "@/lib/heure";
+import { compterAvantVidage } from "@/lib/crm/reinitialisation";
 import {
   actionBasculerCompte,
   actionChangerMotDePasse,
   actionCreerCompte,
+  actionViderLeFichier,
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -24,8 +26,12 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
   const erreur = premier(params.erreur);
   const cree = premier(params.cree) === "1";
   const modifie = premier(params.modifie) === "1";
+  const vide = premier(params.vide);
 
   const comptes = isDbConfigured() ? await listerUtilisateurs() : [];
+  // Ce qu'emporterait la remise à zéro, compté avant de rien toucher.
+  const aVider = isDbConfigured() ? await compterAvantVidage() : null;
+  const totalAVider = (aVider ?? []).reduce((n, l) => n + l.lignes, 0);
 
   return (
     <Cadre
@@ -36,6 +42,12 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
       {erreur && <div className="adm-alerte">{erreur}</div>}
       {cree && <div className="adm-alerte">Le compte a été créé.</div>}
       {modifie && <div className="adm-alerte">Le mot de passe a été remplacé.</div>}
+      {vide && (
+        <div className="adm-alerte">
+          <strong>Le fichier est vide.</strong> Retiré : {vide}. Les séquences, le catalogue
+          des stages, les comptes et le journal d&apos;audit sont restés en place.
+        </div>
+      )}
 
       <div className="adm-carte" style={{ marginBottom: 14 }}>
         <p className="adm-titre">Les accès en place</p>
@@ -177,6 +189,69 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
           avec son propre compte, dont l&apos;accès se retire ici en un clic, sans rien
           changer pour les autres.
         </p>
+      </div>
+
+      {/* ─── La remise à zéro. Sans retour possible. ─── */}
+      <div className="adm-carte zone-rouge" id="vider" style={{ marginTop: 14 }}>
+        <p className="adm-titre">Remettre le fichier à zéro</p>
+        <p style={{ margin: "0 0 12px", lineHeight: 1.7 }}>
+          Pour effacer les essais avant la mise en service. <strong>Sans retour possible</strong> :
+          il n&apos;y a pas de corbeille, et ce qui part ne se récupère que dans une
+          sauvegarde.
+        </p>
+
+        {totalAVider > 0 ? (
+          <>
+            <p style={{ margin: "0 0 8px", fontSize: 13, color: "var(--adm-mute)" }}>
+              Partiraient aujourd&apos;hui — <strong>{totalAVider}</strong> ligne
+              {totalAVider > 1 ? "s" : ""} en tout :
+            </p>
+            <ul className="zone-rouge-liste">
+              {(aVider ?? [])
+                .filter((l) => l.lignes > 0)
+                .map((l) => (
+                  <li key={l.table}>
+                    <b>{l.lignes}</b> {l.table}
+                  </li>
+                ))}
+            </ul>
+          </>
+        ) : (
+          <p style={{ margin: "0 0 12px", fontSize: 13, color: "var(--adm-mute)" }}>
+            Le fichier est déjà vide : il n&apos;y a rien à retirer.
+          </p>
+        )}
+
+        <p style={{ margin: "12px 0", fontSize: 13, lineHeight: 1.7 }}>
+          Restent en place : les <strong>séquences</strong> et leurs e-mails, le
+          <strong> catalogue des stages</strong> avec ses places et sa logistique, les{" "}
+          <strong>comptes</strong> ci-dessus, et le <strong>journal d&apos;audit</strong>, où
+          cette opération s&apos;inscrira.
+        </p>
+
+        <p style={{ margin: "0 0 14px", fontSize: 13, lineHeight: 1.7 }}>
+          <strong>Prenez une copie d&apos;abord.</strong>{" "}
+          <a href="/api/admin/export">Exporter les contacts en CSV</a> — et la sauvegarde
+          complète part chaque jour par e-mail, en pièce jointe.
+        </p>
+
+        <form action={actionViderLeFichier} className="zone-rouge-form">
+          <label style={{ flex: 1, minWidth: 220 }}>
+            <span className="adm-label">
+              Écrivez <code>VIDER</code> pour confirmer
+            </span>
+            <input
+              name="confirmation"
+              className="adm-champ"
+              autoComplete="off"
+              placeholder="VIDER"
+              required
+            />
+          </label>
+          <button type="submit" className="adm-btn danger">
+            Vider le fichier
+          </button>
+        </form>
       </div>
     </Cadre>
   );

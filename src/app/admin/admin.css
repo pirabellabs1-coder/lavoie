@@ -372,6 +372,20 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-btn.fantome { background: var(--adm-surface); color: var(--adm-ink); border-color: var(--adm-line-fort); }
 .adm-btn.fantome:hover { background: var(--adm-surface-2); filter: none; }
 .adm-btn.petit { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
+.adm-btn.danger { background: var(--adm-bad); border-color: var(--adm-bad); }
+
+/* La zone rouge : ce qui ne se rattrape pas doit se voir de loin. */
+.zone-rouge { border: 1px solid var(--adm-bad); }
+.zone-rouge .adm-titre { color: var(--adm-bad); }
+.zone-rouge-liste {
+  margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.8;
+  color: var(--adm-ink-2);
+}
+.zone-rouge-liste b { font-variant-numeric: tabular-nums; color: var(--adm-ink); }
+.zone-rouge-form {
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;
+  border-top: 1px solid var(--adm-line); padding-top: 14px;
+}
 
 .adm-champ {
   width: 100%;

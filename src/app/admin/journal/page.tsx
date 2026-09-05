@@ -24,6 +24,8 @@ const LIBELLES: Record<string, string> = {
   sequence_ajout_masse: "Ajout en masse dans une séquence",
   sequence_ajout_fiche: "Personne ajoutée à une séquence depuis sa fiche",
   sequence_retrait: "Personne retirée d'une séquence",
+  contact_cree: "Fiche créée à la main",
+  fichier_vide: "Fichier remis à zéro",
 };
 
 type Params = Promise<Record<string, string | string[] | undefined>>;

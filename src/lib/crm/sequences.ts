@@ -298,6 +298,39 @@ export const SEQUENCES_PAR_DEFAUT: SequenceGraine[] = [
       },
     ],
   },
+  {
+    cle: "apres_stage",
+    nom: "Après le stage",
+    description:
+      "Se déclenche cinq jours après un stage, pour les places confirmées et les personnes venues. Accompagne l'intégration, puis ouvre le pas suivant — un cercle, le stage d'après, ou un accompagnement.",
+    declencheur: "apres_stage",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Ce qui reste, une fois rentré",
+        corps:
+          `Bonjour {{prenom}},\n\nVous êtes rentré depuis quelques jours. C'est le moment le plus délicat du chemin : celui où la vie reprend son rythme, où les vieux réflexes se remettent en place, et où ce qui s'est ouvert pendant le stage risque de se refermer sans bruit.\n\nCe n'est pas une faiblesse de votre part. C'est mécanique. Un corps qui vient de traverser quelque chose de fort cherche à revenir à ce qu'il connaît.\n\nUne seule chose à tenir cette semaine : un point d'ancrage quotidien, même minuscule. Dix minutes, à heure fixe, sans écran. Ce n'est pas la durée qui compte, c'est la régularité.\n\nEt si quelque chose remonte — une émotion, une image, une question —, écrivez-le-moi. Je lis tout.` +
+          SIGNATURE,
+      },
+      {
+        ordre: 2,
+        delai_jours: 12,
+        sujet: "Seul, on retombe ; ensemble, on tient",
+        corps:
+          `Bonjour {{prenom}},\n\nDeux semaines ont passé. Vous savez maintenant ce qui a tenu, et ce qui a glissé.\n\nCe que j'observe depuis des années : les personnes qui transforment durablement ne sont pas les plus motivées, ce sont celles qui ne restent pas seules. Un stage ouvre ; c'est le rythme qui inscrit.\n\nC'est exactement ce que sont les cercles : un rendez-vous régulier, en petit groupe, sur un axe précis — les rêves, les mémoires transgénérationnelles, l'argent, la sexualité. On y avance sans repartir de zéro à chaque fois.\n\nLes cercles ouverts en ce moment : ${HUB_CERCLES}\n\nEt si aucun ne vous parle, ce n'est pas grave : le stage a déjà fait son travail.` +
+          SIGNATURE,
+      },
+      {
+        ordre: 3,
+        delai_jours: 25,
+        sujet: "Le prochain passage",
+        corps:
+          `Bonjour {{prenom}},\n\nUn dernier mot, puis je vous laisse à votre chemin.\n\nLe Cycle des Saisons se parcourt sur quatre stages, un par saison. Chacun se tient seul, mais l'un après l'autre ils descendent plus profond — on ne retravaille pas la même chose à l'automne et au printemps.\n\nLes prochaines dates : ${SITE.url}/evenements\nLe parcours complet : ${SITE.url}/cycle-des-saisons\n\nEt s'il vous faut un travail plus resserré, en tête-à-tête, dites-le-moi : ${SITE.url}/contact\n\nQuoi que vous décidiez, ce que vous avez traversé vous appartient. Personne ne peut vous le reprendre.` +
+          SIGNATURE,
+      },
+    ],
+  },
 ];
 
 /** Installe les scénarios manquants. Idempotent, n'écrase jamais l'existant. */
