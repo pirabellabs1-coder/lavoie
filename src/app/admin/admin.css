@@ -602,6 +602,12 @@ textarea.adm-champ { min-height: 96px; resize: vertical; line-height: 1.6; }
 .fiche-seq .nom { font-weight: 600; font-size: 13px; }
 .fiche-seq .det { color: var(--adm-mute); font-size: 11.5px; margin-top: 2px; line-height: 1.5; }
 .fiche-seq-ajout { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+/* Créer une fiche à la main, depuis la liste des contacts. */
+.contact-neuf {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.contact-neuf .adm-label { margin-bottom: 4px; }
 .fiche-seq-ajout .adm-champ { flex: 1; min-width: 180px; }
 
 @media (max-width: 700px) {

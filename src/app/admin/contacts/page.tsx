@@ -2,6 +2,10 @@ import Link from "next/link";
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
 import { STATUTS, STATUT_LABEL, listerContacts, nomAffiche } from "@/lib/crm/contacts";
+import { groupesManuels } from "@/lib/crm/categories";
+import { exigerIdentite } from "@/lib/crm/session";
+import { peut } from "@/lib/crm/utilisateurs";
+import { actionCreerContact } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +17,11 @@ function dateCourte(d: Date | string): string {
 export default async function ContactsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; statut?: string }>;
+  searchParams: Promise<{ q?: string; statut?: string; erreur?: string }>;
 }) {
-  const { q, statut } = await searchParams;
+  const { q, statut, erreur } = await searchParams;
+  const qui = await exigerIdentite();
+  const automate = peut(qui.role, "sequences");
   const contacts = isDbConfigured()
     ? await listerContacts({ recherche: q, statut, limite: 500 })
     : [];
@@ -30,9 +36,12 @@ export default async function ContactsPage({
           : undefined
       }
       actions={
-        <a href="/api/admin/export" className="adm-btn fantome">
-          Exporter en CSV
-        </a>
+        <>
+          <a href="#ajouter" className="adm-btn">Ajouter une personne</a>
+          <a href="/api/admin/export" className="adm-btn fantome">
+            Exporter en CSV
+          </a>
+        </>
       }
     >
       {!isDbConfigured() && (
@@ -41,6 +50,125 @@ export default async function ContactsPage({
           variable <code>DATABASE_URL</code> dans les réglages Vercel, puis redéployez.
         </div>
       )}
+
+      {/* ─── Ajouter quelqu'un à la main ─── */}
+      <div className="adm-carte" id="ajouter" style={{ marginBottom: 16 }}>
+        <details className="seq-edit seq-ajout" open={Boolean(erreur)}>
+          <summary>Ajouter une personne</summary>
+
+          {erreur && (
+            <div className="adm-alerte" style={{ margin: "10px 0" }}>
+              {erreur}
+            </div>
+          )}
+
+          <p className="seq-ajout-aide">
+            Pour quelqu&apos;un rencontré hors du site : un stage, un appel, une adresse
+            notée sur un carnet. Une adresse déjà connue n&apos;est jamais dupliquée — sa
+            fiche est complétée, et vous arrivez dessus.
+          </p>
+
+          <form action={actionCreerContact} style={{ marginTop: 12 }}>
+            <div className="contact-neuf">
+              <label>
+                <span className="adm-label">Prénom</span>
+                <input name="prenom" className="adm-champ" maxLength={80} />
+              </label>
+              <label>
+                <span className="adm-label">Nom</span>
+                <input name="nom" className="adm-champ" maxLength={80} />
+              </label>
+              <label>
+                <span className="adm-label">E-mail *</span>
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  className="adm-champ"
+                  maxLength={254}
+                  placeholder="marie@exemple.fr"
+                />
+              </label>
+              <label>
+                <span className="adm-label">Téléphone</span>
+                <input name="telephone" className="adm-champ" maxLength={40} />
+              </label>
+              <label>
+                <span className="adm-label">Statut</span>
+                <select name="statut" className="adm-champ" defaultValue="nouveau">
+                  {STATUTS.map((s) => (
+                    <option key={s.cle} value={s.cle}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span className="adm-label">Source</span>
+                <input
+                  name="source"
+                  className="adm-champ"
+                  maxLength={120}
+                  placeholder="Stage automne, salon…"
+                />
+              </label>
+            </div>
+
+            <label style={{ display: "block", marginTop: 12 }}>
+              <span className="adm-label">Ce qu&apos;il faut retenir</span>
+              <textarea
+                name="note"
+                rows={2}
+                className="adm-champ"
+                maxLength={2000}
+                placeholder="Où vous l'avez rencontrée, ce qu'elle cherche…"
+                style={{ resize: "vertical" }}
+              />
+            </label>
+
+            {automate ? (
+              <>
+                <label style={{ display: "block", marginTop: 12 }}>
+                  <span className="adm-label">L&apos;inscrire dans une catégorie</span>
+                  <select name="categorie" className="adm-champ" defaultValue="">
+                    <option value="">Ne l&apos;inscrire à aucune séquence</option>
+                    {groupesManuels().map((g) => (
+                      <optgroup key={g.titre} label={g.titre}>
+                        {g.cats.map((c) => (
+                          <option key={c.cle} value={c.cle}>
+                            {c.cat}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
+                </label>
+                <p className="seq-ajout-note" style={{ margin: "6px 0 0" }}>
+                  Une catégorie choisie décide du statut et de la source à la place des
+                  champs ci-dessus, et lance sa séquence d&apos;e-mails. Sans catégorie, la
+                  fiche est simplement créée et rien ne part.
+                </p>
+                <label className="seq-ajout-accord">
+                  <input type="checkbox" name="accord" />
+                  <span>
+                    Cette personne a accepté de recevoir ces e-mails — à cocher seulement si
+                    vous choisissez une catégorie. L&apos;accord est consigné dans sa
+                    chronologie avec votre nom.
+                  </span>
+                </label>
+              </>
+            ) : (
+              <p className="seq-ajout-note" style={{ marginTop: 12 }}>
+                La fiche est créée sans qu&apos;aucun e-mail ne parte.
+              </p>
+            )}
+
+            <button type="submit" className="adm-btn" style={{ marginTop: 4 }}>
+              Enregistrer cette personne
+            </button>
+          </form>
+        </details>
+      </div>
 
       <form className="adm-carte" style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>

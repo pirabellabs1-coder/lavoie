@@ -60,6 +60,7 @@ export default async function FicheContact({
   const messages = await searchParams;
   const erreur = Array.isArray(messages.erreur) ? messages.erreur[0] : messages.erreur;
   const offreFaite = messages.offre === "creee" || messages.offre === "envoyee";
+  const cree = Array.isArray(messages.cree) ? messages.cree[0] : messages.cree;
   const seq = Array.isArray(messages.seq) ? messages.seq[0] : messages.seq;
   // `hasOwn` : sans lui, `?seq=__proto__` renverrait un objet, que React
   // refuserait d'afficher.
@@ -92,6 +93,13 @@ export default async function FicheContact({
       }
     >
       {erreur && <div className="adm-alerte">{erreur}</div>}
+      {cree && (
+        <div className="adm-alerte">
+          {cree === "1"
+            ? "La fiche est créée."
+            : "Cette adresse était déjà au fichier : sa fiche a été complétée, pas dupliquée."}
+        </div>
+      )}
       {offreFaite && (
         <div className="adm-alerte">
           {messages.offre === "envoyee"

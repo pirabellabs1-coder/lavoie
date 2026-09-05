@@ -397,9 +397,18 @@ reprendre une liste importée : on cible par statut, par source et par
 ancienneté, on **compte d'abord**, puis on ajoute. Comme pour les campagnes, le
 bouton « Compter » est là pour ça — un envoi de masse ne se rattrape pas.
 
-**Depuis une fiche.** L'encadré **Automatisations** montre où en est la
-personne dans chaque séquence — quel e-mail, quand part le suivant — permet de
-l'ajouter à une catégorie, et de la retirer d'une séquence en cours.
+**Depuis l'onglet Contacts.** Le bouton **« Ajouter une personne »**, en haut à
+droite, crée une fiche à la main : prénom, nom, e-mail, téléphone, et ce qu'il
+faut retenir. La catégorie y est facultative — on peut vouloir seulement noter
+quelqu'un dans le fichier sans rien lui envoyer. Dès qu'une catégorie est
+choisie, c'est elle qui fixe le statut et la source, et sa séquence démarre.
+Une adresse déjà connue n'est jamais dupliquée : sa fiche est complétée, et
+vous arrivez dessus.
+
+**Depuis une fiche.** L'encadré **Automatisations**, sous « Où en est-il dans le
+parcours », montre où en est la personne dans chaque séquence — quel e-mail,
+quand part le suivant — permet de l'ajouter à une catégorie, et de la retirer
+d'une séquence en cours.
 
 **La case d'accord n'est pas une formalité.** Elle atteste que ces personnes
 ont accepté de recevoir ces e-mails ; l'ajout est inscrit au journal d'audit
