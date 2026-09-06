@@ -4,6 +4,7 @@ import VideoTestimonial from "@/components/VideoTestimonial";
 import JsonLd from "@/components/JsonLd";
 import { videoLd, breadcrumbLd } from "@/lib/jsonld";
 import { temoignagesPublies } from "@/lib/crm/temoignages";
+import { SITE } from "@/lib/site";
 import DeposerTemoignage from "@/components/DeposerTemoignage";
 
 export const dynamic = "force-dynamic";
@@ -105,7 +106,7 @@ export default async function Temoignages() {
           <div style={{ display: "flex", justifyContent: "center", gap: 60, flexWrap: "wrap" }}>
             {[
               { n: "500+", label: "Personnes accompagnées" },
-              { n: "4.9/5", label: "Note Google" },
+              { n: `${SITE.noteGoogle}/5`, label: "Note Google" },
               { n: "100 %", label: "Recommandent" },
             ].map((s, i) => (
               <div key={i} style={{ textAlign: "center" }}>
@@ -180,9 +181,21 @@ export default async function Temoignages() {
               <span key={i} style={{ color: "var(--gold)", fontSize: 24 }}>★</span>
             ))}
           </div>
-          <p className="num" style={{ fontSize: 44, color: "var(--navy)", margin: "0 0 8px" }}>4.9 / 5</p>
-          <p style={{ fontSize: 15, color: "var(--mute)", margin: "0 0 8px" }}>Basé sur les avis Google vérifiés</p>
-          <p className="small" style={{ letterSpacing: ".16em", textTransform: "uppercase", color: "var(--gold)", margin: 0, fontSize: 10.5 }}>✓ Avis certifiés Google</p>
+          <p className="num" style={{ fontSize: 44, color: "var(--navy)", margin: "0 0 8px" }}>
+            {SITE.noteGoogle} / 5
+          </p>
+          <p style={{ fontSize: 15, color: "var(--mute)", margin: "0 0 8px" }}>
+            Basé sur les avis Google vérifiés
+          </p>
+          <a
+            href={SITE.avisGoogle}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="small"
+            style={{ letterSpacing: ".16em", textTransform: "uppercase", color: "var(--gold)", fontSize: 10.5 }}
+          >
+            ✓ Les lire sur Google
+          </a>
         </div>
       </section>
 

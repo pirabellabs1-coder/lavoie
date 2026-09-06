@@ -22,7 +22,11 @@ export const SITE = {
     region: "Sarthe",
     country: "FR",
   },
-  rating: { value: 4.9, count: 142 },
+  // La note affichée sur la page des témoignages. C'est une affirmation
+  // humaine, vérifiable sur la fiche Google ci-dessous — elle n'est plus
+  // injectée dans les données structurées : une note d'entreprise que Google
+  // ne peut pas recouper, il l'ignore au mieux, la sanctionne au pire.
+  noteGoogle: 4.9,
   // La fiche Google, où l'on peut aussi déposer un avis public. Elle est
   // proposée après le témoignage, jamais à la place : un avis Google ne se
   // relit pas et ne se retire pas.

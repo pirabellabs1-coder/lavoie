@@ -66,8 +66,15 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close on route change
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  // Le menu se referme au changement de page. L'ajustement se fait pendant le
+  // rendu plutôt que dans un effet : c'est le motif recommandé par React pour
+  // une donnée dérivée d'une autre, et il évite le rendu supplémentaire —
+  // l'utilisateur ne voit jamais le menu ouvert sur la page suivante.
+  const [pagePrecedente, setPagePrecedente] = useState(pathname);
+  if (pathname !== pagePrecedente) {
+    setPagePrecedente(pathname);
+    setMobileOpen(false);
+  }
 
   // Lock body scroll when mobile menu open
   useEffect(() => {

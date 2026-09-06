@@ -1,0 +1,57 @@
+name: Vérification
+
+# Chaque poussée sur `main` déclenche un déploiement chez Vercel. Rien ne
+# vérifiait ce qui partait : ni le typage, ni le lint, ni les tests, ni même
+# que le site compile ailleurs que sur la machine qui a écrit le code. Ce
+# fichier comble ce trou — il tourne en parallèle du déploiement et rend le
+# commit rouge sur GitHub si quelque chose casse.
+#
+# Il ne bloque pas la mise en ligne : Vercel déploie de son côté. Pour que
+# l'échec devienne bloquant, il faut protéger la branche `main` dans les
+# réglages GitHub et exiger ce contrôle avant fusion.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Une nouvelle poussée annule la vérification en cours sur la même branche :
+# seule la dernière version compte.
+concurrency:
+  group: verification-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verifier:
+    name: Types, lint, tests et build
+    runs-on: ubuntu-latest
+    # Le build d'un site de cette taille tient largement dedans ; la limite
+    # évite qu'un blocage consomme les minutes du compte.
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` et non `npm install` : la version installée est exactement
+      # celle du fichier de verrouillage, comme chez Vercel.
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Vérifier les types
+        run: npx tsc --noEmit
+
+      - name: Vérifier le style
+        run: npm run lint
+
+      - name: Jouer les tests
+        run: npm test
+
+      # En dernier, parce que c'est l'étape la plus longue : autant échouer
+      # vite sur une faute de frappe.
+      - name: Construire le site
+        run: npm run build

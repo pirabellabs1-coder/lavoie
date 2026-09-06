@@ -144,7 +144,7 @@ export default function DomoinaPage() {
             <div className="img-zoom" style={{ position: "relative" }}>
               <Placeholder
                 style={{ aspectRatio: "4/5", border: "1px solid var(--line)" }}
-                src="/hut-jardin-zen.png"
+                src="/hut-jardin-zen.webp"
                 alt="Eau, nature et silence — l'esprit de l'accompagnement"
                 sizes="(max-width: 900px) 100vw, 45vw"
               />

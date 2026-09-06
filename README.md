@@ -16,6 +16,17 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Vérifier avant de pousser
+
+```bash
+npx tsc --noEmit && npm run lint && npm test && npm run build
+```
+
+Ces quatre commandes sont exactement ce que rejoue GitHub Actions à chaque
+poussée (`.github/workflows/verification.yml`). Une poussée sur `main`
+déclenche aussi un déploiement Vercel : la vérification tourne en parallèle,
+elle ne bloque rien tant que la branche n'est pas protégée.
+
 ## Tests
 
 ```bash

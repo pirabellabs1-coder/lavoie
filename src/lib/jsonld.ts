@@ -61,13 +61,10 @@ export function organizationLd(): Record<string, unknown> {
         { "@type": "OfferCatalog", name: "Immersion Royale", description: "Accompagnement initiatique sur 9 à 12 mois." },
       ],
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: SITE.rating.value,
-      reviewCount: SITE.rating.count,
-      bestRating: 5,
-      worstRating: 1,
-    },
+    // Pas d'`aggregateRating` ici : une note d'organisation déclarée par
+    // l'organisation elle-même, sans source recoupable, n'a pas sa place dans
+    // les données structurées. La note Google reste affichée sur la page des
+    // témoignages, où le visiteur peut la vérifier d'un clic.
     ...(SITE.sameAs.length ? { sameAs: SITE.sameAs } : {}),
   };
 }

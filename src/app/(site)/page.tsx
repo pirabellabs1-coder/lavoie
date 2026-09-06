@@ -524,10 +524,10 @@ export default function Home() {
         {/* Bande d'images pleine largeur */}
         <div className="hut-strip" data-reveal="" data-reveal-delay="1">
           {[
-            { src: "/hut-jardin-zen.png", k: "Nature", t: "Jardin zen & piscine" },
-            { src: "/hut-terrasse.png", k: "Extérieur", t: "Terrasse en pierre" },
-            { src: "/hut-salle.png", k: "Convivialité", t: "Salle de vie" },
-            { src: "/hut-chambre.png", k: "Repos", t: "Chambres apaisantes" },
+            { src: "/hut-jardin-zen.webp", k: "Nature", t: "Jardin zen & piscine" },
+            { src: "/hut-terrasse.webp", k: "Extérieur", t: "Terrasse en pierre" },
+            { src: "/hut-salle.webp", k: "Convivialité", t: "Salle de vie" },
+            { src: "/hut-chambre.webp", k: "Repos", t: "Chambres apaisantes" },
           ].map((tile, i) => (
             <Link href="/centre-hut" className="hut-tile" key={i} aria-label={`Centre HUT — ${tile.t}`}>
               <Placeholder src={tile.src} alt={`${tile.t} — Centre HUT`} sizes="(max-width: 860px) 50vw, 25vw" />

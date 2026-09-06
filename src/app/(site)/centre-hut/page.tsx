@@ -83,7 +83,7 @@ export default function CentreHut() {
             </div>
             <Placeholder
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.15)" }}
-              src="/hut-jardin-zen.png"
+              src="/hut-jardin-zen.webp"
               alt="Jardin zen du Centre HUT au crépuscule"
               sizes="(max-width: 768px) 100vw, 45vw"
             />
@@ -97,20 +97,20 @@ export default function CentreHut() {
           <div className="rg-split-2-1" style={{ gap: 8 }}>
             <Placeholder
             style={{ aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)" }}
-            src="/hut-terrasse.png"
+            src="/hut-terrasse.webp"
             alt="Terrasse et bâtisse en pierre du Centre HUT"
             sizes="(max-width: 768px) 100vw, 66vw"
           />
             <div style={{ display: "grid", gap: 8 }}>
               <Placeholder
                 style={{ aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)" }}
-                src="/hut-salle.png"
+                src="/hut-salle.webp"
                 alt="Salle à manger conviviale du Centre HUT"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
               <Placeholder
                 style={{ aspectRatio: "16/9", border: "1px solid rgba(255,255,255,0.08)" }}
-                src="/hut-chambre.png"
+                src="/hut-chambre.webp"
                 alt="Chambre du Centre HUT"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
@@ -119,26 +119,26 @@ export default function CentreHut() {
           <div className="rg-img" style={{ gap: 8, marginTop: 8 }}>
             <Placeholder
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="/hut-salle.png"
+              src="/hut-salle.webp"
               alt="Salle à manger du Centre HUT"
               objectPosition="center"
               sizes="25vw"
             />
             <Placeholder
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="/hut-chambre.png"
+              src="/hut-chambre.webp"
               alt="Chambre du Centre HUT"
               sizes="25vw"
             />
             <Placeholder
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="/hut-terrasse.png"
+              src="/hut-terrasse.webp"
               alt="Terrasse en pierre du Centre HUT"
               sizes="25vw"
             />
             <Placeholder
               style={{ aspectRatio: "1/1", border: "1px solid rgba(255,255,255,0.08)" }}
-              src="/hut-jardin-zen.png"
+              src="/hut-jardin-zen.webp"
               alt="Jardin zen du Centre HUT"
               sizes="25vw"
             />

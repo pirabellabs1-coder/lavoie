@@ -295,7 +295,7 @@ export default function CycleDesSaisonsPage() {
             </div>
 
             <div style={{ position: "relative", aspectRatio: "4 / 5", borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255,255,255,0.12)" }}>
-              <Image src="/hut-jardin-zen.png" alt="Le jardin zen du Centre HUT, en Sarthe" fill sizes="(max-width: 900px) 100vw, 420px" style={{ objectFit: "cover" }} />
+              <Image src="/hut-jardin-zen.webp" alt="Le jardin zen du Centre HUT, en Sarthe" fill sizes="(max-width: 900px) 100vw, 420px" style={{ objectFit: "cover" }} />
             </div>
           </div>
         </div>
