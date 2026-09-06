@@ -164,9 +164,30 @@ vide. Il ne passe pas par la base : c'est ce qui garantit de pouvoir entrer mêm
 si la base est momentanément injoignable. Il doit rester entre les mains de
 Domoïna seule.
 
-Les mots de passe des comptes ne sont jamais enregistrés tels quels, seulement
-une empreinte qui ne permet pas de les retrouver. Un mot de passe oublié se
-remplace depuis la page Comptes ; il ne se relit pas.
+### Ouvrir un accès
+
+Vous renseignez trois choses : le **nom**, l'**adresse e-mail** et le **rôle**.
+Rien d'autre — surtout pas un mot de passe.
+
+La personne reçoit alors un e-mail avec un lien à elle. Elle le suit, choisit
+son mot de passe, et son accès s'ouvre. **Vous ne verrez jamais ce mot de
+passe**, et vous ne pouvez pas en choisir un à sa place : au mieux lui renvoyer
+un lien. C'est ce qui rend une trace de connexion crédible — si quelqu'un
+entre avec son compte, c'est elle — et ce qui évite qu'un mot de passe traîne
+dans une boîte mail.
+
+Le lien vaut **sept jours** et ne sert **qu'une fois**. Tant qu'il n'est pas
+suivi, la ligne affiche « invitation en attente ».
+
+**Mot de passe oublié, lien expiré, invitation perdue** : le bouton
+« Renvoyer l'invitation » de la liste en fabrique un nouveau, qui annule le
+précédent. C'est la seule façon de rendre un accès, et elle passe toujours par
+la boîte mail de la personne concernée.
+
+Les mots de passe ne sont jamais enregistrés tels quels, seulement une empreinte
+qui ne permet pas de les retrouver. Le jeton d'invitation non plus : la base
+n'en garde que l'empreinte, si bien que même en la lisant on ne pourrait pas
+s'en servir.
 
 ## La sauvegarde
 

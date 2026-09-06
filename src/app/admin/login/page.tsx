@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ suite?: string }>;
+  searchParams: Promise<{ suite?: string; active?: string }>;
 }) {
-  const { suite } = await searchParams;
+  const { suite, active } = await searchParams;
   const configure = Boolean(process.env.ADMIN_PASSWORD);
 
   return (
@@ -21,6 +21,13 @@ export default async function LoginPage({
           La Voie 2 la Conscience
           <span>Tableau de bord</span>
         </div>
+
+        {active === "1" && (
+          <div className="adm-alerte" style={{ margin: "0 0 16px" }}>
+            <strong>Votre accès est ouvert.</strong> Connectez-vous avec votre adresse et le
+            mot de passe que vous venez de choisir.
+          </div>
+        )}
 
         {configure ? (
           <FormulaireConnexion suite={suite} />

@@ -5,10 +5,12 @@ import { revalidatePath } from "next/cache";
 import { identiteAvecDroit } from "@/lib/crm/session";
 import {
   basculerUtilisateur,
-  changerMotDePasse,
-  creerUtilisateur,
   estRoleValide,
+  inviterUtilisateur,
+  obtenirUtilisateur,
+  poserInvitation,
 } from "@/lib/crm/utilisateurs";
+import { envoyerInvitation } from "@/lib/crm/invitations";
 import { tracer } from "@/lib/crm/journal";
 
 /**
@@ -17,26 +19,82 @@ import { tracer } from "@/lib/crm/journal";
  * masque le lien ne protège rien.
  */
 
-export async function actionCreerCompte(donnees: FormData) {
+/**
+ * Inviter quelqu'un. On ne saisit que son nom, son adresse et son rôle : le
+ * mot de passe ne passe jamais par ici. La personne le choisit elle-même en
+ * suivant le lien reçu, et elle est la seule à le connaître.
+ */
+export async function actionInviterCompte(donnees: FormData) {
   const qui = await identiteAvecDroit("comptes");
   if (!qui) return;
 
   const email = String(donnees.get("email") ?? "");
   const nom = String(donnees.get("nom") ?? "");
-  const motDePasse = String(donnees.get("motDePasse") ?? "");
   const role = String(donnees.get("role") ?? "secretariat");
   if (!estRoleValide(role)) return;
 
-  const resultat = await creerUtilisateur({ email, nom, motDePasse, role });
-  if (resultat.ok) await tracer(qui, "compte_cree", `${nom} (${email})`, role);
-  revalidatePath("/admin/comptes");
-
-  // L'erreur repasse par l'URL : la page reste servie par le serveur, sans état
-  // client à maintenir pour un formulaire utilisé trois fois par an.
+  const resultat = await inviterUtilisateur({ email, nom, role });
   if (!resultat.ok) {
     redirect(`/admin/comptes?erreur=${encodeURIComponent(resultat.erreur)}`);
   }
-  redirect("/admin/comptes?cree=1");
+
+  const souci = await envoyerInvitation({
+    email: email.trim().toLowerCase(),
+    nom,
+    role,
+    jeton: resultat.jeton,
+    parQui: qui.nom,
+  });
+  await tracer(qui, "compte_invite", `${nom} (${email})`, souci ? `échec : ${souci}` : role);
+  revalidatePath("/admin/comptes");
+
+  // Le compte existe même si l'e-mail n'est pas parti : on le dit, et le bouton
+  // « Renvoyer l'invitation » de la liste permet de réessayer.
+  if (souci) {
+    redirect(
+      `/admin/comptes?erreur=${encodeURIComponent(
+        `Le compte est créé, mais l'invitation n'est pas partie : ${souci}`,
+      )}`,
+    );
+  }
+  redirect(`/admin/comptes?invite=${encodeURIComponent(email.trim().toLowerCase())}`);
+}
+
+/**
+ * Renvoyer un lien : invitation perdue, expirée, ou mot de passe oublié. C'est
+ * la seule façon de rendre un accès — personne ne peut en choisir un pour
+ * quelqu'un d'autre.
+ */
+export async function actionRenvoyerInvitation(donnees: FormData) {
+  const qui = await identiteAvecDroit("comptes");
+  if (!qui) return;
+
+  const id = String(donnees.get("id") ?? "");
+  if (!/^\d+$/.test(id)) return;
+
+  const u = await obtenirUtilisateur(id);
+  if (!u) redirect("/admin/comptes?erreur=" + encodeURIComponent("Ce compte est introuvable."));
+
+  const jeton = await poserInvitation(id);
+  if (!jeton) {
+    redirect("/admin/comptes?erreur=" + encodeURIComponent("Le lien n'a pas pu être préparé."));
+  }
+
+  const souci = await envoyerInvitation({
+    email: u.email,
+    nom: u.nom,
+    role: u.role,
+    jeton,
+    parQui: qui.nom,
+    renvoi: true,
+  });
+  await tracer(qui, "compte_invite", `compte ${id}`, souci ? `échec : ${souci}` : "lien renvoyé");
+  revalidatePath("/admin/comptes");
+
+  if (souci) {
+    redirect(`/admin/comptes?erreur=${encodeURIComponent(`L'envoi a échoué : ${souci}`)}`);
+  }
+  redirect(`/admin/comptes?invite=${encodeURIComponent(u.email)}`);
 }
 
 export async function actionBasculerCompte(donnees: FormData) {
@@ -55,26 +113,6 @@ export async function actionBasculerCompte(donnees: FormData) {
   await basculerUtilisateur(id, actif);
   await tracer(qui, "compte_bascule", `compte ${id}`, actif ? "accès rendu" : "accès retiré");
   revalidatePath("/admin/comptes");
-}
-
-export async function actionChangerMotDePasse(donnees: FormData) {
-  const qui = await identiteAvecDroit("comptes");
-  if (!qui) return;
-
-  const id = String(donnees.get("id") ?? "");
-  const motDePasse = String(donnees.get("motDePasse") ?? "");
-  if (!id) return;
-
-  const ok = await changerMotDePasse(id, motDePasse);
-  if (ok) await tracer(qui, "compte_mdp", `compte ${id}`);
-  revalidatePath("/admin/comptes");
-  if (!ok) {
-    redirect(
-      "/admin/comptes?erreur=" +
-        encodeURIComponent("Mot de passe trop court : douze caractères au minimum."),
-    );
-  }
-  redirect("/admin/comptes?modifie=1");
 }
 
 /**

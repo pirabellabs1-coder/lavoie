@@ -294,6 +294,15 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS campagne_id BIGINT REFERENCES campagnes(id) ON DELETE SET NULL
   `;
 
+  // L'invitation d'un collaborateur : on ne garde que l'empreinte du jeton,
+  // jamais le jeton lui-même — la personne invitée est la seule à l'avoir reçu.
+  await sql`
+    ALTER TABLE utilisateurs
+      ADD COLUMN IF NOT EXISTS invitation_empreinte TEXT,
+      ADD COLUMN IF NOT EXISTS invitation_expire_le TIMESTAMPTZ,
+      ADD COLUMN IF NOT EXISTS invite_le            TIMESTAMPTZ
+  `;
+
   // Le témoin du worker : une ligne par passage, pour voir tout de suite le
   // jour où il cesse de passer (voir `passages.ts`).
   await sql`

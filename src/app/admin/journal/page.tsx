@@ -16,6 +16,8 @@ const LIBELLES: Record<string, string> = {
   offre_envoyee: "Proposition envoyée",
   campagne_creee: "Campagne créée",
   compte_cree: "Compte créé",
+  compte_invite: "Invitation envoyée à un collaborateur",
+  compte_active: "Compte activé par son titulaire",
   compte_bascule: "Accès d'un compte modifié",
   compte_mdp: "Mot de passe d'un compte changé",
   rgpd_acces: "Accès RGPD (téléchargement)",

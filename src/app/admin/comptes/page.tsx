@@ -6,8 +6,8 @@ import { enClair } from "@/lib/heure";
 import { compterAvantVidage } from "@/lib/crm/reinitialisation";
 import {
   actionBasculerCompte,
-  actionChangerMotDePasse,
-  actionCreerCompte,
+  actionInviterCompte,
+  actionRenvoyerInvitation,
   actionViderLeFichier,
 } from "./actions";
 
@@ -25,8 +25,7 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
 
   const params = await searchParams;
   const erreur = premier(params.erreur);
-  const cree = premier(params.cree) === "1";
-  const modifie = premier(params.modifie) === "1";
+  const invite = premier(params.invite);
   const vide = premier(params.vide);
   const restaure = premier(params.restaure);
 
@@ -42,8 +41,13 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
       sousTitre="Qui peut entrer dans le tableau de bord, et jusqu'où."
     >
       {erreur && <div className="adm-alerte">{erreur}</div>}
-      {cree && <div className="adm-alerte">Le compte a été créé.</div>}
-      {modifie && <div className="adm-alerte">Le mot de passe a été remplacé.</div>}
+      {invite && (
+        <div className="adm-alerte">
+          <strong>L&apos;invitation est partie à {invite}.</strong> Le lien vaut sept jours et
+          ne sert qu&apos;une fois. Tant qu&apos;il n&apos;est pas suivi, le compte apparaît
+          « invitation en attente » ci-dessous.
+        </div>
+      )}
       {vide && (
         <div className="adm-alerte">
           <strong>Le fichier est vide.</strong> Retiré : {vide}. Les séquences, le catalogue
@@ -69,7 +73,7 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
                   <th>Rôle</th>
                   <th>Dernière visite</th>
                   <th>État</th>
-                  <th>Nouveau mot de passe</th>
+                  <th>Accès</th>
                 </tr>
               </thead>
               <tbody>
@@ -81,7 +85,11 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
                       {ROLES.find((r) => r.cle === u.role)?.label ?? u.role}
                     </td>
                     <td style={{ color: "var(--adm-mute)", whiteSpace: "nowrap" }}>
-                      {u.derniere_connexion_le ? enClair(u.derniere_connexion_le) : "jamais"}
+                      {u.derniere_connexion_le
+                        ? enClair(u.derniere_connexion_le)
+                        : u.invitation_expire_le
+                          ? "invitation en attente"
+                          : "jamais"}
                     </td>
                     <td>
                       <form action={actionBasculerCompte}>
@@ -93,20 +101,10 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
                       </form>
                     </td>
                     <td>
-                      <form action={actionChangerMotDePasse} style={{ display: "flex", gap: 6 }}>
+                      <form action={actionRenvoyerInvitation}>
                         <input type="hidden" name="id" value={u.id} />
-                        <input
-                          type="password"
-                          name="motDePasse"
-                          className="adm-champ"
-                          placeholder="12 caractères minimum"
-                          minLength={12}
-                          required
-                          autoComplete="new-password"
-                          style={{ width: 180 }}
-                        />
                         <button type="submit" className="adm-btn fantome petit">
-                          Remplacer
+                          {u.invitation_expire_le ? "Renvoyer l'invitation" : "Envoyer un lien"}
                         </button>
                       </form>
                     </td>
@@ -119,8 +117,14 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
       </div>
 
       <div className="adm-carte" style={{ marginBottom: 14 }}>
-        <p className="adm-titre">Ajouter quelqu&apos;un</p>
-        <form action={actionCreerCompte} style={{ display: "grid", gap: 14, maxWidth: 520 }}>
+        <p className="adm-titre">Inviter quelqu&apos;un</p>
+        <p style={{ margin: "0 0 16px", fontSize: 12.5, color: "var(--adm-mute)", lineHeight: 1.7, maxWidth: 520 }}>
+          Vous renseignez le nom, l&apos;adresse et le rôle — rien d&apos;autre. La personne
+          reçoit un lien valable sept jours et choisit elle-même son mot de passe. Vous ne le
+          verrez jamais : c&apos;est ce qui rend ses traces de connexion crédibles, et ce qui
+          évite qu&apos;un mot de passe traîne dans une boîte mail.
+        </p>
+        <form action={actionInviterCompte} style={{ display: "grid", gap: 14, maxWidth: 520 }}>
           <label style={{ display: "block" }}>
             <span style={{ display: "block", fontSize: 12, color: "var(--adm-mute)", marginBottom: 6 }}>
               Nom
@@ -133,20 +137,6 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
               E-mail — c&apos;est l&apos;identifiant de connexion
             </span>
             <input type="email" name="email" required className="adm-champ" autoComplete="off" />
-          </label>
-
-          <label style={{ display: "block" }}>
-            <span style={{ display: "block", fontSize: 12, color: "var(--adm-mute)", marginBottom: 6 }}>
-              Mot de passe provisoire — douze caractères au minimum
-            </span>
-            <input
-              type="password"
-              name="motDePasse"
-              required
-              minLength={12}
-              className="adm-champ"
-              autoComplete="new-password"
-            />
           </label>
 
           <fieldset style={{ border: "1px solid var(--adm-line)", borderRadius: 8, padding: 14 }}>
@@ -173,7 +163,7 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
           </fieldset>
 
           <div>
-            <button type="submit" className="adm-btn">Créer le compte</button>
+            <button type="submit" className="adm-btn">Envoyer l&apos;invitation</button>
           </div>
         </form>
       </div>
