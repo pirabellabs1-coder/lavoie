@@ -3,7 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { identite, identiteAvecDroit } from "@/lib/crm/session";
-import { changerStatutParticipation, creerStage, reglerStage } from "@/lib/crm/stages";
+import {
+  changerStatutParticipation,
+  creerStage,
+  reglerStage,
+  supprimerParticipation,
+} from "@/lib/crm/stages";
 import { ajouterDate, basculerDate, retirerDate } from "@/lib/crm/dates-stages";
 import { depuisParis } from "@/lib/heure";
 import { tracer } from "@/lib/crm/journal";
@@ -20,6 +25,24 @@ export async function actionStatutParticipation(donnees: FormData) {
   const statut = String(donnees.get("statut") ?? "");
   if (!id || !statut) return;
   await changerStatutParticipation(id, statut);
+  revalidatePath("/admin/stages");
+}
+
+/**
+ * Retirer une place. Réservé au propriétaire, et tracé : effacer une ligne ne
+ * doit jamais être un geste anonyme.
+ */
+export async function actionSupprimerParticipation(donnees: FormData) {
+  const qui = await identiteAvecDroit("sequences");
+  if (!qui) return;
+
+  const id = String(donnees.get("id") ?? "");
+  if (!/^[0-9]+$/.test(id)) return;
+
+  const retiree = await supprimerParticipation(id);
+  if (retiree) {
+    await tracer(qui, "place_retiree", retiree.nom, retiree.titre);
+  }
   revalidatePath("/admin/stages");
 }
 

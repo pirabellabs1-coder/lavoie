@@ -331,6 +331,37 @@ export async function changerStatutParticipation(
   }
 }
 
+/**
+ * Retire une demande de place, définitivement.
+ *
+ * À ne pas confondre avec « Annuler » : une annulation garde la trace de
+ * quelqu'un qui s'était inscrit puis s'est désisté — c'est une information.
+ * Retirer efface la ligne, et c'est ce qu'il faut pour une réservation
+ * d'essai, un doublon, une erreur de saisie : des choses qui n'ont jamais eu
+ * lieu et qui, gardées, faussent les comptes et la mémoire du stage.
+ *
+ * La fiche de la personne, elle, n'est pas touchée : elle vit sa vie ailleurs.
+ */
+export async function supprimerParticipation(
+  id: string,
+): Promise<{ nom: string; titre: string } | null> {
+  const sql = await getDb();
+  if (!sql) return null;
+  try {
+    const lignes = await sql<{ nom: string; titre: string }[]>`
+      DELETE FROM participations p
+      USING contacts c, stages s
+      WHERE p.id = ${id} AND c.id = p.contact_id AND s.id = p.stage_id
+      RETURNING COALESCE(NULLIF(TRIM(CONCAT(c.prenom, ' ', c.nom)), ''), c.email) AS nom,
+                s.titre
+    `;
+    return lignes[0] ?? null;
+  } catch (e) {
+    console.error("[crm] supprimerParticipation:", e);
+    return null;
+  }
+}
+
 export async function reglerStage(
   id: string,
   entree: {

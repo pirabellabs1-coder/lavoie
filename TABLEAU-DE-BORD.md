@@ -506,6 +506,21 @@ La disponibilité est **revérifiée au moment de la demande** : entre l'afficha
 et le clic, la dernière place a pu partir. Dans ce cas la personne bascule en
 liste d'attente, et on le lui dit.
 
+### Retirer une place
+
+Le tableau des participants distingue deux gestes qui n'ont rien à voir :
+
+- **Annuler** garde la ligne et la marque « Annulée ». C'est ce qu'il faut pour
+  un désistement : quelqu'un s'était engagé, puis s'est retiré. La trace vaut
+  information.
+- **Retirer** efface la ligne. C'est pour une réservation d'essai, un doublon,
+  une erreur de saisie — des choses qui n'ont jamais eu lieu et qui, gardées,
+  faussent les comptes et la mémoire du stage.
+
+Retirer est réservé au propriétaire, et inscrit au journal d'audit avec le nom
+de la personne concernée : effacer ne doit jamais être un geste anonyme. La
+fiche du contact, elle, n'est pas touchée — elle vit sa vie ailleurs.
+
 ## Les stages, centralisés
 
 Le bouton « Réserver ma place » de chaque page de stage ouvre maintenant le

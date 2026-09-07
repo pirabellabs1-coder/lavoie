@@ -28,6 +28,8 @@ const LIBELLES: Record<string, string> = {
   sequence_retrait: "Personne retirée d'une séquence",
   contact_cree: "Fiche créée à la main",
   fichier_vide: "Fichier remis à zéro",
+  stage_cree: "Stage créé",
+  place_retiree: "Place retirée d'un stage",
   sauvegarde_restauree: "Sauvegarde restaurée",
 };
 

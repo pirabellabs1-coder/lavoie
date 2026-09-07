@@ -24,6 +24,7 @@ import {
   actionReglerStage,
   actionRetirerDate,
   actionStatutParticipation,
+  actionSupprimerParticipation,
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -217,6 +218,8 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                       <thead>
                         <tr>
                           <th>Personne</th>
+                          <th>Places</th>
+                          <th>Date</th>
                           <th>État</th>
                           <th>Demandé le</th>
                           <th>Suite</th>
@@ -236,6 +239,12 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                                   « {p.message} »
                                 </div>
                               )}
+                            </td>
+                            <td style={{ fontVariantNumeric: "tabular-nums" }}>
+                              {p.personnes > 1 ? `${p.personnes} places` : "1 place"}
+                            </td>
+                            <td style={{ color: "var(--adm-mute)", whiteSpace: "nowrap" }}>
+                              {p.date_debut ? jourEtHeure(p.date_debut) : "—"}
                             </td>
                             <td>
                               <span
@@ -262,6 +271,18 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                                     </button>
                                   </form>
                                 ))}
+                                {reglable && (
+                                  <form action={actionSupprimerParticipation}>
+                                    <input type="hidden" name="id" value={p.id} />
+                                    <button
+                                      type="submit"
+                                      className="adm-btn fantome petit"
+                                      title="Efface la ligne — pour un essai ou un doublon, pas pour un désistement"
+                                    >
+                                      Retirer
+                                    </button>
+                                  </form>
+                                )}
                               </div>
                             </td>
                           </tr>
