@@ -61,7 +61,13 @@ export async function POST(req: Request) {
   });
 
   const place = contact
-    ? await demanderPlace({ slug, contactId: contact.id, message })
+    ? await demanderPlace({
+        slug,
+        contactId: contact.id,
+        message,
+        // La date choisie sur la page du stage, quand il en propose plusieurs.
+        dateId: /^[0-9]+$/.test(String(data.dateId ?? "")) ? String(data.dateId) : null,
+      })
     : null;
   const enAttente = place?.statut === "attente";
 

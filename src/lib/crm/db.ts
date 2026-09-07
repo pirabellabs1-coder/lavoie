@@ -294,6 +294,40 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS campagne_id BIGINT REFERENCES campagnes(id) ON DELETE SET NULL
   `;
 
+  // Les stages gagnent ce qui manquait pour les tenir depuis le tableau de
+  // bord : un lieu, un tarif, un résumé, et surtout des dates multiples.
+  await sql`
+    ALTER TABLE stages
+      ADD COLUMN IF NOT EXISTS lieu       TEXT,
+      ADD COLUMN IF NOT EXISTS prix_cents BIGINT,
+      ADD COLUMN IF NOT EXISTS resume     TEXT
+  `;
+
+  // Les jours où un stage est disponible. Un stage sans date reste ouvert à la
+  // demande ; un stage qui en a laisse la personne choisir le sien, comme sur
+  // une billetterie.
+  await sql`
+    CREATE TABLE IF NOT EXISTS stage_dates (
+      id       BIGSERIAL PRIMARY KEY,
+      stage_id BIGINT NOT NULL REFERENCES stages(id) ON DELETE CASCADE,
+      debut_le TIMESTAMPTZ NOT NULL,
+      fin_le   TIMESTAMPTZ,
+      -- Places de cette date-là ; à défaut, celles du stage.
+      places   INT,
+      -- Fermée à la main, sans être supprimée ni complète.
+      ouverte  BOOLEAN NOT NULL DEFAULT TRUE,
+      cree_le  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (stage_id, debut_le)
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS idx_stage_dates ON stage_dates (stage_id, debut_le)`;
+
+  // La place demandée l'est pour une date précise, quand le stage en propose.
+  await sql`
+    ALTER TABLE participations
+      ADD COLUMN IF NOT EXISTS date_id BIGINT REFERENCES stage_dates(id) ON DELETE SET NULL
+  `;
+
   // Le carnet de bord de l'équipe : qui a fait quoi, quel jour. C'est la
   // mémoire commune du travail, et ce que la cliente vient consulter.
   await sql`

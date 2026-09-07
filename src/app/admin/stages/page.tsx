@@ -11,7 +11,20 @@ import {
   type Participation,
 } from "@/lib/crm/stages";
 import { enClair } from "@/lib/heure";
-import { actionReglerStage, actionStatutParticipation } from "./actions";
+import {
+  datesDuStage,
+  etatDeLaDate,
+  placesRestantesDate,
+  type DateStage,
+} from "@/lib/crm/dates-stages";
+import {
+  actionAjouterDate,
+  actionBasculerDate,
+  actionCreerStage,
+  actionReglerStage,
+  actionRetirerDate,
+  actionStatutParticipation,
+} from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -38,14 +51,50 @@ const SUITES: Record<string, { statut: string; libelle: string }[]> = {
   annulee: [{ statut: "demande", libelle: "Reprendre" }],
 };
 
-export default async function StagesPage() {
+/** L'état d'une date, dit en français et en couleur. */
+const ETATS_DATE: Record<string, { texte: string; ton: string }> = {
+  libre: { texte: "Places libres", ton: "client" },
+  dernieres: { texte: "Dernières places", ton: "contacte" },
+  complet: { texte: "Complet", ton: "perdu" },
+  fermee: { texte: "Fermée", ton: "perdu" },
+  passee: { texte: "Passée", ton: "nouveau" },
+};
+
+function jourEtHeure(d: Date | string): string {
+  const v = d instanceof Date ? d : new Date(d);
+  return v.toLocaleString("fr-FR", {
+    timeZone: "Europe/Paris",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function euros(cents: number | null): string {
+  if (cents == null) return "";
+  return (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+}
+
+type Params = Promise<Record<string, string | string[] | undefined>>;
+
+export default async function StagesPage({ searchParams }: { searchParams: Params }) {
   const qui = await exigerIdentite();
   const reglable = peut(qui.role, "sequences");
+
+  const params = await searchParams;
+  const erreur = Array.isArray(params.erreur) ? params.erreur[0] : params.erreur;
+  const cree = (Array.isArray(params.cree) ? params.cree[0] : params.cree) === "1";
 
   const branchee = isDbConfigured();
   const stages = branchee ? await listerStages() : [];
   const participants = await Promise.all(
     stages.map((s) => (branchee ? participantsDuStage(s.id) : Promise.resolve([]))),
+  );
+  // Les jours de disponibilité, stage par stage : c'est la date qui se remplit.
+  const dates: DateStage[][] = await Promise.all(
+    stages.map((s) => (branchee ? datesDuStage(s.id) : Promise.resolve([]))),
   );
 
   return (
@@ -61,6 +110,53 @@ export default async function StagesPage() {
         </div>
       )}
 
+      {erreur && <div className="adm-alerte">{erreur}</div>}
+      {cree && <div className="adm-alerte">Le stage est créé. Ajoutez-lui ses dates ci-dessous.</div>}
+
+      {reglable && (
+        <div className="adm-carte" id="creer" style={{ marginBottom: 14 }}>
+          <details>
+            <summary style={{ cursor: "pointer", fontSize: 13.5, fontWeight: 600 }}>
+              Créer un stage
+            </summary>
+            <p style={{ margin: "10px 0 14px", fontSize: 12.5, color: "var(--adm-mute)", lineHeight: 1.7 }}>
+              Pour un stage qui n&apos;est pas au catalogue du site : une session
+              supplémentaire, un atelier en ligne, une date exceptionnelle. Les quatre stages
+              du Cycle des Saisons, eux, ont leur page et arrivent tout seuls.
+            </p>
+            <form action={actionCreerStage} style={{ display: "grid", gap: 12, maxWidth: 620 }}>
+              <label>
+                <span className="adm-label">Titre</span>
+                <input name="titre" required maxLength={200} className="adm-champ"
+                  placeholder="Atelier en ligne — Poser ses intentions" />
+              </label>
+              <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
+                <label>
+                  <span className="adm-label">Lieu</span>
+                  <input name="lieu" maxLength={200} className="adm-champ" placeholder="En ligne, ou Centre HUT" />
+                </label>
+                <label>
+                  <span className="adm-label">Places</span>
+                  <input type="number" name="places" min={1} max={500} defaultValue={12} className="adm-champ" />
+                </label>
+                <label>
+                  <span className="adm-label">Tarif (euros)</span>
+                  <input name="prix" className="adm-champ" placeholder="500" inputMode="decimal" />
+                </label>
+              </div>
+              <label>
+                <span className="adm-label">En une phrase</span>
+                <textarea name="resume" rows={2} maxLength={2000} className="adm-champ"
+                  placeholder="Ce que la personne vient y chercher." style={{ resize: "vertical" }} />
+              </label>
+              <div>
+                <button type="submit" className="adm-btn">Créer le stage</button>
+              </div>
+            </form>
+          </details>
+        </div>
+      )}
+
       {stages.length === 0 ? (
         <div className="adm-carte">
           <p className="adm-vide">Aucun stage au catalogue.</p>
@@ -69,11 +165,12 @@ export default async function StagesPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {stages.map((s, i) => {
             const gens = participants[i];
+            const jours = dates[i];
             const restantes = Math.max(0, s.places - s.confirmees - s.demandes);
             const complet = restantes === 0;
 
             return (
-              <div className="adm-carte" key={s.id}>
+              <div className="adm-carte" key={s.id} id={`stage-${s.id}`}>
                 <div
                   style={{
                     display: "flex",
@@ -86,7 +183,13 @@ export default async function StagesPage() {
                   <div>
                     <p style={{ margin: 0, fontWeight: 650, fontSize: 15 }}>{s.titre}</p>
                     <p style={{ margin: "2px 0 0", color: "var(--adm-mute)", fontSize: 12.5 }}>
-                      {s.debut_le ? enClair(s.debut_le) : "date à confirmer"}
+                      {jours.length
+                        ? `${jours.length} date${jours.length > 1 ? "s" : ""} proposée${jours.length > 1 ? "s" : ""}`
+                        : s.debut_le
+                          ? enClair(s.debut_le)
+                          : "date à confirmer"}
+                      {s.lieu ? ` · ${s.lieu}` : ""}
+                      {s.prix_cents != null ? ` · ${euros(s.prix_cents)}` : ""}
                       {!s.actif && " · fermé aux demandes"}
                     </p>
                   </div>
@@ -174,6 +277,97 @@ export default async function StagesPage() {
                   </p>
                 )}
 
+                {/* ─── Les jours où ce stage est disponible ─── */}
+                <div style={{ marginTop: 18, borderTop: "1px solid var(--adm-line)", paddingTop: 14 }}>
+                  <p className="adm-titre" style={{ marginBottom: 10 }}>
+                    Dates disponibles{" "}
+                    <span className="appoint">
+                      — {jours.length ? `${jours.length} proposée${jours.length > 1 ? "s" : ""}` : "aucune pour l'instant"}
+                    </span>
+                  </p>
+
+                  {jours.length > 0 && (
+                    <div className="stage-dates">
+                      {jours.map((d) => {
+                        const etat = etatDeLaDate(d);
+                        const info = ETATS_DATE[etat];
+                        const restantes = placesRestantesDate(d);
+                        return (
+                          <div className="stage-date" key={d.id}>
+                            <div>
+                              <div className="quand">{jourEtHeure(d.debut_le)}</div>
+                              <div className="etat">
+                                <span className="adm-tag" data-s={info.ton}>
+                                  {info.texte}
+                                </span>
+                                <span>
+                                  {d.prises}/{d.places} pris
+                                  {restantes > 0 ? ` · ${restantes} libre${restantes > 1 ? "s" : ""}` : ""}
+                                </span>
+                              </div>
+                            </div>
+                            {reglable && (
+                              <div className="boutons">
+                                <form action={actionBasculerDate}>
+                                  <input type="hidden" name="id" value={d.id} />
+                                  <input type="hidden" name="ouverte" value={d.ouverte ? "0" : "1"} />
+                                  <button type="submit" className="adm-btn fantome petit">
+                                    {d.ouverte ? "Fermer" : "Rouvrir"}
+                                  </button>
+                                </form>
+                                <form action={actionRetirerDate}>
+                                  <input type="hidden" name="id" value={d.id} />
+                                  <input type="hidden" name="stage" value={s.id} />
+                                  <button type="submit" className="adm-btn fantome petit">
+                                    Retirer
+                                  </button>
+                                </form>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {reglable && (
+                    <form action={actionAjouterDate} className="stage-date-neuve">
+                      <input type="hidden" name="stage" value={s.id} />
+                      <label>
+                        <span className="adm-label">Début</span>
+                        <input type="datetime-local" name="debut" required className="adm-champ" />
+                      </label>
+                      <label>
+                        <span className="adm-label">Fin (facultatif)</span>
+                        <input type="datetime-local" name="fin" className="adm-champ" />
+                      </label>
+                      <label>
+                        <span className="adm-label">Places</span>
+                        <input
+                          type="number"
+                          name="places"
+                          min={1}
+                          max={500}
+                          className="adm-champ"
+                          placeholder={String(s.places)}
+                          style={{ width: 100 }}
+                        />
+                      </label>
+                      <button type="submit" className="adm-btn petit">
+                        Ajouter cette date
+                      </button>
+                    </form>
+                  )}
+
+                  {jours.length === 0 && (
+                    <p style={{ margin: "10px 0 0", fontSize: 12, color: "var(--adm-mute)", lineHeight: 1.6 }}>
+                      Sans date, le stage reste ouvert aux demandes : la personne écrit sans
+                      choisir de jour, comme aujourd&apos;hui. Dès qu&apos;une date existe, le
+                      site propose de choisir.
+                    </p>
+                  )}
+                </div>
+
                 {reglable && (
                   <details style={{ marginTop: 16 }}>
                     <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--adm-mute)" }}>
@@ -181,6 +375,36 @@ export default async function StagesPage() {
                     </summary>
                     <form action={actionReglerStage} style={{ display: "grid", gap: 12, marginTop: 14 }}>
                       <input type="hidden" name="id" value={s.id} />
+                      <label style={{ display: "block" }}>
+                        <span className="adm-label">Titre</span>
+                        <input name="titre" defaultValue={s.titre} maxLength={200} className="adm-champ" />
+                      </label>
+                      <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
+                        <label>
+                          <span className="adm-label">Lieu</span>
+                          <input name="lieu" defaultValue={s.lieu ?? ""} maxLength={200} className="adm-champ" />
+                        </label>
+                        <label>
+                          <span className="adm-label">Tarif (euros)</span>
+                          <input
+                            name="prix"
+                            defaultValue={s.prix_cents != null ? String(s.prix_cents / 100) : ""}
+                            className="adm-champ"
+                            inputMode="decimal"
+                          />
+                        </label>
+                      </div>
+                      <label style={{ display: "block" }}>
+                        <span className="adm-label">En une phrase</span>
+                        <textarea
+                          name="resume"
+                          rows={2}
+                          defaultValue={s.resume ?? ""}
+                          maxLength={2000}
+                          className="adm-champ"
+                          style={{ resize: "vertical" }}
+                        />
+                      </label>
                       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-end" }}>
                         <label style={{ display: "block" }}>
                           <span className="adm-label">Places</span>

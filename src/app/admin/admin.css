@@ -374,6 +374,30 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-btn.petit { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
 .adm-btn.danger { background: var(--adm-bad); border-color: var(--adm-bad); }
 
+/* ═══ Les dates d'un stage ═════════════════════════════════════════════════ */
+
+.stage-dates { display: grid; gap: 8px; margin-bottom: 14px; }
+.stage-date {
+  display: flex; justify-content: space-between; gap: 14px; align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border: 1px solid var(--adm-line);
+  border-radius: 10px;
+}
+.stage-date .quand { font-weight: 600; font-size: 13.5px; text-transform: capitalize; }
+.stage-date .etat {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  margin-top: 4px; font-size: 11.5px; color: var(--adm-mute);
+}
+.stage-date .boutons { display: flex; gap: 8px; }
+.stage-date-neuve {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+  padding: 12px 14px;
+  border: 1px dashed var(--adm-line-fort);
+  border-radius: 10px;
+}
+.stage-date-neuve .adm-label { margin-bottom: 4px; }
+
 /* ═══ Le carnet de bord ════════════════════════════════════════════════════ */
 
 .carnet-saisie {

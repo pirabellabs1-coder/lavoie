@@ -2006,3 +2006,53 @@ select option { background: var(--white); }
 /* Hero : plein cadre (pas de max-width) + gutter responsif minimal — réduit le vide
    sur les côtés en desktop sans coller aux bords sur mobile (min 24px). */
 .hero-container { max-width: none !important; padding-left: clamp(24px, 3vw, 48px) !important; padding-right: clamp(24px, 3vw, 48px) !important; }
+
+/* ═══ Le choix d'une date de stage ═════════════════════════════════════════ */
+
+.dates-choix {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.date-carte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-width: 88px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--navy-ink);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+.date-carte:hover:not(:disabled) { border-color: var(--navy); transform: translateY(-1px); }
+.date-carte .jour {
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; opacity: .65;
+}
+.date-carte .numero { font-size: 24px; font-weight: 600; line-height: 1.15; }
+.date-carte .mois { font-size: 11.5px; text-transform: lowercase; opacity: .75; }
+.date-carte .heure { font-size: 11px; opacity: .6; margin-top: 3px; }
+.date-carte .etat {
+  margin-top: 6px; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--gold);
+}
+.date-carte.choisie {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+.date-carte.choisie .etat { color: var(--gold); }
+.date-carte.complete {
+  cursor: not-allowed;
+  opacity: .5;
+  text-decoration: line-through;
+}
+.date-carte.complete .etat { color: var(--mute); text-decoration: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .date-carte { transition: none; }
+  .date-carte:hover:not(:disabled) { transform: none; }
+}

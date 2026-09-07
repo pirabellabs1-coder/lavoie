@@ -42,6 +42,10 @@ export type Stage = {
   places: number;
   actif: boolean;
   logistique: string | null;
+  lieu: string | null;
+  /** En centimes : jamais de flottant sur de l'argent. */
+  prix_cents: number | null;
+  resume: string | null;
 };
 
 export type StageVue = Stage & {
@@ -91,6 +95,7 @@ export async function listerStages(): Promise<StageVue[]> {
   try {
     return await sql<StageVue[]>`
       SELECT s.id, s.slug, s.titre, s.debut_le, s.places, s.actif, s.logistique,
+             s.lieu, s.prix_cents, s.resume,
              COUNT(p.id) FILTER (WHERE p.statut = 'confirmee')::int AS confirmees,
              COUNT(p.id) FILTER (WHERE p.statut = 'demande')::int   AS demandes,
              COUNT(p.id) FILTER (WHERE p.statut = 'attente')::int   AS attente
@@ -154,7 +159,9 @@ export async function demanderPlace(entree: {
   slug: string;
   contactId: string;
   message?: string;
-}): Promise<{ statut: "demande" | "attente"; titre: string } | null> {
+  /** La date choisie, quand le stage en propose plusieurs. */
+  dateId?: string | null;
+}): Promise<{ statut: "demande" | "attente"; titre: string; quand: Date | null } | null> {
   const sql = await getDb();
   if (!sql) return null;
   await semerStages();
@@ -164,14 +171,27 @@ export async function demanderPlace(entree: {
     `;
     if (!stage) return null;
 
-    const restantes = await placesRestantes(entree.slug);
-    const statut = restantes !== null && restantes <= 0 ? "attente" : "demande";
+    // La disponibilité se juge sur la date choisie quand il y en a une : c'est
+    // elle qui se remplit, pas le stage. Et elle se revérifie ici, au moment de
+    // la demande — entre l'affichage et le clic, la dernière place a pu partir.
+    const { datePrenable, placesRestantesDate } = await import("./dates-stages");
+    const date = entree.dateId ? await datePrenable(entree.dateId) : null;
+    const bonneDate = date && String(date.stage_id) === String(stage.id) ? date : null;
+
+    const restantes = bonneDate
+      ? placesRestantesDate(bonneDate)
+      : await placesRestantes(entree.slug);
+    const complet =
+      restantes !== null && (restantes <= 0 || (bonneDate ? !bonneDate.ouverte : false));
+    const statut = complet ? "attente" : "demande";
 
     await sql`
-      INSERT INTO participations (stage_id, contact_id, statut, message)
-      VALUES (${stage.id}, ${entree.contactId}, ${statut}, ${entree.message || null})
+      INSERT INTO participations (stage_id, contact_id, statut, message, date_id)
+      VALUES (${stage.id}, ${entree.contactId}, ${statut}, ${entree.message || null},
+              ${bonneDate ? bonneDate.id : null})
       ON CONFLICT (stage_id, contact_id) DO UPDATE SET
         message = COALESCE(NULLIF(EXCLUDED.message, ''), participations.message),
+        date_id = COALESCE(EXCLUDED.date_id, participations.date_id),
         -- Une personne qui refait une demande après une annulation redevient
         -- candidate ; une place déjà confirmée n'est jamais rétrogradée.
         statut = CASE WHEN participations.statut IN ('annulee', 'attente')
@@ -184,7 +204,7 @@ export async function demanderPlace(entree: {
               ${`${statut === "attente" ? "Liste d'attente" : "Demande de place"} — ${stage.titre}`})
     `;
 
-    return { statut, titre: stage.titre };
+    return { statut, titre: stage.titre, quand: bonneDate ? bonneDate.debut_le : null };
   } catch (e) {
     console.error("[crm] demanderPlace:", e);
     return null;
@@ -229,22 +249,93 @@ export async function changerStatutParticipation(
 
 export async function reglerStage(
   id: string,
-  entree: { places: number; logistique: string; actif: boolean },
+  entree: {
+    places: number;
+    logistique: string;
+    actif: boolean;
+    titre?: string;
+    lieu?: string;
+    resume?: string;
+    prixEuros?: number | null;
+  },
 ): Promise<boolean> {
   const sql = await getDb();
   if (!sql) return false;
+  const titre = entree.titre?.trim().slice(0, 200);
+  const prix =
+    entree.prixEuros != null && Number.isFinite(entree.prixEuros) && entree.prixEuros >= 0
+      ? Math.round(entree.prixEuros * 100)
+      : null;
   try {
     await sql`
       UPDATE stages
       SET places = ${Math.max(0, Math.min(500, entree.places))},
           logistique = ${entree.logistique || null},
-          actif = ${entree.actif}
+          actif = ${entree.actif},
+          titre = COALESCE(${titre || null}, titre),
+          lieu = ${entree.lieu?.trim().slice(0, 200) || null},
+          resume = ${entree.resume?.trim().slice(0, 2000) || null},
+          prix_cents = ${prix}
       WHERE id = ${id}
     `;
     return true;
   } catch (e) {
     console.error("[crm] reglerStage:", e);
     return false;
+  }
+}
+
+/** Un identifiant d'adresse lisible, tiré du titre. */
+export function slugifier(titre: string): string {
+  return titre
+    .normalize("NFD")
+    // Les accents décomposés par NFD s'enlèvent en retirant les diacritiques.
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
+/**
+ * Crée un stage depuis le tableau de bord. Le catalogue éditorial reste dans le
+ * code — pages, textes, photos —, mais un stage peut désormais naître ici :
+ * celui qu'on ajoute en cours d'année, celui qui n'a pas de page à lui.
+ */
+export async function creerStage(entree: {
+  titre: string;
+  lieu?: string;
+  resume?: string;
+  places?: number;
+  prixEuros?: number | null;
+}): Promise<{ ok: true; id: string } | { ok: false; erreur: string }> {
+  const sql = await getDb();
+  if (!sql) return { ok: false, erreur: "Base de données indisponible." };
+
+  const titre = entree.titre.trim().slice(0, 200);
+  if (titre.length < 3) return { ok: false, erreur: "Le titre est trop court." };
+  const slug = slugifier(titre);
+  if (!slug) return { ok: false, erreur: "Ce titre ne donne pas d'adresse lisible." };
+
+  const prix =
+    entree.prixEuros != null && Number.isFinite(entree.prixEuros) && entree.prixEuros >= 0
+      ? Math.round(entree.prixEuros * 100)
+      : null;
+
+  try {
+    const [ligne] = await sql<{ id: string }[]>`
+      INSERT INTO stages (slug, titre, lieu, resume, places, prix_cents)
+      VALUES (${slug}, ${titre}, ${entree.lieu?.trim().slice(0, 200) || null},
+              ${entree.resume?.trim().slice(0, 2000) || null},
+              ${Math.max(1, Math.min(500, entree.places ?? 12))}, ${prix})
+      ON CONFLICT (slug) DO NOTHING
+      RETURNING id
+    `;
+    if (!ligne) return { ok: false, erreur: "Un stage porte déjà ce titre." };
+    return { ok: true, id: String(ligne.id) };
+  } catch (e) {
+    console.error("[crm] creerStage:", e);
+    return { ok: false, erreur: "La création a échoué." };
   }
 }
 

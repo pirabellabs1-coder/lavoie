@@ -476,6 +476,36 @@ traces en même temps que le reste serait le seul geste vraiment irrattrapable.
 
 Réservé au propriétaire.
 
+## Les stages et leurs dates
+
+Onglet **Stages**. Ce qui vient d'Eventbrite s'y retrouve, à la différence près
+que tout se règle chez vous.
+
+**Créer un stage.** Titre, lieu, places, tarif, une phrase de résumé. C'est pour
+ce qui n'a pas de page au catalogue : un atelier en ligne, une session
+supplémentaire, une date exceptionnelle. Les quatre stages du Cycle des Saisons
+gardent leur page et arrivent tout seuls.
+
+**Ouvrir des dates.** C'est le cœur. Un stage peut être proposé plusieurs jours,
+et c'est la date qui se remplit, pas le stage. Pour chacune : le début, la fin
+si besoin, et un nombre de places qui lui est propre (à défaut, celui du stage).
+Chaque date affiche son état — **places libres**, **dernières places**,
+**complet**, **fermée** — et le compte exact de ce qui est pris.
+
+**Fermer plutôt qu'effacer.** Une date où personne n'est inscrit se retire ; une
+date qui a déjà des demandes se **ferme** — elle disparaît du site, mais les
+personnes inscrites gardent leur place et leur trace. Le tableau de bord refuse
+la suppression dans ce cas, et le dit.
+
+**Ce que voit le visiteur.** Sur la page du stage, au-dessus du formulaire, une
+rangée de cartes : jour, date, heure. Il choisit la sienne, les dates complètes
+étant barrées et non cliquables. Sans aucune date, le formulaire reste ce
+qu'il était — une demande sans choix de jour.
+
+La disponibilité est **revérifiée au moment de la demande** : entre l'affichage
+et le clic, la dernière place a pu partir. Dans ce cas la personne bascule en
+liste d'attente, et on le lui dit.
+
 ## Les stages, centralisés
 
 Le bouton « Réserver ma place » de chaque page de stage ouvre maintenant le
