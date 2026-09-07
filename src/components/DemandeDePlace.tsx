@@ -256,7 +256,7 @@ export default function DemandeDePlace({
             <div>
               <div className="nom">Participation au stage</div>
               <div className="detail">
-                {prixCents != null ? euros(prixCents) : (prixTexte ?? "Tarif sur demande")}
+                {prixTexte ?? (prixCents != null ? euros(prixCents) : "Tarif sur demande")}
                 {choisie && choisie.restantes > 0 && choisie.restantes <= 6
                   ? ` · ${choisie.restantes} place${choisie.restantes > 1 ? "s" : ""} restante${choisie.restantes > 1 ? "s" : ""}`
                   : ""}

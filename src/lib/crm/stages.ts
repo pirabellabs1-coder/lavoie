@@ -79,11 +79,36 @@ export async function semerStages(): Promise<void> {
   if (!sql) return;
   try {
     for (const e of EVENEMENTS) {
+      // Le lieu et le tarif ne sont posés que s'ils manquent : ce qui est réglé
+      // depuis le tableau de bord fait toujours autorité sur le catalogue.
       await sql`
-        INSERT INTO stages (slug, titre, debut_le)
-        VALUES (${e.slug}, ${e.titreLong || e.titre}, ${e.debutISO ?? null})
-        ON CONFLICT (slug) DO NOTHING
+        INSERT INTO stages (slug, titre, debut_le, lieu, prix_cents)
+        VALUES (${e.slug}, ${e.titreLong || e.titre}, ${e.debutISO ?? null},
+                ${e.lieu ?? null}, ${e.prixCents ?? null})
+        ON CONFLICT (slug) DO UPDATE SET
+          lieu = COALESCE(stages.lieu, EXCLUDED.lieu),
+          prix_cents = COALESCE(stages.prix_cents, EXCLUDED.prix_cents)
       `;
+
+      // La date du catalogue devient la première date disponible — une seule
+      // fois, marquée comme telle. Un stage dont les dates ne sont pas encore
+      // fixées reste sans date, et donc ouvert à la demande.
+      if (e.debutISO) {
+        await sql`
+          WITH cible AS (
+            SELECT id FROM stages WHERE slug = ${e.slug} AND dates_semees = FALSE
+          ),
+          posee AS (
+            INSERT INTO stage_dates (stage_id, debut_le, fin_le)
+            SELECT id, ${e.debutISO}::timestamptz, ${e.finISO ?? null}::timestamptz
+            FROM cible
+            ON CONFLICT (stage_id, debut_le) DO NOTHING
+            RETURNING stage_id
+          )
+          UPDATE stages SET dates_semees = TRUE
+          WHERE id IN (SELECT id FROM cible)
+        `;
+      }
     }
   } catch (err) {
     console.error("[crm] semerStages:", err);

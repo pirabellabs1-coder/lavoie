@@ -300,7 +300,10 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
     ALTER TABLE stages
       ADD COLUMN IF NOT EXISTS lieu       TEXT,
       ADD COLUMN IF NOT EXISTS prix_cents BIGINT,
-      ADD COLUMN IF NOT EXISTS resume     TEXT
+      ADD COLUMN IF NOT EXISTS resume       TEXT,
+      -- Vrai dès que la date du catalogue a été installée une fois : sans ce
+      -- témoin, une date supprimée à la main reviendrait au démarrage suivant.
+      ADD COLUMN IF NOT EXISTS dates_semees BOOLEAN NOT NULL DEFAULT FALSE
   `;
 
   // Les jours où un stage est disponible. Un stage sans date reste ouvert à la

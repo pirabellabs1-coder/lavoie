@@ -43,8 +43,14 @@ export type Evenement = {
   heure?: string;
   /** Lieu, ex. « Centre HUT, Sarthe (72) ». */
   lieu: string;
-  /** Tarif affiché. */
+  /** Tarif affiché, en toutes lettres. */
   prix: string;
+  /**
+   * Tarif en centimes, quand il est ferme. Il sert de valeur de départ au
+   * tableau de bord, qui reste maître ensuite : ce qui est réglé à l'écran
+   * n'est jamais réécrit par le catalogue.
+   */
+  prixCents?: number;
   /** Lien de billetterie externe. */
   url: string;
   /** Couverture (format Eventbrite 2:1). */
@@ -91,7 +97,8 @@ const TOUS: Evenement[] = [
     finISO: "2026-09-20T18:00:00+02:00",
     heure: "4 jours (+ options J0 et J+1)",
     lieu: "Centre HUT, Rouperroux-le-Coquet (72)",
-    prix: "Tarifs sur la billetterie",
+    prix: "À partir de 500 € · options J0 et J+1 en supplément",
+    prixCents: 50000,
     url: "https://www.eventbrite.fr/e/stage-automne-naitre-a-soi-en-ce-nouveau-cycle-tickets-1991547637595",
     image: "/evenements/stage-automne.jpg",
     featured: true,
