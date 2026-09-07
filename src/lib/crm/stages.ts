@@ -70,48 +70,65 @@ export type Participation = {
 };
 
 /**
- * Crée en base les stages du catalogue qui n'y sont pas encore. Idempotent :
- * un stage déjà présent n'est jamais réécrit, pour ne pas effacer un nombre de
- * places ou un texte de logistique ajustés à la main.
+ * Le semis n'a lieu qu'une fois par instance. Il est appelé depuis des pages
+ * publiques : le rejouer à chaque visite ferait une dizaine de requêtes pour
+ * rien. Même motif que le semis des séquences.
+ */
+let semisStagesFait: Promise<void> | null = null;
+
+/**
+ * Crée en base les stages du catalogue qui n'y sont pas encore, et leur pose ce
+ * que le catalogue sait déjà : le lieu, le tarif ferme, et la date du stage
+ * comme première date disponible. Idempotent, et jamais destructeur : ce qui
+ * est réglé depuis le tableau de bord fait toujours autorité.
  */
 export async function semerStages(): Promise<void> {
+  if (!semisStagesFait) {
+    semisStagesFait = semer().catch((e) => {
+      // Un semis raté ne reste pas mémorisé : la base était peut-être
+      // simplement indisponible, et l'appel suivant doit réessayer.
+      semisStagesFait = null;
+      console.error("[crm] semerStages:", e);
+    });
+  }
+  return semisStagesFait;
+}
+
+async function semer(): Promise<void> {
   const sql = await getDb();
   if (!sql) return;
-  try {
-    for (const e of EVENEMENTS) {
-      // Le lieu et le tarif ne sont posés que s'ils manquent : ce qui est réglé
-      // depuis le tableau de bord fait toujours autorité sur le catalogue.
-      await sql`
-        INSERT INTO stages (slug, titre, debut_le, lieu, prix_cents)
-        VALUES (${e.slug}, ${e.titreLong || e.titre}, ${e.debutISO ?? null},
-                ${e.lieu ?? null}, ${e.prixCents ?? null})
-        ON CONFLICT (slug) DO UPDATE SET
-          lieu = COALESCE(stages.lieu, EXCLUDED.lieu),
-          prix_cents = COALESCE(stages.prix_cents, EXCLUDED.prix_cents)
-      `;
 
-      // La date du catalogue devient la première date disponible — une seule
-      // fois, marquée comme telle. Un stage dont les dates ne sont pas encore
-      // fixées reste sans date, et donc ouvert à la demande.
-      if (e.debutISO) {
-        await sql`
-          WITH cible AS (
-            SELECT id FROM stages WHERE slug = ${e.slug} AND dates_semees = FALSE
-          ),
-          posee AS (
-            INSERT INTO stage_dates (stage_id, debut_le, fin_le)
-            SELECT id, ${e.debutISO}::timestamptz, ${e.finISO ?? null}::timestamptz
-            FROM cible
-            ON CONFLICT (stage_id, debut_le) DO NOTHING
-            RETURNING stage_id
-          )
-          UPDATE stages SET dates_semees = TRUE
-          WHERE id IN (SELECT id FROM cible)
-        `;
-      }
+  for (const e of EVENEMENTS) {
+    // Le lieu et le tarif ne sont posés que s'ils manquent : ce qui est réglé
+    // depuis le tableau de bord fait toujours autorité sur le catalogue.
+    await sql`
+      INSERT INTO stages (slug, titre, debut_le, lieu, prix_cents)
+      VALUES (${e.slug}, ${e.titreLong || e.titre}, ${e.debutISO ?? null},
+              ${e.lieu ?? null}, ${e.prixCents ?? null})
+      ON CONFLICT (slug) DO UPDATE SET
+        lieu = COALESCE(stages.lieu, EXCLUDED.lieu),
+        prix_cents = COALESCE(stages.prix_cents, EXCLUDED.prix_cents)
+    `;
+
+    // La date du catalogue devient la première date disponible — une seule
+    // fois, marquée comme telle. Un stage dont les dates ne sont pas encore
+    // fixées reste sans date, et donc ouvert à la demande.
+    if (e.debutISO) {
+      await sql`
+        WITH cible AS (
+          SELECT id FROM stages WHERE slug = ${e.slug} AND dates_semees = FALSE
+        ),
+        posee AS (
+          INSERT INTO stage_dates (stage_id, debut_le, fin_le)
+          SELECT id, ${e.debutISO}::timestamptz, ${e.finISO ?? null}::timestamptz
+          FROM cible
+          ON CONFLICT (stage_id, debut_le) DO NOTHING
+          RETURNING stage_id
+        )
+        UPDATE stages SET dates_semees = TRUE
+        WHERE id IN (SELECT id FROM cible)
+      `;
     }
-  } catch (err) {
-    console.error("[crm] semerStages:", err);
   }
 }
 

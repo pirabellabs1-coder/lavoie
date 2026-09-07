@@ -1,5 +1,5 @@
 import { datesOuvertes, etatDeLaDate, placesRestantesDate } from "@/lib/crm/dates-stages";
-import { placesRestantes, stagePublic } from "@/lib/crm/stages";
+import { placesRestantes, semerStages, stagePublic } from "@/lib/crm/stages";
 
 /**
  * Les dates encore proposées pour un stage.
@@ -14,6 +14,10 @@ export async function GET(req: Request) {
   if (!/^[a-z0-9-]{1,120}$/.test(slug)) {
     return Response.json({ stage: null, dates: [] });
   }
+
+  // Premier passage après un déploiement : c'est souvent ici que le catalogue
+  // s'installe, avant même qu'on ait ouvert le tableau de bord.
+  await semerStages();
 
   const [stage, dates, restantes] = await Promise.all([
     stagePublic(slug),
