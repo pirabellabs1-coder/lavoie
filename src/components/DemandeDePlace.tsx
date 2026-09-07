@@ -64,6 +64,29 @@ function partiesDeDate(iso: string) {
   };
 }
 
+/**
+ * Un stage de plusieurs jours ne se lit pas sur une carte : celle-ci ne porte
+ * que le début. La période complète est donc écrite en toutes lettres sous les
+ * cartes — sans quoi « jeu. 17 · 17:00 » laisse croire à une soirée.
+ */
+function periode(debut: string, fin: string | null): string | null {
+  if (!fin) return null;
+  const d = new Date(debut);
+  const f = new Date(fin);
+  const jour = (v: Date, options: Intl.DateTimeFormatOptions) =>
+    v.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris", ...options });
+  if (jour(d, { day: "numeric", month: "short", year: "numeric" }) ===
+      jour(f, { day: "numeric", month: "short", year: "numeric" })) {
+    return null;
+  }
+  const memeMois = jour(d, { month: "long", year: "numeric" }) === jour(f, { month: "long", year: "numeric" });
+  const debutTexte = memeMois
+    ? jour(d, { weekday: "long", day: "numeric" })
+    : jour(d, { weekday: "long", day: "numeric", month: "long" });
+  const finTexte = jour(f, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  return `Du ${debutTexte} au ${finTexte}`;
+}
+
 function euros(cents: number): string {
   return (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
 }
@@ -182,7 +205,9 @@ export default function DemandeDePlace({
             : "Le secrétariat revient vers vous sous 48 heures ouvrées pour confirmer la place et vous transmettre les modalités de règlement."}
         </p>
         <div className="resa-recap">
-          {choisie && <span>{partiesDeDate(choisie.debut).complet}</span>}
+          {choisie && (
+            <span>{periode(choisie.debut, choisie.fin) ?? partiesDeDate(choisie.debut).complet}</span>
+          )}
           <span>
             {places} place{places > 1 ? "s" : ""}
           </span>
@@ -247,6 +272,10 @@ export default function DemandeDePlace({
             </div>
           ) : (
             <p className="resa-date-fixe">{dateTexte ?? "Dates communiquées à la confirmation"}</p>
+          )}
+
+          {choisie && periode(choisie.debut, choisie.fin) && (
+            <p className="resa-periode">{periode(choisie.debut, choisie.fin)}</p>
           )}
 
           <p className="resa-legende" style={{ marginTop: 26 }}>
@@ -334,7 +363,7 @@ export default function DemandeDePlace({
       <div className="resa-corps">
         <div className="resa-recap">
           {choisie ? (
-            <span>{partiesDeDate(choisie.debut).complet}</span>
+            <span>{periode(choisie.debut, choisie.fin) ?? partiesDeDate(choisie.debut).complet}</span>
           ) : (
             dateTexte && <span>{dateTexte}</span>
           )}
