@@ -2117,7 +2117,6 @@ select option { background: var(--white); }
   margin: 12px 0 0;
   font-size: 13.5px;
   color: var(--navy-ink);
-  text-transform: capitalize;
 }
 
 .resa-billet {
