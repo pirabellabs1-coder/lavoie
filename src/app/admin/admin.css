@@ -374,6 +374,56 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-btn.petit { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
 .adm-btn.danger { background: var(--adm-bad); border-color: var(--adm-bad); }
 
+/* ═══ Le carnet de bord ════════════════════════════════════════════════════ */
+
+.carnet-saisie {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+.carnet-saisie .adm-label { margin-bottom: 4px; }
+
+.carnet-resume {
+  display: grid; gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+.carnet-resume .n {
+  font-size: 26px; font-weight: 650; color: var(--adm-ink);
+  font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.carnet-resume .l { font-size: 11.5px; color: var(--adm-mute); margin-top: 4px; line-height: 1.4; }
+
+.carnet-liste { display: grid; gap: 8px; }
+.carnet-ligne {
+  display: grid;
+  grid-template-columns: 4px 1fr auto;
+  gap: 0 14px;
+  align-items: start;
+  padding: 12px 14px 12px 0;
+  border: 1px solid var(--adm-line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.carnet-ligne .liseré { align-self: stretch; border-radius: 4px; }
+.carnet-ligne .titre { font-weight: 600; font-size: 13.5px; line-height: 1.4; }
+.carnet-ligne .meta {
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  margin-top: 5px; font-size: 11.5px; color: var(--adm-mute);
+}
+.carnet-ligne .meta .adm-tag { font-size: 10.5px; }
+.carnet-ligne .detail {
+  margin: 8px 0 0; font-size: 12.5px; color: var(--adm-ink-2);
+  line-height: 1.6; white-space: pre-wrap;
+}
+.carnet-ligne .boutons { display: flex; gap: 8px; align-items: center; }
+.carnet-cocher { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.carnet-cocher .adm-champ { width: 190px; padding: 5px 9px; font-size: 12px; }
+
+@media (max-width: 700px) {
+  .carnet-ligne { grid-template-columns: 4px 1fr; }
+  .carnet-ligne .boutons { grid-column: 2; margin-top: 10px; }
+  .carnet-cocher .adm-champ { width: 100%; }
+}
+
 /* Le témoin discret du worker, au-dessus des chiffres. */
 .adm-temoin {
   margin: 0 0 14px; font-size: 12px; color: var(--adm-mute);

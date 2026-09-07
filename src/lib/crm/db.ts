@@ -294,6 +294,30 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS campagne_id BIGINT REFERENCES campagnes(id) ON DELETE SET NULL
   `;
 
+  // Le carnet de bord de l'équipe : qui a fait quoi, quel jour. C'est la
+  // mémoire commune du travail, et ce que la cliente vient consulter.
+  await sql`
+    CREATE TABLE IF NOT EXISTS actions (
+      id         BIGSERIAL PRIMARY KEY,
+      -- Auteur figé, comme au journal d'audit : un compte désactivé ne doit
+      -- pas effacer la trace de ce qu'il a fait.
+      auteur_id  TEXT NOT NULL,
+      auteur_nom TEXT NOT NULL,
+      titre      TEXT NOT NULL,
+      detail     TEXT,
+      categorie  TEXT NOT NULL DEFAULT 'autre',
+      -- prevue · faite
+      statut     TEXT NOT NULL DEFAULT 'faite',
+      -- Le jour de l'action, qui n'est pas forcément celui de la saisie.
+      fait_le    DATE,
+      echeance   DATE,
+      duree_min  INT,
+      cree_le    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      maj_le     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS idx_actions_jour ON actions (statut, fait_le DESC)`;
+
   // L'invitation d'un collaborateur : on ne garde que l'empreinte du jeton,
   // jamais le jeton lui-même — la personne invitée est la seule à l'avoir reçu.
   await sql`

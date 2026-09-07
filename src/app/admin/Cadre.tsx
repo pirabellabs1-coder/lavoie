@@ -26,7 +26,8 @@ type Icone =
   | "campagnes"
   | "envois"
   | "comptes"
-  | "journal";
+  | "journal"
+  | "carnet";
 
 function Trait({ nom }: { nom: Icone }) {
   const chemins: Record<Icone, React.ReactNode> = {
@@ -105,6 +106,12 @@ function Trait({ nom }: { nom: Icone }) {
         <path d="M8.5 10h7M8.5 13.5h7M8.5 17h4" />
       </>
     ),
+    carnet: (
+      <>
+        <path d="M6.5 3.5h11a1.5 1.5 0 0 1 1.5 1.5v15l-3.5-2-3.5 2-3.5-2-3.5 2V5a1.5 1.5 0 0 1 1.5-1.5z" />
+        <path d="M9 8.5l1.6 1.6 3.4-3.4M9 14h6" />
+      </>
+    ),
   };
 
   return (
@@ -129,7 +136,10 @@ type Entree = { href: string; label: string; icone: Icone; droit?: Droit; pastil
 const GROUPES: { titre: string; entrees: Entree[] }[] = [
   {
     titre: "Pilotage",
-    entrees: [{ href: "/admin", label: "Vue d'ensemble", icone: "vue" }],
+    entrees: [
+      { href: "/admin", label: "Vue d'ensemble", icone: "vue" },
+      { href: "/admin/carnet", label: "Carnet de bord", icone: "carnet" },
+    ],
   },
   {
     titre: "Les gens",

@@ -386,6 +386,39 @@ la demande et un lien vers chaque fiche, d'où l'on peut renvoyer.
 personnel plutôt que l'adresse générique : le témoignage d'un participant
 revient rattaché à sa fiche, et la demande est comptée comme envoyée.
 
+## Le carnet de bord
+
+Onglet **Carnet de bord**, ouvert à toute personne qui a un compte. C'est la
+mémoire commune du travail : chacun y note ce qu'il a fait, et tout le monde
+lit ce que les autres ont fait.
+
+**Noter prend dix secondes.** Une ligne — « Publication Instagram sur la
+blessure originelle » —, une catégorie, le jour (aujourd'hui par défaut, mais
+on peut noter la veille), et si l'on veut le temps passé et un détail. La
+personne qui écrit signe automatiquement : son nom reste attaché à sa ligne,
+même si son compte est désactivé plus tard.
+
+**Ce qui est prévu, coché plus tard.** En cochant « c'est prévu, pas encore
+fait », la ligne va dans « À faire » avec sa date en échéance. Un bouton
+« C'est fait » la range au jour où elle a été faite, avec un mot en plus si
+l'on veut — pas besoin de la ressaisir.
+
+**Ce que voit la cliente.** En haut de page, le résumé de la période : combien
+d'actions, combien de temps, la répartition par personne et par catégorie.
+Puis le carnet lui-même, jour par jour, du plus récent au plus ancien. Les
+filtres permettent de resserrer sur sept jours, trente jours, trois mois, ou
+sur une seule personne.
+
+**Deux façons d'en sortir un rapport** : le bouton « Exporter en CSV », qui
+respecte la période et le filtre en cours et s'ouvre dans un tableur ; et le
+point du lundi, qui compte désormais les actions de la semaine par personne.
+
+Chacun ne peut retoucher que ses propres lignes — le propriétaire, toutes.
+
+Les huit catégories : Contenu, Réseaux, Publicité, E-mailing, Relation,
+Site & technique, Analyse, Autre. Elles se modifient dans
+`src/lib/crm/carnet.ts`, en tête de fichier.
+
 ## Le témoin du worker
 
 Tout ce qui part tout seul — séquences, campagnes, relances, logistique des

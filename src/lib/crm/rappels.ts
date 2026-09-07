@@ -4,6 +4,7 @@ import { jourParis } from "@/lib/heure";
 import { getDb } from "./db";
 import { habiller } from "./email";
 import { annulerFauteDeConfirmation } from "./questionnaires";
+import { actionsDeLaSemaine } from "./carnet";
 import { EXPEDITEUR } from "./sequences";
 
 /** Un client Resend par appel : la clé n'est lue qu'au moment de s'en servir. */
@@ -67,6 +68,9 @@ export async function envoyerRapportHebdomadaire(): Promise<boolean> {
   }
 
   const tauxOuverture = c.envoyes ? Math.round((c.ouverts / c.envoyes) * 100) : 0;
+  // Ce que l'équipe a noté dans le carnet : le seul chiffre de ce rapport qui
+  // parle du travail plutôt que de ses résultats.
+  const carnet = await actionsDeLaSemaine();
 
   const { html, text } = habiller({
     apercu: `${c.nouveaux} nouveaux contacts cette semaine.`,
@@ -80,6 +84,11 @@ export async function envoyerRapportHebdomadaire(): Promise<boolean> {
       `· ${c.questionnaires} reçus, dont ${c.eligibles} éligibles à l'entretien\n` +
       `· ${c.prerequis} personnes ont confirmé leurs prérequis\n` +
       `· ${c.rdv} rendez-vous prévus dans les sept prochains jours\n\n` +
+      (carnet.length
+        ? `Le carnet de l'équipe\n` +
+          carnet.map((p) => `· ${p.nom} : ${p.n} action${p.n > 1 ? "s" : ""}\n`).join("") +
+          `\n`
+        : "") +
       `E-mails\n` +
       `· ${c.envoyes} partis, ${tauxOuverture} % ouverts\n` +
       `· le worker est passé ${c.passages} fois cette semaine` +
