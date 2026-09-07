@@ -285,7 +285,13 @@ export default async function EvenementPage({
           </p>
 
           <div id="reserver" style={{ maxWidth: 620, margin: "48px auto 0", scrollMarginTop: 90 }}>
-            <DemandeDePlace slug={e.slug} titre={e.titreLong} complet={e.complet} />
+            <DemandeDePlace
+              slug={e.slug}
+              titre={e.titreLong}
+              complet={e.complet}
+              prixTexte={e.prix}
+              dateTexte={e.date}
+            />
           </div>
         </div>
       </section>

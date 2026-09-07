@@ -61,6 +61,8 @@ export type Participation = {
   statut: string;
   message: string | null;
   cree_le: Date;
+  personnes: number;
+  date_debut: Date | null;
   prenom: string | null;
   nom: string | null;
   email: string;
@@ -96,9 +98,9 @@ export async function listerStages(): Promise<StageVue[]> {
     return await sql<StageVue[]>`
       SELECT s.id, s.slug, s.titre, s.debut_le, s.places, s.actif, s.logistique,
              s.lieu, s.prix_cents, s.resume,
-             COUNT(p.id) FILTER (WHERE p.statut = 'confirmee')::int AS confirmees,
-             COUNT(p.id) FILTER (WHERE p.statut = 'demande')::int   AS demandes,
-             COUNT(p.id) FILTER (WHERE p.statut = 'attente')::int   AS attente
+             COALESCE(SUM(p.personnes) FILTER (WHERE p.statut = 'confirmee'), 0)::int AS confirmees,
+             COALESCE(SUM(p.personnes) FILTER (WHERE p.statut = 'demande'), 0)::int   AS demandes,
+             COALESCE(SUM(p.personnes) FILTER (WHERE p.statut = 'attente'), 0)::int   AS attente
       FROM stages s
       LEFT JOIN participations p ON p.stage_id = s.id
       GROUP BY s.id
@@ -116,9 +118,11 @@ export async function participantsDuStage(stageId: string): Promise<Participatio
   try {
     return await sql<Participation[]>`
       SELECT p.id, p.stage_id, p.contact_id, p.statut, p.message, p.cree_le,
+             p.personnes, d.debut_le AS date_debut,
              c.prenom, c.nom, c.email, c.telephone
       FROM participations p
       JOIN contacts c ON c.id = p.contact_id
+      LEFT JOIN stage_dates d ON d.id = p.date_id
       WHERE p.stage_id = ${stageId}
       ORDER BY
         array_position(ARRAY['confirmee','demande','attente','venue','annulee'], p.statut),
@@ -130,6 +134,29 @@ export async function participantsDuStage(stageId: string): Promise<Participatio
   }
 }
 
+export type StagePublic = {
+  titre: string;
+  lieu: string | null;
+  prix_cents: number | null;
+  places: number;
+  actif: boolean;
+};
+
+/** Ce qu'un visiteur a le droit de savoir d'un stage : son cadre et son tarif. */
+export async function stagePublic(slug: string): Promise<StagePublic | null> {
+  const sql = await getDb();
+  if (!sql) return null;
+  try {
+    const [s] = await sql<StagePublic[]>`
+      SELECT titre, lieu, prix_cents, places, actif FROM stages WHERE slug = ${slug}
+    `;
+    return s ?? null;
+  } catch (e) {
+    console.error("[crm] stagePublic:", e);
+    return null;
+  }
+}
+
 /** Reste-t-il de la place ? Les demandes en cours comptent comme des places prises. */
 export async function placesRestantes(slug: string): Promise<number | null> {
   const sql = await getDb();
@@ -137,7 +164,7 @@ export async function placesRestantes(slug: string): Promise<number | null> {
   try {
     const [l] = await sql<{ places: number; prises: number }[]>`
       SELECT s.places,
-             COUNT(p.id) FILTER (WHERE p.statut IN ('confirmee', 'demande'))::int AS prises
+             COALESCE(SUM(p.personnes) FILTER (WHERE p.statut IN ('confirmee', 'demande')), 0)::int AS prises
       FROM stages s
       LEFT JOIN participations p ON p.stage_id = s.id
       WHERE s.slug = ${slug}
@@ -161,7 +188,14 @@ export async function demanderPlace(entree: {
   message?: string;
   /** La date choisie, quand le stage en propose plusieurs. */
   dateId?: string | null;
-}): Promise<{ statut: "demande" | "attente"; titre: string; quand: Date | null } | null> {
+  /** Combien de places pour cette demande. Une par défaut. */
+  personnes?: number;
+}): Promise<{
+  statut: "demande" | "attente";
+  titre: string;
+  quand: Date | null;
+  personnes: number;
+} | null> {
   const sql = await getDb();
   if (!sql) return null;
   await semerStages();
@@ -185,13 +219,16 @@ export async function demanderPlace(entree: {
       restantes !== null && (restantes <= 0 || (bonneDate ? !bonneDate.ouverte : false));
     const statut = complet ? "attente" : "demande";
 
+    const personnes = Math.max(1, Math.min(6, Math.round(entree.personnes ?? 1)));
+
     await sql`
-      INSERT INTO participations (stage_id, contact_id, statut, message, date_id)
+      INSERT INTO participations (stage_id, contact_id, statut, message, date_id, personnes)
       VALUES (${stage.id}, ${entree.contactId}, ${statut}, ${entree.message || null},
-              ${bonneDate ? bonneDate.id : null})
+              ${bonneDate ? bonneDate.id : null}, ${personnes})
       ON CONFLICT (stage_id, contact_id) DO UPDATE SET
         message = COALESCE(NULLIF(EXCLUDED.message, ''), participations.message),
         date_id = COALESCE(EXCLUDED.date_id, participations.date_id),
+        personnes = EXCLUDED.personnes,
         -- Une personne qui refait une demande après une annulation redevient
         -- candidate ; une place déjà confirmée n'est jamais rétrogradée.
         statut = CASE WHEN participations.statut IN ('annulee', 'attente')
@@ -204,7 +241,12 @@ export async function demanderPlace(entree: {
               ${`${statut === "attente" ? "Liste d'attente" : "Demande de place"} — ${stage.titre}`})
     `;
 
-    return { statut, titre: stage.titre, quand: bonneDate ? bonneDate.debut_le : null };
+    return {
+      statut,
+      titre: stage.titre,
+      quand: bonneDate ? bonneDate.debut_le : null,
+      personnes,
+    };
   } catch (e) {
     console.error("[crm] demanderPlace:", e);
     return null;

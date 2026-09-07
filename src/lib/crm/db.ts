@@ -322,10 +322,12 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   `;
   await sql`CREATE INDEX IF NOT EXISTS idx_stage_dates ON stage_dates (stage_id, debut_le)`;
 
-  // La place demandée l'est pour une date précise, quand le stage en propose.
+  // La place demandée l'est pour une date précise, quand le stage en propose,
+  // et peut valoir pour plusieurs personnes — on vient rarement seul.
   await sql`
     ALTER TABLE participations
-      ADD COLUMN IF NOT EXISTS date_id BIGINT REFERENCES stage_dates(id) ON DELETE SET NULL
+      ADD COLUMN IF NOT EXISTS date_id   BIGINT REFERENCES stage_dates(id) ON DELETE SET NULL,
+      ADD COLUMN IF NOT EXISTS personnes INT NOT NULL DEFAULT 1
   `;
 
   // Le carnet de bord de l'équipe : qui a fait quoi, quel jour. C'est la

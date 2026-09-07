@@ -52,7 +52,7 @@ export async function datesDuStage(stageId: string): Promise<DateStage[]> {
       SELECT d.id, d.stage_id, d.debut_le, d.fin_le,
              COALESCE(d.places, s.places)::int AS places,
              d.ouverte,
-             COUNT(p.id) FILTER (WHERE p.statut IN ('demande', 'confirmee'))::int AS prises
+             COALESCE(SUM(p.personnes) FILTER (WHERE p.statut IN ('demande', 'confirmee')), 0)::int AS prises
       FROM stage_dates d
       JOIN stages s ON s.id = d.stage_id
       LEFT JOIN participations p ON p.date_id = d.id
@@ -75,7 +75,7 @@ export async function datesOuvertes(slug: string): Promise<DateStage[]> {
       SELECT d.id, d.stage_id, d.debut_le, d.fin_le,
              COALESCE(d.places, s.places)::int AS places,
              d.ouverte,
-             COUNT(p.id) FILTER (WHERE p.statut IN ('demande', 'confirmee'))::int AS prises
+             COALESCE(SUM(p.personnes) FILTER (WHERE p.statut IN ('demande', 'confirmee')), 0)::int AS prises
       FROM stage_dates d
       JOIN stages s ON s.id = d.stage_id
       LEFT JOIN participations p ON p.date_id = d.id
@@ -168,7 +168,7 @@ export async function datePrenable(dateId: string): Promise<DateStage | null> {
       SELECT d.id, d.stage_id, d.debut_le, d.fin_le,
              COALESCE(d.places, s.places)::int AS places,
              d.ouverte,
-             COUNT(p.id) FILTER (WHERE p.statut IN ('demande', 'confirmee'))::int AS prises
+             COALESCE(SUM(p.personnes) FILTER (WHERE p.statut IN ('demande', 'confirmee')), 0)::int AS prises
       FROM stage_dates d
       JOIN stages s ON s.id = d.stage_id
       LEFT JOIN participations p ON p.date_id = d.id

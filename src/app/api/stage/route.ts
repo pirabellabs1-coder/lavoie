@@ -67,6 +67,8 @@ export async function POST(req: Request) {
         message,
         // La date choisie sur la page du stage, quand il en propose plusieurs.
         dateId: /^[0-9]+$/.test(String(data.dateId ?? "")) ? String(data.dateId) : null,
+        // Combien de places : on vient rarement seul, jamais à vingt.
+        personnes: Math.max(1, Math.min(6, Math.round(Number(data.personnes) || 1))),
       })
     : null;
   const enAttente = place?.statut === "attente";
