@@ -31,8 +31,9 @@ export async function GET(req: Request) {
         ? {
             titre: stage.titre,
             lieu: stage.lieu,
-            // En centimes : la mise en forme se fait à l'affichage.
-            prixCents: stage.prix_cents,
+            // En centimes, et en nombre : un BIGINT revient en chaîne du
+            // pilote Postgres, et « 50000 » ne se multiplie pas comme 50000.
+            prixCents: stage.prix_cents == null ? null : Number(stage.prix_cents),
             ouvert: stage.actif,
             // Sans date précise, c'est la jauge du stage entier qui parle.
             restantes: restantes ?? null,
