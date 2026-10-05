@@ -75,3 +75,46 @@ export function enClair(d: Date | string | null): string {
     minute: "2-digit",
   });
 }
+
+/**
+ * Une période en toutes lettres : « Du jeudi 17 au dimanche 20 septembre 2026 ».
+ *
+ * Un stage de quatre jours ne se lit pas sur une date unique. Quand la fin
+ * manque, ou tombe le même jour, on écrit le jour seul avec son heure.
+ */
+export function periodeEnClair(
+  debut: Date | string,
+  fin?: Date | string | null,
+): string {
+  const d = debut instanceof Date ? debut : new Date(debut);
+  if (Number.isNaN(d.getTime())) return "—";
+  const jour = (v: Date, options: Intl.DateTimeFormatOptions) =>
+    v.toLocaleDateString("fr-FR", { timeZone: ZONE, ...options });
+
+  const f = fin ? (fin instanceof Date ? fin : new Date(fin)) : null;
+  const memeJour =
+    !f ||
+    Number.isNaN(f.getTime()) ||
+    jour(d, { day: "numeric", month: "short", year: "numeric" }) ===
+      jour(f, { day: "numeric", month: "short", year: "numeric" });
+
+  if (memeJour) {
+    // Un atelier d'une journée se réserve sur son créneau : dire « 09:00 »
+    // sans dire jusqu'à quand laisse ignorer s'il faut bloquer deux heures ou
+    // la journée entière.
+    const heure = (v: Date) =>
+      v.toLocaleTimeString("fr-FR", { timeZone: ZONE, hour: "2-digit", minute: "2-digit" });
+    const creneau =
+      f && !Number.isNaN(f.getTime()) && f.getTime() > d.getTime()
+        ? `${heure(d)} – ${heure(f)}`
+        : heure(d);
+    return `${jour(d, { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · ${creneau}`;
+  }
+
+  const memeMois =
+    jour(d, { month: "long", year: "numeric" }) === jour(f, { month: "long", year: "numeric" });
+  const debutTexte = memeMois
+    ? jour(d, { weekday: "long", day: "numeric" })
+    : jour(d, { weekday: "long", day: "numeric", month: "long" });
+  return `Du ${debutTexte} au ${jour(f, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}`;
+}

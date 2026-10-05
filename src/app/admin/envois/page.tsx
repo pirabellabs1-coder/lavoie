@@ -2,6 +2,7 @@ import Link from "next/link";
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
 import { listerEnvois } from "@/lib/crm/sequences";
+import { exigerIdentite } from "@/lib/crm/session";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,11 @@ function pourcentage(part: number, total: number): string {
 }
 
 export default async function EnvoisPage() {
+  // Le proxy garde déjà /admin, mais c'était ici la seule page à ne compter
+  // que sur lui. Trois cents adresses de destinataires méritent la même double
+  // barrière que les seize autres écrans.
+  await exigerIdentite();
+
   const envois = isDbConfigured() ? await listerEnvois(300) : [];
   const echecs = envois.filter((e) => e.statut === "echec").length;
   // Le taux se calcule sur les seuls e-mails effectivement partis.

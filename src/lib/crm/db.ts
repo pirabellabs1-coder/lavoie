@@ -333,6 +333,32 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS personnes INT NOT NULL DEFAULT 1
   `;
 
+  // Les photos déposées depuis le tableau de bord. Identifiant tiré au sort :
+  // deviner l'adresse d'une image ne doit pas se faire en incrémentant.
+  await sql`
+    CREATE TABLE IF NOT EXISTS images (
+      id        TEXT PRIMARY KEY,
+      type_mime TEXT NOT NULL,
+      octets    BYTEA NOT NULL,
+      largeur   INT,
+      hauteur   INT,
+      taille    INT NOT NULL DEFAULT 0,
+      alt       TEXT,
+      cree_le   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  // Le texte de remplacement d'une photo : ce qu'entend la personne qui ne la
+  // voit pas. Ajouté après coup, donc en ALTER pour les bases déjà en place.
+  await sql`ALTER TABLE images ADD COLUMN IF NOT EXISTS alt TEXT`;
+
+  // Un stage tenu depuis le tableau de bord porte sa photo et son texte.
+  await sql`
+    ALTER TABLE stages
+      ADD COLUMN IF NOT EXISTS image_id    TEXT REFERENCES images(id) ON DELETE SET NULL,
+      ADD COLUMN IF NOT EXISTS description TEXT
+  `;
+
   // Le carnet de bord de l'équipe : qui a fait quoi, quel jour. C'est la
   // mémoire commune du travail, et ce que la cliente vient consulter.
   await sql`

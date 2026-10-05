@@ -46,9 +46,15 @@ export type Stage = {
   /** En centimes : jamais de flottant sur de l'argent. */
   prix_cents: number | null;
   resume: string | null;
+  /** Photo déposée depuis le tableau de bord. */
+  image_id: string | null;
+  /** Texte long, pour les stages qui n'ont pas de page au catalogue. */
+  description: string | null;
 };
 
 export type StageVue = Stage & {
+  /** Le texte de remplacement de la photo, s'il en a été saisi un. */
+  image_alt: string | null;
   confirmees: number;
   demandes: number;
   attente: number;
@@ -139,13 +145,15 @@ export async function listerStages(): Promise<StageVue[]> {
   try {
     return await sql<StageVue[]>`
       SELECT s.id, s.slug, s.titre, s.debut_le, s.places, s.actif, s.logistique,
-             s.lieu, s.prix_cents, s.resume,
+             s.lieu, s.prix_cents::int AS prix_cents, s.resume, s.image_id, s.description,
+             i.alt AS image_alt,
              COALESCE(SUM(p.personnes) FILTER (WHERE p.statut = 'confirmee'), 0)::int AS confirmees,
              COALESCE(SUM(p.personnes) FILTER (WHERE p.statut = 'demande'), 0)::int   AS demandes,
              COALESCE(SUM(p.personnes) FILTER (WHERE p.statut = 'attente'), 0)::int   AS attente
       FROM stages s
       LEFT JOIN participations p ON p.stage_id = s.id
-      GROUP BY s.id
+      LEFT JOIN images i ON i.id = s.image_id
+      GROUP BY s.id, i.alt
       ORDER BY s.debut_le NULLS LAST, s.titre
     `;
   } catch (e) {
@@ -182,6 +190,11 @@ export type StagePublic = {
   prix_cents: number | null;
   places: number;
   actif: boolean;
+  image_id: string | null;
+  resume: string | null;
+  description: string | null;
+  image_alt: string | null;
+  slug: string;
 };
 
 /** Ce qu'un visiteur a le droit de savoir d'un stage : son cadre et son tarif. */
@@ -190,7 +203,11 @@ export async function stagePublic(slug: string): Promise<StagePublic | null> {
   if (!sql) return null;
   try {
     const [s] = await sql<StagePublic[]>`
-      SELECT titre, lieu, prix_cents, places, actif FROM stages WHERE slug = ${slug}
+      SELECT s.slug, s.titre, s.lieu, s.prix_cents::int AS prix_cents, s.places, s.actif,
+             s.image_id, s.resume, s.description, i.alt AS image_alt
+      FROM stages s
+      LEFT JOIN images i ON i.id = s.image_id
+      WHERE s.slug = ${slug}
     `;
     return s ?? null;
   } catch (e) {
@@ -362,6 +379,16 @@ export async function supprimerParticipation(
   }
 }
 
+/**
+ * Un tarif en centimes, borné. Le plafond n'est pas de la méfiance : la colonne
+ * est lue en `::int`, et un montant saisi au-delà ferait échouer la lecture —
+ * donc vider la page du tableau de bord, seul endroit où le corriger.
+ */
+function enCentimes(euros: number | null | undefined): number | null {
+  if (euros == null || !Number.isFinite(euros) || euros < 0) return null;
+  return Math.round(Math.min(euros, 1_000_000) * 100);
+}
+
 export async function reglerStage(
   id: string,
   entree: {
@@ -371,32 +398,81 @@ export async function reglerStage(
     titre?: string;
     lieu?: string;
     resume?: string;
+    description?: string;
     prixEuros?: number | null;
+    /** Nouvel identifiant d'image, ou `null` pour retirer la photo. */
+    imageId?: string | null;
+    /** Vrai si l'on veut effacer la photo actuelle. */
+    retirerImage?: boolean;
   },
-): Promise<boolean> {
+): Promise<{ ok: boolean; ancienneImage: string | null; slug: string | null }> {
   const sql = await getDb();
-  if (!sql) return false;
+  if (!sql) return { ok: false, ancienneImage: null, slug: null };
   const titre = entree.titre?.trim().slice(0, 200);
-  const prix =
-    entree.prixEuros != null && Number.isFinite(entree.prixEuros) && entree.prixEuros >= 0
-      ? Math.round(entree.prixEuros * 100)
-      : null;
+  const prix = enCentimes(entree.prixEuros);
   try {
-    await sql`
-      UPDATE stages
-      SET places = ${Math.max(0, Math.min(500, entree.places))},
-          logistique = ${entree.logistique || null},
-          actif = ${entree.actif},
-          titre = COALESCE(${titre || null}, titre),
-          lieu = ${entree.lieu?.trim().slice(0, 200) || null},
-          resume = ${entree.resume?.trim().slice(0, 2000) || null},
-          prix_cents = ${prix}
-      WHERE id = ${id}
-    `;
-    return true;
+    // La photo ne change que si l'on en dépose une neuve ou qu'on demande à
+    // retirer l'ancienne : un formulaire renvoyé sans fichier ne l'efface pas.
+    const image = entree.retirerImage ? null : (entree.imageId ?? undefined);
+
+    // L'ancienne photo est relue en base, et non reçue du formulaire : un champ
+    // caché se change, et on effacerait alors l'image d'un autre stage. Les
+    // deux requêtes tiennent dans la même transaction pour que l'identifiant
+    // rendu soit bien celui qu'on vient de remplacer.
+    const ligne = await sql.begin(async (tx) => {
+      const [avant] = await tx<{ slug: string; image_id: string | null }[]>`
+        SELECT slug, image_id FROM stages WHERE id = ${id} FOR UPDATE
+      `;
+      if (!avant) return null;
+      await tx`
+        UPDATE stages
+        SET places = ${Math.max(0, Math.min(500, entree.places))},
+            logistique = ${entree.logistique || null},
+            actif = ${entree.actif},
+            titre = COALESCE(${titre || null}, titre),
+            lieu = ${entree.lieu?.trim().slice(0, 200) || null},
+            resume = ${entree.resume?.trim().slice(0, 2000) || null},
+            description = ${entree.description?.trim().slice(0, 20000) || null},
+            prix_cents = ${prix},
+            image_id = ${image === undefined ? tx`image_id` : image}
+        WHERE id = ${id}
+      `;
+      return { slug: avant.slug, ancienne: avant.image_id };
+    });
+
+    return {
+      ok: Boolean(ligne),
+      ancienneImage: ligne?.ancienne ?? null,
+      slug: ligne?.slug ?? null,
+    };
   } catch (e) {
     console.error("[crm] reglerStage:", e);
-    return false;
+    return { ok: false, ancienneImage: null, slug: null };
+  }
+}
+
+/**
+ * Publie un stage, ou le retire du site.
+ *
+ * `actif` porte les deux sens à la fois : visible du public, et ouvert aux
+ * demandes. C'est volontaire — un stage qu'on retire ne doit pas laisser une
+ * page qui prend encore des réservations.
+ */
+export async function publierStage(
+  id: string,
+  publier: boolean,
+): Promise<{ ok: boolean; slug: string | null; titre: string | null }> {
+  const sql = await getDb();
+  if (!sql) return { ok: false, slug: null, titre: null };
+  try {
+    const [l] = await sql<{ slug: string; titre: string }[]>`
+      UPDATE stages SET actif = ${publier} WHERE id = ${id}
+      RETURNING slug, titre
+    `;
+    return { ok: Boolean(l), slug: l?.slug ?? null, titre: l?.titre ?? null };
+  } catch (e) {
+    console.error("[crm] publierStage:", e);
+    return { ok: false, slug: null, titre: null };
   }
 }
 
@@ -421,9 +497,11 @@ export async function creerStage(entree: {
   titre: string;
   lieu?: string;
   resume?: string;
+  description?: string;
   places?: number;
   prixEuros?: number | null;
-}): Promise<{ ok: true; id: string } | { ok: false; erreur: string }> {
+  imageId?: string | null;
+}): Promise<{ ok: true; id: string; slug: string } | { ok: false; erreur: string }> {
   const sql = await getDb();
   if (!sql) return { ok: false, erreur: "Base de données indisponible." };
 
@@ -432,22 +510,29 @@ export async function creerStage(entree: {
   const slug = slugifier(titre);
   if (!slug) return { ok: false, erreur: "Ce titre ne donne pas d'adresse lisible." };
 
-  const prix =
-    entree.prixEuros != null && Number.isFinite(entree.prixEuros) && entree.prixEuros >= 0
-      ? Math.round(entree.prixEuros * 100)
-      : null;
+  const prix = enCentimes(entree.prixEuros);
 
   try {
     const [ligne] = await sql<{ id: string }[]>`
-      INSERT INTO stages (slug, titre, lieu, resume, places, prix_cents)
+      INSERT INTO stages (slug, titre, lieu, resume, description, places, prix_cents, image_id,
+                          actif, dates_semees)
       VALUES (${slug}, ${titre}, ${entree.lieu?.trim().slice(0, 200) || null},
               ${entree.resume?.trim().slice(0, 2000) || null},
-              ${Math.max(1, Math.min(500, entree.places ?? 12))}, ${prix})
+              ${entree.description?.trim().slice(0, 20000) || null},
+              ${Math.max(1, Math.min(500, entree.places ?? 12))}, ${prix},
+              ${entree.imageId ?? null},
+              -- Un stage naît en brouillon. Sans quoi il serait public et
+              -- réservable à la seconde où on le crée, avant d'avoir sa date,
+              -- son tarif et son texte : un visiteur pourrait prendre une
+              -- place sur un stage dont rien n'est encore arrêté.
+              FALSE,
+              -- Un stage né ici n'a pas de date au catalogue : rien à semer.
+              TRUE)
       ON CONFLICT (slug) DO NOTHING
       RETURNING id
     `;
     if (!ligne) return { ok: false, erreur: "Un stage porte déjà ce titre." };
-    return { ok: true, id: String(ligne.id) };
+    return { ok: true, id: String(ligne.id), slug };
   } catch (e) {
     console.error("[crm] creerStage:", e);
     return { ok: false, erreur: "La création a échoué." };
@@ -498,15 +583,17 @@ export async function accompagnerLesStages(): Promise<{
   // ── Une semaine avant ──
   try {
     const dues = await sql<Due[]>`
-      SELECT p.id, c.email, c.prenom, s.titre, s.debut_le, s.logistique
+      SELECT p.id, c.email, c.prenom, s.titre,
+             COALESCE(d.debut_le, s.debut_le) AS debut_le, s.logistique
       FROM participations p
       JOIN stages s   ON s.id = p.stage_id
       JOIN contacts c ON c.id = p.contact_id
+      LEFT JOIN stage_dates d ON d.id = p.date_id
       WHERE p.statut = 'confirmee'
         AND p.logistique_le IS NULL
-        AND s.debut_le IS NOT NULL
-        AND s.debut_le > NOW()
-        AND s.debut_le < NOW() + make_interval(days => ${AVANT_JOURS})
+        AND COALESCE(d.debut_le, s.debut_le) IS NOT NULL
+        AND COALESCE(d.debut_le, s.debut_le) > NOW()
+        AND COALESCE(d.debut_le, s.debut_le) < NOW() + make_interval(days => ${AVANT_JOURS})
         AND c.desabonne_le IS NULL
       LIMIT 100
     `;
@@ -552,15 +639,17 @@ export async function accompagnerLesStages(): Promise<{
   // ── Deux jours après ──
   try {
     const dues = await sql<(Due & { contact_id: string })[]>`
-      SELECT p.id, p.contact_id, c.email, c.prenom, s.titre, s.debut_le, s.logistique
+      SELECT p.id, p.contact_id, c.email, c.prenom, s.titre,
+             COALESCE(d.debut_le, s.debut_le) AS debut_le, s.logistique
       FROM participations p
       JOIN stages s   ON s.id = p.stage_id
       JOIN contacts c ON c.id = p.contact_id
+      LEFT JOIN stage_dates d ON d.id = p.date_id
       WHERE p.statut IN ('confirmee', 'venue')
         AND p.retour_le IS NULL
-        AND s.debut_le IS NOT NULL
-        AND s.debut_le < NOW() - make_interval(days => ${APRES_JOURS})
-        AND s.debut_le > NOW() - INTERVAL '30 days'
+        AND COALESCE(d.debut_le, s.debut_le) IS NOT NULL
+        AND COALESCE(d.debut_le, s.debut_le) < NOW() - make_interval(days => ${APRES_JOURS})
+        AND COALESCE(d.debut_le, s.debut_le) > NOW() - INTERVAL '30 days'
         AND c.desabonne_le IS NULL
       LIMIT 100
     `;
@@ -611,14 +700,17 @@ export async function accompagnerLesStages(): Promise<{
   // fois, jamais deux.
   try {
     const dues = await sql<Due[]>`
-      SELECT p.id, c.email, c.prenom, s.titre, s.debut_le, s.logistique
+      SELECT p.id, c.email, c.prenom, s.titre,
+             COALESCE(d.debut_le, s.debut_le) AS debut_le, s.logistique
       FROM participations p
       JOIN stages s   ON s.id = p.stage_id
       JOIN contacts c ON c.id = p.contact_id
+      LEFT JOIN stage_dates d ON d.id = p.date_id
       WHERE p.statut = 'demande'
         AND p.relance_le IS NULL
         AND p.cree_le < NOW() - make_interval(days => ${RELANCE_JOURS})
-        AND (s.debut_le IS NULL OR s.debut_le > NOW())
+        AND (COALESCE(d.debut_le, s.debut_le) IS NULL
+             OR COALESCE(d.debut_le, s.debut_le) > NOW())
         AND c.desabonne_le IS NULL
       LIMIT 100
     `;
@@ -664,11 +756,12 @@ export async function accompagnerLesStages(): Promise<{
       FROM participations p
       JOIN stages s   ON s.id = p.stage_id
       JOIN contacts c ON c.id = p.contact_id
+      LEFT JOIN stage_dates d ON d.id = p.date_id
       WHERE p.statut IN ('confirmee', 'venue')
         AND p.suite_le IS NULL
-        AND s.debut_le IS NOT NULL
-        AND s.debut_le < NOW() - make_interval(days => ${SUITE_JOURS})
-        AND s.debut_le > NOW() - INTERVAL '60 days'
+        AND COALESCE(d.debut_le, s.debut_le) IS NOT NULL
+        AND COALESCE(d.debut_le, s.debut_le) < NOW() - make_interval(days => ${SUITE_JOURS})
+        AND COALESCE(d.debut_le, s.debut_le) > NOW() - INTERVAL '60 days'
         AND c.desabonne_le IS NULL
       LIMIT 100
     `;
@@ -683,4 +776,64 @@ export async function accompagnerLesStages(): Promise<{
   }
 
   return { logistique, retours, relances, suites };
+}
+
+export type StageALAffiche = {
+  slug: string;
+  titre: string;
+  lieu: string | null;
+  prix_cents: number | null;
+  image_id: string | null;
+  image_alt: string | null;
+  resume: string | null;
+  /** Début de la prochaine date ouverte, ou `null` si aucune n'est posée. */
+  debut_le: Date | null;
+  fin_le: Date | null;
+  /** Places restantes sur cette date. `null` tant qu'aucune date n'existe. */
+  restantes: number | null;
+};
+
+/**
+ * Les stages ouverts au public, avec leur prochaine date.
+ *
+ * L'agenda du site est écrit dans le code (`src/lib/evenements.ts`) : quatre
+ * saisons, un jeûne, un accompagnement. Mais un stage créé depuis le tableau
+ * de bord n'y figure pas — et sans cette liste il n'apparaîtrait nulle part.
+ * On ne renvoie donc que ce que le catalogue ignore, à charge pour l'appelant
+ * de passer les slugs qu'il affiche déjà.
+ */
+export async function stagesALAffiche(dejaAffiches: string[] = []): Promise<StageALAffiche[]> {
+  const sql = await getDb();
+  if (!sql) return [];
+  await semerStages();
+  try {
+    return await sql<StageALAffiche[]>`
+      SELECT s.slug, s.titre, s.lieu, s.prix_cents::int AS prix_cents, s.image_id,
+             i.alt AS image_alt, s.resume,
+             d.debut_le, d.fin_le,
+             CASE WHEN d.id IS NULL THEN NULL
+                  ELSE GREATEST(0, COALESCE(d.places, s.places) - COALESCE(pr.prises, 0))
+             END::int AS restantes
+      FROM stages s
+      LEFT JOIN images i ON i.id = s.image_id
+      LEFT JOIN LATERAL (
+        SELECT dd.id, dd.debut_le, dd.fin_le, dd.places
+        FROM stage_dates dd
+        WHERE dd.stage_id = s.id AND dd.ouverte = TRUE AND dd.debut_le > NOW()
+        ORDER BY dd.debut_le
+        LIMIT 1
+      ) d ON TRUE
+      LEFT JOIN LATERAL (
+        SELECT COALESCE(SUM(p.personnes), 0) AS prises
+        FROM participations p
+        WHERE p.date_id = d.id AND p.statut IN ('demande', 'confirmee')
+      ) pr ON TRUE
+      WHERE s.actif = TRUE
+        AND NOT (s.slug = ANY (${dejaAffiches}::text[]))
+      ORDER BY d.debut_le NULLS LAST, s.titre
+    `;
+  } catch (e) {
+    console.error("[crm] stagesALAffiche:", e);
+    return [];
+  }
 }

@@ -16,6 +16,12 @@ import { getDb } from "./db";
 /** En dessous de ce nombre de places restantes, on prévient que ça se remplit. */
 export const SEUIL_DERNIERES = 3;
 
+/**
+ * Ce qu'on écrit quand aucune date n'est ouverte. Une seule formulation, pour
+ * que la carte, la page et le titre de l'onglet disent la même chose.
+ */
+export const SANS_DATE = "Prochaine date à venir";
+
 export type DateStage = {
   id: string;
   stage_id: string;
@@ -98,9 +104,9 @@ export async function ajouterDate(entree: {
   debut: Date;
   fin?: Date | null;
   places?: number | null;
-}): Promise<boolean> {
+}): Promise<{ ok: boolean; slug: string | null }> {
   const sql = await getDb();
-  if (!sql) return false;
+  if (!sql) return { ok: false, slug: null };
   try {
     await sql`
       INSERT INTO stage_dates (stage_id, debut_le, fin_le, places)
@@ -108,23 +114,33 @@ export async function ajouterDate(entree: {
               ${entree.places && entree.places > 0 ? Math.min(entree.places, 500) : null})
       ON CONFLICT (stage_id, debut_le) DO NOTHING
     `;
-    return true;
+    // Le slug remonte pour que l'appelant puisse revalider la page publique :
+    // elle rend les dates côté serveur, et resterait sinon en cache dix
+    // minutes à annoncer un jour qui n'est plus le bon.
+    return { ok: true, slug: await slugDuStage(sql, entree.stageId) };
   } catch (e) {
     console.error("[crm] ajouterDate:", e);
-    return false;
+    return { ok: false, slug: null };
   }
 }
 
 /** Ouvre ou ferme une date sans la supprimer : les demandes déjà posées restent. */
-export async function basculerDate(id: string, ouverte: boolean): Promise<boolean> {
+export async function basculerDate(
+  id: string,
+  ouverte: boolean,
+): Promise<{ ok: boolean; slug: string | null }> {
   const sql = await getDb();
-  if (!sql) return false;
+  if (!sql) return { ok: false, slug: null };
   try {
-    await sql`UPDATE stage_dates SET ouverte = ${ouverte} WHERE id = ${id}`;
-    return true;
+    const [l] = await sql<{ slug: string }[]>`
+      UPDATE stage_dates d SET ouverte = ${ouverte}
+      WHERE d.id = ${id}
+      RETURNING (SELECT s.slug FROM stages s WHERE s.id = d.stage_id) AS slug
+    `;
+    return { ok: Boolean(l), slug: l?.slug ?? null };
   } catch (e) {
     console.error("[crm] basculerDate:", e);
-    return false;
+    return { ok: false, slug: null };
   }
 }
 
@@ -133,25 +149,32 @@ export async function basculerDate(id: string, ouverte: boolean): Promise<boolea
  * cas, on ne l'efface pas — sans quoi des personnes se retrouveraient inscrites
  * à un jour qui n'existe plus.
  */
-export async function retirerDate(id: string): Promise<{ ok: boolean; raison?: string }> {
+export async function retirerDate(
+  id: string,
+): Promise<{ ok: boolean; raison?: string; slug: string | null }> {
   const sql = await getDb();
-  if (!sql) return { ok: false, raison: "Base indisponible." };
+  if (!sql) return { ok: false, raison: "Base indisponible.", slug: null };
   try {
-    const [l] = await sql<{ n: number }[]>`
-      SELECT COUNT(*)::int AS n FROM participations
-      WHERE date_id = ${id} AND statut IN ('demande', 'confirmee', 'venue')
+    const [l] = await sql<{ n: number; slug: string | null }[]>`
+      SELECT COUNT(p.*)::int AS n,
+             (SELECT s.slug FROM stages s
+              JOIN stage_dates dd ON dd.stage_id = s.id WHERE dd.id = ${id}) AS slug
+      FROM participations p
+      WHERE p.date_id = ${id} AND p.statut IN ('demande', 'confirmee', 'venue')
     `;
+    const slug = l?.slug ?? null;
     if (Number(l?.n ?? 0) > 0) {
       return {
         ok: false,
         raison: "Des personnes sont inscrites à cette date : fermez-la plutôt que de l'effacer.",
+        slug,
       };
     }
     await sql`DELETE FROM stage_dates WHERE id = ${id}`;
-    return { ok: true };
+    return { ok: true, slug };
   } catch (e) {
     console.error("[crm] retirerDate:", e);
-    return { ok: false, raison: "La suppression a échoué." };
+    return { ok: false, raison: "La suppression a échoué.", slug: null };
   }
 }
 
@@ -180,4 +203,13 @@ export async function datePrenable(dateId: string): Promise<DateStage | null> {
     console.error("[crm] datePrenable:", e);
     return null;
   }
+}
+
+/** Le slug d'un stage, pour revalider sa page publique après coup. */
+async function slugDuStage(
+  sql: NonNullable<Awaited<ReturnType<typeof getDb>>>,
+  stageId: string,
+): Promise<string | null> {
+  const [l] = await sql<{ slug: string }[]>`SELECT slug FROM stages WHERE id = ${stageId}`;
+  return l?.slug ?? null;
 }

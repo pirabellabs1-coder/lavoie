@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,12 +12,40 @@ import {
   type Evenement,
 } from "@/lib/evenements";
 import DemandeDePlace from "@/components/DemandeDePlace";
+import { semerStages, stagePublic } from "@/lib/crm/stages";
+import { datesOuvertes, SANS_DATE } from "@/lib/crm/dates-stages";
+import { periodeEnClair } from "@/lib/heure";
+import StageLibre from "./StageLibre";
 
 const MARINE = "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)";
 
 export function generateStaticParams() {
   return EVENEMENT_SLUGS.map((slug) => ({ slug }));
 }
+
+/**
+ * Les six rendez-vous du catalogue sont prérendus. Un stage créé depuis le
+ * tableau de bord n'y figure pas : sa page est donc rendue à la demande, puis
+ * gardée dix minutes. Les actions du tableau de bord la revalident dès qu'on
+ * la retouche, et la disponibilité, elle, est lue en direct par le panneau de
+ * réservation.
+ */
+export const revalidate = 600;
+
+/**
+ * Lit un stage absent du catalogue. `cache` dédoublonne l'appel : les métadonnées
+ * et la page le demandent toutes les deux, la base ne le voit qu'une fois.
+ */
+const stageDuTableauDeBord = cache(async (slug: string) => {
+  // La forme d'abord : un slug fantaisiste rend un 404 sans toucher la base.
+  // Sans ce filtre, n'importe quelle adresse inventée coûte trois requêtes et
+  // une entrée de cache — le pool de connexions sert aussi les formulaires.
+  if (!/^[a-z0-9-]{1,120}$/.test(slug)) return null;
+  await semerStages();
+  const stage = await stagePublic(slug);
+  if (!stage || !stage.actif) return null;
+  return { stage, dates: await datesOuvertes(slug) };
+});
 
 export async function generateMetadata({
   params,
@@ -25,7 +54,28 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const e = getEvenement(slug);
-  if (!e) return { title: "Événement introuvable" };
+  if (!e) {
+    const libre = await stageDuTableauDeBord(slug);
+    if (!libre) return { title: "Événement introuvable" };
+
+    const { stage, dates } = libre;
+    const quand = dates[0] ? periodeEnClair(dates[0].debut_le, dates[0].fin_le) : SANS_DATE;
+    const description =
+      stage.resume ??
+      `${stage.titre}${stage.lieu ? ` — ${stage.lieu}` : ""}. ${quand}. Places limitées, réservation en ligne.`;
+    const image = stage.image_id ? `/api/images/${stage.image_id}` : "/og.jpg";
+    return {
+      title: `${stage.titre} — ${quand}`,
+      description,
+      alternates: { canonical: `/evenements/${stage.slug}` },
+      openGraph: {
+        type: "website",
+        title: stage.titre,
+        description,
+        images: [{ url: image }],
+      },
+    };
+  }
 
   return {
     title: `${e.titreLong} — ${e.date}`,
@@ -87,7 +137,14 @@ export default async function EvenementPage({
 }) {
   const { slug } = await params;
   const e = getEvenement(slug);
-  if (!e) notFound();
+  if (!e) {
+    // Hors catalogue : c'est peut-être un stage ajouté depuis le tableau de
+    // bord. Il a droit à sa page, sans quoi la photo déposée et les dates
+    // ouvertes ne mèneraient nulle part.
+    const libre = await stageDuTableauDeBord(slug);
+    if (!libre) notFound();
+    return <StageLibre stage={libre.stage} dates={libre.dates} />;
+  }
 
   const autres = EVENEMENTS.filter((x) => x.slug !== e.slug).slice(0, 3);
 

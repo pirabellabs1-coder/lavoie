@@ -2,9 +2,17 @@ import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/site";
 import { ARTICLE_SLUGS as BLOG_SLUGS } from "@/lib/articles";
 import { DOC_SLUGS } from "@/lib/documents";
-import { EVENEMENT_SLUGS } from "@/lib/evenements";
+import { EVENEMENTS, EVENEMENT_SLUGS } from "@/lib/evenements";
+import { stagesALAffiche } from "@/lib/crm/stages";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+/**
+ * Un stage créé depuis le tableau de bord a une page publique : elle doit donc
+ * figurer au plan du site. Une heure de cache suffit — un moteur ne relit pas
+ * ce fichier plus souvent.
+ */
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const routes: { path: string; priority: number; freq: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
@@ -48,6 +56,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const stageEntries: MetadataRoute.Sitemap = (
+    await stagesALAffiche(EVENEMENTS.map((e) => e.slug))
+  ).map((s) => ({
+    url: `${SITE.url}/evenements/${s.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
   const docEntries: MetadataRoute.Sitemap = DOC_SLUGS.map((slug) => ({
     url: `${SITE.url}/cadre-deontologique/${slug}`,
     lastModified: now,
@@ -55,5 +72,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.2,
   }));
 
-  return [...staticEntries, ...evenementEntries, ...blogEntries, ...docEntries];
+  return [...staticEntries, ...evenementEntries, ...stageEntries, ...blogEntries, ...docEntries];
 }

@@ -21,6 +21,7 @@ import {
   actionAjouterDate,
   actionBasculerDate,
   actionCreerStage,
+  actionPublierStage,
   actionReglerStage,
   actionRetirerDate,
   actionStatutParticipation,
@@ -112,7 +113,12 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
       )}
 
       {erreur && <div className="adm-alerte">{erreur}</div>}
-      {cree && <div className="adm-alerte">Le stage est créé. Ajoutez-lui ses dates ci-dessous.</div>}
+      {cree && (
+        <div className="adm-alerte">
+          <strong>Le stage est créé, et pas encore publié.</strong> Ajoutez-lui ses dates
+          ci-dessous, puis cliquez sur <em>Publier</em> : il apparaîtra alors sur le site.
+        </div>
+      )}
 
       {reglable && (
         <div className="adm-carte" id="creer" style={{ marginBottom: 14 }}>
@@ -150,8 +156,34 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                 <textarea name="resume" rows={2} maxLength={2000} className="adm-champ"
                   placeholder="Ce que la personne vient y chercher." style={{ resize: "vertical" }} />
               </label>
-              <div>
+              <label>
+                <span className="adm-label">Le texte de la page</span>
+                <textarea name="description" rows={6} maxLength={20000} className="adm-champ"
+                  placeholder={"Ce qui se vit pendant ce stage, pour qui il est, ce qu'on en repart avec.\n\nUne ligne vide sépare deux paragraphes."}
+                  style={{ resize: "vertical", lineHeight: 1.6 }} />
+              </label>
+              <label>
+                <span className="adm-label">Photo — JPEG, PNG, WebP ou AVIF, 4 Mo au plus</span>
+                <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/avif"
+                  className="adm-champ" />
+                <span className="adm-aide">
+                  Elle est retaillée et convertie automatiquement : inutile de la préparer.
+                </span>
+              </label>
+              <label>
+                <span className="adm-label">Ce que la photo montre</span>
+                <input name="photo_alt" maxLength={300} className="adm-champ"
+                  placeholder="Un cercle de parole sous les arbres du Centre HUT" />
+                <span className="adm-aide">
+                  Lu à voix haute par les lecteurs d&apos;écran, et affiché si l&apos;image ne
+                  charge pas. Une phrase qui décrit la scène, pas le nom du fichier.
+                </span>
+              </label>
+              <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                 <button type="submit" className="adm-btn">Créer le stage</button>
+                <span style={{ fontSize: 12, color: "var(--adm-mute)" }}>
+                  Créé en brouillon : rien n&apos;apparaît sur le site avant que vous le publiiez.
+                </span>
               </div>
             </form>
           </details>
@@ -182,7 +214,12 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                   }}
                 >
                   <div>
-                    <p style={{ margin: 0, fontWeight: 650, fontSize: 15 }}>{s.titre}</p>
+                    <p style={{ margin: 0, fontWeight: 650, fontSize: 15, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                      {s.titre}
+                      {!s.actif && (
+                        <span className="adm-tag" data-s="attente">Brouillon</span>
+                      )}
+                    </p>
                     <p style={{ margin: "2px 0 0", color: "var(--adm-mute)", fontSize: 12.5 }}>
                       {jours.length
                         ? `${jours.length} date${jours.length > 1 ? "s" : ""} proposée${jours.length > 1 ? "s" : ""}`
@@ -191,12 +228,29 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                           : "date à confirmer"}
                       {s.lieu ? ` · ${s.lieu}` : ""}
                       {s.prix_cents != null ? ` · ${euros(s.prix_cents)}` : ""}
-                      {!s.actif && " · fermé aux demandes"}
+                      {!s.actif && " · invisible du site"}
                     </p>
                   </div>
-                  <Link href={`/evenements/${s.slug}`} className="adm-btn fantome petit">
-                    Voir la page
-                  </Link>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    {reglable && (
+                      <form action={actionPublierStage}>
+                        <input type="hidden" name="id" value={s.id} />
+                        <input type="hidden" name="publier" value={s.actif ? "0" : "1"} />
+                        <button type="submit" className={s.actif ? "adm-btn fantome petit" : "adm-btn petit"}>
+                          {s.actif ? "Retirer du site" : "Publier"}
+                        </button>
+                      </form>
+                    )}
+                    {s.actif ? (
+                      <Link href={`/evenements/${s.slug}`} className="adm-btn fantome petit">
+                        Voir la page
+                      </Link>
+                    ) : (
+                      <span style={{ fontSize: 11.5, color: "var(--adm-mute)" }}>
+                        Pas de page publique
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div style={{ margin: "16px 0 6px", display: "flex", gap: 14, flexWrap: "wrap", alignItems: "baseline" }}>
@@ -426,6 +480,67 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                           style={{ resize: "vertical" }}
                         />
                       </label>
+
+                      <label style={{ display: "block" }}>
+                        <span className="adm-label">Le texte de la page</span>
+                        <textarea
+                          name="description"
+                          rows={6}
+                          defaultValue={s.description ?? ""}
+                          maxLength={20000}
+                          className="adm-champ"
+                          placeholder="Utilisé pour les stages qui n'ont pas de page écrite dans le site."
+                          style={{ resize: "vertical", lineHeight: 1.6 }}
+                        />
+                      </label>
+
+                      <div className="stage-photo">
+                        {s.image_id ? (
+                          <>
+                            {/* Décoratif ici : le texte de remplacement se règle
+                                juste à côté, et l'aperçu ne dit rien de plus que
+                                le champ qu'il accompagne. */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={`/api/images/${s.image_id}`} alt="" />
+                            <div>
+                              <label style={{ display: "block" }}>
+                                <span className="adm-label">Remplacer la photo</span>
+                                <input type="file" name="photo"
+                                  accept="image/jpeg,image/png,image/webp,image/avif"
+                                  className="adm-champ" />
+                              </label>
+                              <label style={{ display: "block", marginTop: 10 }}>
+                                <span className="adm-label">Ce que la photo montre</span>
+                                <input name="photo_alt" defaultValue={s.image_alt ?? ""}
+                                  maxLength={300} className="adm-champ"
+                                  placeholder="Un cercle de parole sous les arbres" />
+                                <span className="adm-aide">
+                                  Repris avec la nouvelle photo. Lu par les lecteurs d&apos;écran.
+                                </span>
+                              </label>
+                              <label style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 12.5, marginTop: 10 }}>
+                                <input type="checkbox" name="retirer_photo" />
+                                Retirer la photo
+                              </label>
+                            </div>
+                          </>
+                        ) : (
+                          <label style={{ display: "block", flex: 1 }}>
+                            <span className="adm-label">Photo — JPEG, PNG, WebP ou AVIF, 4 Mo au plus</span>
+                            <input type="file" name="photo"
+                              accept="image/jpeg,image/png,image/webp,image/avif"
+                              className="adm-champ" />
+                            <span className="adm-aide">
+                              Elle est retaillée et convertie automatiquement.
+                            </span>
+                            <span className="adm-label" style={{ marginTop: 10 }}>
+                              Ce que la photo montre
+                            </span>
+                            <input name="photo_alt" maxLength={300} className="adm-champ"
+                              placeholder="Un cercle de parole sous les arbres" />
+                          </label>
+                        )}
+                      </div>
                       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-end" }}>
                         <label style={{ display: "block" }}>
                           <span className="adm-label">Places</span>

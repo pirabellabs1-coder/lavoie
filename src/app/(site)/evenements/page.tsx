@@ -4,6 +4,8 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd } from "@/lib/jsonld";
 import { EVENEMENTS } from "@/lib/evenements";
 import EvenementCard from "@/components/EvenementCard";
+import CarteStageLibre from "@/components/CarteStageLibre";
+import { stagesALAffiche } from "@/lib/crm/stages";
 import LeadMagnetForm from "@/components/LeadMagnetForm";
 
 export const metadata: Metadata = {
@@ -12,6 +14,14 @@ export const metadata: Metadata = {
     "Ateliers, conférences et journées d'immersion animés par Domoïna Ramiadana. Réservez votre place en ligne. Plus un guide gratuit à télécharger.",
   alternates: { canonical: "/evenements" },
 };
+
+/**
+ * L'agenda lit la base pour y trouver les stages ajoutés depuis le tableau de
+ * bord. Dix minutes de cache suffisent : une date qui s'ouvre n'est pas une
+ * urgence à la seconde, et les actions du tableau de bord revalident la page
+ * dès qu'on y touche.
+ */
+export const revalidate = 600;
 
 const MARINE = "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)";
 
@@ -33,7 +43,13 @@ function Eyebrow({ children, gold, style }: { children: React.ReactNode; gold?: 
   );
 }
 
-export default function EvenementsPage() {
+export default async function EvenementsPage() {
+  // Le catalogue du code d'abord — il porte les affiches et les textes longs ;
+  // puis ce que la base a de plus, pour qu'un stage créé à l'écran existe
+  // aussi pour les visiteurs.
+  const libres = await stagesALAffiche(EVENEMENTS.map((e) => e.slug));
+  const vide = EVENEMENTS.length === 0 && libres.length === 0;
+
   return (
     <div className="page-fade">
       <JsonLd
@@ -75,11 +91,14 @@ export default function EvenementsPage() {
             </p>
           </div>
 
-          {EVENEMENTS.length > 0 ? (
+          {!vide ? (
             <>
               <div className="rg-3" style={{ gap: 20, alignItems: "stretch" }}>
                 {EVENEMENTS.map((e, i) => (
                   <EvenementCard key={i} e={e} />
+                ))}
+                {libres.map((s) => (
+                  <CarteStageLibre key={s.slug} s={s} />
                 ))}
               </div>
 

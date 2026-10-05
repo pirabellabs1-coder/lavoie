@@ -1,8 +1,8 @@
 import { Resend } from "resend";
 import { SITE } from "@/lib/site";
-import { getEvenement } from "@/lib/evenements";
 import { enregistrerContact } from "@/lib/crm/contacts";
 import { demanderPlace } from "@/lib/crm/stages";
+import { ficheDuStage } from "@/lib/crm/fiche-stage";
 import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
 import { depuisCorps } from "@/lib/attribution";
 import { habiller } from "@/lib/crm/email";
@@ -38,7 +38,8 @@ export async function POST(req: Request) {
   const telephone = String(data.telephone ?? "").trim();
   const message = String(data.message ?? "").trim().slice(0, 3000);
 
-  const evenement = getEvenement(slug);
+  const dateId = /^[0-9]+$/.test(String(data.dateId ?? "")) ? String(data.dateId) : null;
+  const evenement = await ficheDuStage(slug, dateId);
   if (!evenement) return Response.json({ error: "Stage inconnu." }, { status: 404 });
   if (!prenom || !nom || !email) {
     return Response.json({ error: "Champs requis manquants." }, { status: 400 });
@@ -66,7 +67,7 @@ export async function POST(req: Request) {
         contactId: contact.id,
         message,
         // La date choisie sur la page du stage, quand il en propose plusieurs.
-        dateId: /^[0-9]+$/.test(String(data.dateId ?? "")) ? String(data.dateId) : null,
+        dateId,
         // Combien de places : on vient rarement seul, jamais à vingt.
         personnes: Math.max(1, Math.min(6, Math.round(Number(data.personnes) || 1))),
       })
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
             ? `Le stage « ${evenement.titreLong} » affiche complet. Vous êtes inscrit(e) sur la liste d'attente : dès qu'une place se libère, nous vous prévenons — dans l'ordre des demandes.\n\n`
             : `Votre demande de place pour « ${evenement.titreLong} » nous est bien parvenue.\n\n` +
               `Le secrétariat revient vers vous sous 48 heures ouvrées pour confirmer la place et vous transmettre les modalités de règlement. Votre place n'est retenue qu'à ce moment-là.\n\n`) +
-          `Les dates : ${evenement.date}\nLe lieu : ${evenement.lieu}\n\n` +
+          `Les dates : ${evenement.quand}\nLe lieu : ${evenement.lieu}\n\n` +
           `À très vite,\n` +
           `Le secrétariat — La Voie 2 la Conscience`,
       });
@@ -116,7 +117,7 @@ export async function POST(req: Request) {
         text:
           `${enAttente ? "Liste d'attente" : "Nouvelle demande de place"}\n\n` +
           `Stage     : ${evenement.titreLong}\n` +
-          `Dates     : ${evenement.date}\n` +
+          `Dates     : ${evenement.quand}\n` +
           `Nom       : ${prenom} ${nom}\n` +
           `Email     : ${email}\n` +
           `Téléphone : ${telephone || "non communiqué"}\n\n` +

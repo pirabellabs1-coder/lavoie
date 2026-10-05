@@ -374,6 +374,18 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-btn.petit { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
 .adm-btn.danger { background: var(--adm-bad); border-color: var(--adm-bad); }
 
+/* La photo d'un stage, dans son réglage. */
+.stage-photo { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.stage-photo img {
+  width: 180px; height: 120px; object-fit: cover;
+  border-radius: 10px; border: 1px solid var(--adm-line);
+}
+.stage-photo > div { flex: 1; min-width: 240px; }
+.adm-aide {
+  display: block; margin-top: 6px;
+  font-size: 11.5px; color: var(--adm-mute); line-height: 1.5;
+}
+
 /* ═══ Les dates d'un stage ═════════════════════════════════════════════════ */
 
 .stage-dates { display: grid; gap: 8px; margin-bottom: 14px; }
@@ -384,7 +396,10 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
   border: 1px solid var(--adm-line);
   border-radius: 10px;
 }
-.stage-date .quand { font-weight: 600; font-size: 13.5px; text-transform: capitalize; }
+/* En français, seule la première lettre se capitalise : `capitalize` donnerait
+   « Jeu. 17 Sept. », avec une majuscule à chaque mot. */
+.stage-date .quand { font-weight: 600; font-size: 13.5px; }
+.stage-date .quand::first-letter { text-transform: uppercase; }
 .stage-date .etat {
   display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
   margin-top: 4px; font-size: 11.5px; color: var(--adm-mute);

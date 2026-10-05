@@ -111,6 +111,21 @@ export async function restaurerSauvegarde(contenu: string): Promise<ResultatRest
         await tx`DELETE FROM ${tx(table)}`;
       }
 
+      // Les photos ne sont pas dans la copie — c'est un choix assumé : les y
+      // mettre ferait passer un fichier de secours de deux méga-octets à deux
+      // cents. Mais `stages.image_id` porte une clé étrangère : réinsérée vers
+      // une photo absente, elle ferait échouer la restauration **en bloc**.
+      //
+      // On relit donc les photos réellement présentes. Restaurer sur la même
+      // base garde les illustrations ; restaurer sur une base neuve rend des
+      // stages sans photo, ce qui est exactement ce que le module d'images
+      // annonce — et jamais un échec total.
+      const photos = new Set<string>();
+      if (colonnes.has("images")) {
+        const presentes = await tx<{ id: string }[]>`SELECT id FROM images`;
+        for (const p of presentes) photos.add(String(p.id));
+      }
+
       for (const table of TABLES) {
         const dispo = colonnes.get(table);
         const lignes = tables[table];
@@ -127,6 +142,9 @@ export async function restaurerSauvegarde(contenu: string): Promise<ResultatRest
           const paquet = lignes.slice(i, i + 500).map((l) => {
             const propre: Ligne = {};
             for (const c of cles) propre[c] = valeur(l[c]);
+            if (propre.image_id && !photos.has(String(propre.image_id))) {
+              propre.image_id = null;
+            }
             return propre;
           });
           await tx`INSERT INTO ${tx(table)} ${tx(paquet, ...cles)}`;
