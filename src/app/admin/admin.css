@@ -1,33 +1,51 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Tableau de bord — dense, lisible, et calme.
+/* ═══ Tableau de bord — l'outil de travail de la maison ══════════════════
 
-   Indépendant du site vitrine : le site est une vitrine, ceci est un outil de
-   travail. Deux règles tiennent l'ensemble — la donnée est la seule chose qui
-   a le droit d'être colorée, et tout le reste (fonds, filets, textes de
-   service) reste dans une gamme de gris très légèrement bleutés.
-   ═══════════════════════════════════════════════════════════════════════════ */
+   Dense et lisible, mais de la même maison que le site : le marine et l'or de
+   la marque, et le Cormorant pour tout ce qui s'annonce — un titre d'écran, un
+   chiffre qu'on vient chercher. L'Inter tient la donnée, parce qu'un tableau se
+   lit en diagonale et qu'une serif s'y fatigue.
+
+   Trois règles tiennent l'ensemble :
+
+     · la donnée est la seule chose qui a le droit d'être colorée — fonds,
+       filets et textes de service restent dans une gamme de gris bleutés ;
+     · l'or ne porte jamais un petit texte sur fond clair (le contraste ne
+       suit pas) : il souligne, il marque l'actif, il porte un bouton, et son
+       palier profond sert aux surtitres ;
+     · rien n'est posé à plat : une surface a un filet, une lueur interne et
+       une ombre diffuse — jamais une ombre dure.
+   ════════════════════════════════════════════════════════════════════════ */
 
 .adm {
+  /* Caractères — ceux du site, posés par next/font sur la racine. */
+  --adm-serif: var(--font-cormorant, "Cormorant Garamond"), Georgia, serif;
+  --adm-sans: var(--font-inter, "Inter"), system-ui, -apple-system, "Segoe UI", sans-serif;
+
   /* Surfaces */
-  --adm-bg: #f5f7fc;
+  --adm-bg: #edf0f8;
   --adm-surface: #ffffff;
-  --adm-surface-2: #eff2f9;
-  --adm-side: #0e1734;
-  --adm-side-2: #16224b;
+  --adm-surface-2: #f2f5fc;
+  --adm-surface-3: #e8ecf7;
+  --adm-side: #0a1130;
+  --adm-side-2: #111c44;
 
   /* Encres — gris biaisés vers le bleu de la marque */
-  --adm-ink: #131a2e;
-  --adm-ink-2: #3d4763;
-  --adm-mute: #6b7590;
+  --adm-ink: #101730;
+  --adm-ink-2: #394361;
+  --adm-mute: #67718c;
 
-  /* Filets */
-  --adm-line: #e4e8f2;
-  --adm-line-fort: #d0d7e8;
+  /* Filets — teintés, jamais gris neutre */
+  --adm-line: rgba(20, 40, 120, .10);
+  --adm-line-fort: rgba(20, 40, 120, .19);
 
   /* Accents d'interface */
   --adm-accent: #1c2f8c;
+  --adm-accent-fonce: #142269;
   --adm-accent-clair: #eaeefb;
-  --adm-gold: #b98900;
+  --adm-gold: #f5c422;
+  --adm-gold-clair: #ffda5e;
+  --adm-gold-profond: #8a6a00;
+  --adm-gold-encre: #1d1604;
 
   /* Rampe ordinale — une seule teinte, claire → foncée, validée pour l'écart
      de clarté entre paliers et le contraste du palier le plus clair. */
@@ -47,28 +65,56 @@
   --adm-warn: #b45309;
   --adm-bad: #b3261e;
 
+  /* Rayons — une seule échelle, concentrique quand les surfaces s'emboîtent */
+  --adm-r-xs: 8px;
+  --adm-r-sm: 11px;
+  --adm-r: 16px;
+  --adm-r-lg: 20px;
+
+  /* Reliefs — une lueur interne, une ombre de contact, une ombre portée très
+     diffuse. Jamais de noir franc : du marine dilué. */
+  --adm-lueur: inset 0 1px 0 rgba(255, 255, 255, .9);
+  --adm-ombre: 0 1px 2px rgba(12, 20, 60, .04), 0 20px 44px -30px rgba(12, 20, 60, .45);
+  --adm-ombre-haute: 0 2px 6px rgba(12, 20, 60, .07), 0 34px 60px -34px rgba(12, 20, 60, .55);
+
+  /* Mouvement — une seule courbe, celle du site. */
+  --adm-ease: cubic-bezier(.32, .72, 0, 1);
+  --adm-vite: .18s;
+  --adm-pose: .34s;
+
   min-height: 100vh;
-  background: var(--adm-bg);
+  background:
+    radial-gradient(90% 46% at 6% -6%, rgba(28, 47, 140, .10) 0%, transparent 62%),
+    radial-gradient(60% 34% at 100% 0%, rgba(245, 196, 34, .07) 0%, transparent 58%),
+    var(--adm-bg);
+  background-attachment: fixed;
   color: var(--adm-ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--adm-sans);
   font-size: 13.5px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
 
 .adm * { box-sizing: border-box; }
-.adm :focus-visible { outline: 2px solid var(--adm-accent); outline-offset: 2px; border-radius: 4px; }
+.adm :focus-visible {
+  outline: 2px solid var(--adm-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 5px rgba(245, 196, 34, .35);
+}
 
 /* ─── Charpente ──────────────────────────────────────────────────────────── */
 
 .adm-shell { display: flex; min-height: 100vh; }
 
 .adm-side {
-  width: 244px;
+  width: 252px;
   flex-shrink: 0;
-  background: linear-gradient(180deg, var(--adm-side) 0%, var(--adm-side-2) 100%);
+  background:
+    radial-gradient(120% 40% at 50% 0%, rgba(245, 196, 34, .10) 0%, transparent 58%),
+    linear-gradient(180deg, var(--adm-side) 0%, var(--adm-side-2) 100%);
   color: #e8ecf8;
-  padding: 22px 14px 18px;
+  padding: 24px 14px 18px;
   display: flex;
   flex-direction: column;
   /* Fixe, et non « collante » : le site vitrine pose `overflow-x: hidden` sur
@@ -80,35 +126,47 @@
   bottom: 0;
   z-index: 10;
   overflow-y: auto;
+  /* Le filet d'or : la seule chose qui sépare l'outil du site, et qui dit
+     pourtant que c'est la même maison. */
+  box-shadow: inset -1px 0 0 rgba(245, 196, 34, .22);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .18) transparent;
 }
 
+/* La marque. Sur le marine de la barre elle est blanche ; posée sur un fond
+   clair — l'écran de connexion — elle reprend l'encre, sans quoi elle
+   disparaîtrait. */
 .adm-brand {
-  font-size: 13.5px;
-  font-weight: 700;
-  letter-spacing: .01em;
-  color: #ffffff;
-  padding: 0 10px 20px;
-  line-height: 1.3;
+  font-family: var(--adm-serif);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: .005em;
+  color: var(--adm-ink);
+  padding: 2px 10px 22px;
+  line-height: 1.12;
 }
 .adm-brand span {
   display: block;
-  font-weight: 500;
-  color: rgba(232, 236, 248, .52);
-  font-size: 11px;
-  letter-spacing: .08em;
+  font-family: var(--adm-sans);
+  font-weight: 600;
+  color: var(--adm-gold-profond);
+  font-size: 9.5px;
+  letter-spacing: .22em;
   text-transform: uppercase;
-  margin-top: 3px;
+  margin-top: 8px;
 }
+.adm-side .adm-brand { color: #ffffff; }
+.adm-side .adm-brand span { color: var(--adm-gold); }
 
 .adm-nav { display: flex; flex-direction: column; gap: 2px; }
 
 .adm-nav .groupe {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: .14em;
+  letter-spacing: .2em;
   text-transform: uppercase;
-  color: rgba(232, 236, 248, .38);
-  padding: 16px 10px 6px;
+  color: rgba(232, 236, 248, .52);
+  padding: 18px 10px 7px;
 }
 .adm-nav .groupe:first-child { padding-top: 0; }
 
@@ -116,34 +174,43 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  color: rgba(232, 236, 248, .82);
+  gap: 11px;
+  padding: 8px 11px;
+  border-radius: var(--adm-r-sm);
+  color: rgba(232, 236, 248, .80);
   text-decoration: none;
   font-weight: 500;
   font-size: 13.5px;
-  transition: background .12s ease, color .12s ease;
+  transition: background var(--adm-vite) var(--adm-ease),
+              color var(--adm-vite) var(--adm-ease),
+              transform var(--adm-vite) var(--adm-ease);
 }
-.adm-nav a svg { flex: none; opacity: .8; }
-.adm-nav a:hover { background: rgba(255, 255, 255, .07); color: #fff; }
-.adm-nav a.actif { background: rgba(255, 255, 255, .12); color: #fff; font-weight: 600; }
-.adm-nav a.actif svg { opacity: 1; }
+.adm-nav a svg { flex: none; opacity: .72; transition: opacity var(--adm-vite) var(--adm-ease); }
+.adm-nav a:hover { background: rgba(255, 255, 255, .07); color: #fff; transform: translateX(2px); }
+.adm-nav a:hover svg { opacity: 1; }
+.adm-nav a.actif {
+  background: linear-gradient(90deg, rgba(245, 196, 34, .16) 0%, rgba(255, 255, 255, .07) 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+.adm-nav a.actif svg { opacity: 1; color: var(--adm-gold); }
 .adm-pastille {
   margin-left: auto;
   background: var(--adm-gold);
-  color: #17110a;
+  color: var(--adm-gold-encre);
   border-radius: 999px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 6px;
   font-size: 11px;
   font-weight: 700;
-  line-height: 18px;
+  line-height: 19px;
   text-align: center;
   font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 3px rgba(245, 196, 34, .14);
 }
-.adm-nav a.actif .adm-pastille { background: #fff; color: var(--adm-side); }
+.adm-nav a.actif .adm-pastille { background: #fff; color: var(--adm-side); box-shadow: none; }
 
 .adm-nav a.actif::before {
   content: "";
@@ -152,50 +219,126 @@
   top: 50%;
   transform: translateY(-50%);
   width: 3px;
-  height: 20px;
+  height: 22px;
   border-radius: 0 3px 3px 0;
   background: var(--adm-gold);
+  box-shadow: 0 0 12px rgba(245, 196, 34, .6);
 }
 
-.adm-pied { margin-top: auto; padding-top: 22px; }
+.adm-pied { margin-top: auto; padding-top: 24px; }
 .adm-qui {
   font-size: 11.5px;
   line-height: 1.5;
-  color: rgba(232, 236, 248, .55);
-  padding: 0 10px 14px;
+  color: rgba(232, 236, 248, .52);
+  padding: 14px 10px;
+  margin: 0 0 12px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
 }
-.adm-qui strong { display: block; color: #fff; font-size: 13px; font-weight: 600; }
+.adm-qui strong {
+  display: block;
+  color: #fff;
+  font-family: var(--adm-serif);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  margin-bottom: 1px;
+}
 .adm-pied .adm-btn { width: 100%; justify-content: center; margin-bottom: 8px; }
+.adm-pied .adm-btn.fantome {
+  background: rgba(255, 255, 255, .06);
+  color: rgba(232, 236, 248, .92);
+  border-color: rgba(255, 255, 255, .14);
+  box-shadow: none;
+}
+.adm-pied .adm-btn.fantome:hover { background: rgba(255, 255, 255, .12); color: #fff; }
 .adm-pied form { margin: 0; }
 
 .adm-main {
   flex: 1;
   min-width: 0;
-  padding: 28px clamp(16px, 3vw, 40px) 72px;
+  padding: 34px clamp(16px, 3.2vw, 44px) 84px;
   /* La place réservée à la barre fixe. */
-  margin-left: 244px;
+  margin-left: 252px;
 }
 
 .adm-head {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
+  gap: 18px;
   flex-wrap: wrap;
-  margin-bottom: 22px;
+  margin-bottom: 26px;
+  padding-bottom: 20px;
+  position: relative;
 }
-.adm-head h1 { font-size: 24px; margin: 0 0 3px; letter-spacing: -.02em; font-weight: 650; }
-.adm-head p { margin: 0; color: var(--adm-mute); font-size: 13px; max-width: 68ch; }
+/* Un filet qui s'éteint : une règle pleine couperait la page en deux. */
+.adm-head::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--adm-line-fort) 0%, rgba(20, 40, 120, 0) 72%);
+}
+.adm-head h1 {
+  font-family: var(--adm-serif);
+  font-size: clamp(27px, 2.6vw, 36px);
+  margin: 0 0 4px;
+  letter-spacing: -.005em;
+  font-weight: 600;
+  line-height: 1.08;
+}
+.adm-head h1 em { font-style: italic; color: var(--adm-accent); }
+.adm-head p { margin: 0; color: var(--adm-mute); font-size: 13.5px; max-width: 68ch; line-height: 1.6; }
+
+/* Le surtitre d'un écran : minuscule, doré, espacé. */
+.adm-surtitre {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 11px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--adm-gold-profond);
+}
+.adm-surtitre::before {
+  content: "";
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .5;
+}
 
 /* ─── Cartes et grilles ──────────────────────────────────────────────────── */
 
 .adm-carte {
   background: var(--adm-surface);
   border: 1px solid var(--adm-line);
-  border-radius: 14px;
-  padding: 18px 20px;
-  box-shadow: 0 1px 2px rgba(16, 24, 64, .03), 0 10px 28px -22px rgba(16, 24, 64, .35);
+  border-radius: var(--adm-r);
+  padding: 20px 22px;
+  box-shadow: var(--adm-lueur), var(--adm-ombre);
+  transition: box-shadow var(--adm-pose) var(--adm-ease),
+              transform var(--adm-pose) var(--adm-ease);
 }
+
+/* Une carte sur laquelle on agit se soulève : un stage, une fiche, une offre.
+   Les cartes de lecture seule, elles, ne bougent pas — rien ne se passerait. */
+.adm-carte.vivante:hover {
+  box-shadow: var(--adm-lueur), var(--adm-ombre-haute);
+  transform: translateY(-1px);
+}
+
+/* L'emboîtement : une surface dans une surface, aux rayons concentriques.
+   C'est ce qui donne à un bloc l'air d'une pièce posée dans son logement
+   plutôt que d'un rectangle dessiné. */
+.adm-bac {
+  background: var(--adm-surface-3);
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-r);
+  padding: 6px;
+}
+.adm-bac > * { border-radius: calc(var(--adm-r) - 6px); }
 
 .adm-grille { display: grid; gap: 14px; }
 .adm-g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -204,28 +347,78 @@
 .adm-g-large { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
 
 .adm-titre {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--adm-mute);
+  letter-spacing: .18em;
+  color: var(--adm-gold-profond);
   font-weight: 700;
   margin: 0 0 16px;
 }
-.adm-titre .appoint { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--adm-mute); }
+/* Le titre d'une carte qui porte un objet — un stage, une personne, une
+   offre. En serif : c'est un nom, pas une étiquette de champ. */
+.adm-carte-titre {
+  font-family: var(--adm-serif);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: .005em;
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.adm-carte-sous {
+  margin: 4px 0 0;
+  color: var(--adm-mute);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+/* Une barre d'actions posée en haut à droite d'une carte. */
+.adm-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.adm-titre .appoint {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  color: var(--adm-mute);
+  font-size: 12px;
+}
 
 /* ─── Tuiles de chiffres ─────────────────────────────────────────────────── */
 
-.adm-kpi { display: flex; flex-direction: column; gap: 2px; }
+.adm-kpi { display: flex; flex-direction: column; gap: 2px; position: relative; }
 .adm-kpi .l {
   color: var(--adm-mute);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .1em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
   text-transform: uppercase;
 }
-/* Chiffres proportionnels : à cette taille, le tabulaire écarte trop. */
-.adm-kpi .n { font-size: 32px; font-weight: 650; letter-spacing: -.025em; line-height: 1.12; margin-top: 6px; }
-.adm-kpi .s { font-size: 12px; color: var(--adm-mute); margin-top: 2px; }
+/* Le chiffre est la chose qu'on vient chercher : il est donc écrit dans la
+   serif de la maison, en grand. Chiffres proportionnels — à cette taille, le
+   tabulaire écarte trop. */
+.adm-kpi .n {
+  font-family: var(--adm-serif);
+  font-size: 42px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  line-height: 1.04;
+  margin-top: 10px;
+  font-variant-numeric: lining-nums;
+}
+.adm-kpi .s { font-size: 12px; color: var(--adm-mute); margin-top: 4px; }
+/* Le trait d'or sous le chiffre : trois pixels qui changent tout. */
+.adm-kpi .n::after {
+  content: "";
+  display: block;
+  width: 26px;
+  height: 2px;
+  margin-top: 12px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--adm-gold) 0%, rgba(245, 196, 34, 0) 100%);
+}
 
 .adm-delta {
   display: inline-flex;
@@ -234,13 +427,13 @@
   font-size: 11.5px;
   font-weight: 600;
   border-radius: 999px;
-  padding: 1px 8px;
-  margin-top: 8px;
+  padding: 2px 9px;
+  margin-top: 12px;
   align-self: flex-start;
 }
-.adm-delta[data-sens="haut"] { background: #e6f5ee; color: var(--adm-ok); }
-.adm-delta[data-sens="bas"] { background: #fdecea; color: var(--adm-bad); }
-.adm-delta[data-sens="plat"] { background: var(--adm-surface-2); color: var(--adm-mute); }
+.adm-delta[data-sens="haut"] { background: #e3f4ec; color: var(--adm-ok); box-shadow: inset 0 0 0 1px rgba(15, 123, 79, .22); }
+.adm-delta[data-sens="bas"] { background: #fcebe9; color: var(--adm-bad); box-shadow: inset 0 0 0 1px rgba(179, 38, 30, .20); }
+.adm-delta[data-sens="plat"] { background: var(--adm-surface-2); color: var(--adm-mute); box-shadow: inset 0 0 0 1px var(--adm-line); }
 
 /* ─── Graphiques ─────────────────────────────────────────────────────────── */
 
@@ -286,30 +479,50 @@
 .adm-barre .piste i { display: block; height: 100%; border-radius: 2px 4px 4px 2px; background: var(--adm-data); min-width: 3px; }
 
 /* Jauge — le remplissage porte l'état, la piste est un palier clair du même bleu. */
-.adm-jauge { background: var(--adm-d1); border-radius: 999px; height: 6px; overflow: hidden; opacity: .45; }
-.adm-jauge i { display: block; height: 100%; background: var(--adm-data); border-radius: 999px; }
+.adm-jauge {
+  background: rgba(51, 80, 180, .14);
+  border-radius: 999px;
+  height: 7px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(12, 20, 60, .10);
+}
+.adm-jauge i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--adm-d4) 0%, var(--adm-data) 100%);
+  border-radius: 999px;
+  transition: width .6s var(--adm-ease);
+}
 
 /* ─── Tableaux ───────────────────────────────────────────────────────────── */
 
-.adm-table-scroll { overflow-x: auto; margin: 0 -20px; padding: 0 20px; }
+.adm-table-scroll { overflow-x: auto; margin: 0 -22px; padding: 0 22px; }
 
 table.adm-t { width: 100%; border-collapse: collapse; }
 table.adm-t th {
   text-align: left;
-  font-size: 10.5px;
+  font-size: 9.5px;
   text-transform: uppercase;
-  letter-spacing: .09em;
+  letter-spacing: .16em;
   color: var(--adm-mute);
   font-weight: 700;
-  padding: 0 10px 10px;
-  border-bottom: 1px solid var(--adm-line);
+  padding: 0 10px 11px;
+  border-bottom: 1px solid var(--adm-line-fort);
   white-space: nowrap;
 }
-table.adm-t td { padding: 11px 10px; border-bottom: 1px solid var(--adm-line); vertical-align: top; }
+table.adm-t td {
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--adm-line);
+  vertical-align: top;
+  transition: background var(--adm-vite) var(--adm-ease);
+}
 table.adm-t tbody tr:last-child td { border-bottom: 0; }
 table.adm-t tbody tr:hover td { background: var(--adm-surface-2); }
+/* Un repère doré au survol : la ligne lue se tient d'elle-même. */
+table.adm-t tbody tr td:first-child { box-shadow: inset 2px 0 0 transparent; }
+table.adm-t tbody tr:hover td:first-child { box-shadow: inset 2px 0 0 var(--adm-gold); }
 table.adm-t a { color: var(--adm-accent); font-weight: 600; text-decoration: none; }
-table.adm-t a:hover { text-decoration: underline; }
+table.adm-t a:hover { text-decoration: underline; text-underline-offset: 2px; }
 table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 
 /* ─── Étiquettes d'état ──────────────────────────────────────────────────── */
@@ -317,34 +530,61 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-tag {
   display: inline-block;
   border-radius: 999px;
-  padding: 2px 9px;
-  font-size: 11px;
-  font-weight: 600;
+  padding: 2.5px 10px;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: .02em;
   white-space: nowrap;
   line-height: 1.5;
+  box-shadow: inset 0 0 0 1px rgba(20, 40, 120, .10);
 }
-.adm-tag[data-s="nouveau"]     { background: #eceff5; color: #4b5563; }
-.adm-tag[data-s="lead"]        { background: #e7eeff; color: #24409b; }
-.adm-tag[data-s="contacte"]    { background: #fff3da; color: #8a5a00; }
-.adm-tag[data-s="appel"]       { background: #ece5ff; color: #5b32b5; }
-.adm-tag[data-s="proposition"] { background: #ffe9d6; color: #9a4a00; }
-.adm-tag[data-s="client"]      { background: #dcf5e8; color: #0f7b4f; }
-.adm-tag[data-s="perdu"]       { background: #fdeae8; color: #9c2018; }
+.adm-tag[data-s="nouveau"]     { background: #eef0f6; color: #434d63; }
+.adm-tag[data-s="lead"]        { background: #e6edff; color: #24409b; }
+.adm-tag[data-s="contacte"]    { background: #fff2d6; color: #7a5000; }
+.adm-tag[data-s="attente"]     { background: #fff2d6; color: #7a5000; }
+.adm-tag[data-s="appel"]       { background: #ebe3ff; color: #55309f; }
+.adm-tag[data-s="proposition"] { background: #ffe7d2; color: #8f4300; }
+.adm-tag[data-s="client"]      { background: #d9f3e4; color: #0d6f47; }
+.adm-tag[data-s="perdu"]       { background: #fce8e6; color: #932019; }
 
-.adm-vide { color: var(--adm-mute); padding: 38px 10px; text-align: center; }
+.adm-vide {
+  color: var(--adm-mute);
+  padding: 44px 10px;
+  text-align: center;
+  font-size: 13.5px;
+}
+/* Un écran vide n'est pas une erreur : on le dit en belles lettres. */
+.adm-vide strong {
+  display: block;
+  font-family: var(--adm-serif);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--adm-ink);
+  margin-bottom: 6px;
+}
 
 .adm-alerte {
-  background: #fff8e6;
-  border: 1px solid #f2dfae;
-  border-radius: 12px;
-  padding: 14px 16px;
-  margin-bottom: 16px;
-  line-height: 1.6;
+  position: relative;
+  background: linear-gradient(180deg, #fffaed 0%, #fff6e0 100%);
+  border: 1px solid rgba(197, 154, 22, .32);
+  border-radius: var(--adm-r-sm);
+  padding: 15px 18px 15px 20px;
+  margin-bottom: 18px;
+  line-height: 1.65;
+  box-shadow: var(--adm-lueur), 0 14px 30px -26px rgba(138, 106, 0, .7);
+  overflow: hidden;
+}
+.adm-alerte::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--adm-gold);
 }
 .adm-alerte code {
   background: rgba(0, 0, 0, .06);
-  padding: 1px 5px;
-  border-radius: 4px;
+  padding: 1.5px 6px;
+  border-radius: 5px;
   font-size: 12.5px;
 }
 
@@ -353,26 +593,72 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  background: var(--adm-accent);
+  gap: 8px;
+  background: linear-gradient(180deg, var(--adm-accent) 0%, var(--adm-accent-fonce) 100%);
   color: #fff;
-  border: 1px solid var(--adm-accent);
-  border-radius: 9px;
-  padding: 8px 14px;
-  font-size: 13px;
+  border: 1px solid var(--adm-accent-fonce);
+  border-radius: 999px;
+  padding: 9px 17px;
+  font-size: 12.5px;
   font-weight: 600;
+  letter-spacing: .01em;
   cursor: pointer;
   text-decoration: none;
   font-family: inherit;
   white-space: nowrap;
-  transition: filter .12s ease, background .12s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 18px -12px rgba(20, 34, 105, .9);
+  transition: transform var(--adm-vite) var(--adm-ease),
+              box-shadow var(--adm-vite) var(--adm-ease),
+              filter var(--adm-vite) var(--adm-ease);
 }
-.adm-btn:hover { filter: brightness(1.15); }
-.adm-btn[disabled] { opacity: .55; cursor: default; }
-.adm-btn.fantome { background: var(--adm-surface); color: var(--adm-ink); border-color: var(--adm-line-fort); }
-.adm-btn.fantome:hover { background: var(--adm-surface-2); filter: none; }
-.adm-btn.petit { padding: 5px 10px; font-size: 12px; border-radius: 7px; }
-.adm-btn.danger { background: var(--adm-bad); border-color: var(--adm-bad); }
+.adm-btn:hover { filter: brightness(1.12); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 12px 22px -12px rgba(20, 34, 105, .95); }
+/* On enfonce : un bouton qui ne répond pas sous le doigt paraît mort. */
+.adm-btn:active { transform: scale(.975); }
+.adm-btn[disabled] { opacity: .5; cursor: default; box-shadow: none; }
+.adm-btn[disabled]:active { transform: none; }
+
+.adm-btn.fantome {
+  background: var(--adm-surface);
+  color: var(--adm-ink);
+  border-color: var(--adm-line-fort);
+  box-shadow: var(--adm-lueur), 0 6px 14px -12px rgba(12, 20, 60, .8);
+}
+.adm-btn.fantome:hover { background: var(--adm-surface-2); filter: none; border-color: rgba(20, 40, 120, .3); }
+
+/* L'or : réservé au geste principal d'un écran. Encre sombre sur l'or, donc
+   lisible — l'or en texte sur fond clair ne passerait pas. */
+.adm-btn.or {
+  background: linear-gradient(180deg, var(--adm-gold-clair) 0%, var(--adm-gold) 100%);
+  color: var(--adm-gold-encre);
+  border-color: rgba(138, 106, 0, .45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 10px 22px -14px rgba(138, 106, 0, .9);
+}
+.adm-btn.or:hover { filter: brightness(1.06); }
+
+.adm-btn.petit { padding: 6px 12px; font-size: 11.5px; }
+.adm-btn.danger {
+  background: linear-gradient(180deg, #c7362e 0%, var(--adm-bad) 100%);
+  border-color: #8f1d17;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), 0 8px 18px -12px rgba(179, 38, 30, .9);
+}
+
+/* La flèche d'un bouton ne flotte pas à côté du texte : elle a son logement. */
+.adm-btn .rond {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  margin: -2px -7px -2px 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .16);
+  font-size: 11px;
+  line-height: 1;
+  transition: transform var(--adm-pose) var(--adm-ease), background var(--adm-vite) var(--adm-ease);
+}
+.adm-btn:hover .rond { transform: translateX(2px); background: rgba(255, 255, 255, .26); }
+.adm-btn.fantome .rond, .adm-btn.or .rond { background: rgba(12, 20, 60, .10); }
+.adm-btn.fantome:hover .rond, .adm-btn.or:hover .rond { background: rgba(12, 20, 60, .16); }
 
 /* La photo d'un stage, dans son réglage. */
 .stage-photo { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
@@ -392,10 +678,14 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .stage-date {
   display: flex; justify-content: space-between; gap: 14px; align-items: center;
   flex-wrap: wrap;
-  padding: 10px 14px;
+  padding: 12px 16px;
+  background: var(--adm-surface-2);
   border: 1px solid var(--adm-line);
-  border-radius: 10px;
+  border-radius: var(--adm-r-sm);
+  transition: background var(--adm-vite) var(--adm-ease),
+              border-color var(--adm-vite) var(--adm-ease);
 }
+.stage-date:hover { background: var(--adm-surface-3); border-color: var(--adm-line-fort); }
 /* En français, seule la première lettre se capitalise : `capitalize` donnerait
    « Jeu. 17 Sept. », avec une majuscule à chaque mot. */
 .stage-date .quand { font-weight: 600; font-size: 13.5px; }
@@ -407,9 +697,9 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .stage-date .boutons { display: flex; gap: 8px; }
 .stage-date-neuve {
   display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border: 1px dashed var(--adm-line-fort);
-  border-radius: 10px;
+  border-radius: var(--adm-r-sm);
 }
 .stage-date-neuve .adm-label { margin-bottom: 4px; }
 
@@ -455,7 +745,7 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 }
 .carnet-ligne .boutons { display: flex; gap: 8px; align-items: center; }
 .carnet-cocher { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-.carnet-cocher .adm-champ { width: 190px; padding: 5px 9px; font-size: 12px; }
+.carnet-cocher .adm-champ { width: 190px; padding: 6px 10px; font-size: 12px; }
 
 @media (max-width: 700px) {
   .carnet-ligne { grid-template-columns: 4px 1fr; }
@@ -496,24 +786,35 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
 .adm-champ {
   width: 100%;
   border: 1px solid var(--adm-line-fort);
-  border-radius: 9px;
-  padding: 9px 11px;
+  border-radius: var(--adm-r-sm);
+  padding: 10px 12px;
   font-size: 13.5px;
   font-family: inherit;
   background: var(--adm-surface);
   color: var(--adm-ink);
+  box-shadow: inset 0 1px 2px rgba(12, 20, 60, .05);
+  transition: border-color var(--adm-vite) var(--adm-ease),
+              box-shadow var(--adm-vite) var(--adm-ease);
 }
-.adm-champ:focus { outline: 2px solid var(--adm-accent); outline-offset: 1px; }
-textarea.adm-champ { min-height: 96px; resize: vertical; line-height: 1.6; }
+.adm-champ::placeholder { color: rgba(103, 113, 140, .72); }
+.adm-champ:hover { border-color: rgba(20, 40, 120, .3); }
+.adm-champ:focus {
+  outline: none;
+  border-color: var(--adm-accent);
+  box-shadow: inset 0 1px 2px rgba(12, 20, 60, .04), 0 0 0 3px rgba(28, 47, 140, .14);
+}
+textarea.adm-champ { min-height: 104px; resize: vertical; line-height: 1.65; }
+select.adm-champ { cursor: pointer; }
+input[type="file"].adm-champ { padding: 8px 10px; font-size: 12.5px; cursor: pointer; }
 
 .adm-label {
   display: block;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--adm-mute);
   text-transform: uppercase;
-  letter-spacing: .09em;
-  margin-bottom: 6px;
+  letter-spacing: .16em;
+  margin-bottom: 7px;
 }
 
 /* ─── Écrans étroits ─────────────────────────────────────────────────────── */
@@ -734,3 +1035,50 @@ textarea.adm-champ { min-height: 96px; resize: vertical; line-height: 1.6; }
   .seq-route { grid-template-columns: 4px 1fr; }
   .seq-route .compte { grid-column: 2; text-align: left; margin-top: 6px; }
 }
+
+/* ═══ L'écran de connexion ════════════════════════════════════════════════
+
+   C'est la première page que la cliente voit chaque matin : elle a droit au
+   même soin que le site. Un panneau marine qui porte la marque, une colonne
+   claire qui porte le formulaire. */
+
+.adm-connexion {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+.adm-connexion-bac {
+  width: 100%;
+  max-width: 420px;
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-line);
+  border-radius: var(--adm-r-lg);
+  box-shadow: var(--adm-lueur), var(--adm-ombre-haute);
+  overflow: hidden;
+}
+.adm-connexion-tete {
+  background:
+    radial-gradient(120% 60% at 80% 0%, rgba(245, 196, 34, .16) 0%, transparent 60%),
+    linear-gradient(160deg, var(--adm-side) 0%, var(--adm-side-2) 100%);
+  padding: 30px 32px 26px;
+  border-bottom: 1px solid rgba(245, 196, 34, .25);
+}
+.adm-connexion-tete .adm-brand { padding: 0; color: #fff; }
+.adm-connexion-tete .adm-brand span { color: var(--adm-gold); }
+.adm-connexion-tete p {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(232, 236, 248, .66);
+}
+.adm-connexion-corps { padding: 26px 32px 30px; }
+.adm-connexion-pied {
+  margin: 20px 0 0;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--adm-mute);
+  text-align: center;
+}
+.adm-connexion-pied a { color: var(--adm-accent); font-weight: 600; text-decoration: none; }
+.adm-connexion-pied a:hover { text-decoration: underline; }

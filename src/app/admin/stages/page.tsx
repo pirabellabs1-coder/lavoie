@@ -180,7 +180,9 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                 </span>
               </label>
               <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-                <button type="submit" className="adm-btn">Créer le stage</button>
+                <button type="submit" className="adm-btn or">
+                  Créer le stage <span className="rond" aria-hidden="true">→</span>
+                </button>
                 <span style={{ fontSize: 12, color: "var(--adm-mute)" }}>
                   Créé en brouillon : rien n&apos;apparaît sur le site avant que vous le publiiez.
                 </span>
@@ -203,7 +205,7 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
             const complet = restantes === 0;
 
             return (
-              <div className="adm-carte" key={s.id} id={`stage-${s.id}`}>
+              <div className="adm-carte vivante" key={s.id} id={`stage-${s.id}`}>
                 <div
                   style={{
                     display: "flex",
@@ -214,13 +216,13 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                   }}
                 >
                   <div>
-                    <p style={{ margin: 0, fontWeight: 650, fontSize: 15, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    <p className="adm-carte-titre">
                       {s.titre}
                       {!s.actif && (
                         <span className="adm-tag" data-s="attente">Brouillon</span>
                       )}
                     </p>
-                    <p style={{ margin: "2px 0 0", color: "var(--adm-mute)", fontSize: 12.5 }}>
+                    <p className="adm-carte-sous">
                       {jours.length
                         ? `${jours.length} date${jours.length > 1 ? "s" : ""} proposée${jours.length > 1 ? "s" : ""}`
                         : s.debut_le
@@ -236,7 +238,7 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                       <form action={actionPublierStage}>
                         <input type="hidden" name="id" value={s.id} />
                         <input type="hidden" name="publier" value={s.actif ? "0" : "1"} />
-                        <button type="submit" className={s.actif ? "adm-btn fantome petit" : "adm-btn petit"}>
+                        <button type="submit" className={s.actif ? "adm-btn fantome petit" : "adm-btn or petit"}>
                           {s.actif ? "Retirer du site" : "Publier"}
                         </button>
                       </form>

@@ -189,6 +189,12 @@ export default async function Cadre({
   const qui = await exigerIdentite();
   const enAttente = await compterEnAttente();
 
+  // Le surtitre se déduit de la navigation : l'écran dit d'où il vient sans
+  // qu'aucune page ait à le répéter.
+  const place = GROUPES.flatMap((g) => g.entrees.map((e) => ({ groupe: g.titre, ...e }))).find(
+    (e) => e.href === actif,
+  );
+
   const groupes = GROUPES.map((g) => ({
     ...g,
     entrees: g.entrees
@@ -243,6 +249,11 @@ export default async function Cadre({
       <main className="adm-main">
         <div className="adm-head">
           <div>
+            {place && (
+              <p className="adm-surtitre">
+                {place.groupe} · {place.label}
+              </p>
+            )}
             <h1>{titre}</h1>
             {sousTitre && <p>{sousTitre}</p>}
           </div>
