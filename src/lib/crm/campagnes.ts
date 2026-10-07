@@ -1,3 +1,4 @@
+import { PROFILS, profil } from "./profils";
 import { Resend } from "resend";
 import { getDb } from "./db";
 import { habiller, lienDesinscription, personnaliser } from "./email";
@@ -23,6 +24,8 @@ import { EXPEDITEUR } from "./sequences";
  */
 
 /** Critères de ciblage. Tous facultatifs, combinés par « et ». */
+const CLES_PROFIL = PROFILS.map((p) => p.cle) as string[];
+
 export type Segment = {
   /** Statuts retenus dans l'entonnoir. Vide ou absent = tous. */
   statuts?: string[];
@@ -42,6 +45,11 @@ export type Segment = {
   stage?: string;
   /** États de participation retenus. Vide = tous, annulées comprises. */
   stage_etats?: string[];
+  /**
+   * Profils retenus. C'est le critère le plus utile du lot : écrire à « tous
+   * les dirigeants » n'a rien à voir avec écrire à « tous les leads ».
+   */
+  profils?: string[];
 };
 
 /** Les états d'une participation, tels qu'ils sont écrits en base. */
@@ -93,6 +101,13 @@ export function nettoyerSegment(brut: unknown): Segment {
     // critère qui ne filtre rien.
     if (etats.length && etats.length < ETATS_STAGE.length) segment.stage_etats = etats;
   }
+  if (Array.isArray(s.profils)) {
+    const liste = s.profils
+      .filter((v): v is string => typeof v === "string")
+      .filter((v) => CLES_PROFIL.includes(v))
+      .slice(0, 10);
+    if (liste.length) segment.profils = liste;
+  }
   // Un état de participation sans stage n'a pas de sens : c'est le stage qui
   // porte le critère.
   if (!segment.stage) delete segment.stage_etats;
@@ -112,6 +127,9 @@ export function decrireSegment(s: Segment, titresDesStages: Record<string, strin
   if (s.utm_source) bouts.push(`campagne « ${s.utm_source} »`);
   if (s.depuis_jours) bouts.push(`arrivés depuis moins de ${s.depuis_jours} jours`);
   if (s.jamais_ouvert) bouts.push("n'a jamais ouvert un e-mail");
+  if (s.profils?.length) {
+    bouts.push(s.profils.map((c) => profil(c).nom.toLowerCase()).join(", "));
+  }
   if (s.stage) {
     const nom = titresDesStages[s.stage] ?? s.stage;
     const ou = s.stage === "*" ? "inscrits à un stage" : `inscrits au stage « ${nom} »`;
@@ -141,6 +159,7 @@ async function destinataires(
   const jamaisOuvert = segment.jamais_ouvert === true;
   const stage = segment.stage ?? null;
   const etats = segment.stage_etats?.length ? segment.stage_etats : null;
+  const profils = segment.profils?.length ? segment.profils : null;
 
   try {
     return await sql<Destinataire[]>`
@@ -152,6 +171,12 @@ async function destinataires(
         AND (${statuts}::text[] IS NULL OR c.statut = ANY(${statuts}::text[]))
         AND (${source}::text IS NULL OR c.source = ${source})
         AND (${utm}::text IS NULL OR c.utm_source = ${utm})
+        AND (
+          ${profils}::text[] IS NULL
+          -- « inconnu » vise ceux qui n'ont pas encore de questionnaire : en
+          -- base, leur colonne est vide, pas égale à « inconnu ».
+          OR COALESCE(c.profil, 'inconnu') = ANY(${profils}::text[])
+        )
         AND (${jours}::int IS NULL OR c.cree_le >= NOW() - make_interval(days => ${jours}::int))
         AND (
           ${jamaisOuvert} = FALSE

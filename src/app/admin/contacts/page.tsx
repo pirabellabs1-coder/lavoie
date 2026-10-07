@@ -6,6 +6,7 @@ import { groupesManuels } from "@/lib/crm/categories";
 import { exigerIdentite } from "@/lib/crm/session";
 import { peut } from "@/lib/crm/utilisateurs";
 import { actionCreerContact } from "./actions";
+import { profil, PROFILS } from "@/lib/crm/profils";
 
 export const dynamic = "force-dynamic";
 
@@ -17,13 +18,13 @@ function dateCourte(d: Date | string): string {
 export default async function ContactsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; statut?: string; erreur?: string }>;
+  searchParams: Promise<{ q?: string; statut?: string; profil?: string; erreur?: string }>;
 }) {
-  const { q, statut, erreur } = await searchParams;
+  const { q, statut, profil: profilFiltre, erreur } = await searchParams;
   const qui = await exigerIdentite();
   const automate = peut(qui.role, "sequences");
   const contacts = isDbConfigured()
-    ? await listerContacts({ recherche: q, statut, limite: 500 })
+    ? await listerContacts({ recherche: q, statut, profil: profilFiltre, limite: 500 })
     : [];
 
   return (
@@ -191,8 +192,17 @@ export default async function ContactsPage({
               ))}
             </select>
           </div>
+          <div>
+            <label className="adm-label" htmlFor="profil">Profil</label>
+            <select id="profil" name="profil" className="adm-champ" defaultValue={profilFiltre ?? ""}>
+              <option value="">Tous</option>
+              {PROFILS.map((pr) => (
+                <option key={pr.cle} value={pr.cle}>{pr.nom}</option>
+              ))}
+            </select>
+          </div>
           <button type="submit" className="adm-btn">Filtrer</button>
-          {(q || statut) && (
+          {(q || statut || profilFiltre) && (
             <Link href="/admin/contacts" className="adm-btn fantome">Réinitialiser</Link>
           )}
         </div>
@@ -215,6 +225,7 @@ export default async function ContactsPage({
                   <th>Téléphone</th>
                   <th>Source</th>
                   <th>Intérêt</th>
+                  <th>Profil</th>
                   <th>Statut</th>
                   <th>Arrivé le</th>
                 </tr>
@@ -234,6 +245,15 @@ export default async function ContactsPage({
                     <td style={{ color: "var(--adm-mute)" }}>{c.telephone || "—"}</td>
                     <td style={{ color: "var(--adm-mute)" }}>{c.source || "—"}</td>
                     <td style={{ color: "var(--adm-mute)" }}>{c.interet || "—"}</td>
+                    <td>
+                      {c.profil ? (
+                        <span className="adm-tag" data-s={profil(c.profil).ton} title={profil(c.profil).phrase}>
+                          {profil(c.profil).court}
+                        </span>
+                      ) : (
+                        <span style={{ color: "var(--adm-mute)" }}>—</span>
+                      )}
+                    </td>
                     <td>
                       <span className="adm-tag" data-s={c.statut}>
                         {STATUT_LABEL[c.statut] ?? c.statut}

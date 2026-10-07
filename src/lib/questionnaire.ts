@@ -429,3 +429,24 @@ export function router(reponses: Reponses, eligible: boolean): Route {
   if (revenuModeste(reponses)) return "formations";
   return eligible ? "appel" : "stages";
 }
+
+/**
+ * La séquence réellement envoyée : la route dit ce qu'on propose, le profil
+ * dit comment on en parle.
+ *
+ * La route « appel » garde sa séquence de prérequis — un entretien se prépare,
+ * et cette préparation ne dépend pas de qui on est. Pour tous les autres, la
+ * suite est écrite pour le profil : un dirigeant et un débutant ne reçoivent
+ * plus le même texte sous prétexte qu'ils n'ont pas eu l'entretien.
+ */
+export function sequencePour(route: Route, profil: string): string {
+  if (route === "appel") return SEQUENCE_DE_ROUTE.appel;
+  const parProfil: Record<string, string> = {
+    dirigeant: "dirigeant",
+    cadre: "cadre",
+    avance: "avance",
+    debutant: "debutant",
+    accessible: "formations",
+  };
+  return parProfil[profil] ?? SEQUENCE_DE_ROUTE[route];
+}

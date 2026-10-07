@@ -27,6 +27,7 @@ function lireSegment(donnees: FormData): Segment {
     jamais_ouvert: donnees.get("jamais_ouvert") === "on",
     stage: donnees.get("stage"),
     stage_etats: donnees.getAll("stage_etats").map(String),
+    profils: donnees.getAll("profils").map(String),
   });
 }
 
@@ -48,6 +49,7 @@ function paramsDuFormulaire(donnees: FormData): URLSearchParams {
   if (segment.jamais_ouvert) params.set("jamais_ouvert", "on");
   if (segment.stage) params.set("stage", segment.stage);
   for (const e of segment.stage_etats ?? []) params.append("stage_etats", e);
+  for (const pr of segment.profils ?? []) params.append("profils", pr);
   const quand = String(donnees.get("quand") ?? "");
   if (quand) params.set("quand", quand);
   const essai = String(donnees.get("essai") ?? "");

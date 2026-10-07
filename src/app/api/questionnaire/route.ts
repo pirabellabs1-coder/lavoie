@@ -1,7 +1,8 @@
 import { Resend } from "resend";
 import { after } from "next/server";
 import { SITE } from "@/lib/site";
-import { enregistrerContact } from "@/lib/crm/contacts";
+import { enregistrerContact, poserProfil } from "@/lib/crm/contacts";
+import { profilDesReponses } from "@/lib/crm/profils";
 import { enregistrerQuestionnaire } from "@/lib/crm/questionnaires";
 import { inscrireASequence } from "@/lib/crm/sequences";
 import { controlerFormulaire, reponseRefus } from "@/lib/crm/antispam";
@@ -11,7 +12,7 @@ import {
   manquantes,
   QUESTIONS,
   router,
-  SEQUENCE_DE_ROUTE,
+  sequencePour,
   type Reponses,
 } from "@/lib/questionnaire";
 
@@ -107,8 +108,14 @@ export async function POST(req: Request) {
     // La séquence n'est lancée qu'une fois la copie enregistrée : c'est elle
     // qui porte le jeton du lien de confirmation.
     if (copie) {
+      // Le profil est posé sur la fiche avant toute inscription : c'est lui
+      // qui décide ce que la personne va lire, et il doit rester lisible dans
+      // le tableau de bord même si la séquence change un jour.
+      const cle = profilDesReponses(reponses);
+      await poserProfil(contact.id, cle);
+
       const route = router(reponses, evaluation.eligible);
-      await inscrireASequence(contact.id, SEQUENCE_DE_ROUTE[route]);
+      await inscrireASequence(contact.id, sequencePour(route, cle));
       after(async () => {
         const { traiterEcheances } = await import("@/lib/crm/sequences");
         await traiterEcheances(20);

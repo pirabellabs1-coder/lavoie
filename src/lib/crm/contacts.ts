@@ -37,6 +37,8 @@ export type Contact = {
   message: string | null;
   notes: string | null;
   consentement: boolean;
+  /** À qui on parle, déduit du questionnaire. Vide tant qu'il n'y en a pas. */
+  profil: string | null;
   desabonne_le: Date | null;
   cree_le: Date;
   maj_le: Date;
@@ -186,6 +188,8 @@ export async function journaliser(
 export type Filtres = {
   recherche?: string;
   statut?: string;
+  /** Clé de profil, « inconnu » compris. */
+  profil?: string;
   limite?: number;
 };
 
@@ -195,6 +199,7 @@ export async function listerContacts(f: Filtres = {}): Promise<Contact[]> {
   const limite = Math.min(f.limite ?? 200, 1000);
   const recherche = f.recherche?.trim() ? `%${f.recherche.trim()}%` : null;
   const statut = f.statut && estStatutValide(f.statut) ? f.statut : null;
+  const profil = f.profil?.trim() ? f.profil.trim() : null;
 
   try {
     return await sql<Contact[]>`
@@ -204,6 +209,7 @@ export async function listerContacts(f: Filtres = {}): Promise<Contact[]> {
              OR COALESCE(prenom, '') ILIKE ${recherche}
              OR COALESCE(nom, '') ILIKE ${recherche})
         AND (${statut}::text IS NULL OR statut = ${statut})
+        AND (${profil}::text IS NULL OR COALESCE(profil, 'inconnu') = ${profil})
       ORDER BY cree_le DESC
       LIMIT ${limite}
     `;
@@ -419,4 +425,21 @@ export async function exporterCsv(): Promise<string> {
     ].map(echapper).join(";"),
   );
   return [entetes.join(";"), ...lignes].join("\n");
+}
+
+/**
+ * Pose le profil d'un contact — celui que le questionnaire vient de révéler.
+ *
+ * Il est écrit sur la fiche, et non recalculé à la lecture : une personne peut
+ * refaire le questionnaire des mois plus tard, et c'est bien le dernier état
+ * connu qui doit faire foi partout, y compris dans les campagnes déjà bâties.
+ */
+export async function poserProfil(contactId: string, profil: string): Promise<void> {
+  const sql = await getDb();
+  if (!sql) return;
+  try {
+    await sql`UPDATE contacts SET profil = ${profil} WHERE id = ${contactId}`;
+  } catch (e) {
+    console.error("[crm] poserProfil:", e);
+  }
 }

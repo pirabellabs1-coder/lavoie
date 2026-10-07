@@ -274,6 +274,9 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS page_entree       TEXT,
       ADD COLUMN IF NOT EXISTS jeton_parrainage  TEXT,
       ADD COLUMN IF NOT EXISTS parrain_id        BIGINT REFERENCES contacts(id) ON DELETE SET NULL,
+      -- À qui on parle : le profil déduit du questionnaire. Il décide la
+      -- séquence, colore la fiche et sert de cible aux campagnes.
+      ADD COLUMN IF NOT EXISTS profil             TEXT,
       ADD COLUMN IF NOT EXISTS reveille_le        TIMESTAMPTZ,
       ADD COLUMN IF NOT EXISTS confirme_le        TIMESTAMPTZ,
       -- Date de la demande d'avis : sans elle, impossible de savoir qui a été

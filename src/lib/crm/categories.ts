@@ -125,6 +125,60 @@ export const CATEGORIES: Record<string, Categorie> = {
     statut: "appel",
     source: "Entretien",
   },
+  // ── Les quatre profils ─────────────────────────────────────────────────
+  //
+  // Ce ne sont pas des portes d'entrée du site : personne ne s'inscrit « en
+  // tant que dirigeant ». Le questionnaire les attribue. Mais on peut y poser
+  // quelqu'un à la main — après un appel, un salon, une recommandation — parce
+  // que c'est souvent de vive voix qu'on apprend à qui on parle.
+  dirigeant: {
+    cle: "dirigeant",
+    groupe: "Par profil",
+    cat: "Dirigeant en crise silencieuse",
+    cond: "questionnaire : dirige ou travaille à son compte, plus de 5 000 € par mois",
+    ton: "#5b32b5",
+    ordre: 10,
+    manuel: true,
+    aide: "Une personne qui dirige, gagne bien sa vie, et à qui la réussite ne suffit plus. Registre d'arbitrage, aucun vocabulaire d'éveil.",
+    statut: "lead",
+    source: "Profil — dirigeant",
+  },
+  cadre: {
+    cle: "cadre",
+    groupe: "Par profil",
+    cat: "En transition",
+    cond: "questionnaire : salarié ou en reconversion, 2 000 à 5 000 € par mois",
+    ton: "#24409b",
+    ordre: 11,
+    manuel: true,
+    aide: "Budget réel mais mesuré, se pose la question depuis un moment. On l'emmène vers un stage de saison.",
+    statut: "lead",
+    source: "Profil — transition",
+  },
+  avance: {
+    cle: "avance",
+    groupe: "Par profil",
+    cat: "Chemin déjà engagé",
+    cond: "questionnaire : plus de trois ans de travail personnel, pratique tenue",
+    ton: "#0f7b4f",
+    ordre: 12,
+    manuel: true,
+    aide: "Ne lui réexpliquez pas les bases : il les connaît. On nomme le plateau, et on propose le Cycle complet ou le jeûne.",
+    statut: "lead",
+    source: "Profil — chemin engagé",
+  },
+  debutant: {
+    cle: "debutant",
+    groupe: "Par profil",
+    cat: "Premier pas",
+    cond: "questionnaire : n'a jamais entrepris de travail personnel",
+    ton: "#6b7590",
+    ordre: 13,
+    manuel: true,
+    aide: "Aucun jargon, aucune pression : le livret sur le Cadre, puis un cercle. C'est tout.",
+    statut: "lead",
+    source: "Profil — premier pas",
+  },
   apres_stage: {
     cle: "apres_stage",
     groupe: "Après un stage",

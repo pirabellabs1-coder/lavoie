@@ -13,6 +13,7 @@ import {
 import { ETATS_PARTICIPATION, listerStages } from "@/lib/crm/stages";
 import { adresseParDefaut, construireApercu, PRENOM_EXEMPLE } from "@/lib/crm/essai";
 import { enClair } from "@/lib/heure";
+import { PROFILS } from "@/lib/crm/profils";
 import {
   actionApercuMail,
   actionArreterCampagne,
@@ -59,8 +60,14 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
     : params.stage_etats
       ? [String(params.stage_etats)]
       : [];
+  const profilsChoisis = Array.isArray(params.profils)
+    ? params.profils
+    : params.profils
+      ? [String(params.profils)]
+      : [];
   const segment: Segment = nettoyerSegment({
     statuts: statutsChoisis,
+    profils: profilsChoisis,
     source: premier(params.source),
     utm_source: premier(params.utm_source),
     depuis_jours: premier(params.depuis_jours),
@@ -190,6 +197,29 @@ export default async function CampagnesPage({ searchParams }: { searchParams: Pa
                   defaultValue={premier(params.depuis_jours)}
                 />
               </label>
+            </div>
+
+            <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--adm-line)" }}>
+              <span style={{ display: "block", fontSize: 12, color: "var(--adm-mute)", marginBottom: 8 }}>
+                À qui on parle — sans coche, tous les profils
+              </span>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 4 }}>
+                {PROFILS.map((pr) => (
+                  <label
+                    key={pr.cle}
+                    title={pr.phrase}
+                    style={{ display: "flex", gap: 6, alignItems: "center", fontSize: 13 }}
+                  >
+                    <input
+                      type="checkbox"
+                      name="profils"
+                      value={pr.cle}
+                      defaultChecked={profilsChoisis.includes(pr.cle)}
+                    />
+                    <span className="adm-tag" data-s={pr.ton}>{pr.court}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--adm-line)" }}>

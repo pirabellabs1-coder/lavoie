@@ -22,6 +22,7 @@ import { filleuls, lienParrainage } from "@/lib/crm/parrainage";
 import { categorie, groupesManuels } from "@/lib/crm/categories";
 import { inscriptionsDuContact } from "@/lib/crm/sequences";
 import { aDejaTemoigne, lienAvis } from "@/lib/crm/avis";
+import { profil } from "@/lib/crm/profils";
 
 export const dynamic = "force-dynamic";
 
@@ -124,6 +125,24 @@ export default async function FicheContact({
 
       <div className="adm-grille adm-g2">
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {/* À qui on parle. Posé par le questionnaire, et lisible d'un coup
+              d'œil : c'est ce qui décide du ton de tout ce qu'on lui envoie. */}
+          <div className="adm-carte">
+            <p className="adm-titre">À qui on parle</p>
+            <p className="adm-carte-titre" style={{ marginBottom: 6 }}>
+              {profil(contact.profil).nom}
+              <span className="adm-tag" data-s={profil(contact.profil).ton}>
+                {profil(contact.profil).court}
+              </span>
+            </p>
+            <p style={{ margin: 0, fontSize: 13, color: "var(--adm-ink-2)", lineHeight: 1.6 }}>
+              {profil(contact.profil).phrase}
+            </p>
+            <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "var(--adm-mute)" }}>
+              On vise : {profil(contact.profil).vers}
+            </p>
+          </div>
+
           <div className="adm-carte">
             <p className="adm-titre">Où en est-il dans le parcours</p>
             <form action={actionChangerStatut} style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>

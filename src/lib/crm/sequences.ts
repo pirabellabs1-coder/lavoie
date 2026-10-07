@@ -298,6 +298,164 @@ export const SEQUENCES_PAR_DEFAUT: SequenceGraine[] = [
       },
     ],
   },
+  // ── Les quatre séquences de profil ─────────────────────────────────────
+  //
+  // Elles se ressemblent par la forme — cinq e-mails à J+0, 3, 7, 14 et 24 —
+  // et par rien d'autre. Un dirigeant qu'on tutoie de loin avec du vocabulaire
+  // d'éveil se désabonne ; un débutant à qui on parle de plateau ne comprend
+  // pas de quoi il s'agit. Deux de ces séquences ne partagent aucune phrase.
+  {
+    cle: "dirigeant",
+    nom: "Dirigeants — ce que la réussite n'a pas réglé",
+    description: "Pour les dirigeants et independants a revenus eleves. Registre d'arbitrage, aucun lexique spirituel : on parle du cout cache de la performance, et on mene a l'entretien individuel.",
+    declencheur: "dirigeant",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Ce qui ne figure dans aucun bilan",
+        corps: "Bonjour {{prenom}},\n\nVous avez construit quelque chose. Les chiffres tiennent, l'activité tourne, votre entourage vous croit solide. Et pourtant, à certaines heures, vous ne ressentez rien de ce que cette réussite devrait produire.\n\nCe n'est pas une baisse de régime. Ce n'est pas non plus un manque de gratitude. C'est un écart — entre ce que vous avez bâti et celui qui l'a bâti.\n\nLes dirigeants que j'accompagne arrivent presque tous avec la même formulation : tout va bien, et je ne sais plus pourquoi je continue. Ils n'ont pas un problème de méthode. Ils ont un problème de place.\n\nJe ne vais pas vous vendre un état d'esprit. Les quatre e-mails qui suivent posent ce que j'observe depuis des années chez des personnes qui décident vite, bien, et pour tout le monde sauf elles-mêmes.\n\nVous pouvez les lire entre deux rendez-vous. Si rien ne vous parle, le lien de désinscription est en bas de page, et aucune explication ne vous sera demandée.\n\nSi quelque chose vous arrête, deux lignes en réponse me suffisent." + SIGNATURE,
+      },
+      {
+        ordre: 2,
+        delai_jours: 3,
+        sujet: "{{prenom}}, le prix de la maîtrise",
+        corps: "Bonjour {{prenom}},\n\nVotre capacité à tenir n'est pas tombée du ciel. Elle s'est construite, souvent très tôt, parce qu'il fallait bien que quelqu'un tienne.\n\nC'est l'endroit que presque personne ne regarde. On félicite la rigueur, l'endurance, le sang-froid. On ne demande jamais ce qu'ils ont coûté à l'enfant qui les a appris le premier.\n\nJe le formule ainsi : nous bâtissons fréquemment notre zone d'excellence sur une blessure que nous n'avons jamais nommée. Le contrôle a été une solution. Il a fonctionné. Il a produit des résultats réels, mesurables, parfois considérables. Puis il est devenu la seule manière d'exister, et c'est à ce moment que l'intérieur s'éteint.\n\nVous le repérez dans des détails. L'incapacité à ne rien faire un dimanche. L'agacement quand on vous aide. La fatigue qui ne part plus en vacances.\n\nRien de cela ne se répare par une meilleure organisation. Ce n'est pas un problème de temps, et c'est bien pour cette raison que les solutions d'agenda n'y changent rien.\n\nLe fond du sujet est ici : https://www.lavoie2laconscience.com/blog/la-blessure-originelle" + SIGNATURE,
+      },
+      {
+        ordre: 3,
+        delai_jours: 7,
+        sujet: "Pourquoi je n'appelle pas cela du coaching",
+        corps: "Bonjour {{prenom}},\n\nLa question revient à chaque premier échange : en quoi est-ce différent de ce que j'ai déjà essayé.\n\nTrois différences, et je les assume.\n\nUn coach travaille sur un objectif. Je travaille sur ce qui, en vous, choisit les objectifs. Ce n'est pas le même étage.\n\nUn programme de développement personnel vous demande de comprendre. Ici, la compréhension est l'entrée et non la sortie. Ce qui déplace réellement les choses se joue dans le corps, dans un lieu, sur plusieurs jours — pas dans une visioconférence de soixante minutes.\n\nEnfin, je ne promets aucune performance supplémentaire. Si vous cherchez à produire davantage, d'autres le feront mieux que moi. Ce travail vise l'inverse : retrouver la cohérence entre ce que vous faites et celui que vous êtes devenu en le faisant.\n\nBeaucoup de dirigeants ont déjà essayé le coaching, les séminaires, les retraites, les lectures. Souvent avec profit. Rarement avec bascule.\n\nSi cette distinction vous semble jouer sur les mots, c'est une objection valable et elle m'intéresse. Écrivez-la-moi telle quelle." + SIGNATURE,
+      },
+      {
+        ordre: 4,
+        delai_jours: 14,
+        sujet: "La discrétion n'est pas une option ici",
+        corps: "Bonjour {{prenom}},\n\nUne objection m'est rarement formulée à voix haute : je ne peux pas me permettre d'être vu dans ce genre de démarche.\n\nElle est légitime. Un dirigeant qui parle de ce qui s'est éteint chez lui prend un risque réel, vis-à-vis de ses équipes, de ses associés, parfois de sa famille.\n\nC'est pourquoi le cadre est posé avant le travail. Engagement de confidentialité signé. Groupe restreint lors des immersions. Discrétion sur le lieu. Charte de pratique, supervision externe, et droit de retrait à tout moment.\n\nPour le reste, le dispositif se décrit simplement : des séances individuelles à distance, des immersions de plusieurs jours au Centre HUT en Sarthe, et une ligne directe entre les rendez-vous. Trois niveaux existent selon la durée, de trois à douze mois. Les tarifs se communiquent après un audit d'alignement, sur devis, avec un règlement en trois, six ou douze fois.\n\nAutant vous le dire maintenant plutôt qu'à l'issue d'un entretien : ce n'est pas une dépense accessoire, et elle n'a de sens que si le moment est juste.\n\nLe détail des trois niveaux : https://www.lavoie2laconscience.com/offre-gold" + SIGNATURE,
+      },
+      {
+        ordre: 5,
+        delai_jours: 24,
+        sujet: "Quarante-cinq minutes, et vous décidez",
+        corps: "Bonjour {{prenom}},\n\nJe termine ici cette série, avec une proposition précise.\n\nUn entretien individuel de quarante-cinq minutes, offert. Un créneau de fin de journée ou de début de matinée, selon ce qui s'insère le mieux dans votre semaine.\n\nCe qui s'y passe : vous posez votre situation à voix haute, ce qui est souvent la première fois que cela arrive. Je vous dis ce que j'entends, sans ménagement inutile. Nous regardons ensemble si un accompagnement est juste pour vous, maintenant, ou si autre chose le serait davantage.\n\nTrois sorties possibles, et les trois sont acceptables : nous travaillons ensemble, nous reportons, je vous oriente ailleurs. Tout le monde ne repart pas avec une proposition d'accompagnement — le questionnaire de préparation existe précisément pour que cette question soit tranchée avant, et non pendant.\n\nSi votre réponse est « pas maintenant », elle n'a pas à être justifiée. Vous resterez sur cette liste et rien ne vous sera renvoyé à ce sujet.\n\nDemander un créneau : https://www.lavoie2laconscience.com/contact" + SIGNATURE,
+      },
+    ],
+  },
+  {
+    cle: "cadre",
+    nom: "En transition — le premier stage",
+    description: "Pour les salaries et personnes en reconversion, budget mesure. Registre concret et logistique : le cadre, le groupe, le prix, et le fait qu'on n'a pas a tout quitter. Mene a un stage de saison.",
+    declencheur: "cadre",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Vous n'avez pas à tout quitter",
+        corps: "Bonjour {{prenom}},\n\nUne idée circule beaucoup et bloque énormément de monde : pour changer de vie, il faudrait d'abord tout casser. Démissionner, partir, recommencer ailleurs.\n\nJ'observe surtout l'inverse. Les personnes qui tiennent leurs changements sont celles qui ont commencé sans brûler leurs appuis.\n\nVous êtes peut-être en poste, en reconversion, ou entre les deux. Vous vous posez les mêmes questions depuis un moment : un an, trois ans, parfois davantage. Elles ne sont jamais urgentes, et c'est exactement le problème. Rien ne vous force, donc rien ne bouge.\n\nCe qui fait bouger, dans mon expérience, c'est une date posée dans l'agenda. Un lieu, un début, une fin. Pas un grand saut : un cadre.\n\nDans les trois semaines qui viennent, je vous écris quatre fois. Je vous décris concrètement ce qui se passe pendant quatre jours de stage, ce que cela coûte, ce qui est demandé et ce qui ne l'est pas.\n\nVous saurez à quoi vous attendre avant qu'une seule décision vous soit demandée. Rien ne vous sera proposé avant que vous ayez ces informations." + SIGNATURE,
+      },
+      {
+        ordre: 2,
+        delai_jours: 3,
+        sujet: "Quatre jours, un lieu, un groupe",
+        corps: "Bonjour {{prenom}},\n\nConcrètement, voilà à quoi ressemblent quatre jours.\n\nVous arrivez un jeudi en fin d'après-midi, au Centre HUT, en Sarthe. Le premier soir sert à poser le cadre et à formuler pourquoi vous êtes venu. Rien de plus.\n\nLes trois jours suivants alternent des temps d'enseignement, des cercles de parole, des pratiques corporelles, des repas partagés et des plages de silence, souvent le soir. Il y a aussi un rituel dans l'eau : un bassin, de l'eau chaude, peu profonde, et un encadrement pendant toute la durée. Savoir nager n'est pas nécessaire.\n\nLe groupe est volontairement petit. Il mêle des personnes qui arrivent et d'autres qui reviennent d'une saison précédente. Ce mélange fait une partie du travail : vous entendez des gens plus avancés parler de ce que vous êtes en train de traverser.\n\nLa clôture a lieu le dimanche à dix-huit heures. Vous repartez avec quelque chose de formulé, pas avec un classeur de notes.\n\nCe stage appartient à un parcours de quatre saisons, mais chacun se tient seul. Vous pouvez n'en faire qu'un et vous arrêter là.\n\nLe détail du parcours : https://www.lavoie2laconscience.com/cycle-des-saisons" + SIGNATURE,
+      },
+      {
+        ordre: 3,
+        delai_jours: 7,
+        sujet: "Ce que le cadre protège chez vous",
+        corps: "Bonjour {{prenom}},\n\nUne crainte revient très souvent chez les personnes qui n'ont jamais fait ce type de travail : devoir se livrer devant des inconnus.\n\nJe vais être claire. Rien n'est imposé. Les cercles de parole se vivent sur la base du volontariat, et le cadre posé le premier soir sert précisément à cela : protéger ce que vous ne souhaitez pas dire. On peut traverser un stage entier en parlant peu.\n\nCe mot, « cadre », a mauvaise presse. On l'associe à la contrainte, donc à une liberté qui diminue. C'est l'inverse qui se produit. Un groupe sans règles devient un endroit où l'on se surveille. Un groupe dont les règles sont dites devient un endroit où l'on peut enfin déposer quelque chose.\n\nCela vaut aussi en dehors des stages. Dans une vie professionnelle dense, l'absence de cadre ne produit pas de la souplesse, elle produit du débordement — et vous le vérifiez probablement toutes les semaines.\n\nJ'ai écrit un livret court là-dessus. Il explique pourquoi une contrainte choisie rend plus libre.\n\nLe livret : https://formation-untout.com/comment-le-cadre-vous-rend-t-il-plus-libre" + SIGNATURE,
+      },
+      {
+        ordre: 4,
+        delai_jours: 14,
+        sujet: "Combien coûtent ces quatre jours, {{prenom}} ?",
+        corps: "Bonjour {{prenom}},\n\nParlons d'argent, puisque la réflexion s'arrête souvent là.\n\nUn stage de saison démarre à 500 €. Deux options existent en supplément, à 150 € chacune : arriver la veille, repartir le lendemain. Elles ne sont pas obligatoires, et beaucoup de personnes viennent sans.\n\nS'y ajoutent le trajet jusqu'en Sarthe et les jours posés. Ce que le tarif couvre exactement figure sur la billetterie, et je préfère que vous le lisiez plutôt que de vous en donner un résumé approximatif.\n\nCinq cents euros, sur un salaire, ce n'est pas rien. C'est une dépense qui se prépare, pas une décision d'impulsion. C'est aussi pourquoi l'inscription reste remboursable jusqu'à vingt-huit jours avant la date : vous pouvez réserver une place et continuer de réfléchir.\n\nCe que j'évite, c'est de comparer ce montant à un week-end ou à un téléphone. Ce genre de calcul ne convainc personne et met surtout mal à l'aise.\n\nPosez-vous plutôt une question simple : depuis combien de temps repoussez-vous cela à l'année prochaine.\n\nSi un point reste flou sur les tarifs ou les conditions, répondez-moi. Je réponds précisément, chiffres compris." + SIGNATURE,
+      },
+      {
+        ordre: 5,
+        delai_jours: 24,
+        sujet: "L'hiver, si vous voulez une date",
+        corps: "Bonjour {{prenom}},\n\nJe vous propose quelque chose de daté, parce qu'une intention sans date ne survit pas à un mois chargé.\n\nLe prochain passage ouvert au Centre HUT est celui de l'hiver. Les dates précises s'affichent sur la page des événements au fur et à mesure qu'elles sont arrêtées — c'est la seule source à jour, mes e-mails vieillissent plus vite qu'elle.\n\nPourquoi l'hiver convient à quelqu'un qui commence : c'est la descente fondatrice du cycle. On y regarde ce qui a été transmis avant nous, les loyautés familiales, les silences. Il est possible de rejoindre le parcours à cette saison.\n\nEt après, une question que presque personne n'anticipe : comment ne pas laisser se refermer ce qui s'est ouvert. Quatre jours intenses suivis de six mois sans rien donnent un bon souvenir et peu de changement. C'est à cela que servent les cercles, un rendez-vous régulier en petit groupe autour d'un axe précis, pour environ soixante-dix euros par mois. On en reparlera le moment venu.\n\nSi cet hiver n'est pas possible, dites-le sans détour. Un agenda qui ne s'y prête pas, un budget qui n'y est pas, une envie qui n'est pas là : trois raisons suffisantes, et aucune ne ferme la porte.\n\nLes dates et la réservation : https://www.lavoie2laconscience.com/evenements" + SIGNATURE,
+      },
+    ],
+  },
+  {
+    cle: "avance",
+    nom: "Chemin engagé — comprendre ne suffit plus",
+    description: "Pour celles et ceux qui travaillent sur eux depuis des annees. On ne reexplique aucune base : on nomme le plateau, la lucidite qui tourne a vide, et on mene au Cycle complet et au jeune.",
+    declencheur: "avance",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Je ne vais pas vous réexpliquer les bases",
+        corps: "Bonjour {{prenom}},\n\nVous travaillez depuis plus de trois ans. Vous avez une pratique, vous la tenez, et vous savez nommer ce qui se rejoue chez vous. Vous pourriez probablement l'expliquer mieux que plusieurs des accompagnants que vous avez rencontrés.\n\nJe ne vais donc pas vous parler de l'enfant intérieur, du mental qui s'agite ou de l'importance de la respiration. Vous avez passé cet endroit, et vous le savez.\n\nCe que je vois arriver, en revanche, chez des personnes exactement à votre étape : un plateau. La pratique continue, les prises de conscience deviennent plus fines, la vie ne se déplace plus. On devient très bon pour s'observer, et c'est précisément ce qui immobilise.\n\nCe n'est pas un échec. C'est le signe qu'un autre type de travail est requis. Plus engageant, plus incarné, nettement moins confortable.\n\nLes quatre messages suivants parlent de cela. Ils ne vous proposeront pas une méthode supplémentaire à ajouter à votre collection, vous en avez déjà assez.\n\nSi vous reconnaissez le plateau, répondez-moi en une phrase pour me dire depuis quand il dure. Je lis ces réponses avec attention." + SIGNATURE,
+      },
+      {
+        ordre: 2,
+        delai_jours: 3,
+        sujet: "Quand la lucidité devient un abri",
+        corps: "Bonjour {{prenom}},\n\nIl existe une manière très élégante de ne pas changer : comprendre.\n\nComprendre apaise. On met un mot sur ce qui fait mal, le mot tient, la douleur baisse d'un cran. On a l'impression d'avancer. Parfois on avance réellement. Et parfois on a seulement trouvé un abri confortable, construit avec du vocabulaire juste.\n\nLe signe est assez net. Vous savez d'où vient votre schéma, vous pouvez en retracer l'origine, les acteurs, la mécanique — et il produit toujours les mêmes effets dans vos relations, votre rapport à l'argent, votre corps.\n\nCe qui manque n'est pas une information de plus. C'est un passage. Un moment où le corps traverse ce que la tête a déjà cartographié, devant témoins, sans pouvoir sortir par le commentaire.\n\nC'est inconfortable, et c'est le but. Les dispositifs qui transforment durablement ont tous ce point commun : pendant un temps donné, ils rendent la fuite par l'analyse impossible.\n\nNe me croyez pas sur parole. Vérifiez. Prenez la prise de conscience dont vous êtes le plus fier, et regardez ce qu'elle a concrètement déplacé dans votre vie depuis douze mois.\n\nSi la réponse est « rien », vous savez où vous en êtes." + SIGNATURE,
+      },
+      {
+        ordre: 3,
+        delai_jours: 7,
+        sujet: "Pourquoi quatre saisons et pas un week-end",
+        corps: "Bonjour {{prenom}},\n\nVous avez probablement déjà fait des retraites. Trois jours intenses, un retour chez soi en état de grâce, et six semaines plus tard le niveau d'avant.\n\nLe Cycle des Saisons est construit contre cet effet-là. Quatre stages sur une année, un par saison, et chacun travaille un mouvement différent.\n\nL'automne accepte : on regarde son histoire et ses héritages sans chercher à les corriger dans l'instant. L'hiver descend : les loyautés familiales, les récits qu'on s'est racontés pour tenir, ce qui vient d'avant nous. Le printemps manifeste : il demande de sortir, de poser un acte identifié et daté, devant le cercle. L'été élève et célèbre, ce que les personnes très performantes savent le moins faire.\n\nOn ne retravaille donc pas la même matière à six mois d'intervalle. Chaque passage s'appuie sur le précédent et descend plus bas.\n\nIl y a aussi le rituel de l'eau, la Voie Initiatique de l'Eau. Dans l'eau chaude, le système nerveux se régule et le mental cesse de tenir la barre. Ce qui était figé se remet à bouger. C'est le genre de chose que je ne sais pas démontrer par écrit.\n\nLe parcours, saison par saison : https://www.lavoie2laconscience.com/cycle-des-saisons" + SIGNATURE,
+      },
+      {
+        ordre: 4,
+        delai_jours: 14,
+        sujet: "{{prenom}}, ce que le jeûne retire",
+        corps: "Bonjour {{prenom}},\n\nIl y a un rendez-vous dont je parle peu, parce qu'il ne convient pas à tout le monde : le jeûne initiatique.\n\nCe n'est ni une cure, ni une performance. Le principe est ancien et simple. En retirant la nourriture, on retire aussi ce que le mental n'arrivait plus à trier : les priorités devenues automatiques, les engagements qu'on honore sans y croire, les liens qui pèsent et qu'on n'ose pas nommer.\n\nLe protocole est encadré de bout en bout, descente alimentaire, jeûne, reprise. Un échange préalable vérifie que c'est adapté à votre situation, car certaines conditions de santé le contre-indiquent. Le groupe reste restreint, avec des temps de silence structurés et un travail écrit sur les intentions.\n\nPour quelqu'un qui pratique depuis des années, l'intérêt n'est pas dans la détoxification. C'est l'un des rares dispositifs où la volonté ne sert à rien. On ne jeûne pas bien par discipline. À un moment, le contrôle lâche, et ce qui parle ensuite n'est plus la voix habituelle. Vous avez peut-être déjà cherché cela ailleurs, en plus long et en moins net.\n\nLes dates de l'édition d'automne ne sont pas encore arrêtées, le lieu non plus. Si ce rendez-vous vous intéresse, répondez-moi : je vous écris dès que c'est fixé." + SIGNATURE,
+      },
+      {
+        ordre: 5,
+        delai_jours: 24,
+        sujet: "S'engager sur une année, pas un stage",
+        corps: "Bonjour {{prenom}},\n\nVoici ce que je vous propose, et c'est exigeant.\n\nNon pas un stage, mais le cycle. Une année, quatre passages, avec ce que cela implique : des dates bloquées très en avance, un budget assumé, et l'obligation de revenir même quand la saison précédente a remué quelque chose de désagréable.\n\nL'entrée se fait habituellement à l'automne. Celui de cette année est derrière nous. Le prochain passage ouvert est l'hiver, qui constitue la descente fondatrice du parcours : c'est une entrée cohérente pour quelqu'un qui a déjà beaucoup travaillé la surface de son récit familial sans en atteindre les racines.\n\nCe qui change dans un engagement d'un an : vous ne choisissez plus vos moments. C'est exactement ce qui en fait un cadre initiatique et non une consommation d'expériences. On y va aussi quand on n'en a pas envie, et c'est fréquemment là que quelque chose cède.\n\nSi vous préférez commencer par une seule saison pour voir, c'est possible et personne ne vous le reprochera. Et si la réponse est « pas cette année », elle est reçue sans discussion : un cycle commencé à contretemps ne produit pas grand-chose.\n\nLes dates et les modalités : https://www.lavoie2laconscience.com/evenements" + SIGNATURE,
+      },
+    ],
+  },
+  {
+    cle: "debutant",
+    nom: "Premier pas — par où commencer",
+    description: "Pour qui n'a jamais rien entrepris. Phrases courtes, aucun jargon, droit explicite de ne pas savoir. Mene au livret sur le Cadre puis a un cercle.",
+    declencheur: "debutant",
+    etapes: [
+      {
+        ordre: 1,
+        delai_jours: 0,
+        sujet: "Si vous ne savez pas par où commencer",
+        corps: "Bonjour {{prenom}},\n\nMerci d'être là. Une chose d'abord : vous n'avez rien à préparer et rien à comprendre pour l'instant.\n\nBeaucoup de personnes m'écrivent la même phrase, un peu gênées. Je ne sais pas par où commencer. Comme s'il s'agissait d'un aveu. C'est en réalité le point de départ le plus honnête qui existe. Celles qui savent exactement ce qu'elles cherchent ont souvent déjà décidé ce qu'elles ne voulaient pas voir.\n\nJe vais vous écrire quatre fois dans les trois semaines qui viennent. Des messages courts. Pas de vocabulaire compliqué, pas de promesse de transformation en sept jours.\n\nJe vous expliquerai trois choses, et pas une de plus : ce que veut dire travailler sur soi quand on n'a jamais essayé, ce que recouvrent les mots étranges qu'on croise dans ce milieu, et à quoi ressemble un premier pas qui ne coûte presque rien.\n\nVous pouvez tout lire, ou n'en lire aucun. Il n'y aura ni rappel insistant, ni compte à rebours.\n\nEt si une question vous vient, même une question que vous jugez bête, répondez à cet e-mail. Je lis tout." + SIGNATURE,
+      },
+      {
+        ordre: 2,
+        delai_jours: 3,
+        sujet: "Pourquoi je parle toujours de cadre",
+        corps: "Bonjour {{prenom}},\n\nUn mot reviendra souvent si vous restez par ici : le cadre.\n\nIl sonne sévère. On imagine des règles, de la discipline, quelqu'un qui surveille. C'est presque le contraire.\n\nPrenez un exemple quotidien. Sans heure de coucher, la soirée s'étire, vous arbitrez cent fois entre un épisode de plus et le sommeil, et vous vous couchez fatigué d'avoir décidé. Avec une heure posée à l'avance, la question ne se pose plus. Vous ne subissez pas la règle : vous cessez de la rediscuter.\n\nLe cadre produit cela à l'échelle d'une vie intérieure. Dix minutes par jour, toujours au même moment, sans téléphone, valent davantage qu'un week-end de résolutions. Non pas parce que dix minutes seraient magiques, mais parce qu'elles reviennent.\n\nC'est le premier conseil que je donne, et le seul qui ne demande aucun argent. Commencez par un rendez-vous minuscule que vous ne négociez plus avec vous-même.\n\nJ'ai écrit un livret court qui explique comment une contrainte choisie rend plus libre. C'est la meilleure entrée possible dans ce travail, et vous n'avez besoin de rien connaître pour le lire.\n\nLe livret : https://formation-untout.com/comment-le-cadre-vous-rend-t-il-plus-libre" + SIGNATURE,
+      },
+      {
+        ordre: 3,
+        delai_jours: 7,
+        sujet: "Trois mots qui font peur pour rien",
+        corps: "Bonjour {{prenom}},\n\nCe milieu a un vocabulaire qui décourage. Trois mots reviennent sans arrêt. Voilà ce qu'ils veulent dire, sans décoration.\n\nUn cercle, c'est un petit groupe qui se retrouve régulièrement et où chacun peut parler. Rien d'ésotérique : des personnes, un sujet, et quelqu'un qui tient le temps de parole. On y va surtout pour s'apercevoir qu'on n'est pas seul à vivre ce qu'on croyait anormal chez soi.\n\nUn rituel, c'est un geste décidé à l'avance pour marquer un passage. Un mariage est un rituel. Un enterrement aussi. Cela sert à ce que le corps enregistre qu'une chose a changé, puisque la tête, seule, oublie très vite.\n\nInitiatique signifie qu'il y a un avant et un après. Pas une formation que l'on suit, mais une étape que l'on franchit. Le mot est ancien, il n'est pas plus mystérieux que cela.\n\nSi un terme vous arrête ailleurs, sur le site ou pendant une conférence, demandez-moi ce qu'il veut dire. Je préfère une question posée tôt à un malentendu qui s'installe.\n\nRien ne vous est demandé aujourd'hui. C'était du vocabulaire, rien d'autre." + SIGNATURE,
+      },
+      {
+        ordre: 4,
+        delai_jours: 14,
+        sujet: "À quoi ressemble un cercle, {{prenom}}",
+        corps: "Bonjour {{prenom}},\n\nVous vous demandez peut-être ce qu'est un cercle en pratique. Je prends le plus concret, celui dont le détail est public : le Canal des Rêves.\n\nC'est un groupe privé sur Telegram. Vous y déposez un rêve quand vous en faites un. Vous recevez une analyse, pas une interprétation sortie d'un dictionnaire, et vous lisez celles des autres, ce qui apprend autant que les vôtres. Soixante euros par mois, et vous entrez quand vous voulez, sans calendrier à suivre.\n\nDeux remarques pour vous rassurer. Ne pas se souvenir de ses rêves n'est pas un obstacle : cette mémoire se réveille avec la pratique, et c'est l'une des premières choses que le groupe travaille. Et ce qui se dit là n'en sort pas, sinon personne ne déposerait quoi que ce soit de vrai.\n\nLes autres cercles fonctionnent sur le même principe, avec un axe différent : ce qui se répète de génération en génération, le rapport à l'argent, les relations où l'on se perd, le corps et l'intimité.\n\nTous marchent au mois, sans durée minimale, et aucun n'exige d'avoir fait quelque chose avant.\n\nLes axes ouverts : https://www.lavoie2laconscience.com/cercles" + SIGNATURE,
+      },
+      {
+        ordre: 5,
+        delai_jours: 24,
+        sujet: "Un premier pas, et rien de plus",
+        corps: "Bonjour {{prenom}},\n\nDernier message. Je vous propose une seule chose, la plus petite que je connaisse : rejoindre un cercle pendant un mois.\n\nUn mois, c'est assez pour savoir si ce rythme vous fait quelque chose, et trop court pour devenir un engagement qui pèse. Comptez autour de soixante-dix euros selon le cercle. On ne vous demandera ni expérience, ni vocabulaire, ni histoire à raconter le premier jour.\n\nChoisissez l'axe qui vous parle le plus spontanément, pas celui qui paraît le plus sérieux. Si vous hésitez entre deux, prenez celui qui vous met un peu mal à l'aise : c'est en général le bon.\n\nEt si la réponse est non, ou pas encore, c'est très bien ainsi. Des personnes lisent ces messages pendant un an avant de bouger, d'autres ne bougent jamais et vont parfaitement bien. Vous ne recevrez aucune relance sur ce sujet.\n\nCe que vous pouvez garder, même sans rien rejoindre : le rendez-vous quotidien dont je vous parlais, dix minutes qui reviennent toujours au même moment. C'est, honnêtement, ce qui change le plus de choses pour le moins d'argent.\n\nLes cercles ouverts : https://www.lavoie2laconscience.com/cercles" + SIGNATURE,
+      },
+    ],
+  },
   {
     cle: "apres_stage",
     nom: "Après le stage",
