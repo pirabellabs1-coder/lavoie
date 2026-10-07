@@ -120,6 +120,15 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
         </p>
       )}
 
+      {!process.env.CRON_SECRET && (
+        <div className="adm-alerte">
+          <strong>La tâche planifiée n&apos;est pas signée.</strong> Sans la variable{" "}
+          <code>CRON_SECRET</code> dans les réglages Vercel, l&apos;adresse du worker est
+          ouverte à tous — les relances de règlement sont donc suspendues par précaution.
+          Posez-la, puis redéployez.
+        </div>
+      )}
+
       {/* Ce qui attend une décision. En tête, parce que c'est la raison
           d'ouvrir cet écran le matin. */}
       <div className="adm-carte" style={{ marginBottom: 14 }}>

@@ -1,3 +1,4 @@
+import type postgres from "postgres";
 import { getDb } from "./db";
 import { SITE } from "@/lib/site";
 
@@ -142,6 +143,29 @@ export async function ouvrirPaiement(
   if (!stripe) return { ok: false, raison: "Stripe n'est pas branché." };
 
   try {
+    // Une place n'a qu'un lien vivant à la fois.
+    //
+    // Sans cela, deux liens ouverts pour la même place — un acompte envoyé
+    // lundi, un total envoyé jeudi — sont tous les deux payables : la personne
+    // qui clique les deux règle cent trente pour cent, et il faut rembourser à
+    // la main. On périme donc les précédents avant d'en ouvrir un.
+    const anciens = await sql<{ session_id: string | null }[]>`
+      UPDATE paiements SET statut = 'expiree'
+      WHERE participation_id = ${participationId} AND statut = 'attente'
+      RETURNING session_id
+    `;
+    for (const a of anciens) {
+      if (!a.session_id) continue;
+      // Fermer la session chez Stripe aussi : une session périmée seulement
+      // chez nous resterait payable depuis le lien déjà reçu par e-mail.
+      try {
+        await stripe.checkout.sessions.expire(a.session_id);
+      } catch {
+        // Déjà expirée ou déjà réglée : Stripe refuse, et c'est sans
+        // conséquence — notre ligne, elle, ne vaut plus rien.
+      }
+    }
+
     const [ligne] = await sql<{ id: string }[]>`
       INSERT INTO paiements (participation_id, contact_id, montant_cents, genre, statut)
       VALUES (${participationId}, ${place.contact_id}, ${montant}, ${genreReel}, 'attente')
@@ -209,40 +233,67 @@ export async function ouvrirPaiement(
  * encore en attente. Stripe peut livrer deux fois le même événement, la
  * deuxième fois ne change rien.
  */
-export async function encaisser(sessionId: string): Promise<boolean> {
-  const sql = await getDb();
+export async function encaisser(
+  sessionId: string,
+  tx?: postgres.TransactionSql,
+): Promise<boolean> {
+  const sql = tx ?? (await getDb());
   if (!sql) return false;
-  try {
-    const [l] = await sql<{ id: string }[]>`
-      UPDATE paiements SET statut = 'payee', paye_le = NOW()
-      WHERE session_id = ${sessionId} AND statut = 'attente'
-      RETURNING id
-    `;
-    return Boolean(l);
-  } catch (e) {
-    console.error("[crm] encaisser:", e);
-    return false;
-  }
+  // Pas de try/catch : une écriture qui échoue doit remonter jusqu'au webhook,
+  // qui répondra 500 et fera rejouer Stripe. Avalée ici, l'erreur rendait un
+  // 200 — l'argent était débité et la place restait « en attente », pour
+  // toujours, sans que personne en soit averti.
+  const [l] = await sql<{ id: string }[]>`
+    UPDATE paiements SET statut = 'payee', paye_le = NOW()
+    WHERE session_id = ${sessionId} AND statut = 'attente'
+    RETURNING id
+  `;
+  return Boolean(l);
 }
 
-/** Un règlement reçu autrement : virement, chèque, espèces le jour même. */
+/**
+ * Un règlement reçu autrement : virement, chèque, espèces le jour même.
+ *
+ * Le montant est borné par le reste dû — non par méfiance, mais parce qu'une
+ * saisie à 50000 au lieu de 500 passait sans broncher, et qu'au-delà de vingt
+ * et un millions l'écriture échouait en silence dans la colonne `INT`, pendant
+ * que le journal affirmait le contraire.
+ */
 export async function encaisserALaMain(
   participationId: string,
   montantCents: number,
-): Promise<boolean> {
+): Promise<{ ok: boolean; montant: number; raison?: string }> {
   const sql = await getDb();
-  if (!sql || montantCents <= 0) return false;
+  if (!sql) return { ok: false, montant: 0, raison: "Base indisponible." };
+  if (!Number.isFinite(montantCents) || montantCents <= 0) {
+    return { ok: false, montant: 0, raison: "Indiquez un montant en euros." };
+  }
+
+  const place = await laPlace(participationId);
+  if (!place) return { ok: false, montant: 0, raison: "Cette place est introuvable." };
+
+  const total = (place.prix_cents ?? 0) * Math.max(1, place.personnes);
+  const reste = Math.max(0, total - place.deja_paye);
+  if (total > 0 && reste <= 0) {
+    return { ok: false, montant: 0, raison: "Cette place est déjà réglée." };
+  }
+
+  // Sans tarif au stage, on fait confiance à la saisie : il n'y a rien à quoi
+  // la comparer. Sinon, on ne peut pas encaisser plus que ce qui est dû.
+  const montant = total > 0 ? Math.min(Math.round(montantCents), reste) : Math.round(montantCents);
+  // Partiel ou solde : l'état affiché serait faux si tout était « intégral ».
+  const genre: GenrePaiement =
+    total > 0 && montant < reste ? "acompte" : place.deja_paye > 0 ? "solde" : "integral";
+
   try {
     await sql`
       INSERT INTO paiements (participation_id, contact_id, montant_cents, genre, statut, paye_le)
-      SELECT ${participationId}, p.contact_id, ${Math.round(montantCents)}, 'integral',
-             'manuelle', NOW()
-      FROM participations p WHERE p.id = ${participationId}
+      VALUES (${participationId}, ${place.contact_id}, ${montant}, ${genre}, 'manuelle', NOW())
     `;
-    return true;
+    return { ok: true, montant };
   } catch (e) {
     console.error("[crm] encaisserALaMain:", e);
-    return false;
+    return { ok: false, montant: 0, raison: "Ce règlement n'a pas pu être enregistré." };
   }
 }
 
@@ -375,8 +426,8 @@ export async function relancerLesPaiements(): Promise<number> {
   const sql = await getDb();
   if (!sql || !stripeActif()) return 0;
   try {
-    const dues = await sql<{ participation_id: string }[]>`
-      SELECT DISTINCT x.participation_id
+    const dues = await sql<{ participation_id: string; genre: GenrePaiement }[]>`
+      SELECT DISTINCT ON (x.participation_id) x.participation_id, x.genre
       FROM paiements x
       JOIN participations p ON p.id = x.participation_id
       JOIN contacts c       ON c.id = p.contact_id
@@ -392,17 +443,23 @@ export async function relancerLesPaiements(): Promise<number> {
           WHERE y.participation_id = x.participation_id
             AND y.statut IN ('payee', 'manuelle')
         )
+      ORDER BY x.participation_id, x.cree_le DESC
       LIMIT 50
     `;
 
     let partis = 0;
     for (const d of dues) {
+      // Le même montant que ce qui avait été demandé. Relancer « en solde »
+      // réclamait le prix plein à quelqu'un qui avait reçu un lien d'acompte.
+      const envoi = await envoyerLeLien(String(d.participation_id), d.genre);
+      if (envoi.ok) partis += 1;
+      // Après l'envoi, et sur toutes les lignes de la place : un nouveau lien
+      // vient d'être ouvert, et sans cette marque il serait relancé à son tour
+      // trois jours plus tard, indéfiniment.
       await sql`
         UPDATE paiements SET relance_le = NOW()
-        WHERE participation_id = ${d.participation_id} AND statut = 'attente'
+        WHERE participation_id = ${d.participation_id} AND relance_le IS NULL
       `;
-      const envoi = await envoyerLeLien(String(d.participation_id), "solde");
-      if (envoi.ok) partis += 1;
     }
     return partis;
   } catch (e) {

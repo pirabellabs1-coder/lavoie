@@ -50,24 +50,31 @@ export async function POST(req: Request) {
   }
 
   try {
-    const [neuf] = await sql<{ id: string }[]>`
-      INSERT INTO stripe_evenements (id, type) VALUES (${evenement.id}, ${evenement.type})
-      ON CONFLICT (id) DO NOTHING
-      RETURNING id
-    `;
-    // Déjà vu : on acquitte sans rejouer.
-    if (!neuf) return Response.json({ recu: true, deja: true });
+    // La marque et l'encaissement tiennent dans la même transaction. Séparés,
+    // un échec de l'encaissement laissait derrière lui un événement marqué
+    // comme vu : Stripe ne le rejouait plus, et le règlement était perdu sans
+    // bruit. Ici, si l'écriture échoue, la marque disparaît avec elle et le
+    // rejeu reprendra tout.
+    await sql.begin(async (tx) => {
+      const [neuf] = await tx<{ id: string }[]>`
+        INSERT INTO stripe_evenements (id, type) VALUES (${evenement.id}, ${evenement.type})
+        ON CONFLICT (id) DO NOTHING
+        RETURNING id
+      `;
+      // Déjà vu, et traité pour de bon : on acquitte sans rejouer.
+      if (!neuf) return;
 
-    if (evenement.type === "checkout.session.completed") {
-      const session = evenement.data.object;
-      // `paid` couvre le cas des moyens de paiement différés, où la session se
-      // termine avant que l'argent soit là.
-      if (session.payment_status === "paid") {
-        await encaisser(session.id);
+      if (evenement.type === "checkout.session.completed") {
+        const session = evenement.data.object;
+        // `paid` couvre le cas des moyens de paiement différés, où la session
+        // se termine avant que l'argent soit là.
+        if (session.payment_status === "paid") {
+          await encaisser(session.id, tx);
+        }
+      } else if (evenement.type === "checkout.session.async_payment_succeeded") {
+        await encaisser(evenement.data.object.id, tx);
       }
-    } else if (evenement.type === "checkout.session.async_payment_succeeded") {
-      await encaisser(evenement.data.object.id);
-    }
+    });
 
     return Response.json({ recu: true });
   } catch (e) {

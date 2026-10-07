@@ -1,5 +1,6 @@
 import { getDb } from "./db";
 import type { Origine } from "@/lib/attribution";
+import { ligneCsv } from "@/lib/csv";
 
 /**
  * Le parcours d'un prospect, du premier contact jusqu'à la conversion.
@@ -430,17 +431,13 @@ export async function exporterCsv(): Promise<string> {
     "email", "prenom", "nom", "telephone", "statut", "source",
     "interet", "notes", "desabonne", "cree_le",
   ];
-  const echapper = (v: unknown) => {
-    const s = v === null || v === undefined ? "" : String(v);
-    return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-  };
   const lignes = contacts.map((c) =>
-    [
+    ligneCsv([
       c.email, c.prenom, c.nom, c.telephone, STATUT_LABEL[c.statut] ?? c.statut,
       c.source, c.interet, c.notes,
       c.desabonne_le ? "oui" : "non",
       c.cree_le instanceof Date ? c.cree_le.toISOString() : c.cree_le,
-    ].map(echapper).join(";"),
+    ]),
   );
   return [entetes.join(";"), ...lignes].join("\n");
 }
@@ -496,14 +493,10 @@ export async function exporterContactsCsv(f: Filtres = {}): Promise<string> {
     "arrive_le",
     "desabonne_le",
   ];
-  const echapper = (v: unknown) => {
-    const s = v === null || v === undefined ? "" : String(v);
-    return /[",\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-  };
   const jour = (d: Date | null) => (d ? new Date(d).toISOString().slice(0, 10) : "");
 
   const corps = lignes.map((c) =>
-    [
+    ligneCsv([
       c.prenom,
       c.nom,
       c.email,
@@ -515,9 +508,7 @@ export async function exporterContactsCsv(f: Filtres = {}): Promise<string> {
       c.utm_source,
       jour(c.cree_le),
       jour(c.desabonne_le),
-    ]
-      .map(echapper)
-      .join(";"),
+    ]),
   );
   return [entetes.join(";"), ...corps].join("\n");
 }

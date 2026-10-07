@@ -1,6 +1,7 @@
 import { getDb } from "./db";
 import type { Identite } from "./session";
 import { peut } from "./utilisateurs";
+import { ligneCsv } from "@/lib/csv";
 
 /**
  * Le carnet de bord de l'équipe.
@@ -303,21 +304,15 @@ export async function actionsDeLaSemaine(): Promise<{ nom: string; n: number }[]
 export async function exporterCarnetCsv(f: Filtres = {}): Promise<string> {
   const lignes = await listerActions({ ...f, limite: 1000 });
   const entetes = ["date", "qui", "categorie", "action", "detail", "minutes"];
-  const echapper = (v: unknown) => {
-    const s = v === null || v === undefined ? "" : String(v);
-    return /[",\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
-  };
   const corps = lignes.map((a) =>
-    [
+    ligneCsv([
       a.fait_le ? new Date(a.fait_le).toISOString().slice(0, 10) : "",
       a.auteur_nom,
       categorieAction(a.categorie).label,
       a.titre,
       a.detail ?? "",
       a.duree_min ?? "",
-    ]
-      .map(echapper)
-      .join(";"),
+    ]),
   );
   return [entetes.join(";"), ...corps].join("\n");
 }

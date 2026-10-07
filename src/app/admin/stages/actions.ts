@@ -270,7 +270,9 @@ export async function actionEnvoyerLien(donnees: FormData) {
   if (!/^[0-9]+$/.test(id)) return;
 
   const envoi = await envoyerLeLien(id, genre === "integral" ? "integral" : "acompte");
-  await tracer(qui, "lien_paiement", id, genre);
+  // Tracé seulement si le lien est réellement parti : un journal qui affirme
+  // un envoi qui n'a pas eu lieu est pire qu'un journal muet.
+  if (envoi.ok) await tracer(qui, "lien_paiement", id, genre);
   revalidatePath("/admin/stages");
   if (!envoi.ok) {
     redirect(
@@ -295,8 +297,13 @@ export async function actionEncaisserALaMain(donnees: FormData) {
     );
   }
 
-  await encaisserALaMain(id, Math.round(euros * 100));
-  await tracer(qui, "paiement_manuel", id, `${euros} €`);
+  const recu = await encaisserALaMain(id, Math.round(euros * 100));
   revalidatePath("/admin/stages");
+  if (!recu.ok) {
+    redirect(
+      `/admin/stages?erreur=${encodeURIComponent(recu.raison ?? "Ce règlement n'a pas pu être enregistré.")}#stage-${stageId}`,
+    );
+  }
+  await tracer(qui, "paiement_manuel", id, `${(recu.montant / 100).toFixed(2)} €`);
   redirect(`/admin/stages#stage-${stageId}`);
 }

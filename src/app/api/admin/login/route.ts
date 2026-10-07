@@ -43,18 +43,33 @@ export async function POST(req: Request) {
   const motDePasse = String(data.motDePasse ?? "");
   const email = String(data.email ?? "").trim();
 
-  // Un compte nominatif d'abord ; à défaut, la clé de secours ADMIN_PASSWORD,
-  // qui reste le seul moyen d'entrer si la base est momentanément injoignable.
+  // Deux portes, et une seule à la fois.
+  //
+  // Une adresse renseignée veut dire « j'entre avec mon compte » : seul ce
+  // compte peut alors ouvrir la session. La clé de secours ne prend pas le
+  // relais — elle ouvrirait une session de propriétaire à qui demandait la
+  // sienne. Ce mot de passe a circulé avant l'arrivée des comptes nominatifs,
+  // et quelqu'un du secrétariat qui le saisit par habitude, avec sa propre
+  // adresse, héritait en silence de tous les droits.
+  //
+  // Sans adresse, la clé de secours reste le seul moyen d'entrer quand la
+  // base est momentanément injoignable. C'est sa raison d'être.
   let utilisateurId: string | null = null;
   let nomActeur = "Accès principal";
+  let entre = false;
+
   if (email) {
     const compte = await authentifier(email, motDePasse);
     if (compte) {
       utilisateurId = compte.id;
       nomActeur = compte.nom;
+      entre = true;
     }
+  } else {
+    entre = await motDePasseValide(motDePasse);
   }
-  if (!utilisateurId && !(await motDePasseValide(motDePasse))) {
+
+  if (!entre) {
     const n = (etat && Date.now() < etat.jusqua ? etat.n : 0) + 1;
     tentatives.set(ip, { n, jusqua: Date.now() + BLOCAGE_MS });
     return Response.json(

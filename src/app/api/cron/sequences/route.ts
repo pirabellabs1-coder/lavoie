@@ -36,7 +36,12 @@ export async function GET(req: Request) {
   const stages = await accompagnerLesStages();
   const reveil = await reveillerLesDormants();
   const avis = await relancerLesAvis();
-  const paiements = await relancerLesPaiements();
+  // Les relances de règlement ouvrent des sessions Stripe et envoient des
+  // liens de paiement. Tant que CRON_SECRET n'est pas posée, cette route est
+  // ouverte à tous : on ne laisse pas un inconnu déclencher cela à l'heure de
+  // son choix. Le reste du worker, lui, ne fait qu'avancer des envois déjà
+  // planifiés et peut tourner sans secret.
+  const paiements = secret ? await relancerLesPaiements() : 0;
   // Le lundi seulement — la fonction se charge elle-même de vérifier le jour.
   const rapport = await envoyerRapportHebdomadaire();
   // En dernier : la sauvegarde reflète ainsi tout ce que ce passage a produit.

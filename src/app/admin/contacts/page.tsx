@@ -46,9 +46,13 @@ export default async function ContactsPage({
       actions={
         <>
           <a href="#ajouter" className="adm-btn">Ajouter une personne</a>
-          <a href={`/api/admin/export${filtresEnUrl}`} className="adm-btn fantome">
-            Exporter {filtresEnUrl ? "ce filtre" : "en CSV"}
-          </a>
+          {/* L'export est réservé au propriétaire : un bouton qui rend un
+              « non autorisé » promet ce qu'il ne peut pas tenir. */}
+          {peut(qui.role, "export") && (
+            <a href={`/api/admin/export${filtresEnUrl}`} className="adm-btn fantome">
+              Exporter {filtresEnUrl ? "ce filtre" : "en CSV"}
+            </a>
+          )}
         </>
       }
     >
