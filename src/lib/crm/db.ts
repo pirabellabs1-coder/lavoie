@@ -333,7 +333,10 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
   await sql`
     ALTER TABLE participations
       ADD COLUMN IF NOT EXISTS date_id   BIGINT REFERENCES stage_dates(id) ON DELETE SET NULL,
-      ADD COLUMN IF NOT EXISTS personnes INT NOT NULL DEFAULT 1
+      ADD COLUMN IF NOT EXISTS personnes INT NOT NULL DEFAULT 1,
+      -- Date à laquelle on a prévenu cette personne qu'une place se libérait.
+      -- Une seule fois : être relancé deux fois pour la même place agace.
+      ADD COLUMN IF NOT EXISTS attente_prevenue_le TIMESTAMPTZ
   `;
 
   // Les règlements d'une place de stage.

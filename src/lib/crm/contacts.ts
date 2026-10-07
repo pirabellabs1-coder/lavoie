@@ -443,3 +443,31 @@ export async function poserProfil(contactId: string, profil: string): Promise<vo
     console.error("[crm] poserProfil:", e);
   }
 }
+
+export type PartProfil = { profil: string; total: number; clients: number };
+
+/**
+ * Combien de personnes par profil, et combien sont devenues clientes.
+ *
+ * C'est la seule statistique qui dise où mettre l'effort : si les dirigeants
+ * convertissent à trente pour cent et les débutants à deux, la réponse n'est
+ * pas d'écrire plus d'e-mails, c'est d'aller chercher plus de dirigeants.
+ */
+export async function repartitionParProfil(): Promise<PartProfil[]> {
+  const sql = await getDb();
+  if (!sql) return [];
+  try {
+    return await sql<PartProfil[]>`
+      SELECT COALESCE(profil, 'inconnu') AS profil,
+             COUNT(*)::int AS total,
+             COUNT(*) FILTER (WHERE statut = 'client')::int AS clients
+      FROM contacts
+      WHERE desabonne_le IS NULL
+      GROUP BY COALESCE(profil, 'inconnu')
+      ORDER BY COUNT(*) DESC
+    `;
+  } catch (e) {
+    console.error("[crm] repartitionParProfil:", e);
+    return [];
+  }
+}

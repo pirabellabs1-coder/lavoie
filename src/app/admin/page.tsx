@@ -14,6 +14,9 @@ import { peut } from "@/lib/crm/utilisateurs";
 import { derniereSauvegarde } from "@/lib/crm/sauvegarde";
 import { dernierPassage, enSilence } from "@/lib/crm/passages";
 import { enClair } from "@/lib/heure";
+import { cequiAttend } from "@/lib/crm/afaire";
+import { repartitionParProfil } from "@/lib/crm/contacts";
+import { profil } from "@/lib/crm/profils";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +41,9 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
   const sauvegarde = peut(qui.role, "sauvegarde") ? await derniereSauvegarde() : null;
   const passage = await dernierPassage();
   const silencieux = isDbConfigured() && enSilence(passage);
+  const taches = isDbConfigured() ? await cequiAttend() : [];
+  const parProfil = isDbConfigured() ? await repartitionParProfil() : [];
+  const plusGrand = Math.max(1, ...parProfil.map((r) => r.total));
 
   if (!isDbConfigured() || !stats) {
     return (
@@ -114,6 +120,30 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
         </p>
       )}
 
+      {/* Ce qui attend une décision. En tête, parce que c'est la raison
+          d'ouvrir cet écran le matin. */}
+      <div className="adm-carte" style={{ marginBottom: 14 }}>
+        <p className="adm-titre">À faire aujourd&apos;hui</p>
+        {taches.length === 0 ? (
+          <p style={{ margin: 0, fontSize: 13.5, color: "var(--adm-mute)" }}>
+            Rien n&apos;attend de décision. Tout ce qui pouvait partir seul est parti.
+          </p>
+        ) : (
+          <div className="afaire">
+            {taches.map((t) => (
+              <Link key={t.cle} href={t.lien} className="afaire-ligne" data-ton={t.ton}>
+                <span className="n">{t.nombre}</span>
+                <span>
+                  <span className="quoi">{t.nombre > 1 ? t.quoiPluriel : t.quoi}</span>
+                  {t.detail && <span className="det">{t.detail}</span>}
+                </span>
+                <span className="fleche" aria-hidden="true">→</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="adm-grille adm-g4" style={{ marginBottom: 14 }}>
         <Tuile
           label="Contacts"
@@ -161,6 +191,38 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
           </p>
         </div>
       </div>
+
+      {/* Qui sont les gens de la liste, et lesquels deviennent clients. */}
+      {parProfil.length > 0 && (
+        <div className="adm-carte" style={{ marginBottom: 14 }}>
+          <p className="adm-titre">
+            À qui on parle <span className="appoint">— et qui devient client</span>
+          </p>
+          <div className="adm-barres">
+            {parProfil.map((r) => {
+              const p = profil(r.profil);
+              const part = plusGrand ? (r.total / plusGrand) * 100 : 0;
+              const taux = r.total ? Math.round((r.clients / r.total) * 100) : 0;
+              return (
+                <div className="adm-barre" key={r.profil}>
+                  <span className="nom">
+                    <Link href={`/admin/contacts?profil=${r.profil}`} style={{ color: "inherit" }}>
+                      {p.nom}
+                    </Link>
+                  </span>
+                  <span className="val">
+                    {r.total}
+                    <span style={{ color: "var(--adm-mute)", fontWeight: 500, fontSize: 12 }}>
+                      {" "}· {taux} % clients
+                    </span>
+                  </span>
+                  <span className="piste"><i style={{ width: `${Math.max(2, part)}%` }} /></span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="adm-grille adm-g3" style={{ marginBottom: 14 }}>
         <div className="adm-carte">

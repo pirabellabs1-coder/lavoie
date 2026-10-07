@@ -1082,3 +1082,54 @@ input[type="file"].adm-champ { padding: 8px 10px; font-size: 12.5px; cursor: poi
 }
 .adm-connexion-pied a { color: var(--adm-accent); font-weight: 600; text-decoration: none; }
 .adm-connexion-pied a:hover { text-decoration: underline; }
+
+/* ═══ Ce qui attend une main ══════════════════════════════════════════════
+
+   La première chose qu'on lit le matin. Chaque ligne est un lien : on clique
+   le nombre, on arrive là où ça se traite. Le ton dit l'urgence sans crier —
+   un liseré, pas un fond rouge. */
+
+.afaire { display: grid; gap: 8px; }
+.afaire-ligne {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 13px 16px;
+  border-radius: var(--adm-r-sm);
+  background: var(--adm-surface-2);
+  border: 1px solid var(--adm-line);
+  box-shadow: inset 3px 0 0 var(--adm-line-fort);
+  text-decoration: none;
+  color: inherit;
+  transition: background var(--adm-vite) var(--adm-ease),
+              box-shadow var(--adm-vite) var(--adm-ease),
+              transform var(--adm-vite) var(--adm-ease);
+}
+.afaire-ligne:hover { background: var(--adm-surface-3); transform: translateX(2px); }
+.afaire-ligne[data-ton="urgent"] { box-shadow: inset 3px 0 0 var(--adm-bad); }
+.afaire-ligne[data-ton="tenir"] { box-shadow: inset 3px 0 0 var(--adm-gold); }
+
+.afaire-ligne .n {
+  font-family: var(--adm-serif);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  min-width: 36px;
+  text-align: right;
+  font-variant-numeric: lining-nums;
+}
+.afaire-ligne[data-ton="urgent"] .n { color: var(--adm-bad); }
+.afaire-ligne .quoi { display: block; font-weight: 600; font-size: 13.5px; }
+.afaire-ligne .det { display: block; font-size: 12px; color: var(--adm-mute); margin-top: 2px; }
+.afaire-ligne .fleche {
+  color: var(--adm-mute);
+  font-size: 15px;
+  transition: transform var(--adm-pose) var(--adm-ease);
+}
+.afaire-ligne:hover .fleche { transform: translateX(3px); color: var(--adm-accent); }
+
+@media (max-width: 560px) {
+  .afaire-ligne { grid-template-columns: auto 1fr; }
+  .afaire-ligne .fleche { display: none; }
+}

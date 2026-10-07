@@ -341,6 +341,14 @@ export async function changerStatutParticipation(
         WHERE id = ${l.contact_id} AND statut <> 'client'
       `;
     }
+    // Une annulation libère une place : la liste d'attente doit l'apprendre
+    // tout de suite, pas le jour où quelqu'un y repense.
+    if (statut === "annulee") {
+      const [ou] = await sql<{ stage_id: string }[]>`
+        SELECT stage_id FROM participations WHERE id = ${id}
+      `;
+      if (ou) await reveillerLaListe(String(ou.stage_id));
+    }
     return true;
   } catch (e) {
     console.error("[crm] changerStatutParticipation:", e);
@@ -365,13 +373,15 @@ export async function supprimerParticipation(
   const sql = await getDb();
   if (!sql) return null;
   try {
-    const lignes = await sql<{ nom: string; titre: string }[]>`
+    const lignes = await sql<{ nom: string; titre: string; stage_id: string }[]>`
       DELETE FROM participations p
       USING contacts c, stages s
       WHERE p.id = ${id} AND c.id = p.contact_id AND s.id = p.stage_id
       RETURNING COALESCE(NULLIF(TRIM(CONCAT(c.prenom, ' ', c.nom)), ''), c.email) AS nom,
-                s.titre
+                s.titre, s.id AS stage_id
     `;
+    // Retirer une place la libère, exactement comme une annulation.
+    if (lignes[0]) await reveillerLaListe(String(lignes[0].stage_id));
     return lignes[0] ?? null;
   } catch (e) {
     console.error("[crm] supprimerParticipation:", e);
@@ -835,5 +845,89 @@ export async function stagesALAffiche(dejaAffiches: string[] = []): Promise<Stag
   } catch (e) {
     console.error("[crm] stagesALAffiche:", e);
     return [];
+  }
+}
+
+/**
+ * Réveille la liste d'attente d'un stage.
+ *
+ * Une place qui se libère ne se remplit pas toute seule : jusqu'ici, la
+ * personne en attente l'apprenait si quelqu'un y pensait. Personne n'y pensait.
+ *
+ * On prévient la plus ancienne demande en attente, une seule fois, et on ne
+ * confirme rien à sa place : c'est elle qui décide si c'est encore le bon
+ * moment. Le silence vaut refus, et la suivante sera prévenue au prochain
+ * désistement.
+ */
+export async function reveillerLaListe(stageId: string): Promise<number> {
+  const sql = await getDb();
+  if (!sql) return 0;
+  if (!process.env.RESEND_API_KEY) return 0;
+
+  try {
+    // Combien de places réellement libres, toutes dates confondues ? On reste
+    // volontairement prudent : une place libre, une personne prévenue.
+    const [jauge] = await sql<{ libres: number }[]>`
+      SELECT (s.places - COALESCE(SUM(p.personnes)
+                FILTER (WHERE p.statut IN ('confirmee', 'demande')), 0))::int AS libres
+      FROM stages s
+      LEFT JOIN participations p ON p.stage_id = s.id
+      WHERE s.id = ${stageId} AND s.actif = TRUE
+      GROUP BY s.places
+    `;
+    if (!jauge || jauge.libres <= 0) return 0;
+
+    const dues = await sql<{
+      id: string;
+      email: string;
+      prenom: string | null;
+      titre: string;
+      slug: string;
+    }[]>`
+      SELECT p.id, c.email, c.prenom, s.titre, s.slug
+      FROM participations p
+      JOIN contacts c ON c.id = p.contact_id
+      JOIN stages s   ON s.id = p.stage_id
+      WHERE p.stage_id = ${stageId}
+        AND p.statut = 'attente'
+        AND p.attente_prevenue_le IS NULL
+        AND c.desabonne_le IS NULL
+      ORDER BY p.cree_le
+      LIMIT ${Math.min(jauge.libres, 5)}
+    `;
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    let prevenus = 0;
+    for (const d of dues) {
+      // Marqué avant l'envoi : mieux vaut un e-mail manquant qu'un e-mail en
+      // double si l'envoi échoue au milieu d'une boucle.
+      await sql`UPDATE participations SET attente_prevenue_le = NOW() WHERE id = ${d.id}`;
+      const { html, text } = habiller({
+        email: d.email,
+        apercu: `Une place s'est libérée pour « ${d.titre} ».`,
+        texte:
+          `Bonjour ${d.prenom ?? ""},\n\n` +
+          `Une place vient de se libérer pour « ${d.titre} », et vous êtes la première personne sur la liste d'attente.\n\n` +
+          `Elle vous est réservée quarante-huit heures. Répondez simplement à ce message pour la prendre — le secrétariat s'occupe du reste.\n\n` +
+          `Si le moment n'est plus le bon, dites-le aussi : nous préviendrons la personne suivante, et vous resterez prévenue des prochaines dates.\n\n` +
+          `Le stage : ${SITE.url}/evenements/${d.slug}`,
+      });
+      try {
+        await resend.emails.send({
+          from: EXPEDITEUR,
+          to: d.email,
+          subject: `Une place s'est libérée — ${d.titre}`,
+          html,
+          text,
+        });
+        prevenus += 1;
+      } catch (e) {
+        console.error("[crm] réveil de liste d'attente non envoyé:", e);
+      }
+    }
+    return prevenus;
+  } catch (e) {
+    console.error("[crm] reveillerLaListe:", e);
+    return 0;
   }
 }
