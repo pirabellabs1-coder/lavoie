@@ -16,7 +16,7 @@ import { semerStages, stagePublic } from "@/lib/crm/stages";
 import { datesOuvertes, SANS_DATE } from "@/lib/crm/dates-stages";
 import { periodeEnClair } from "@/lib/heure";
 import StageLibre from "./StageLibre";
-import AvisDuStage from "@/components/AvisDuStage";
+import AvisPublies from "@/components/AvisPublies";
 
 const MARINE = "linear-gradient(150deg, #142579 0%, #0f1d6e 50%, #0a1450 100%)";
 
@@ -327,7 +327,7 @@ export default async function EvenementPage({
       </section>
 
       {/* CE QU'ILS EN DISENT — juste avant de décider. */}
-      <AvisDuStage />
+      <AvisPublies />
 
       {/* RÉSERVATION */}
       <section className="section-tight" style={{ background: "var(--white)" }}>

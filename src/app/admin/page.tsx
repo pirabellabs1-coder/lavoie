@@ -205,7 +205,8 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
       {parProfil.length > 0 && (
         <div className="adm-carte" style={{ marginBottom: 14 }}>
           <p className="adm-titre">
-            À qui on parle <span className="appoint">— et qui devient client</span>
+            À qui on parle{" "}
+            <span className="appoint">— et qui devient client, hors désabonnés</span>
           </p>
           <div className="adm-barres">
             {parProfil.map((r) => {

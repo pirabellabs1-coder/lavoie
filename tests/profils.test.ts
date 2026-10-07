@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PROFILS, profil, profilDesReponses, profilsCiblables } from "@/lib/crm/profils";
+import { PROFILS, profil, profilDesReponses } from "@/lib/crm/profils";
 import { SEQUENCES_PAR_DEFAUT } from "@/lib/crm/sequences";
 import { router, sequencePour, type Reponses } from "@/lib/questionnaire";
 
@@ -92,9 +92,11 @@ describe("profil", () => {
     expect(profil("n'existe pas").cle).toBe("inconnu");
   });
 
-  it("ne propose pas « inconnu » comme cible de campagne", () => {
-    expect(profilsCiblables().some((p) => p.cle === "inconnu")).toBe(false);
-    expect(profilsCiblables()).toHaveLength(PROFILS.length - 1);
+  it("porte un ton que la feuille de style connaît", () => {
+    // Une pastille sans style ne se voit pas à la relecture : le compilateur
+    // tient l'union, ce test tient la liste côté CSS.
+    const connus = ["nouveau", "lead", "contacte", "appel", "proposition", "client", "perdu"];
+    for (const p of PROFILS) expect(connus, `profil ${p.cle}`).toContain(p.ton);
   });
 });
 

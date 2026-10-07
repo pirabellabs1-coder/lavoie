@@ -57,6 +57,9 @@ export async function cequiAttend(): Promise<Tache[]> {
         -- Les règlements ouverts et jamais honorés.
         (SELECT COUNT(DISTINCT x.participation_id) FROM paiements x
           WHERE x.statut = 'attente'
+            -- Une ligne ouverte avant que Stripe réponde n'a pas de session :
+            -- personne n'a jamais reçu de lien, il n'y a rien à attendre.
+            AND x.session_id IS NOT NULL
             AND NOT EXISTS (
               SELECT 1 FROM paiements y
               WHERE y.participation_id = x.participation_id

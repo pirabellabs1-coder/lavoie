@@ -31,11 +31,18 @@ const TABLES = [
   "sequences",
   "sequence_etapes",
   "stages",
+  // Les jours d'ouverture avant les places : une participation désigne la
+  // date à laquelle elle a été prise.
+  "stage_dates",
   "campagnes",
   "evenements",
   "questionnaires",
   "inscriptions",
   "participations",
+  // Les règlements suivent les places qu'ils paient. Vidés par cascade avec
+  // elles, ils doivent être réécrits avec elles — sinon une restauration
+  // efface définitivement la trace de qui a payé quoi.
+  "paiements",
   "offres",
   "temoignages",
   "envois",
@@ -126,9 +133,21 @@ export async function restaurerSauvegarde(contenu: string): Promise<ResultatRest
         for (const p of presentes) photos.add(String(p.id));
       }
 
+      // Même précaution pour les jours d'ouverture, mais pour une autre
+      // raison : une sauvegarde faite avant que `stage_dates` entre dans la
+      // copie n'en contient aucun, et les participations qu'elle ramène
+      // désignent pourtant des dates. On relit donc celles qui existent au
+      // moment d'écrire les places — ni avant, puisqu'on vient de les
+      // réinsérer, ni après, puisqu'il serait trop tard.
+      let dates: Set<string> | null = null;
+
       for (const table of TABLES) {
         const dispo = colonnes.get(table);
         const lignes = tables[table];
+        if (table === "participations" && colonnes.has("stage_dates")) {
+          const presentes = await tx<{ id: string }[]>`SELECT id FROM stage_dates`;
+          dates = new Set(presentes.map((d) => String(d.id)));
+        }
         if (!dispo || !Array.isArray(lignes) || !lignes.length) continue;
 
         // Les colonnes d'une sauvegarde ancienne peuvent ne plus exister ;
@@ -144,6 +163,11 @@ export async function restaurerSauvegarde(contenu: string): Promise<ResultatRest
             for (const c of cles) propre[c] = valeur(l[c]);
             if (propre.image_id && !photos.has(String(propre.image_id))) {
               propre.image_id = null;
+            }
+            if (dates && propre.date_id && !dates.has(String(propre.date_id))) {
+              // La place revient, rattachée au stage mais sans son jour : un
+              // stage sans date vaut mieux qu'une restauration qui échoue.
+              propre.date_id = null;
             }
             return propre;
           });

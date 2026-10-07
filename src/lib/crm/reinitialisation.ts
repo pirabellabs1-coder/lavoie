@@ -34,6 +34,7 @@ export const TABLES_VIDEES = [
   "inscriptions",
   "evenements",
   "questionnaires",
+  "paiements",
   "participations",
   "offres",
   "temoignages",
@@ -61,6 +62,10 @@ export async function viderLeFichier(): Promise<Purge | null> {
       const inscriptions = await tx`DELETE FROM inscriptions`;
       const evenements = await tx`DELETE FROM evenements`;
       const questionnaires = await tx`DELETE FROM questionnaires`;
+      // Les règlements avant les places : la cascade les emporterait de toute
+      // façon, mais sans les compter — et un écran qui annonce ce qu'il vide
+      // ne doit rien effacer en silence, surtout pas de l'argent.
+      const paiements = await tx`DELETE FROM paiements`;
       const participations = await tx`DELETE FROM participations`;
       const offres = await tx`DELETE FROM offres`;
       const temoignages = await tx`DELETE FROM temoignages`;
@@ -75,6 +80,7 @@ export async function viderLeFichier(): Promise<Purge | null> {
         { table: "chronologies", lignes: evenements.count },
         { table: "questionnaires", lignes: questionnaires.count },
         { table: "places de stage", lignes: participations.count },
+        { table: "règlements", lignes: paiements.count },
         { table: "propositions", lignes: offres.count },
         { table: "témoignages", lignes: temoignages.count },
       ];
@@ -99,6 +105,7 @@ export async function compterAvantVidage(): Promise<Purge | null> {
         (SELECT COUNT(*) FROM evenements)::int     AS evenements,
         (SELECT COUNT(*) FROM questionnaires)::int AS questionnaires,
         (SELECT COUNT(*) FROM participations)::int AS participations,
+        (SELECT COUNT(*) FROM paiements)::int      AS paiements,
         (SELECT COUNT(*) FROM offres)::int         AS offres,
         (SELECT COUNT(*) FROM temoignages)::int    AS temoignages
     `;
@@ -111,6 +118,7 @@ export async function compterAvantVidage(): Promise<Purge | null> {
       { table: "chronologies", lignes: Number(l.evenements) },
       { table: "questionnaires", lignes: Number(l.questionnaires) },
       { table: "places de stage", lignes: Number(l.participations) },
+      { table: "règlements", lignes: Number(l.paiements) },
       { table: "propositions", lignes: Number(l.offres) },
       { table: "témoignages", lignes: Number(l.temoignages) },
     ];

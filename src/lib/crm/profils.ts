@@ -37,8 +37,12 @@ export type Profil = {
   vers: string;
   /** La séquence qui lui parle. */
   sequence: string;
-  /** Le ton de la pastille, repris des états de contact. */
-  ton: string;
+  /**
+   * Le ton de la pastille. L'union plutôt qu'une chaîne : le CSS ne connaît
+   * que ces valeurs, et une faute de frappe donnerait une pastille sans style,
+   * en silence.
+   */
+  ton: "nouveau" | "lead" | "contacte" | "appel" | "proposition" | "client" | "perdu";
 };
 
 export const PROFILS: Profil[] = [
@@ -106,11 +110,6 @@ const PAR_CLE = new Map(PROFILS.map((p) => [p.cle, p]));
 
 export function profil(cle: string | null | undefined): Profil {
   return PAR_CLE.get((cle ?? "inconnu") as CleProfil) ?? PAR_CLE.get("inconnu")!;
-}
-
-/** Les profils qu'on peut viser dans une campagne — « inconnu » n'en est pas une cible. */
-export function profilsCiblables(): Profil[] {
-  return PROFILS.filter((p) => p.cle !== "inconnu");
 }
 
 /** Travaille sur soi depuis assez longtemps pour qu'on ne lui réexplique pas les bases. */

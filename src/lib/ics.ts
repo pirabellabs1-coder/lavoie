@@ -20,12 +20,19 @@ export function ligneIcs(cle: string, valeur: string): string {
     .replace(/,/g, "\\,")
     .replace(/\r?\n/g, "\\n");
 
+  // Le format compte des octets, pas des caractères : « é » en pèse deux, et
+  // un titre de soixante-treize lettres accentuées dépasserait la limite sans
+  // qu'on s'en aperçoive. On découpe donc sur la taille réelle, en s'arrêtant
+  // toujours à une frontière de caractère — couper un « é » en deux produirait
+  // un fichier illisible.
   const morceaux: string[] = [];
   let reste = `${cle}:${net}`;
-  while (reste.length > 73) {
-    morceaux.push(reste.slice(0, 73));
+  while (Buffer.byteLength(reste, "utf8") > 73) {
+    let coupe = Math.min(reste.length, 73);
+    while (Buffer.byteLength(reste.slice(0, coupe), "utf8") > 73) coupe -= 1;
+    morceaux.push(reste.slice(0, coupe));
     // Une ligne pliée reprend par une espace : c'est la règle du format.
-    reste = " " + reste.slice(73);
+    reste = " " + reste.slice(coupe);
   }
   morceaux.push(reste);
   return morceaux.join("\r\n");

@@ -329,17 +329,6 @@
   transform: translateY(-1px);
 }
 
-/* L'emboîtement : une surface dans une surface, aux rayons concentriques.
-   C'est ce qui donne à un bloc l'air d'une pièce posée dans son logement
-   plutôt que d'un rectangle dessiné. */
-.adm-bac {
-  background: var(--adm-surface-3);
-  border: 1px solid var(--adm-line);
-  border-radius: var(--adm-r);
-  padding: 6px;
-}
-.adm-bac > * { border-radius: calc(var(--adm-r) - 6px); }
-
 .adm-grille { display: grid; gap: 14px; }
 .adm-g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .adm-g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -374,9 +363,6 @@
   font-size: 12.5px;
   line-height: 1.5;
 }
-
-/* Une barre d'actions posée en haut à droite d'une carte. */
-.adm-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
 .adm-titre .appoint {
   text-transform: none;
@@ -796,7 +782,9 @@ table.adm-t .num { font-variant-numeric: tabular-nums; text-align: right; }
   transition: border-color var(--adm-vite) var(--adm-ease),
               box-shadow var(--adm-vite) var(--adm-ease);
 }
-.adm-champ::placeholder { color: rgba(103, 113, 140, .72); }
+/* Un texte de substitution reste un texte : sous 4,5:1 il devient illisible
+   pour une partie des gens, et le défaut du navigateur faisait mieux. */
+.adm-champ::placeholder { color: var(--adm-mute); opacity: 1; }
 .adm-champ:hover { border-color: rgba(20, 40, 120, .3); }
 .adm-champ:focus {
   outline: none;
@@ -854,7 +842,7 @@ input[type="file"].adm-champ { padding: 8px 10px; font-size: 12.5px; cursor: poi
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .adm * { transition: none !important; }
+  .adm * { transition: none !important; animation: none !important; }
 }
 
 /* ═══ Pipeline des séquences (façon n8n) ═══════════════════════════════════ */
@@ -1132,4 +1120,32 @@ input[type="file"].adm-champ { padding: 8px 10px; font-size: 12.5px; cursor: poi
 @media (max-width: 560px) {
   .afaire-ligne { grid-template-columns: auto 1fr; }
   .afaire-ligne .fleche { display: none; }
+}
+
+/* ═══ La chronologie d'une fiche ══════════════════════════════════════════
+
+   Ce qui s'est passé avec cette personne, du plus récent au plus ancien. La
+   date tient sa colonne pour que l'œil descende droit. */
+
+.adm-chrono { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.adm-chrono li {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 9px 10px;
+  border-radius: var(--adm-r-xs);
+  font-size: 13px;
+  transition: background var(--adm-vite) var(--adm-ease);
+}
+.adm-chrono li:hover { background: var(--adm-surface-2); }
+.adm-chrono time {
+  color: var(--adm-mute);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .adm-chrono li { grid-template-columns: 1fr; gap: 2px; }
 }

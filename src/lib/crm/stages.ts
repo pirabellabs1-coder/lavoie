@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { Resend } from "resend";
 import { SITE } from "@/lib/site";
 import { EVENEMENTS } from "@/lib/evenements";
@@ -344,10 +345,17 @@ export async function changerStatutParticipation(
     // Une annulation libère une place : la liste d'attente doit l'apprendre
     // tout de suite, pas le jour où quelqu'un y repense.
     if (statut === "annulee") {
-      const [ou] = await sql<{ stage_id: string }[]>`
-        SELECT stage_id FROM participations WHERE id = ${id}
+      const [ou] = await sql<{ stage_id: string; date_id: string | null }[]>`
+        SELECT stage_id, date_id FROM participations WHERE id = ${id}
       `;
-      if (ou) await reveillerLaListe(String(ou.stage_id));
+      // Après la réponse : le secrétariat ne doit pas attendre cinq
+      // allers-retours SMTP devant un bouton « Annuler ».
+      if (ou) {
+        const { stage_id, date_id } = ou;
+        after(async () => {
+          await reveillerLaListe(String(stage_id), date_id);
+        });
+      }
     }
     return true;
   } catch (e) {
@@ -373,15 +381,22 @@ export async function supprimerParticipation(
   const sql = await getDb();
   if (!sql) return null;
   try {
-    const lignes = await sql<{ nom: string; titre: string; stage_id: string }[]>`
+    const lignes = await sql<
+      { nom: string; titre: string; stage_id: string; date_id: string | null }[]
+    >`
       DELETE FROM participations p
       USING contacts c, stages s
       WHERE p.id = ${id} AND c.id = p.contact_id AND s.id = p.stage_id
       RETURNING COALESCE(NULLIF(TRIM(CONCAT(c.prenom, ' ', c.nom)), ''), c.email) AS nom,
-                s.titre, s.id AS stage_id
+                s.titre, s.id AS stage_id, p.date_id
     `;
     // Retirer une place la libère, exactement comme une annulation.
-    if (lignes[0]) await reveillerLaListe(String(lignes[0].stage_id));
+    if (lignes[0]) {
+      const { stage_id, date_id } = lignes[0];
+      after(async () => {
+        await reveillerLaListe(String(stage_id), date_id);
+      });
+    }
     return lignes[0] ?? null;
   } catch (e) {
     console.error("[crm] supprimerParticipation:", e);
@@ -859,24 +874,44 @@ export async function stagesALAffiche(dejaAffiches: string[] = []): Promise<Stag
  * moment. Le silence vaut refus, et la suivante sera prévenue au prochain
  * désistement.
  */
-export async function reveillerLaListe(stageId: string): Promise<number> {
+export async function reveillerLaListe(
+  stageId: string,
+  dateId?: string | null,
+): Promise<number> {
   const sql = await getDb();
   if (!sql) return 0;
   if (!process.env.RESEND_API_KEY) return 0;
 
   try {
-    // Combien de places réellement libres, toutes dates confondues ? On reste
-    // volontairement prudent : une place libre, une personne prévenue.
-    const [jauge] = await sql<{ libres: number }[]>`
-      SELECT (s.places - COALESCE(SUM(p.personnes)
-                FILTER (WHERE p.statut IN ('confirmee', 'demande')), 0))::int AS libres
-      FROM stages s
-      LEFT JOIN participations p ON p.stage_id = s.id
-      WHERE s.id = ${stageId} AND s.actif = TRUE
-      GROUP BY s.places
-    `;
+    // La jauge se compte sur la date libérée, pas sur le stage entier.
+    //
+    // Un stage de douze places avec deux dates à sept prises chacune affiche
+    // « 12 − 14 = −2 » si l'on additionne tout : la liste d'attente restait
+    // alors muette précisément dans le cas qu'elle vise. C'est la date qui se
+    // remplit, comme partout ailleurs dans le code.
+    const [jauge] = dateId
+      ? await sql<{ libres: number }[]>`
+          SELECT (COALESCE(d.places, s.places) - COALESCE(SUM(p.personnes)
+                    FILTER (WHERE p.statut IN ('confirmee', 'demande')), 0))::int AS libres
+          FROM stage_dates d
+          JOIN stages s ON s.id = d.stage_id
+          LEFT JOIN participations p ON p.date_id = d.id
+          WHERE d.id = ${dateId} AND s.actif = TRUE AND d.ouverte = TRUE
+          GROUP BY d.id, d.places, s.places
+        `
+      : // Un stage sans date fonctionne encore à la jauge globale.
+        await sql<{ libres: number }[]>`
+          SELECT (s.places - COALESCE(SUM(p.personnes)
+                    FILTER (WHERE p.statut IN ('confirmee', 'demande')), 0))::int AS libres
+          FROM stages s
+          LEFT JOIN participations p ON p.stage_id = s.id
+          WHERE s.id = ${stageId} AND s.actif = TRUE
+          GROUP BY s.places
+        `;
     if (!jauge || jauge.libres <= 0) return 0;
 
+    // Et l'on prévient les personnes en attente **sur cette date** : une place
+    // libérée en novembre n'intéresse pas celle qui attend décembre.
     const dues = await sql<{
       id: string;
       email: string;
@@ -889,6 +924,7 @@ export async function reveillerLaListe(stageId: string): Promise<number> {
       JOIN contacts c ON c.id = p.contact_id
       JOIN stages s   ON s.id = p.stage_id
       WHERE p.stage_id = ${stageId}
+        AND (${dateId ?? null}::bigint IS NULL OR p.date_id = ${dateId ?? null}::bigint)
         AND p.statut = 'attente'
         AND p.attente_prevenue_le IS NULL
         AND c.desabonne_le IS NULL

@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, eventLd } from "@/lib/jsonld";
 import { SITE } from "@/lib/site";
 import DemandeDePlace from "@/components/DemandeDePlace";
-import AvisDuStage from "@/components/AvisDuStage";
+import AvisPublies from "@/components/AvisPublies";
 import type { StagePublic } from "@/lib/crm/stages";
 import {
   etatDeLaDate,
@@ -251,7 +251,7 @@ export default function StageLibre({
       )}
 
       {/* CE QU'ILS EN DISENT — juste avant de décider. */}
-      <AvisDuStage />
+      <AvisPublies />
 
       {/* RÉSERVATION */}
       <section className="section" style={{ background: "var(--paper)" }}>

@@ -142,18 +142,19 @@ function Reglement({
         </div>
       )}
       {reglable && (
-        <form action={actionEncaisserALaMain} style={{ display: "flex", gap: 4 }}>
+        <form action={actionEncaisserALaMain} style={{ display: "flex", gap: 4, alignItems: "center" }}>
           <input type="hidden" name="id" value={participationId} />
           <input type="hidden" name="stage" value={stageId} />
           <input
             name="montant"
             className="adm-champ"
             style={{ width: 86, padding: "4px 8px", fontSize: 12 }}
-            placeholder={String(Math.round(reste / 100))}
+            defaultValue={String(Math.round(reste / 100))}
             inputMode="decimal"
             aria-label="Montant reçu en euros"
           />
-          <button type="submit" className="adm-btn fantome petit">Reçu</button>
+          <span style={{ fontSize: 11.5, color: "var(--adm-mute)" }}>€ reçus</span>
+          <button type="submit" className="adm-btn fantome petit">Noter</button>
         </form>
       )}
     </div>

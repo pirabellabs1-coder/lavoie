@@ -24,6 +24,9 @@ export default async function MerciPage({
 }) {
   const { s } = await searchParams;
   const regle = s ? await sessionReglee(s) : null;
+  // Tant que la base n'a pas constaté l'encaissement — paiement différé, ou
+  // lien périmé rouvert —, on ne promet rien qu'on ne sache vrai.
+  const encaisse = regle?.encaisse ?? false;
 
   return (
     <div className="page-fade">
@@ -35,15 +38,31 @@ export default async function MerciPage({
             <span className="dot" style={{ background: "var(--gold)" }} />
           </p>
           <h1 className="display" style={{ fontSize: "clamp(30px, 4vw, 54px)", margin: "0 0 24px", lineHeight: 1.06, color: "var(--white)" }}>
-            Merci, votre place<br />
-            <em className="display-italic" style={{ color: "var(--gold)" }}>est retenue.</em>
+            {encaisse ? (
+              <>
+                Merci, votre place<br />
+                <em className="display-italic" style={{ color: "var(--gold)" }}>est retenue.</em>
+              </>
+            ) : (
+              <>
+                Merci, votre règlement<br />
+                <em className="display-italic" style={{ color: "var(--gold)" }}>est en route.</em>
+              </>
+            )}
           </h1>
           <hr className="filet" style={{ margin: "0 auto 28px" }} />
           <p style={{ fontSize: 17, lineHeight: 1.75, color: "rgba(255,255,255,0.84)", maxWidth: 560, margin: "0 auto" }}>
-            {regle ? (
+            {regle && encaisse ? (
               <>
                 Votre règlement de <strong style={{ color: "var(--white)" }}>{euros(regle.montant)}</strong> pour
                 « {regle.titre} » nous est bien parvenu.
+              </>
+            ) : regle ? (
+              <>
+                Votre banque n&apos;a pas encore confirmé le règlement de{" "}
+                <strong style={{ color: "var(--white)" }}>{euros(regle.montant)}</strong> pour
+                « {regle.titre} ». C&apos;est normal pour certains moyens de paiement : nous
+                vous écrivons dès qu&apos;il est validé.
               </>
             ) : (
               <>Votre règlement nous est bien parvenu.</>
@@ -67,7 +86,9 @@ export default async function MerciPage({
             </h2>
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 18 }}>
               {[
-                "Un reçu arrive dans votre boîte, envoyé par notre prestataire de paiement.",
+                encaisse
+                  ? "Un reçu arrive dans votre boîte, envoyé par notre prestataire de paiement."
+                  : "Dès que le règlement est validé, un reçu arrive dans votre boîte.",
                 "Le secrétariat vous écrit sous 48 heures ouvrées avec les détails pratiques : horaires, accès, ce qu'il faut apporter.",
                 "Une semaine avant le stage, vous recevez la logistique complète.",
               ].map((t, i) => (

@@ -66,6 +66,37 @@ export function acompteDe(total: number): number {
   return Math.max(100, Math.round((total * PART_ACOMPTE) / 100) * 100);
 }
 
+/**
+ * Ce qu'on réclame, et à quel titre.
+ *
+ * C'est **la** décision d'argent du module, et elle est ici, pure, pour être
+ * tenue par des tests : enfouie dans la fonction qui parle à Stripe et à la
+ * base, elle avait déjà laissé passer une relance qui réclamait le prix plein
+ * à quelqu'un ayant reçu un lien d'acompte.
+ *
+ * Rend `null` quand il n'y a plus rien à demander.
+ */
+export function montantAReclamer(entree: {
+  total: number;
+  dejaPaye: number;
+  genre: GenrePaiement;
+}): { montant: number; genre: GenrePaiement } | null {
+  const reste = Math.max(0, entree.total - entree.dejaPaye);
+  if (reste <= 0) return null;
+
+  // Un acompte ne se demande qu'une fois : dès qu'un premier versement est
+  // arrivé, la suite est un solde, quoi qu'on ait demandé.
+  const montant =
+    entree.genre === "acompte" && entree.dejaPaye === 0
+      ? Math.min(acompteDe(entree.total), reste)
+      : reste;
+
+  const genre: GenrePaiement =
+    montant === entree.total ? "integral" : entree.dejaPaye > 0 ? "solde" : "acompte";
+
+  return { montant, genre };
+}
+
 type Place = {
   participation_id: string;
   contact_id: string;
@@ -129,15 +160,9 @@ export async function ouvrirPaiement(
   }
 
   const total = place.prix_cents * Math.max(1, place.personnes);
-  const reste = Math.max(0, total - place.deja_paye);
-  if (reste <= 0) return { ok: false, raison: "Cette place est déjà réglée." };
-
-  // Le montant est décidé ici, à partir du tarif en base. Un acompte déjà
-  // versé transforme mécaniquement la suite en solde.
-  const montant =
-    genre === "acompte" && place.deja_paye === 0 ? Math.min(acompteDe(total), reste) : reste;
-  const genreReel: GenrePaiement =
-    montant === total ? "integral" : place.deja_paye > 0 ? "solde" : "acompte";
+  const aReclamer = montantAReclamer({ total, dejaPaye: place.deja_paye, genre });
+  if (!aReclamer) return { ok: false, raison: "Cette place est déjà réglée." };
+  const { montant, genre: genreReel } = aReclamer;
 
   const stripe = await client();
   if (!stripe) return { ok: false, raison: "Stripe n'est pas branché." };
@@ -301,8 +326,6 @@ export type EtatPaiement = {
   participation_id: string;
   du: number;
   paye: number;
-  dernier_lien: string | null;
-  dernier_statut: string | null;
 };
 
 /** L'état de paiement de chaque place d'un stage, en une requête. */
@@ -314,10 +337,7 @@ export async function etatsDuStage(stageId: string): Promise<Map<string, EtatPai
     const lignes = await sql<EtatPaiement[]>`
       SELECT p.id AS participation_id,
              (COALESCE(s.prix_cents, 0) * GREATEST(p.personnes, 1))::int AS du,
-             COALESCE(SUM(x.montant_cents) FILTER (WHERE x.statut IN ('payee', 'manuelle')), 0)::int AS paye,
-             (ARRAY_AGG(x.lien ORDER BY x.cree_le DESC)
-                FILTER (WHERE x.statut = 'attente'))[1] AS dernier_lien,
-             (ARRAY_AGG(x.statut ORDER BY x.cree_le DESC))[1] AS dernier_statut
+             COALESCE(SUM(x.montant_cents) FILTER (WHERE x.statut IN ('payee', 'manuelle')), 0)::int AS paye
       FROM participations p
       JOIN stages s ON s.id = p.stage_id
       LEFT JOIN paiements x ON x.participation_id = p.id
@@ -334,19 +354,23 @@ export async function etatsDuStage(stageId: string): Promise<Map<string, EtatPai
 /** Ce qu'une session de paiement a réglé, pour la page de remerciement. */
 export async function sessionReglee(
   sessionId: string,
-): Promise<{ montant: number; titre: string } | null> {
+): Promise<{ montant: number; titre: string; encaisse: boolean } | null> {
   const sql = await getDb();
   if (!sql) return null;
   if (!/^cs_[A-Za-z0-9_]{1,200}$/.test(sessionId)) return null;
   try {
-    const [l] = await sql<{ montant: number; titre: string }[]>`
-      SELECT x.montant_cents::int AS montant, s.titre
+    const [l] = await sql<{ montant: number; titre: string; statut: string }[]>`
+      SELECT x.montant_cents::int AS montant, s.titre, x.statut
       FROM paiements x
       JOIN participations p ON p.id = x.participation_id
       JOIN stages s ON s.id = p.stage_id
       WHERE x.session_id = ${sessionId}
     `;
-    return l ?? null;
+    if (!l) return null;
+    // Un paiement différé termine sa session avant que l'argent soit là, et
+    // un ancien lien périmé reste ouvrable : la page ne doit affirmer un
+    // encaissement que si la base le constate.
+    return { montant: l.montant, titre: l.titre, encaisse: l.statut === "payee" || l.statut === "manuelle" };
   } catch (e) {
     console.error("[crm] sessionReglee:", e);
     return null;

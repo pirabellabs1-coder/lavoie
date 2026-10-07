@@ -28,6 +28,17 @@ describe("ligneIcs", () => {
     expect(ligneIcs("SUMMARY", "a\\b")).toBe("SUMMARY:a\\\\b");
   });
 
+  it("plie sur les octets, et jamais au milieu d'un accent", () => {
+    // Cent « é » pèsent deux cents octets : une borne comptée en caractères
+    // les aurait laissés passer, et un agenda aurait refusé le fichier.
+    const rendu = ligneIcs("SUMMARY", "é".repeat(100));
+    for (const l of rendu.split("\r\n")) {
+      expect(Buffer.byteLength(l, "utf8")).toBeLessThanOrEqual(75);
+    }
+    // Rien n'est perdu ni abîmé au dépliage.
+    expect(rendu.replace(/\r\n /g, "")).toBe(`SUMMARY:${"é".repeat(100)}`);
+  });
+
   it("met les retours à la ligne à plat", () => {
     expect(ligneIcs("DESCRIPTION", "Deux\nlignes")).toBe("DESCRIPTION:Deux\\nlignes");
   });
@@ -36,7 +47,7 @@ describe("ligneIcs", () => {
     const rendu = ligneIcs("DESCRIPTION", "x".repeat(200));
     const lignes = rendu.split("\r\n");
     expect(lignes.length).toBeGreaterThan(1);
-    for (const l of lignes) expect(l.length).toBeLessThanOrEqual(75);
+    for (const l of lignes) expect(Buffer.byteLength(l, "utf8")).toBeLessThanOrEqual(75);
     for (const l of lignes.slice(1)) expect(l.startsWith(" ")).toBe(true);
     // Déplié, on retrouve exactement la valeur de départ.
     expect(rendu.replace(/\r\n /g, "")).toBe(`DESCRIPTION:${"x".repeat(200)}`);

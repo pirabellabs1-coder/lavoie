@@ -4,6 +4,10 @@ import { temoignagesPublies } from "@/lib/crm/temoignages";
 /**
  * Trois voix, juste avant de réserver.
  *
+ * Les mêmes sur toutes les pages : les témoignages ne sont pas rattachés à un
+ * stage en particulier, et le nom du composant le dit plutôt que de laisser
+ * croire à un filtrage qui n'existe pas.
+ *
  * Les témoignages existaient, rangés sur une page que personne n'ouvre au
  * moment de décider. Ils valent cent fois plus ici, à l'endroit exact où l'on
  * hésite — et ils sont déjà modérés, donc rien de neuf à surveiller.
@@ -23,7 +27,7 @@ function Etoiles({ note }: { note: number }) {
   );
 }
 
-export default async function AvisDuStage({ titre }: { titre?: string }) {
+export default async function AvisPublies({ titre }: { titre?: string }) {
   const tous = await temoignagesPublies();
   if (tous.length === 0) return null;
   const avis = tous.slice(0, 3);

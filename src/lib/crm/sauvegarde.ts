@@ -56,7 +56,9 @@ export async function construireSauvegarde(): Promise<Sauvegarde | null> {
       envois,
       campagnes,
       stages,
+      datesDeStage,
       participations,
+      paiements,
       offres,
       temoignages,
       utilisateurs,
@@ -73,7 +75,18 @@ export async function construireSauvegarde(): Promise<Sauvegarde | null> {
       // ramènerait des fiches sans leurs places, leurs propositions ni leurs
       // témoignages.
       sql`SELECT * FROM stages ORDER BY id`,
+      // Les jours d'ouverture : une place porte la date à laquelle elle est
+      // prise. Sans eux, la restauration réinsérerait des participations qui
+      // désignent des dates disparues, et échouerait en bloc.
+      sql`SELECT * FROM stage_dates ORDER BY id`,
       sql`SELECT * FROM participations ORDER BY id`,
+      // Les règlements. C'est la seule donnée qu'aucune autre source ne
+      // permet de reconstituer : Stripe connaît ses sessions, personne ne
+      // connaît les virements saisis à la main. La colonne `lien` est laissée
+      // de côté — une adresse de session périmée n'a plus d'usage.
+      sql`SELECT id, participation_id, contact_id, montant_cents, genre, statut,
+                 session_id, relance_le, paye_le, cree_le
+          FROM paiements ORDER BY id`,
       sql`SELECT * FROM offres ORDER BY id`,
       sql`SELECT * FROM temoignages ORDER BY id`,
       // Sans la colonne `empreinte` : voir l'en-tête du fichier.
@@ -93,7 +106,9 @@ export async function construireSauvegarde(): Promise<Sauvegarde | null> {
         envois,
         campagnes,
         stages,
+        stage_dates: datesDeStage,
         participations,
+        paiements,
         offres,
         temoignages,
         utilisateurs,
