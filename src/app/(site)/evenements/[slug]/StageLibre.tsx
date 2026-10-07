@@ -4,6 +4,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbLd, eventLd } from "@/lib/jsonld";
 import { SITE } from "@/lib/site";
 import DemandeDePlace from "@/components/DemandeDePlace";
+import AvisDuStage from "@/components/AvisDuStage";
 import type { StagePublic } from "@/lib/crm/stages";
 import {
   etatDeLaDate,
@@ -146,13 +147,23 @@ export default function StageLibre({
             </p>
           )}
 
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
             <a href="#reserver" className="btn btn-gold">
               Réserver ma place <Arrow />
             </a>
             <Link href="/contact" className="btn btn-ghost-white">
               Poser une question
             </Link>
+            {prochaine && (
+              /* Une date notée dans un e-mail se perd ; une date dans
+                 l'agenda se tient. */
+              <a
+                href={`/api/agenda/${stage.slug}?d=${prochaine.id}`}
+                style={{ fontSize: 13, color: "rgba(255,255,255,0.62)", textDecoration: "underline", textUnderlineOffset: 3 }}
+              >
+                Ajouter à mon agenda
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -238,6 +249,9 @@ export default function StageLibre({
           </div>
         </section>
       )}
+
+      {/* CE QU'ILS EN DISENT — juste avant de décider. */}
+      <AvisDuStage />
 
       {/* RÉSERVATION */}
       <section className="section" style={{ background: "var(--paper)" }}>

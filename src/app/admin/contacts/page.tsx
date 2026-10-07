@@ -21,6 +21,13 @@ export default async function ContactsPage({
   searchParams: Promise<{ q?: string; statut?: string; profil?: string; erreur?: string }>;
 }) {
   const { q, statut, profil: profilFiltre, erreur } = await searchParams;
+
+  // L'export reprend le filtre affiché : on emporte ce qu'on voit.
+  const url = new URLSearchParams();
+  if (q) url.set("q", q);
+  if (statut) url.set("statut", statut);
+  if (profilFiltre) url.set("profil", profilFiltre);
+  const filtresEnUrl = url.size ? `?${url}` : "";
   const qui = await exigerIdentite();
   const automate = peut(qui.role, "sequences");
   const contacts = isDbConfigured()
@@ -39,8 +46,8 @@ export default async function ContactsPage({
       actions={
         <>
           <a href="#ajouter" className="adm-btn">Ajouter une personne</a>
-          <a href="/api/admin/export" className="adm-btn fantome">
-            Exporter en CSV
+          <a href={`/api/admin/export${filtresEnUrl}`} className="adm-btn fantome">
+            Exporter {filtresEnUrl ? "ce filtre" : "en CSV"}
           </a>
         </>
       }

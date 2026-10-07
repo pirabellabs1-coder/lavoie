@@ -405,6 +405,24 @@ export async function statistiques(): Promise<Statistiques | null> {
   }
 }
 
+
+/**
+ * Pose le profil d'un contact — celui que le questionnaire vient de révéler.
+ *
+ * Il est écrit sur la fiche, et non recalculé à la lecture : une personne peut
+ * refaire le questionnaire des mois plus tard, et c'est bien le dernier état
+ * connu qui doit faire foi partout, y compris dans les campagnes déjà bâties.
+ */
+export async function poserProfil(contactId: string, profil: string): Promise<void> {
+  const sql = await getDb();
+  if (!sql) return;
+  try {
+    await sql`UPDATE contacts SET profil = ${profil} WHERE id = ${contactId}`;
+  } catch (e) {
+    console.error("[crm] poserProfil:", e);
+  }
+}
+
 /** Export CSV de toute la base contacts. */
 export async function exporterCsv(): Promise<string> {
   const contacts = await listerContacts({ limite: 1000 });
@@ -425,23 +443,6 @@ export async function exporterCsv(): Promise<string> {
     ].map(echapper).join(";"),
   );
   return [entetes.join(";"), ...lignes].join("\n");
-}
-
-/**
- * Pose le profil d'un contact — celui que le questionnaire vient de révéler.
- *
- * Il est écrit sur la fiche, et non recalculé à la lecture : une personne peut
- * refaire le questionnaire des mois plus tard, et c'est bien le dernier état
- * connu qui doit faire foi partout, y compris dans les campagnes déjà bâties.
- */
-export async function poserProfil(contactId: string, profil: string): Promise<void> {
-  const sql = await getDb();
-  if (!sql) return;
-  try {
-    await sql`UPDATE contacts SET profil = ${profil} WHERE id = ${contactId}`;
-  } catch (e) {
-    console.error("[crm] poserProfil:", e);
-  }
 }
 
 export type PartProfil = { profil: string; total: number; clients: number };
@@ -470,4 +471,53 @@ export async function repartitionParProfil(): Promise<PartProfil[]> {
     console.error("[crm] repartitionParProfil:", e);
     return [];
   }
+}
+
+/**
+ * La liste filtrée, en CSV.
+ *
+ * Mêmes filtres que l'écran : ce qu'on exporte est exactement ce qu'on voit,
+ * sans quoi un fichier de mille lignes arrive là où on en attendait douze.
+ * Les personnes désabonnées sortent avec leur date : un export sert aussi à
+ * prouver qu'on a cessé d'écrire à quelqu'un.
+ */
+export async function exporterContactsCsv(f: Filtres = {}): Promise<string> {
+  const lignes = await listerContacts({ ...f, limite: 1000 });
+  const entetes = [
+    "prenom",
+    "nom",
+    "email",
+    "telephone",
+    "statut",
+    "profil",
+    "source",
+    "interet",
+    "utm_source",
+    "arrive_le",
+    "desabonne_le",
+  ];
+  const echapper = (v: unknown) => {
+    const s = v === null || v === undefined ? "" : String(v);
+    return /[",\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const jour = (d: Date | null) => (d ? new Date(d).toISOString().slice(0, 10) : "");
+
+  const corps = lignes.map((c) =>
+    [
+      c.prenom,
+      c.nom,
+      c.email,
+      c.telephone,
+      c.statut,
+      c.profil ?? "inconnu",
+      c.source,
+      c.interet,
+      c.utm_source,
+      jour(c.cree_le),
+      jour(c.desabonne_le),
+    ]
+      .map(echapper)
+      .join(";"),
+  );
+  return [entetes.join(";"), ...corps].join("\n");
 }
