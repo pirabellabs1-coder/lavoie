@@ -336,6 +336,40 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       ADD COLUMN IF NOT EXISTS personnes INT NOT NULL DEFAULT 1
   `;
 
+  // Les règlements d'une place de stage.
+  //
+  // Une place peut être réglée en deux fois (acompte puis solde) ou d'un coup,
+  // par Stripe ou à la main (virement, chèque). Chaque tentative laisse une
+  // ligne : on sait toujours ce qui a été demandé, ce qui a été encaissé, et
+  // quand. `session_id` est unique — c'est la clé qui rend le webhook
+  // idempotent, Stripe livrant chaque événement au moins une fois.
+  await sql`
+    CREATE TABLE IF NOT EXISTS paiements (
+      id               BIGSERIAL PRIMARY KEY,
+      participation_id BIGINT NOT NULL REFERENCES participations(id) ON DELETE CASCADE,
+      contact_id       BIGINT REFERENCES contacts(id) ON DELETE SET NULL,
+      montant_cents    INT NOT NULL,
+      genre            TEXT NOT NULL DEFAULT 'integral',
+      statut           TEXT NOT NULL DEFAULT 'attente',
+      session_id       TEXT UNIQUE,
+      lien             TEXT,
+      relance_le       TIMESTAMPTZ,
+      paye_le          TIMESTAMPTZ,
+      cree_le          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS paiements_place ON paiements (participation_id)`;
+
+  // Les événements Stripe déjà traités. Stripe rejoue pendant trois jours : un
+  // événement vu deux fois ne doit pas encaisser deux fois.
+  await sql`
+    CREATE TABLE IF NOT EXISTS stripe_evenements (
+      id      TEXT PRIMARY KEY,
+      type    TEXT NOT NULL,
+      vu_le   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
   // Les photos déposées depuis le tableau de bord. Identifiant tiré au sort :
   // deviner l'adresse d'une image ne doit pas se faire en incrémentant.
   await sql`

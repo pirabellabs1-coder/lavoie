@@ -7,6 +7,7 @@ import { accompagnerLesStages } from "@/lib/crm/stages";
 import { reveillerLesDormants } from "@/lib/crm/reveil";
 import { enregistrerPassage } from "@/lib/crm/passages";
 import { relancerLesAvis } from "@/lib/crm/avis";
+import { relancerLesPaiements } from "@/lib/crm/paiements";
 
 /**
  * Worker des séquences — appelé par Vercel Cron (voir vercel.json).
@@ -35,6 +36,7 @@ export async function GET(req: Request) {
   const stages = await accompagnerLesStages();
   const reveil = await reveillerLesDormants();
   const avis = await relancerLesAvis();
+  const paiements = await relancerLesPaiements();
   // Le lundi seulement — la fonction se charge elle-même de vérifier le jour.
   const rapport = await envoyerRapportHebdomadaire();
   // En dernier : la sauvegarde reflète ainsi tout ce que ce passage a produit.
@@ -54,6 +56,7 @@ export async function GET(req: Request) {
       `${annules} rendez-vous annulé(s)`,
       `${reveil.reveils} réveil(s), ${reveil.sorties} sortie(s)`,
       `${avis} rappel(s) d'avis`,
+      `${paiements} rappel(s) de règlement`,
       resultat.echecs ? `${resultat.echecs} échec(s)` : "aucun échec",
     ].join(" · "),
   });
@@ -67,6 +70,7 @@ export async function GET(req: Request) {
     stages,
     reveil,
     avis,
+    paiements,
     rapport,
     sauvegarde,
     duree_ms: dureeMs,

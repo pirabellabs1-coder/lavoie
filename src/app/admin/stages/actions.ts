@@ -12,6 +12,7 @@ import {
 } from "@/lib/crm/stages";
 import { ajouterDate, basculerDate, retirerDate } from "@/lib/crm/dates-stages";
 import { deposerImage, effacerImage } from "@/lib/crm/images";
+import { encaisserALaMain, envoyerLeLien } from "@/lib/crm/paiements";
 import { depuisParis } from "@/lib/heure";
 import { tracer } from "@/lib/crm/journal";
 
@@ -251,4 +252,51 @@ export async function actionRetirerDate(donnees: FormData) {
       `/admin/stages?erreur=${encodeURIComponent(resultat.raison ?? "Suppression refusée.")}#stage-${stageId}`,
     );
   }
+}
+
+/**
+ * Envoie à quelqu'un le lien de règlement de sa place.
+ *
+ * Réservé au propriétaire, et tracé : un lien de paiement engage la maison
+ * autant qu'un e-mail commercial.
+ */
+export async function actionEnvoyerLien(donnees: FormData) {
+  const qui = await identiteAvecDroit("sequences");
+  if (!qui) return;
+
+  const id = String(donnees.get("id") ?? "");
+  const stageId = String(donnees.get("stage") ?? "");
+  const genre = String(donnees.get("genre") ?? "acompte");
+  if (!/^[0-9]+$/.test(id)) return;
+
+  const envoi = await envoyerLeLien(id, genre === "integral" ? "integral" : "acompte");
+  await tracer(qui, "lien_paiement", id, genre);
+  revalidatePath("/admin/stages");
+  if (!envoi.ok) {
+    redirect(
+      `/admin/stages?erreur=${encodeURIComponent(envoi.raison ?? "Le lien n'a pas pu être créé.")}#stage-${stageId}`,
+    );
+  }
+  redirect(`/admin/stages?paiement=1#stage-${stageId}`);
+}
+
+/** Un règlement reçu autrement : virement, chèque, espèces le jour même. */
+export async function actionEncaisserALaMain(donnees: FormData) {
+  const qui = await identiteAvecDroit("sequences");
+  if (!qui) return;
+
+  const id = String(donnees.get("id") ?? "");
+  const stageId = String(donnees.get("stage") ?? "");
+  const brut = String(donnees.get("montant") ?? "").replace(",", ".");
+  const euros = Number(brut);
+  if (!/^[0-9]+$/.test(id) || !Number.isFinite(euros) || euros <= 0) {
+    redirect(
+      `/admin/stages?erreur=${encodeURIComponent("Indiquez un montant en euros.")}#stage-${stageId}`,
+    );
+  }
+
+  await encaisserALaMain(id, Math.round(euros * 100));
+  await tracer(qui, "paiement_manuel", id, `${euros} €`);
+  revalidatePath("/admin/stages");
+  redirect(`/admin/stages#stage-${stageId}`);
 }

@@ -17,10 +17,13 @@ import {
   placesRestantesDate,
   type DateStage,
 } from "@/lib/crm/dates-stages";
+import { etatsDuStage, stripeActif, stripeEnEssai, type EtatPaiement } from "@/lib/crm/paiements";
 import {
   actionAjouterDate,
   actionBasculerDate,
   actionCreerStage,
+  actionEncaisserALaMain,
+  actionEnvoyerLien,
   actionPublierStage,
   actionReglerStage,
   actionRetirerDate,
@@ -79,6 +82,84 @@ function euros(cents: number | null): string {
   return (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
 }
 
+/**
+ * L'état de règlement d'une place, et le geste qui va avec.
+ *
+ * Trois situations, trois affichages : rien n'est dû (le stage n'a pas de
+ * tarif), tout est réglé, ou il reste une somme — et dans ce dernier cas on
+ * propose d'envoyer le lien, ou d'enregistrer un virement reçu.
+ */
+function Reglement({
+  etat,
+  participationId,
+  stageId,
+  reglable,
+}: {
+  etat: EtatPaiement | undefined;
+  participationId: string;
+  stageId: string;
+  reglable: boolean;
+}) {
+  const du = etat?.du ?? 0;
+  const paye = etat?.paye ?? 0;
+  const reste = Math.max(0, du - paye);
+
+  if (du === 0) return <span style={{ color: "var(--adm-mute)" }}>—</span>;
+
+  if (reste === 0) {
+    return (
+      <span className="adm-tag" data-s="client">
+        Réglé · {euros(paye)}
+      </span>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-start" }}>
+      <span className="adm-tag" data-s={paye > 0 ? "contacte" : "nouveau"}>
+        {paye > 0 ? `${euros(paye)} sur ${euros(du)}` : `${euros(du)} dû`}
+      </span>
+      {reglable && stripeActif() && (
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <form action={actionEnvoyerLien}>
+            <input type="hidden" name="id" value={participationId} />
+            <input type="hidden" name="stage" value={stageId} />
+            <input type="hidden" name="genre" value={paye > 0 ? "integral" : "acompte"} />
+            <button type="submit" className="adm-btn fantome petit">
+              {paye > 0 ? "Lien du solde" : "Lien d'acompte"}
+            </button>
+          </form>
+          {paye === 0 && (
+            <form action={actionEnvoyerLien}>
+              <input type="hidden" name="id" value={participationId} />
+              <input type="hidden" name="stage" value={stageId} />
+              <input type="hidden" name="genre" value="integral" />
+              <button type="submit" className="adm-btn fantome petit">
+                Lien du total
+              </button>
+            </form>
+          )}
+        </div>
+      )}
+      {reglable && (
+        <form action={actionEncaisserALaMain} style={{ display: "flex", gap: 4 }}>
+          <input type="hidden" name="id" value={participationId} />
+          <input type="hidden" name="stage" value={stageId} />
+          <input
+            name="montant"
+            className="adm-champ"
+            style={{ width: 86, padding: "4px 8px", fontSize: 12 }}
+            placeholder={String(Math.round(reste / 100))}
+            inputMode="decimal"
+            aria-label="Montant reçu en euros"
+          />
+          <button type="submit" className="adm-btn fantome petit">Reçu</button>
+        </form>
+      )}
+    </div>
+  );
+}
+
 type Params = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function StagesPage({ searchParams }: { searchParams: Params }) {
@@ -88,6 +169,8 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
   const params = await searchParams;
   const erreur = Array.isArray(params.erreur) ? params.erreur[0] : params.erreur;
   const cree = (Array.isArray(params.cree) ? params.cree[0] : params.cree) === "1";
+  const paiementEnvoye =
+    (Array.isArray(params.paiement) ? params.paiement[0] : params.paiement) === "1";
 
   const branchee = isDbConfigured();
   const stages = branchee ? await listerStages() : [];
@@ -97,6 +180,10 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
   // Les jours de disponibilité, stage par stage : c'est la date qui se remplit.
   const dates: DateStage[][] = await Promise.all(
     stages.map((s) => (branchee ? datesDuStage(s.id) : Promise.resolve([]))),
+  );
+  // Où en est le règlement de chaque place.
+  const reglements = await Promise.all(
+    stages.map((s) => (branchee ? etatsDuStage(s.id) : Promise.resolve(new Map()))),
   );
 
   return (
@@ -113,6 +200,30 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
       )}
 
       {erreur && <div className="adm-alerte">{erreur}</div>}
+      {paiementEnvoye && (
+        <div className="adm-alerte">
+          <strong>Le lien de règlement est parti.</strong> Il reste valable vingt-quatre heures ;
+          au-delà, renvoyez-en un autre, cela ne coûte rien.
+        </div>
+      )}
+      {reglable && !stripeActif() && (
+        <div className="adm-alerte">
+          <strong>Le paiement en ligne n&apos;est pas encore branché.</strong> Ajoutez les
+          variables <code>STRIPE_SECRET_KEY</code> et <code>STRIPE_WEBHOOK_SECRET</code> dans les
+          réglages Vercel, puis redéployez. Dans Stripe, l&apos;adresse à déclarer est{" "}
+          <code>https://www.lavoie2laconscience.com/api/stripe/webhook</code>, pour les
+          événements <code>checkout.session.completed</code> et{" "}
+          <code>checkout.session.async_payment_succeeded</code>. En attendant, un règlement reçu
+          par virement s&apos;enregistre à la main dans la colonne « Règlement ».
+        </div>
+      )}
+      {reglable && stripeEnEssai() && (
+        <div className="adm-alerte">
+          <strong>Stripe est en mode essai.</strong> Les liens envoyés n&apos;encaissent rien :
+          ils acceptent la carte de test 4242 4242 4242 4242. Passez aux clés de production
+          quand vous serez prête.
+        </div>
+      )}
       {cree && (
         <div className="adm-alerte">
           <strong>Le stage est créé, et pas encore publié.</strong> Ajoutez-lui ses dates
@@ -201,6 +312,7 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
           {stages.map((s, i) => {
             const gens = participants[i];
             const jours = dates[i];
+            const paye = reglements[i];
             const restantes = Math.max(0, s.places - s.confirmees - s.demandes);
             const complet = restantes === 0;
 
@@ -278,6 +390,7 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                           <th>Date</th>
                           <th>État</th>
                           <th>Demandé le</th>
+                          <th>Règlement</th>
                           <th>Suite</th>
                         </tr>
                       </thead>
@@ -312,6 +425,14 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
                             </td>
                             <td style={{ color: "var(--adm-mute)", whiteSpace: "nowrap" }}>
                               {enClair(p.cree_le)}
+                            </td>
+                            <td style={{ whiteSpace: "nowrap" }}>
+                              <Reglement
+                                etat={paye.get(String(p.id))}
+                                participationId={p.id}
+                                stageId={s.id}
+                                reglable={reglable}
+                              />
                             </td>
                             <td>
                               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>

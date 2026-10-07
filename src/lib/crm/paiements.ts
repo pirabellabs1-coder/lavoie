@@ -1,0 +1,412 @@
+import { getDb } from "./db";
+import { SITE } from "@/lib/site";
+
+/**
+ * Le paiement d'une place de stage.
+ *
+ * Règle première : aucun numéro de carte ne traverse jamais ce serveur. La
+ * saisie se fait sur une page hébergée par Stripe (Checkout), qui gère la
+ * banque, le 3-D Secure et les portefeuilles. Nous ne voyons que des
+ * identifiants — `cs_…`, `pi_…` — et un montant.
+ *
+ * Règle deuxième : le montant est décidé ici, jamais reçu du navigateur. Il
+ * est relu dans la base à partir du stage et du nombre de places. Un prix qui
+ * vient du client est un prix qu'on peut changer.
+ *
+ * Règle troisième : c'est le webhook qui fait foi, pas la redirection. Un
+ * onglet qui se ferme, un réseau qui tombe, et la personne ne revient jamais
+ * sur la page de remerciement — sa place serait alors payée sans que nous le
+ * sachions. Stripe, lui, rappelle pendant trois jours.
+ *
+ * Tant que les clés ne sont pas posées, tout ce module dort : `stripeActif()`
+ * répond faux, le tableau de bord le dit, et rien ne casse.
+ */
+
+/** La part demandée à la réservation quand on ne prend pas tout. */
+export const PART_ACOMPTE = 0.3;
+
+export type GenrePaiement = "acompte" | "solde" | "integral";
+
+export type Paiement = {
+  id: string;
+  participation_id: string;
+  contact_id: string | null;
+  montant_cents: number;
+  genre: GenrePaiement;
+  statut: "attente" | "payee" | "expiree" | "manuelle";
+  session_id: string | null;
+  lien: string | null;
+  paye_le: Date | null;
+  cree_le: Date;
+};
+
+export function stripeActif(): boolean {
+  return Boolean(process.env.STRIPE_SECRET_KEY);
+}
+
+/** Les clés de test commencent par `sk_test_` : on le dit à l'écran. */
+export function stripeEnEssai(): boolean {
+  return (process.env.STRIPE_SECRET_KEY ?? "").startsWith("sk_test_");
+}
+
+async function client() {
+  const cle = process.env.STRIPE_SECRET_KEY;
+  if (!cle) return null;
+  const { default: Stripe } = await import("stripe");
+  return new Stripe(cle);
+}
+
+export function euros(cents: number): string {
+  return (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+}
+
+/** L'acompte, arrondi à l'euro : personne n'aime payer 149,97 €. */
+export function acompteDe(total: number): number {
+  return Math.max(100, Math.round((total * PART_ACOMPTE) / 100) * 100);
+}
+
+type Place = {
+  participation_id: string;
+  contact_id: string;
+  email: string;
+  prenom: string | null;
+  personnes: number;
+  statut: string;
+  titre: string;
+  slug: string;
+  prix_cents: number | null;
+  deja_paye: number;
+};
+
+/** Ce qu'il faut savoir d'une place pour la facturer. */
+async function laPlace(participationId: string): Promise<Place | null> {
+  const sql = await getDb();
+  if (!sql) return null;
+  try {
+    const [l] = await sql<Place[]>`
+      SELECT p.id AS participation_id, p.contact_id, c.email, c.prenom,
+             p.personnes, p.statut, s.titre, s.slug, s.prix_cents::int AS prix_cents,
+             COALESCE((
+               SELECT SUM(x.montant_cents) FROM paiements x
+               WHERE x.participation_id = p.id AND x.statut IN ('payee', 'manuelle')
+             ), 0)::int AS deja_paye
+      FROM participations p
+      JOIN contacts c ON c.id = p.contact_id
+      JOIN stages s   ON s.id = p.stage_id
+      WHERE p.id = ${participationId}
+    `;
+    return l ?? null;
+  } catch (e) {
+    console.error("[crm] laPlace:", e);
+    return null;
+  }
+}
+
+export type LienDePaiement =
+  | { ok: true; lien: string; montant: number; genre: GenrePaiement }
+  | { ok: false; raison: string };
+
+/**
+ * Ouvre une session de paiement et rend le lien à transmettre.
+ *
+ * Le lien n'est pas envoyé d'ici : c'est le secrétariat qui décide quand il
+ * part, et par quel message. Une session vit vingt-quatre heures — au-delà,
+ * on en ouvre une autre, ce qui ne coûte rien.
+ */
+export async function ouvrirPaiement(
+  participationId: string,
+  genre: GenrePaiement,
+): Promise<LienDePaiement> {
+  if (!stripeActif()) {
+    return { ok: false, raison: "Stripe n'est pas branché : ajoutez STRIPE_SECRET_KEY." };
+  }
+  const sql = await getDb();
+  const place = await laPlace(participationId);
+  if (!sql || !place) return { ok: false, raison: "Cette place est introuvable." };
+  if (place.prix_cents == null) {
+    return { ok: false, raison: "Ce stage n'a pas de tarif : réglez-le avant de faire payer." };
+  }
+
+  const total = place.prix_cents * Math.max(1, place.personnes);
+  const reste = Math.max(0, total - place.deja_paye);
+  if (reste <= 0) return { ok: false, raison: "Cette place est déjà réglée." };
+
+  // Le montant est décidé ici, à partir du tarif en base. Un acompte déjà
+  // versé transforme mécaniquement la suite en solde.
+  const montant =
+    genre === "acompte" && place.deja_paye === 0 ? Math.min(acompteDe(total), reste) : reste;
+  const genreReel: GenrePaiement =
+    montant === total ? "integral" : place.deja_paye > 0 ? "solde" : "acompte";
+
+  const stripe = await client();
+  if (!stripe) return { ok: false, raison: "Stripe n'est pas branché." };
+
+  try {
+    const [ligne] = await sql<{ id: string }[]>`
+      INSERT INTO paiements (participation_id, contact_id, montant_cents, genre, statut)
+      VALUES (${participationId}, ${place.contact_id}, ${montant}, ${genreReel}, 'attente')
+      RETURNING id
+    `;
+    if (!ligne) return { ok: false, raison: "Le paiement n'a pas pu être ouvert." };
+
+    const intitule =
+      genreReel === "acompte"
+        ? `Acompte — ${place.titre}`
+        : genreReel === "solde"
+          ? `Solde — ${place.titre}`
+          : place.titre;
+
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: "payment",
+        locale: "fr",
+        customer_email: place.email,
+        line_items: [
+          {
+            quantity: 1,
+            price_data: {
+              currency: "eur",
+              unit_amount: montant,
+              product_data: {
+                name: intitule,
+                description:
+                  place.personnes > 1
+                    ? `${place.personnes} places · total ${euros(total)}`
+                    : `Une place · total ${euros(total)}`,
+              },
+            },
+          },
+        ],
+        success_url: `${SITE.url}/paiement/merci?s={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${SITE.url}/evenements/${place.slug}`,
+        metadata: {
+          paiement_id: String(ligne.id),
+          participation_id: String(participationId),
+          contact_id: String(place.contact_id),
+        },
+      },
+      // Deux clics sur le même bouton n'ouvrent pas deux sessions.
+      { idempotencyKey: `paiement-${ligne.id}` },
+    );
+
+    await sql`
+      UPDATE paiements SET session_id = ${session.id}, lien = ${session.url}
+      WHERE id = ${ligne.id}
+    `;
+
+    if (!session.url) return { ok: false, raison: "Stripe n'a pas rendu de lien." };
+    return { ok: true, lien: session.url, montant, genre: genreReel };
+  } catch (e) {
+    console.error("[crm] ouvrirPaiement:", e);
+    return { ok: false, raison: "Stripe a refusé d'ouvrir la session." };
+  }
+}
+
+/**
+ * Encaisse une session réglée. Appelé par le webhook, et lui seul.
+ *
+ * Idempotent par construction : la mise à jour ne vaut que pour une ligne
+ * encore en attente. Stripe peut livrer deux fois le même événement, la
+ * deuxième fois ne change rien.
+ */
+export async function encaisser(sessionId: string): Promise<boolean> {
+  const sql = await getDb();
+  if (!sql) return false;
+  try {
+    const [l] = await sql<{ id: string }[]>`
+      UPDATE paiements SET statut = 'payee', paye_le = NOW()
+      WHERE session_id = ${sessionId} AND statut = 'attente'
+      RETURNING id
+    `;
+    return Boolean(l);
+  } catch (e) {
+    console.error("[crm] encaisser:", e);
+    return false;
+  }
+}
+
+/** Un règlement reçu autrement : virement, chèque, espèces le jour même. */
+export async function encaisserALaMain(
+  participationId: string,
+  montantCents: number,
+): Promise<boolean> {
+  const sql = await getDb();
+  if (!sql || montantCents <= 0) return false;
+  try {
+    await sql`
+      INSERT INTO paiements (participation_id, contact_id, montant_cents, genre, statut, paye_le)
+      SELECT ${participationId}, p.contact_id, ${Math.round(montantCents)}, 'integral',
+             'manuelle', NOW()
+      FROM participations p WHERE p.id = ${participationId}
+    `;
+    return true;
+  } catch (e) {
+    console.error("[crm] encaisserALaMain:", e);
+    return false;
+  }
+}
+
+export type EtatPaiement = {
+  participation_id: string;
+  du: number;
+  paye: number;
+  dernier_lien: string | null;
+  dernier_statut: string | null;
+};
+
+/** L'état de paiement de chaque place d'un stage, en une requête. */
+export async function etatsDuStage(stageId: string): Promise<Map<string, EtatPaiement>> {
+  const sql = await getDb();
+  const vide = new Map<string, EtatPaiement>();
+  if (!sql) return vide;
+  try {
+    const lignes = await sql<EtatPaiement[]>`
+      SELECT p.id AS participation_id,
+             (COALESCE(s.prix_cents, 0) * GREATEST(p.personnes, 1))::int AS du,
+             COALESCE(SUM(x.montant_cents) FILTER (WHERE x.statut IN ('payee', 'manuelle')), 0)::int AS paye,
+             (ARRAY_AGG(x.lien ORDER BY x.cree_le DESC)
+                FILTER (WHERE x.statut = 'attente'))[1] AS dernier_lien,
+             (ARRAY_AGG(x.statut ORDER BY x.cree_le DESC))[1] AS dernier_statut
+      FROM participations p
+      JOIN stages s ON s.id = p.stage_id
+      LEFT JOIN paiements x ON x.participation_id = p.id
+      WHERE p.stage_id = ${stageId}
+      GROUP BY p.id, s.prix_cents, p.personnes
+    `;
+    return new Map(lignes.map((l) => [String(l.participation_id), l]));
+  } catch (e) {
+    console.error("[crm] etatsDuStage:", e);
+    return vide;
+  }
+}
+
+/** Ce qu'une session de paiement a réglé, pour la page de remerciement. */
+export async function sessionReglee(
+  sessionId: string,
+): Promise<{ montant: number; titre: string } | null> {
+  const sql = await getDb();
+  if (!sql) return null;
+  if (!/^cs_[A-Za-z0-9_]{1,200}$/.test(sessionId)) return null;
+  try {
+    const [l] = await sql<{ montant: number; titre: string }[]>`
+      SELECT x.montant_cents::int AS montant, s.titre
+      FROM paiements x
+      JOIN participations p ON p.id = x.participation_id
+      JOIN stages s ON s.id = p.stage_id
+      WHERE x.session_id = ${sessionId}
+    `;
+    return l ?? null;
+  } catch (e) {
+    console.error("[crm] sessionReglee:", e);
+    return null;
+  }
+}
+
+/**
+ * Envoie à la personne le lien de règlement de sa place.
+ *
+ * L'e-mail est volontairement court : il ne vend plus rien, la décision est
+ * prise. Il dit le montant, ce qu'il couvre, et où payer.
+ */
+export async function envoyerLeLien(
+  participationId: string,
+  genre: GenrePaiement,
+): Promise<{ ok: boolean; raison?: string; lien?: string }> {
+  const place = await laPlace(participationId);
+  if (!place) return { ok: false, raison: "Cette place est introuvable." };
+
+  const ouverture = await ouvrirPaiement(participationId, genre);
+  if (!ouverture.ok) return { ok: false, raison: ouverture.raison };
+
+  if (!process.env.RESEND_API_KEY) {
+    // Le lien existe : le secrétariat peut toujours le recopier à la main.
+    return { ok: true, lien: ouverture.lien, raison: "E-mail non configuré : copiez le lien." };
+  }
+
+  const { habiller } = await import("./email");
+  const { EXPEDITEUR } = await import("./sequences");
+  const total = (place.prix_cents ?? 0) * Math.max(1, place.personnes);
+  const quoi =
+    ouverture.genre === "acompte"
+      ? `l'acompte de ${euros(ouverture.montant)} (sur ${euros(total)})`
+      : ouverture.genre === "solde"
+        ? `le solde de ${euros(ouverture.montant)}`
+        : `le règlement de ${euros(ouverture.montant)}`;
+
+  const { html, text } = habiller({
+    email: place.email,
+    apercu: `Votre place pour « ${place.titre} ».`,
+    texte:
+      `Bonjour ${place.prenom ?? ""},\n\n` +
+      `Votre place pour « ${place.titre} » est confirmée. Il reste ${quoi} à régler pour la retenir définitivement.\n\n` +
+      `Le paiement se fait sur une page sécurisée, par carte :\n${ouverture.lien}\n\n` +
+      `Le lien reste valable vingt-quatre heures. Passé ce délai, écrivez-nous : nous vous en renvoyons un autre, sans difficulté.\n\n` +
+      `Si vous préférez régler par virement, répondez simplement à ce message.`,
+  });
+
+  try {
+    const { Resend } = await import("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: EXPEDITEUR,
+      to: place.email,
+      subject: `Votre place pour « ${place.titre} » — le règlement`,
+      html,
+      text,
+    });
+    return { ok: true, lien: ouverture.lien };
+  } catch (e) {
+    console.error("[crm] envoyerLeLien:", e);
+    return { ok: true, lien: ouverture.lien, raison: "L'e-mail n'est pas parti : copiez le lien." };
+  }
+}
+
+/** Jours avant qu'un règlement en attente soit rappelé, puis abandonné. */
+const RELANCE_JOURS = 3;
+
+/**
+ * Rappelle les règlements restés en attente.
+ *
+ * Une seule fois, trois jours après l'ouverture : au-delà, ce n'est plus un
+ * oubli, c'est une hésitation — et une hésitation se traite à la main, pas par
+ * un automate.
+ */
+export async function relancerLesPaiements(): Promise<number> {
+  const sql = await getDb();
+  if (!sql || !stripeActif()) return 0;
+  try {
+    const dues = await sql<{ participation_id: string }[]>`
+      SELECT DISTINCT x.participation_id
+      FROM paiements x
+      JOIN participations p ON p.id = x.participation_id
+      JOIN contacts c       ON c.id = p.contact_id
+      WHERE x.statut = 'attente'
+        AND x.relance_le IS NULL
+        AND x.cree_le < NOW() - make_interval(days => ${RELANCE_JOURS})
+        AND p.statut IN ('demande', 'confirmee')
+        AND c.desabonne_le IS NULL
+        -- Rien à rappeler si la place a été réglée entre-temps, par un autre
+        -- lien ou par virement.
+        AND NOT EXISTS (
+          SELECT 1 FROM paiements y
+          WHERE y.participation_id = x.participation_id
+            AND y.statut IN ('payee', 'manuelle')
+        )
+      LIMIT 50
+    `;
+
+    let partis = 0;
+    for (const d of dues) {
+      await sql`
+        UPDATE paiements SET relance_le = NOW()
+        WHERE participation_id = ${d.participation_id} AND statut = 'attente'
+      `;
+      const envoi = await envoyerLeLien(String(d.participation_id), "solde");
+      if (envoi.ok) partis += 1;
+    }
+    return partis;
+  } catch (e) {
+    console.error("[crm] relancerLesPaiements:", e);
+    return 0;
+  }
+}
