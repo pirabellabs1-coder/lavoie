@@ -30,7 +30,8 @@ export async function actionInviterCompte(donnees: FormData) {
 
   const email = String(donnees.get("email") ?? "");
   const nom = String(donnees.get("nom") ?? "");
-  const role = String(donnees.get("role") ?? "secretariat");
+  // Sans rôle transmis, le moins de droits possible.
+  const role = String(donnees.get("role") ?? "observateur");
   if (!estRoleValide(role)) return;
 
   const resultat = await inviterUtilisateur({ email, nom, role });

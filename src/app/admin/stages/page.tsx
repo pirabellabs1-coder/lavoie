@@ -2,7 +2,7 @@ import Link from "next/link";
 import Cadre from "../Cadre";
 import { Jauge } from "../Graphes";
 import { isDbConfigured } from "@/lib/crm/db";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { peut } from "@/lib/crm/utilisateurs";
 import {
   ETATS_PARTICIPATION,
@@ -164,7 +164,7 @@ function Reglement({
 type Params = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function StagesPage({ searchParams }: { searchParams: Params }) {
-  const qui = await exigerIdentite();
+  const qui = await exigerDroit("fichier");
   const reglable = peut(qui.role, "sequences");
 
   const params = await searchParams;

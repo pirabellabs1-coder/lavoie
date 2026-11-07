@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { listerQuestionnaires } from "@/lib/crm/questionnaires";
 import { SEUIL_ELIGIBILITE } from "@/lib/questionnaire";
 import { enClair } from "@/lib/heure";
@@ -21,7 +21,7 @@ function nomAffiche(l: { prenom: string | null; nom: string | null; email: strin
 }
 
 export default async function QuestionnairesPage({ searchParams }: { searchParams: Params }) {
-  await exigerIdentite();
+  await exigerDroit("fichier");
 
   const params = await searchParams;
   const brut = Array.isArray(params.filtre) ? params.filtre[0] : params.filtre;

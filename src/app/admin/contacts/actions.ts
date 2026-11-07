@@ -4,7 +4,7 @@ import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { enregistrerContact, estStatutValide, journaliser } from "@/lib/crm/contacts";
-import { identite } from "@/lib/crm/session";
+import { identiteAvecDroit } from "@/lib/crm/session";
 import { peut } from "@/lib/crm/utilisateurs";
 import { categorie } from "@/lib/crm/categories";
 import { entreeDansLaSequence } from "@/lib/crm/ajouts";
@@ -28,7 +28,7 @@ function erreur(message: string): never {
  * qui décide du statut et de la source, et l'accord devient obligatoire.
  */
 export async function actionCreerContact(donnees: FormData) {
-  const qui = await identite();
+  const qui = await identiteAvecDroit("fichier");
   if (!qui) return;
 
   const email = String(donnees.get("email") ?? "").trim().toLowerCase().slice(0, 254);

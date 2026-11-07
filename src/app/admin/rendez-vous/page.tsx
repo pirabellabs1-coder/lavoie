@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { listerRendezVous } from "@/lib/crm/questionnaires";
 import { enClair } from "@/lib/heure";
 
@@ -18,7 +18,7 @@ function dansCombien(quand: Date | string): number {
 }
 
 export default async function RendezVousPage() {
-  await exigerIdentite();
+  await exigerDroit("fichier");
   const lignes = isDbConfigured() ? await listerRendezVous() : [];
 
   const aVenir = lignes.filter((l) => l.rdv_le && dansCombien(l.rdv_le) > 0);

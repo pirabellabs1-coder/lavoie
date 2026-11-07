@@ -18,7 +18,7 @@ import { getDb } from "./db";
  * runtime Edge.
  */
 
-export type Role = "proprietaire" | "secretariat";
+export type Role = "proprietaire" | "secretariat" | "observateur";
 
 export const ROLES: { cle: Role; label: string; aide: string }[] = [
   {
@@ -30,17 +30,34 @@ export const ROLES: { cle: Role; label: string; aide: string }[] = [
   {
     cle: "secretariat",
     label: "Secrétariat",
-    aide: "Contacts, questionnaires, rendez-vous et journal des envois. Rien d'autre.",
+    aide:
+      "Contacts, questionnaires, rendez-vous, stages, témoignages et journal des envois. Rien de ce qui touche à l'argent ni aux envois de masse.",
+  },
+  {
+    cle: "observateur",
+    label: "Observateur",
+    aide:
+      "Le carnet de bord, où il note ce qu'il fait, et les chiffres de la vue d'ensemble. Aucune fiche, aucune adresse, aucun nom.",
   },
 ];
 
-/** Ce que chaque rôle a le droit de faire, en plus du socle commun. */
+/**
+ * Ce que chaque rôle a le droit de faire, en plus du socle commun — la vue
+ * d'ensemble chiffrée et le carnet de bord, ouverts à tout compte.
+ *
+ * `fichier` est l'accès aux données personnelles : fiches, adresses,
+ * questionnaires, places de stage, témoignages. Un observateur — une personne
+ * de l'agence qui note ses actions marketing, un associé qui suit l'activité
+ * — n'en a pas besoin, et ce qu'on ne voit pas ne peut pas fuiter.
+ */
 const DROITS: Record<Role, string[]> = {
-  proprietaire: ["campagnes", "sequences", "export", "comptes", "sauvegarde", "offres"],
-  secretariat: [],
+  proprietaire: ["fichier", "campagnes", "sequences", "export", "comptes", "sauvegarde", "offres"],
+  secretariat: ["fichier"],
+  observateur: [],
 };
 
 export type Droit =
+  | "fichier"
   | "campagnes"
   | "sequences"
   | "export"
@@ -49,7 +66,10 @@ export type Droit =
   | "offres";
 
 export function peut(role: string, droit: Droit): boolean {
-  return (DROITS[role as Role] ?? []).includes(droit);
+  // `hasOwn` : un rôle « constructor » ou « __proto__ » lu en base remonterait
+  // sinon la chaîne des prototypes, et ferait planter la page au lieu de refuser.
+  if (!Object.hasOwn(DROITS, role)) return false;
+  return DROITS[role as Role].includes(droit);
 }
 
 export function estRoleValide(v: string): v is Role {

@@ -20,12 +20,13 @@ import { entreeDansLaSequence } from "@/lib/crm/ajouts";
  * Les Server Actions sont des points d'entrée publics : la session est
  * revérifiée ici, la protection du proxy ne couvrant que la navigation.
  *
- * La vérification passe par `identite()`, qui relit le compte en base : un
- * compte désactivé perd la main tout de suite, sans attendre l'expiration de
- * son cookie. Signer un cookie ne suffit pas à rester habilité.
+ * La vérification passe par `identiteAvecDroit("fichier")`, qui relit le
+ * compte en base : un compte désactivé perd la main tout de suite, sans
+ * attendre l'expiration de son cookie, et un observateur — qui n'a pas accès
+ * aux fiches — ne peut rien y changer. Signer un cookie ne suffit pas.
  */
 async function exigerSession(): Promise<boolean> {
-  return (await identite()) !== null;
+  return (await identiteAvecDroit("fichier")) !== null;
 }
 
 export async function actionChangerStatut(formData: FormData) {
@@ -138,7 +139,7 @@ export async function actionInscrireContact(formData: FormData) {
  * est souvent la manière la plus naturelle de le demander.
  */
 export async function actionDemanderAvis(formData: FormData) {
-  const qui = await identite();
+  const qui = await identiteAvecDroit("fichier");
   if (!qui) return;
 
   const id = String(formData.get("id") ?? "");

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import DeconnexionBouton from "./DeconnexionBouton";
 import { exigerIdentite } from "@/lib/crm/session";
-import { peut, type Droit } from "@/lib/crm/utilisateurs";
+import { peut, ROLES, type Droit } from "@/lib/crm/utilisateurs";
 import { compterEnAttente } from "@/lib/crm/temoignages";
 
 /**
@@ -151,12 +151,12 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
   {
     titre: "Les gens",
     entrees: [
-      { href: "/admin/contacts", label: "Contacts", icone: "contacts" },
-      { href: "/admin/questionnaires", label: "Questionnaires", icone: "questionnaire" },
-      { href: "/admin/rendez-vous", label: "Rendez-vous", icone: "rdv" },
-      { href: "/admin/stages", label: "Stages", icone: "stages" },
-      { href: "/admin/temoignages", label: "Témoignages", icone: "temoignages" },
-      { href: "/admin/parrainage", label: "Parrainage & réveil", icone: "parrainage" },
+      { href: "/admin/contacts", label: "Contacts", icone: "contacts", droit: "fichier" },
+      { href: "/admin/questionnaires", label: "Questionnaires", icone: "questionnaire", droit: "fichier" },
+      { href: "/admin/rendez-vous", label: "Rendez-vous", icone: "rdv", droit: "fichier" },
+      { href: "/admin/stages", label: "Stages", icone: "stages", droit: "fichier" },
+      { href: "/admin/temoignages", label: "Témoignages", icone: "temoignages", droit: "fichier" },
+      { href: "/admin/parrainage", label: "Parrainage & réveil", icone: "parrainage", droit: "fichier" },
     ],
   },
   {
@@ -171,7 +171,7 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
     entrees: [
       { href: "/admin/sequences", label: "Séquences", icone: "sequences", droit: "sequences" },
       { href: "/admin/campagnes", label: "Campagnes", icone: "campagnes", droit: "campagnes" },
-      { href: "/admin/envois", label: "Envois", icone: "envois" },
+      { href: "/admin/envois", label: "Envois", icone: "envois", droit: "fichier" },
     ],
   },
   {
@@ -247,7 +247,9 @@ export default async function Cadre({
         <div className="adm-pied">
           <p className="adm-qui">
             <strong>{qui.nom}</strong>
-            {qui.principal ? "mot de passe principal" : qui.role}
+            {qui.principal
+              ? "mot de passe principal"
+              : (ROLES.find((r) => r.cle === qui.role)?.label ?? qui.role)}
           </p>
           <Link href="/" className="adm-btn fantome petit">
             Voir le site

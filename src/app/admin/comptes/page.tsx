@@ -142,13 +142,13 @@ export default async function ComptesPage({ searchParams }: { searchParams: Para
           <fieldset style={{ border: "1px solid var(--adm-line)", borderRadius: 8, padding: 14 }}>
             <legend style={{ fontSize: 12, color: "var(--adm-mute)", padding: "0 6px" }}>Rôle</legend>
             <div style={{ display: "grid", gap: 10 }}>
-              {ROLES.map((r, i) => (
+              {ROLES.map((r) => (
                 <label key={r.cle} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                   <input
                     type="radio"
                     name="role"
                     value={r.cle}
-                    defaultChecked={i === ROLES.length - 1}
+                    defaultChecked={r.cle === "secretariat"}
                     style={{ marginTop: 3 }}
                   />
                   <span>

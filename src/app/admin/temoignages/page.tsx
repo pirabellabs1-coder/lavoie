@@ -3,7 +3,7 @@ import Cadre from "../Cadre";
 import { avisEnAttente } from "@/lib/crm/avis";
 import { nomAffiche } from "@/lib/crm/contacts";
 import { isDbConfigured } from "@/lib/crm/db";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { listerTemoignages, type Temoignage } from "@/lib/crm/temoignages";
 import { enClair } from "@/lib/heure";
 import { actionStatutTemoignage, actionSupprimerTemoignage } from "./actions";
@@ -54,7 +54,7 @@ export default async function TemoignagesPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await exigerIdentite();
+  await exigerDroit("fichier");
 
   const params = await searchParams;
   const brut = Array.isArray(params.filtre) ? params.filtre[0] : params.filtre;

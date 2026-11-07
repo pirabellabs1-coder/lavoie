@@ -1,5 +1,12 @@
+import { journaliser } from "@/lib/crm/contacts";
 import { getDb } from "@/lib/crm/db";
-import { encaisser } from "@/lib/crm/paiements";
+import { encaisser, euros, rembourser } from "@/lib/crm/paiements";
+
+/** Un identifiant Stripe, que l'objet soit déplié ou non. */
+function idDe(v: string | { id: string } | null | undefined): string | null {
+  if (!v) return null;
+  return typeof v === "string" ? v : v.id;
+}
 
 /**
  * Le retour de Stripe.
@@ -49,6 +56,31 @@ export async function POST(req: Request) {
     return new Response("Base indisponible.", { status: 500 });
   }
 
+  // Un remboursement arrive avec l'identifiant du paiement (pi_…). Les
+  // paiements encaissés avant qu'on le mémorise ne le connaissent pas : on
+  // retrouve alors leur session chez Stripe, avant d'ouvrir la transaction.
+  let sessionDuRemboursement: string | null = null;
+  if (evenement.type === "charge.refunded") {
+    const pi = idDe(evenement.data.object.payment_intent);
+    if (pi) {
+      try {
+        const [connu] = await sql`SELECT 1 FROM paiements WHERE payment_intent = ${pi} LIMIT 1`;
+        if (!connu) {
+          const sessions = await stripe.checkout.sessions.list({ payment_intent: pi, limit: 1 });
+          sessionDuRemboursement = sessions.data[0]?.id ?? null;
+        }
+      } catch (e) {
+        // Stripe injoignable : un 500 le fera rejouer, rien ne se perd.
+        console.error("[stripe] recherche de la session remboursée:", e instanceof Error ? e.message : e);
+        return new Response("Recherche en échec.", { status: 500 });
+      }
+    }
+  }
+
+  // Assigné dans la transaction : l'assertion évite que TypeScript le croie
+  // toujours nul après elle.
+  let remboursement = null as Awaited<ReturnType<typeof rembourser>>;
+
   try {
     // La marque et l'encaissement tiennent dans la même transaction. Séparés,
     // un échec de l'encaissement laissait derrière lui un événement marqué
@@ -70,12 +102,32 @@ export async function POST(req: Request) {
         // `paid` couvre le cas des moyens de paiement différés, où la session
         // se termine avant que l'argent soit là.
         if (session.payment_status === "paid") {
-          await encaisser(session.id, tx);
+          await encaisser(session.id, tx, idDe(session.payment_intent));
         }
       } else if (evenement.type === "checkout.session.async_payment_succeeded") {
-        await encaisser(evenement.data.object.id, tx);
+        const session = evenement.data.object;
+        await encaisser(session.id, tx, idDe(session.payment_intent));
+      } else if (evenement.type === "charge.refunded") {
+        const charge = evenement.data.object;
+        remboursement = await rembourser(
+          { paymentIntent: idDe(charge.payment_intent), sessionId: sessionDuRemboursement },
+          charge.amount_refunded,
+          tx,
+        );
       }
     });
+
+    // La chronologie après la transaction : elle ne doit jamais faire échouer
+    // l'inscription du remboursement lui-même.
+    if (remboursement?.contact_id) {
+      await journaliser(
+        remboursement.contact_id,
+        "paiement",
+        remboursement.integral
+          ? `Remboursement intégral — ${euros(remboursement.cumul)} rendus en tout — ${remboursement.titre}`
+          : `Remboursement partiel de ${euros(remboursement.rembourse)} (${euros(remboursement.cumul)} rendus en tout) — ${remboursement.titre}`,
+      );
+    }
 
     return Response.json({ recu: true });
   } catch (e) {

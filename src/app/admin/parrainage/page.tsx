@@ -2,14 +2,14 @@ import Link from "next/link";
 import Cadre from "../Cadre";
 import { Tuile } from "../Graphes";
 import { isDbConfigured } from "@/lib/crm/db";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { classementParrains } from "@/lib/crm/parrainage";
 import { statsReveil } from "@/lib/crm/reveil";
 
 export const dynamic = "force-dynamic";
 
 export default async function ParrainagePage() {
-  await exigerIdentite();
+  await exigerDroit("fichier");
 
   const branchee = isDbConfigured();
   const parrains = branchee ? await classementParrains() : [];

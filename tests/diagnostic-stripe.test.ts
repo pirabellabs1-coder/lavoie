@@ -109,9 +109,17 @@ describe("diagnosticStripe", () => {
     expect(etape(d, "Stripe accepte la clé")?.detail).toContain("refuse");
   });
 
+  it("signale que les rappels de règlement attendent CRON_SECRET", async () => {
+    delete process.env.STRIPE_SECRET_KEY;
+    delete process.env.CRON_SECRET;
+    const d = await diagnosticStripe();
+    expect(etape(d, "Le rappel des règlements")?.etat).toBe("a-faire");
+  });
+
   it("ne compte pas un compte d'essai non activé parmi les points à régler", async () => {
     process.env.STRIPE_SECRET_KEY = "sk_test_abc";
     process.env.STRIPE_WEBHOOK_SECRET = "whsec_abc";
+    process.env.CRON_SECRET = "une-longue-chaine";
     stripeSimule.retrieveCurrent.mockResolvedValue(compte(false));
     stripeSimule.list.mockResolvedValue(adresseDeclaree());
     const d = await diagnosticStripe();

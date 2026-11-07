@@ -31,6 +31,7 @@ export const ADRESSE_WEBHOOK = `${SITE.url}/api/stripe/webhook`;
 export const EVENEMENTS_WEBHOOK = [
   "checkout.session.completed",
   "checkout.session.async_payment_succeeded",
+  "charge.refunded",
 ] as const;
 
 export type GenrePaiement = "acompte" | "solde" | "integral";
@@ -41,7 +42,7 @@ export type Paiement = {
   contact_id: string | null;
   montant_cents: number;
   genre: GenrePaiement;
-  statut: "attente" | "payee" | "expiree" | "manuelle";
+  statut: "attente" | "payee" | "expiree" | "manuelle" | "remboursee";
   session_id: string | null;
   lien: string | null;
   paye_le: Date | null;
@@ -127,7 +128,7 @@ async function laPlace(participationId: string): Promise<Place | null> {
       SELECT p.id AS participation_id, p.contact_id, c.email, c.prenom,
              p.personnes, p.statut, s.titre, s.slug, s.prix_cents::int AS prix_cents,
              COALESCE((
-               SELECT SUM(x.montant_cents) FROM paiements x
+               SELECT SUM(x.montant_cents - x.rembourse_cents) FROM paiements x
                WHERE x.participation_id = p.id AND x.statut IN ('payee', 'manuelle')
              ), 0)::int AS deja_paye
       FROM participations p
@@ -269,6 +270,7 @@ export async function ouvrirPaiement(
 export async function encaisser(
   sessionId: string,
   tx?: postgres.TransactionSql,
+  paymentIntent?: string | null,
 ): Promise<boolean> {
   const sql = tx ?? (await getDb());
   if (!sql) return false;
@@ -276,12 +278,117 @@ export async function encaisser(
   // qui répondra 500 et fera rejouer Stripe. Avalée ici, l'erreur rendait un
   // 200 — l'argent était débité et la place restait « en attente », pour
   // toujours, sans que personne en soit averti.
+  //
+  // L'identifiant du paiement Stripe est gardé : c'est par lui, et non par la
+  // session, que Stripe signale un remboursement.
   const [l] = await sql<{ id: string }[]>`
-    UPDATE paiements SET statut = 'payee', paye_le = NOW()
+    UPDATE paiements
+    SET statut = 'payee', paye_le = NOW(), payment_intent = COALESCE(${paymentIntent ?? null}, payment_intent)
     WHERE session_id = ${sessionId} AND statut = 'attente'
     RETURNING id
   `;
   return Boolean(l);
+}
+
+/**
+ * Ce que devient un paiement après un remboursement.
+ *
+ * Stripe donne le cumul remboursé, pas le dernier geste : deux remboursements
+ * partiels de 50 € arrivent comme « 50 » puis « 100 ». Le cumul rend donc le
+ * calcul rejouable, et l'on ne descend jamais — un événement ancien livré en
+ * retard ne doit pas effacer un remboursement plus récent.
+ */
+export function apresRemboursement(entree: {
+  montant: number;
+  dejaRembourse: number;
+  cumulStripe: number;
+}): { rembourse: number; integral: boolean } {
+  const cumul = Math.max(0, Math.round(entree.cumulStripe));
+  const rembourse = Math.min(entree.montant, Math.max(entree.dejaRembourse, cumul));
+  return { rembourse, integral: rembourse >= entree.montant };
+}
+
+/**
+ * Inscrit un remboursement fait chez Stripe. Appelé par le webhook, et lui
+ * seul. Rend de quoi écrire la ligne de chronologie, ou `null` si aucun
+ * paiement du site ne correspond.
+ */
+export async function rembourser(
+  ref: { paymentIntent: string | null; sessionId: string | null },
+  cumulStripe: number,
+  tx: postgres.TransactionSql,
+): Promise<{
+  contact_id: string | null;
+  rembourse: number;
+  cumul: number;
+  titre: string;
+  integral: boolean;
+} | null> {
+  if (!ref.paymentIntent && !ref.sessionId) return null;
+  const [l] = await tx<
+    {
+      id: string;
+      participation_id: string;
+      statut: string;
+      montant_cents: number;
+      rembourse_cents: number;
+      contact_id: string | null;
+      titre: string;
+    }[]
+  >`
+    SELECT x.id, x.participation_id, x.statut, x.montant_cents::int AS montant_cents,
+           x.rembourse_cents::int AS rembourse_cents, x.contact_id, s.titre
+    FROM paiements x
+    JOIN participations p ON p.id = x.participation_id
+    JOIN stages s         ON s.id = p.stage_id
+    WHERE x.statut IN ('payee', 'remboursee', 'attente')
+      AND (x.payment_intent = ${ref.paymentIntent ?? ""} OR x.session_id = ${ref.sessionId ?? ""})
+    ORDER BY x.id
+    LIMIT 1
+    FOR UPDATE OF x
+  `;
+  if (!l) return null;
+  if (l.statut === "attente") {
+    // Le remboursement arrive avant l'encaissement (paiement différé, ou
+    // encaissement encore en rejeu). L'avaler consommerait l'événement, puis
+    // l'encaissement inscrirait le montant plein : le remboursement serait
+    // perdu. On refuse, la transaction s'annule, Stripe rejouera plus tard.
+    throw new Error("Remboursement reçu avant l'encaissement : à rejouer.");
+  }
+  const r = apresRemboursement({
+    montant: l.montant_cents,
+    dejaRembourse: l.rembourse_cents,
+    cumulStripe,
+  });
+  if (r.rembourse === l.rembourse_cents) {
+    // Rien de neuf : un événement rejoué, ou plus ancien que ce qu'on sait.
+    return null;
+  }
+  await tx`
+    UPDATE paiements
+    SET rembourse_cents = ${r.rembourse},
+        rembourse_le    = NOW(),
+        statut          = ${r.integral ? "remboursee" : "payee"},
+        payment_intent  = COALESCE(payment_intent, ${ref.paymentIntent ?? null})
+    WHERE id = ${l.id}
+  `;
+  if (r.integral) {
+    // Après un remboursement intégral, plus rien ne part tout seul : un lien
+    // encore ouvert pour la même place serait rappelé trois jours plus tard,
+    // et réclamerait le total à quelqu'un qu'on vient de rembourser. La suite
+    // — annuler, retirer, refaire payer — est une décision humaine.
+    await tx`
+      UPDATE paiements SET statut = 'expiree'
+      WHERE participation_id = ${l.participation_id} AND statut = 'attente'
+    `;
+  }
+  return {
+    contact_id: l.contact_id ? String(l.contact_id) : null,
+    rembourse: r.rembourse - l.rembourse_cents,
+    cumul: r.rembourse,
+    titre: l.titre,
+    integral: r.integral,
+  };
 }
 
 /**
@@ -345,7 +452,7 @@ export async function etatsDuStage(stageId: string): Promise<Map<string, EtatPai
     const lignes = await sql<EtatPaiement[]>`
       SELECT p.id AS participation_id,
              (COALESCE(s.prix_cents, 0) * GREATEST(p.personnes, 1))::int AS du,
-             COALESCE(SUM(x.montant_cents) FILTER (WHERE x.statut IN ('payee', 'manuelle')), 0)::int AS paye
+             COALESCE(SUM(x.montant_cents - x.rembourse_cents) FILTER (WHERE x.statut IN ('payee', 'manuelle')), 0)::int AS paye
       FROM participations p
       JOIN stages s ON s.id = p.stage_id
       LEFT JOIN paiements x ON x.participation_id = p.id
@@ -578,7 +685,7 @@ export function jugerWebhook(
     };
   }
 
-  return { etat: "ok", detail: "L'adresse est déclarée, active, avec les deux événements." };
+  return { etat: "ok", detail: "L'adresse est déclarée, active, avec tous les événements nécessaires." };
 }
 
 export type Diagnostic = {
@@ -787,6 +894,24 @@ export async function diagnosticStripe(): Promise<Diagnostic> {
         },
   );
 
+  // 7. Le rappel automatique des règlements. L'automate n'envoie de liens de
+  // paiement que derrière CRON_SECRET : une route ouverte à tous ne doit pas
+  // pouvoir déclencher des envois d'argent.
+  etapes.push(
+    process.env.CRON_SECRET
+      ? {
+          titre: "Le rappel des règlements",
+          etat: "ok",
+          detail: "Un lien resté sans paiement est rappelé une fois, trois jours après, par l'automate du matin.",
+        }
+      : {
+          titre: "Le rappel des règlements",
+          etat: "a-faire",
+          detail:
+            "Ajoutez CRON_SECRET (une longue chaîne au hasard) dans Vercel : sans elle, les liens restés sans paiement ne sont jamais rappelés.",
+        },
+  );
+
   return { mode, compte, etapes };
 }
 
@@ -814,6 +939,7 @@ export type Bilan = {
   total: number;
   carte: number;
   main: number;
+  rembourse: number;
   ouverts: number;
   montantOuvert: number;
 };
@@ -825,15 +951,18 @@ export async function bilanPaiements(): Promise<Bilan | null> {
   try {
     // Le mois se compte à l'heure de Paris : un virement noté le 1er à 0 h 30
     // appartient au mois qui commence, pas à celui qui finit en UTC.
+    // Tout est compté net : ce qui a été remboursé chez Stripe ne reste pas
+    // dans l'encaissé.
     const [b] = await sql<Bilan[]>`
       SELECT
-        COALESCE(SUM(montant_cents) FILTER (
+        COALESCE(SUM(montant_cents - rembourse_cents) FILTER (
           WHERE statut IN ('payee', 'manuelle')
             AND paye_le >= (date_trunc('month', NOW() AT TIME ZONE 'Europe/Paris') AT TIME ZONE 'Europe/Paris')
         ), 0)::int AS mois,
-        COALESCE(SUM(montant_cents) FILTER (WHERE statut IN ('payee', 'manuelle')), 0)::int AS total,
-        COALESCE(SUM(montant_cents) FILTER (WHERE statut = 'payee'), 0)::int AS carte,
+        COALESCE(SUM(montant_cents - rembourse_cents) FILTER (WHERE statut IN ('payee', 'manuelle')), 0)::int AS total,
+        COALESCE(SUM(montant_cents - rembourse_cents) FILTER (WHERE statut = 'payee'), 0)::int AS carte,
         COALESCE(SUM(montant_cents) FILTER (WHERE statut = 'manuelle'), 0)::int AS main,
+        COALESCE(SUM(rembourse_cents) FILTER (WHERE statut IN ('payee', 'remboursee')), 0)::int AS rembourse,
         COUNT(*) FILTER (WHERE statut = 'attente')::int AS ouverts,
         COALESCE(SUM(montant_cents) FILTER (WHERE statut = 'attente'), 0)::int AS "montantOuvert"
       FROM paiements
@@ -848,6 +977,7 @@ export async function bilanPaiements(): Promise<Bilan | null> {
 export type LigneReglement = {
   id: string;
   montant: number;
+  rembourse: number;
   genre: GenrePaiement;
   statut: Paiement["statut"];
   cree_le: Date;
@@ -865,7 +995,8 @@ export async function derniersReglements(limite = 60): Promise<LigneReglement[]>
   if (!sql) return [];
   try {
     return await sql<LigneReglement[]>`
-      SELECT x.id, x.montant_cents::int AS montant, x.genre, x.statut, x.cree_le, x.paye_le,
+      SELECT x.id, x.montant_cents::int AS montant, x.rembourse_cents::int AS rembourse,
+             x.genre, x.statut, x.cree_le, x.paye_le,
              c.prenom, c.nom, c.email, x.contact_id, s.titre
       FROM paiements x
       JOIN participations p ON p.id = x.participation_id

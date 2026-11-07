@@ -227,6 +227,13 @@ export default async function CarnetPage({ searchParams }: { searchParams: Param
               style={{ resize: "vertical" }}
             />
           </label>
+          {/* Le carnet est lu — et exporté — par tous les comptes, observateurs
+              compris : un nom écrit ici sortirait du fichier par la petite porte. */}
+          <p className="adm-carte-sous" style={{ marginTop: 8 }}>
+            Le carnet est lu par toute l&apos;équipe, observateurs compris : pas de nom ni d&apos;adresse de
+            contact. Écrivez « appel avec une personne inscrite au stage d&apos;hiver » — sa fiche garde le
+            reste.
+          </p>
 
           <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap", marginTop: 12 }}>
             <button type="submit" className="adm-btn">

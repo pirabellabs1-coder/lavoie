@@ -25,7 +25,7 @@ export const CATEGORIES_ACTION = [
   { cle: "reseaux", label: "Réseaux", ton: "#93304f", aide: "Publication, story, réponses, communauté." },
   { cle: "publicite", label: "Publicité", ton: "#8a5a06", aide: "Campagne payante, ciblage, budget." },
   { cle: "emailing", label: "E-mailing", ton: "#0e6b7a", aide: "Séquence, campagne, relance écrite." },
-  { cle: "relation", label: "Relation", ton: "#17654c", aide: "Appel, rendez-vous, message à une personne." },
+  { cle: "relation", label: "Relation", ton: "#17654c", aide: "Appel, rendez-vous, message à une personne — sans son nom : le carnet est lu par tous." },
   { cle: "site", label: "Site & technique", ton: "#5b32b5", aide: "Page, correction, réglage, mise en ligne." },
   { cle: "analyse", label: "Analyse", ton: "#b98900", aide: "Chiffres regardés, décision prise, rapport." },
   { cle: "autre", label: "Autre", ton: "#6b7590", aide: "Ce qui n'entre dans aucune case." },

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { identite } from "@/lib/crm/session";
+import { identiteAvecDroit } from "@/lib/crm/session";
 import {
   changerStatutTemoignage,
   supprimerTemoignage,
@@ -14,7 +14,7 @@ import {
  */
 
 export async function actionStatutTemoignage(donnees: FormData) {
-  if (!(await identite())) return;
+  if (!(await identiteAvecDroit("fichier"))) return;
   const id = String(donnees.get("id") ?? "");
   const statut = String(donnees.get("statut") ?? "");
   if (!id || !statut) return;
@@ -24,7 +24,7 @@ export async function actionStatutTemoignage(donnees: FormData) {
 }
 
 export async function actionSupprimerTemoignage(donnees: FormData) {
-  if (!(await identite())) return;
+  if (!(await identiteAvecDroit("fichier"))) return;
   const id = String(donnees.get("id") ?? "");
   if (!id) return;
   await supprimerTemoignage(id);

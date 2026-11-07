@@ -14,7 +14,7 @@ import {
 import { dernierQuestionnaire } from "@/lib/crm/questionnaires";
 import { QUESTIONS } from "@/lib/questionnaire";
 import { enClair, pourChamp } from "@/lib/heure";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { peut } from "@/lib/crm/utilisateurs";
 import { ETATS, euros, offresDuContact } from "@/lib/crm/offres";
 import { actionAnnulerOffre, actionCreerOffre, actionEnvoyerOffre } from "../../offres/actions";
@@ -68,13 +68,16 @@ export default async function FicheContact({
   // `hasOwn` : sans lui, `?seq=__proto__` renverrait un objet, que React
   // refuserait d'afficher.
   const retourSeq = seq && Object.hasOwn(RETOURS_SEQ, seq) ? RETOURS_SEQ[seq] : null;
+  // Le droit d'abord, la base ensuite : vérifié après la lecture, un compte
+  // sans accès aux fiches distinguait encore une fiche existante (refus)
+  // d'une fiche absente (404).
+  const qui = await exigerDroit("fichier");
   if (!/^\d+$/.test(id)) notFound();
 
   const donnees = await obtenirContact(id);
   if (!donnees) notFound();
   const { contact, timeline } = donnees;
   const copie = await dernierQuestionnaire(id);
-  const qui = await exigerIdentite();
   const commercial = peut(qui.role, "offres");
   const offres = commercial ? await offresDuContact(id) : [];
   const mesFilleuls = await filleuls(id);

@@ -30,11 +30,26 @@ Dans **Settings → Environment Variables**, ajouter :
 | --- | --- | --- |
 | `ADMIN_PASSWORD` | le mot de passe de connexion au tableau de bord | **oui** |
 | `DATABASE_URL` | ajoutée automatiquement à l'étape 1 | **oui** |
-| `CRON_SECRET` | une longue chaîne aléatoire | recommandé |
+| `ADMIN_SECRET` | une longue chaîne aléatoire, **différente** du mot de passe | **fortement recommandé** |
+| `CRON_SECRET` | une longue chaîne aléatoire | **fortement recommandé** |
+| `RESEND_API_KEY` | la clé d'API Resend | oui, pour que les e-mails partent |
 | `RESEND_FROM` | `La Voie 2 la Conscience <contact@lavoie2laconscience.com>` | recommandé |
+| `RESEND_WEBHOOK_SECRET` | le secret du webhook Resend — voir « Le suivi des envois » | recommandé |
+| `STRIPE_SECRET_KEY` | la clé secrète Stripe — voir « Les paiements » | pour le paiement par carte |
+| `STRIPE_WEBHOOK_SECRET` | le secret du webhook Stripe — voir « Les paiements » | pour le paiement par carte |
 
 Choisissez un mot de passe long et unique : c'est la clé de secours du fichier
-clients. Le changer déconnecte immédiatement toutes les sessions.
+clients.
+
+**`ADMIN_SECRET` signe les sessions et tous les liens personnels** — demande
+d'avis, confirmation d'inscription, accès aux données. Sans elle, c'est le mot
+de passe qui signe : le changer déconnecte alors tout le monde et rend morts les
+liens déjà envoyés. Posée une fois pour toutes, elle permet de changer le mot de
+passe sans rien casser d'autre.
+
+**`CRON_SECRET` ferme la porte de l'automate du matin.** Sans elle, n'importe
+qui pourrait le déclencher ; c'est pourquoi les rappels de règlement, qui
+envoient des liens de paiement, ne partent pas tant qu'elle manque.
 
 Une fois le tableau de bord ouvert, créez un compte nominatif par personne
 depuis l'onglet **Comptes** (voir plus bas) : ce mot de passe principal n'a
@@ -131,11 +146,16 @@ désinscrite automatiquement : c'est ce qui protège la réputation du domaine, 
 donc la délivrabilité de tous les autres messages.
 
 **Ce suivi demande un dernier réglage.** Dans Resend → Webhooks → Add endpoint,
-posez l'adresse `https://www.lavoie2laconscience.com/api/webhooks/resend`.
-Resend affiche alors un secret commençant par `whsec_` : collez-le dans une
-variable `RESEND_WEBHOOK_SECRET` sur Vercel, puis redéployez. Tant qu'elle
-manque, l'adresse répond 503 et refuse tout — personne ne peut y injecter de
-faux événements.
+posez l'adresse `https://www.lavoie2laconscience.com/api/webhooks/resend`, avec
+les événements `email.delivered`, `email.opened`, `email.clicked`,
+`email.bounced` et `email.complained`. Resend affiche alors un secret commençant
+par `whsec_` : collez-le dans une variable `RESEND_WEBHOOK_SECRET` sur Vercel,
+puis redéployez. Activez enfin le suivi des ouvertures et des clics dans les
+réglages du domaine, chez Resend.
+
+Tant que la variable manque, l'adresse répond 503 et refuse tout — personne ne
+peut y injecter de faux événements —, et la page Envois affiche un bandeau qui
+le rappelle : les taux y restent à zéro quoi qu'il arrive.
 
 ## Le point du lundi
 
@@ -151,8 +171,16 @@ son e-mail comme identifiant.
 
 | Rôle | Ce qu'il peut faire |
 | --- | --- |
-| **Propriétaire** | tout : campagnes, séquences, export du fichier, sauvegarde, gestion des comptes |
-| **Secrétariat** | contacts, questionnaires, rendez-vous, journal des envois — rien d'autre |
+| **Propriétaire** | tout : campagnes, séquences, propositions et paiements, export du fichier, sauvegarde, gestion des comptes |
+| **Secrétariat** | contacts, questionnaires, rendez-vous, stages, témoignages, journal des envois — rien de ce qui touche à l'argent ni aux envois de masse |
+| **Observateur** | le carnet de bord, où il note ce qu'il fait, et les chiffres de la vue d'ensemble — aucune fiche, aucune adresse, aucun nom |
+
+**L'observateur** est fait pour quelqu'un qui doit suivre l'activité sans
+toucher au fichier : une personne de l'agence qui note ses actions marketing
+dans le carnet, un associé qui regarde les chiffres. Il ne voit ni la liste des
+contacts, ni les places de stage, ni les « derniers arrivés » de l'accueil, ni
+les tâches du jour — qui mènent toutes à des fiches. Ce qu'on ne voit pas ne
+peut pas fuiter.
 
 Retirer l'accès à quelqu'un se fait en un clic et ne change rien pour les
 autres. Le compte n'est pas supprimé : sa trace reste, et l'accès se rend aussi
@@ -241,8 +269,9 @@ confirmées sur places, demandes à traiter, liste d'attente.
 **Le formulaire est en bas de chaque page de stage.** Il dit franchement ce
 qu'il est : une demande de place, pas une inscription payée. La personne entre
 dans le fichier, reçoit un accusé de réception, et le secrétariat est prévenu.
-Le règlement continue de passer par la billetterie — c'est la confirmation qui
-porte le lien.
+Le règlement vient ensuite, depuis la colonne « Règlement » de la place : un
+lien de paiement par carte (une fois Stripe branché), ou un virement noté à la
+main. Voir « Les paiements ».
 
 Quand les places sont prises, le formulaire bascule tout seul en **liste
 d'attente**, et le message change en conséquence. Les demandes en cours
@@ -662,6 +691,89 @@ Les vingt premiers e-mails d'une liste saisie à la main partent dans la foulée
 le reste, comme les ajouts en masse, suit le rythme du worker : 200 par jour,
 à 8 h.
 
+## À faire aujourd'hui
+
+En tête de la vue d'ensemble, ce qui attend une décision — pas des chiffres,
+des choses à faire. Chaque ligne mène là où ça se traite :
+
+- les **demandes de place à confirmer**, en rouge dès qu'une dépasse les
+  48 heures promises dans l'accusé de réception ;
+- les **entretiens à poser** pour les questionnaires éligibles ;
+- les **règlements en attente** : un lien de paiement parti, jamais honoré ;
+- les **témoignages à relire** avant publication ;
+- les **avis restés sans réponse**.
+
+Quand la liste est vide, elle le dit. C'est une bonne nouvelle.
+
+## À qui on parle : les profils
+
+Le questionnaire range chaque personne dans un profil, et le profil décide de
+ce qu'elle reçoit. **Le budget passe avant tout le reste** :
+
+| Profil | Qui | Ce qu'il reçoit |
+| --- | --- | --- |
+| **Accessible** | revenu de 0 à 2 000 € par mois | les ressources accessibles — livre, contenus offerts —, pas un accompagnement qu'il ne pourrait pas suivre |
+| **Dirigeant** | dirige ou travaille à son compte, plus de 5 000 € par mois | « Dirigeants — ce que la réussite n'a pas réglé », 5 e-mails |
+| **Chemin engagé** | plus de trois ans de travail personnel, pratique tenue | « Chemin engagé — comprendre ne suffit plus », 5 e-mails |
+| **Premier pas** | n'a jamais entrepris de travail personnel | « Premier pas — par où commencer », 5 e-mails |
+| **Transition** | tous les autres : salarié ou en reconversion, budget réel mais mesuré | « En transition — le premier stage », 5 e-mails |
+
+Le profil s'affiche en tête de chaque fiche, se filtre dans la liste des
+contacts, sert de critère aux campagnes, et la vue d'ensemble montre combien de
+personnes il compte et combien deviennent clientes. C'est le chiffre qui dit
+où chercher : si les dirigeants se décident bien plus que les autres, la
+réponse n'est pas d'écrire plus d'e-mails, c'est d'aller chercher plus de
+dirigeants.
+
+## Les paiements
+
+Onglet **Paiements**, réservé au propriétaire. Il réunit l'argent au même
+endroit : encaissé ce mois-ci et en tout, par carte ou à la main, liens en
+attente, remboursements, et la liste de tous les règlements, tous stages
+confondus.
+
+**Encaisser une place.** Depuis la colonne « Règlement » d'un stage, on envoie
+un lien d'**acompte** (30 %, arrondi à l'euro) ou un lien pour **la totalité**.
+La personne paie par carte sur une page sécurisée de Stripe : aucun numéro de
+carte ne passe par le site. Un lien vaut vingt-quatre heures, et une place n'a
+qu'un lien vivant à la fois — en ouvrir un nouveau périme l'ancien, ce qui
+évite de faire payer deux fois. Un virement se note à la main, et la ligne se
+met à jour pareillement.
+
+**Le rappel.** Un lien resté sans paiement est rappelé **une fois**, trois
+jours après, par l'automate du matin — à condition que `CRON_SECRET` soit
+posée. Au-delà, ce n'est plus un oubli mais une hésitation, et une hésitation
+se traite de vive voix.
+
+**Les remboursements** se font chez Stripe. Le site l'apprend tout seul : la
+place affiche ce qui reste réellement payé, la fiche de la personne garde la
+trace du remboursement, et les totaux sont comptés nets.
+
+Le site ne refacture **jamais rien de lui-même** après un remboursement.
+Remboursement intégral : les liens encore ouverts pour la place sont périmés,
+plus rien ne part tout seul ; la place, elle, reste telle quelle — l'annuler,
+la retirer ou refaire payer vous revient. Remboursement partiel : le reste dû
+affiché augmente d'autant ; si c'était un geste commercial, n'envoyez pas de
+lien de solde.
+
+**Brancher Stripe.** La page Paiements contient la marche à suivre pas à pas
+et **vérifie elle-même chaque étape** à chaque ouverture : la clé posée est
+bien la secrète, Stripe l'accepte, le compte peut encaisser, le secret du
+webhook est posé, l'adresse `https://www.lavoie2laconscience.com/api/stripe/webhook`
+est déclarée chez Stripe avec les trois événements (`checkout.session.completed`,
+`checkout.session.async_payment_succeeded`, `charge.refunded`), Stripe a déjà
+réussi à appeler le site, et les rappels peuvent partir. On commence en mode
+essai, avec la carte `4242 4242 4242 4242`, puis on passe en production en
+déclarant l'adresse une seconde fois, avec son propre secret.
+
+## La liste d'attente qui se réveille
+
+Quand une place se libère — une annulation, un retrait —, la première personne
+qui attendait **ce jour-là** est prévenue dans la minute. La place lui est
+réservée quarante-huit heures : elle répond au message, le secrétariat fait le
+reste. Si elle ne se manifeste pas, la suivante sera prévenue au prochain
+désistement.
+
 ## Ce que fait le tableau de bord
 
 **Vue d'ensemble** — nombre de contacts, nouveaux sur 7 et 30 jours, clients,
@@ -682,16 +794,23 @@ de notes libre, et le statut à faire évoluer.
 Le statut avance tout seul quand la personne agit sur le site, et ne recule
 jamais. Vous pouvez le corriger à la main à tout moment.
 
-**Séquences** — les e-mails qui partent tout seuls. Trois scénarios sont
-installés d'office :
+**Séquences** — les e-mails qui partent tout seuls, rangés par catégorie de
+personnes. Chaque catégorie a son déclencheur :
 
 | Séquence | Se déclenche quand | Contenu |
 | --- | --- | --- |
 | Suite du guide gratuit | quelqu'un télécharge le guide | 4 e-mails sur 16 jours |
 | Bienvenue aux Lettres | inscription aux Lettres | 2 e-mails sur 7 jours |
 | Suite d'une demande d'appel | formulaire de contact rempli | accusé de réception + relance à J+4 |
-| Prérequis avant l'entretien | questionnaire jugé éligible | le cadre + le lien de confirmation, relance à J+3 |
-| Orientation après questionnaire | questionnaire sous le seuil | renvoi vers le livret et les stages |
+| Prérequis avant l'entretien | questionnaire au-dessus du seuil | le cadre + le lien de confirmation, relance à J+3 |
+| Suite web-conférence — vers les stages | questionnaire sous le seuil, revenu supérieur à 2 000 € | 4 e-mails sur 11 jours |
+| Suite web-conférence — ressources accessibles | questionnaire, revenu modeste | 7 e-mails sur 18 jours |
+| Suite d'un entretien | statut passé à « Appel fait » | 2 e-mails sur 4 jours |
+| Après le stage | cinq jours après un stage | 3 e-mails sur 25 jours |
+| Les quatre séquences par profil | questionnaire — voir « À qui on parle » | 5 e-mails chacune, sur 24 jours |
+
+L'ancienne « Orientation après questionnaire » est conservée pour l'historique,
+mais plus personne n'y entre : le routage au revenu l'a remplacée.
 
 Le sujet, le texte et le délai de chaque étape se modifient directement depuis
 le tableau de bord. `{{prenom}}` est remplacé par le prénom du destinataire.
@@ -719,5 +838,8 @@ désabonnement coupe instantanément toutes les séquences en cours. Les donnée
 sont dans votre propre base : pensez à répondre aux demandes d'accès et de
 suppression, et à garder la politique de confidentialité à jour.
 
-**Sauvegarde.** L'export CSV depuis la page Contacts est votre filet de
-sécurité. Prenez-en un de temps en temps.
+**Sauvegarde.** Une copie complète du fichier — contacts, séquences, stages,
+places, règlements — part chaque matin par e-mail, sauf si rien n'a changé
+depuis la veille. C'est elle, et elle seule, qui se restaure depuis l'onglet
+Comptes. L'export CSV de la page Contacts ne ramène que les contacts : utile
+pour un tableur, pas pour reprendre le fichier.

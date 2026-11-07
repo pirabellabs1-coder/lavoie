@@ -37,6 +37,7 @@ const STATUT: Record<LigneReglement["statut"], { texte: string; ton: string }> =
   manuelle: { texte: "Reçu à la main", ton: "client" },
   attente: { texte: "Lien envoyé", ton: "attente" },
   expiree: { texte: "Lien remplacé", ton: "nouveau" },
+  remboursee: { texte: "Remboursé", ton: "perdu" },
 };
 
 const GENRE: Record<LigneReglement["genre"], string> = {
@@ -93,7 +94,10 @@ export default async function PaiementsPage() {
           <Tuile
             label="Encaissé en tout"
             valeur={euros(bilan.total)}
-            detail={`${euros(bilan.carte)} par carte · ${euros(bilan.main)} à la main`}
+            detail={
+              `${euros(bilan.carte)} par carte · ${euros(bilan.main)} à la main` +
+              (bilan.rembourse ? ` · ${euros(bilan.rembourse)} remboursés` : "")
+            }
           />
           <Tuile
             label="Liens en attente"
@@ -139,7 +143,7 @@ export default async function PaiementsPage() {
             Événements :{" "}
             {EVENEMENTS_WEBHOOK.map((e, i) => (
               <span key={e}>
-                {i > 0 && " et "}
+                {i > 0 && (i === EVENEMENTS_WEBHOOK.length - 1 ? " et " : ", ")}
                 <code>{e}</code>
               </span>
             ))}
@@ -159,7 +163,7 @@ export default async function PaiementsPage() {
               (elle commence par <code>sk_test_</code>). Pas la clé publique.
             </li>
             <li>
-              Dans Développeurs → Webhooks, <strong>ajouter une destination</strong> : l&apos;adresse et les deux
+              Dans Développeurs → Webhooks, <strong>ajouter une destination</strong> : l&apos;adresse et les
               événements ci-dessus. Stripe affiche alors un <em>secret de signature</em> (<code>whsec_…</code>).
             </li>
             <li>
@@ -223,7 +227,14 @@ export default async function PaiementsPage() {
                     </td>
                     <td>{l.titre}</td>
                     <td>{GENRE[l.genre] ?? l.genre}</td>
-                    <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{euros(l.montant)}</td>
+                    <td style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+                      {euros(l.montant)}
+                      {l.rembourse > 0 && l.statut !== "remboursee" && (
+                        <span className="adm-carte-sous" style={{ display: "block", margin: 0 }}>
+                          dont {euros(l.rembourse)} remboursés
+                        </span>
+                      )}
+                    </td>
                     <td>
                       <span className="adm-tag" data-s={(STATUT[l.statut] ?? STATUT.attente).ton}>
                         {(STATUT[l.statut] ?? STATUT.attente).texte}

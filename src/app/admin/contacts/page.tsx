@@ -3,7 +3,7 @@ import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
 import { STATUTS, STATUT_LABEL, listerContacts, nomAffiche } from "@/lib/crm/contacts";
 import { groupesManuels } from "@/lib/crm/categories";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { peut } from "@/lib/crm/utilisateurs";
 import { actionCreerContact } from "./actions";
 import { profil, PROFILS } from "@/lib/crm/profils";
@@ -28,7 +28,7 @@ export default async function ContactsPage({
   if (statut) url.set("statut", statut);
   if (profilFiltre) url.set("profil", profilFiltre);
   const filtresEnUrl = url.size ? `?${url}` : "";
-  const qui = await exigerIdentite();
+  const qui = await exigerDroit("fichier");
   const automate = peut(qui.role, "sequences");
   const contacts = isDbConfigured()
     ? await listerContacts({ recherche: q, statut, profil: profilFiltre, limite: 500 })

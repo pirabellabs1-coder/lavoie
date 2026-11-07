@@ -36,12 +36,16 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
   const params = await searchParams;
   const refuse = params.refuse === "1";
 
+  // Un observateur voit les chiffres, jamais une personne : pas de noms, pas
+  // d'adresses, pas de tâches qui mèneraient à des fiches qu'il ne peut ouvrir.
+  const fichier = peut(qui.role, "fichier");
+
   const stats = await statistiques();
-  const derniers = await listerContacts({ limite: 8 });
+  const derniers = fichier ? await listerContacts({ limite: 8 }) : [];
   const sauvegarde = peut(qui.role, "sauvegarde") ? await derniereSauvegarde() : null;
   const passage = await dernierPassage();
   const silencieux = isDbConfigured() && enSilence(passage);
-  const taches = isDbConfigured() ? await cequiAttend() : [];
+  const taches = isDbConfigured() && fichier ? await cequiAttend() : [];
   const parProfil = isDbConfigured() ? await repartitionParProfil() : [];
   const plusGrand = Math.max(1, ...parProfil.map((r) => r.total));
 
@@ -88,9 +92,11 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
       titre="Vue d'ensemble"
       sousTitre="Ce que fait votre site, en un coup d'œil."
       actions={
-        <Link href="/admin/contacts" className="adm-btn">
-          Voir tous les contacts
-        </Link>
+        fichier && (
+          <Link href="/admin/contacts" className="adm-btn">
+            Voir tous les contacts
+          </Link>
+        )
       }
     >
       {refuse && (
@@ -131,6 +137,7 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
 
       {/* Ce qui attend une décision. En tête, parce que c'est la raison
           d'ouvrir cet écran le matin. */}
+      {fichier && (
       <div className="adm-carte" style={{ marginBottom: 14 }}>
         <p className="adm-titre">À faire aujourd&apos;hui</p>
         {taches.length === 0 ? (
@@ -152,6 +159,7 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
           </div>
         )}
       </div>
+      )}
 
       <div className="adm-grille adm-g4" style={{ marginBottom: 14 }}>
         <Tuile
@@ -216,9 +224,13 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
               return (
                 <div className="adm-barre" key={r.profil}>
                   <span className="nom">
-                    <Link href={`/admin/contacts?profil=${r.profil}`} style={{ color: "inherit" }}>
-                      {p.nom}
-                    </Link>
+                    {fichier ? (
+                      <Link href={`/admin/contacts?profil=${r.profil}`} style={{ color: "inherit" }}>
+                        {p.nom}
+                      </Link>
+                    ) : (
+                      p.nom
+                    )}
                   </span>
                   <span className="val">
                     {r.total}
@@ -309,9 +321,11 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
                 </p>
               )}
             </div>
-            <Link href="/admin/rendez-vous" className="adm-btn fantome petit">
-              Voir les rendez-vous
-            </Link>
+            {fichier && (
+              <Link href="/admin/rendez-vous" className="adm-btn fantome petit">
+                Voir les rendez-vous
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -336,6 +350,7 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
         </div>
       )}
 
+      {fichier && (
       <div className="adm-carte">
         <p className="adm-titre">Derniers arrivés</p>
         {derniers.length === 0 ? (
@@ -377,6 +392,7 @@ export default async function AdminAccueil({ searchParams }: { searchParams: Par
           </div>
         )}
       </div>
+      )}
     </Cadre>
   );
 }

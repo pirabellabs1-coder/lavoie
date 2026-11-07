@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { identite, identiteAvecDroit } from "@/lib/crm/session";
+import { identiteAvecDroit } from "@/lib/crm/session";
 import {
   changerStatutParticipation,
   creerStage,
@@ -38,7 +38,7 @@ function rafraichir(slug?: string | null) {
 }
 
 export async function actionStatutParticipation(donnees: FormData) {
-  if (!(await identite())) return;
+  if (!(await identiteAvecDroit("fichier"))) return;
   const id = String(donnees.get("id") ?? "");
   const statut = String(donnees.get("statut") ?? "");
   if (!id || !statut) return;

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
 import { listerEnvois } from "@/lib/crm/sequences";
-import { exigerIdentite } from "@/lib/crm/session";
+import { exigerDroit } from "@/lib/crm/session";
 import { SITE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +33,7 @@ export default async function EnvoisPage() {
   // Le proxy garde déjà /admin, mais c'était ici la seule page à ne compter
   // que sur lui. Trois cents adresses de destinataires méritent la même double
   // barrière que les seize autres écrans.
-  await exigerIdentite();
+  await exigerDroit("fichier");
 
   const envois = isDbConfigured() ? await listerEnvois(300) : [];
   const echecs = envois.filter((e) => e.statut === "echec").length;

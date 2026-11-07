@@ -193,7 +193,7 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       nom                   TEXT NOT NULL,
       -- pbkdf2$iterations$sel$empreinte — jamais le mot de passe lui-même.
       empreinte             TEXT NOT NULL,
-      role                  TEXT NOT NULL DEFAULT 'secretariat',
+      role                  TEXT NOT NULL DEFAULT 'observateur',
       actif                 BOOLEAN NOT NULL DEFAULT TRUE,
       cree_le               TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       derniere_connexion_le TIMESTAMPTZ
@@ -362,6 +362,15 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
     )
   `;
   await sql`CREATE INDEX IF NOT EXISTS paiements_place ON paiements (participation_id)`;
+  // Les remboursements faits chez Stripe. Stripe les signale par l'identifiant
+  // du paiement (pi_…), pas par la session : on le garde à l'encaissement.
+  await sql`
+    ALTER TABLE paiements
+      ADD COLUMN IF NOT EXISTS payment_intent  TEXT,
+      ADD COLUMN IF NOT EXISTS rembourse_cents INT NOT NULL DEFAULT 0,
+      ADD COLUMN IF NOT EXISTS rembourse_le    TIMESTAMPTZ
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS paiements_intent ON paiements (payment_intent)`;
 
   // Les événements Stripe déjà traités. Stripe rejoue pendant trois jours : un
   // événement vu deux fois ne doit pas encaisser deux fois.
@@ -426,6 +435,9 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
     )
   `;
   await sql`CREATE INDEX IF NOT EXISTS idx_actions_jour ON actions (statut, fait_le DESC)`;
+
+  // Un compte créé sans rôle explicite reçoit le moins de droits possible.
+  await sql`ALTER TABLE utilisateurs ALTER COLUMN role SET DEFAULT 'observateur'`;
 
   // L'invitation d'un collaborateur : on ne garde que l'empreinte du jeton,
   // jamais le jeton lui-même — la personne invitée est la seule à l'avoir reçu.

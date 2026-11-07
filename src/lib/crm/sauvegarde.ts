@@ -85,7 +85,8 @@ export async function construireSauvegarde(): Promise<Sauvegarde | null> {
       // connaît les virements saisis à la main. La colonne `lien` est laissée
       // de côté — une adresse de session périmée n'a plus d'usage.
       sql`SELECT id, participation_id, contact_id, montant_cents, genre, statut,
-                 session_id, relance_le, paye_le, cree_le
+                 session_id, payment_intent, rembourse_cents, rembourse_le,
+                 relance_le, paye_le, cree_le
           FROM paiements ORDER BY id`,
       sql`SELECT * FROM offres ORDER BY id`,
       sql`SELECT * FROM temoignages ORDER BY id`,
