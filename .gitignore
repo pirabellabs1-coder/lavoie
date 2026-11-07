@@ -63,3 +63,6 @@ next-env.d.ts
 /*.heic
 /*.mp4
 /*.mov
+
+# Captures du tableau de bord (noms de contacts), rendus et polices extraites du build
+/montage/

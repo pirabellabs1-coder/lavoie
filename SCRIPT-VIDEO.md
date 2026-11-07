@@ -1,9 +1,11 @@
 # Script de la vidéo de présentation
 
-> **La vidéo se fait sans voix.** Le texte ci-dessous a été découpé et minuté en
-> sous-titres : voir [VIDEO-MONTAGE.md](VIDEO-MONTAGE.md) et le fichier
-> `SOUS-TITRES.srt`, prêt à déposer dans le logiciel de montage. Cette page
-> reste le texte intégral, utile pour relire ou réécrire une phrase.
+> **Ce script n'est plus celui de la vidéo livrée.** La vidéo retenue est sans
+> voix et ne montre que le tableau de bord : sous-titres incrustés, musique
+> d'ambiance, environ six minutes. Elle se fabrique avec
+> `python outils/video_tableau_de_bord.py`, qui contient son propre texte. Cette
+> page reste le récit complet du système — site public compris — si une vidéo
+> commentée devait se faire un jour.
 
 **Durée visée : 9 à 10 minutes.** Une version courte est indiquée
 à la fin : les chapitres marqués ✂ se coupent sans casser le fil.
