@@ -209,13 +209,10 @@ export default async function StagesPage({ searchParams }: { searchParams: Param
       )}
       {reglable && !stripeActif() && (
         <div className="adm-alerte">
-          <strong>Le paiement en ligne n&apos;est pas encore branché.</strong> Ajoutez les
-          variables <code>STRIPE_SECRET_KEY</code> et <code>STRIPE_WEBHOOK_SECRET</code> dans les
-          réglages Vercel, puis redéployez. Dans Stripe, l&apos;adresse à déclarer est{" "}
-          <code>https://www.lavoie2laconscience.com/api/stripe/webhook</code>, pour les
-          événements <code>checkout.session.completed</code> et{" "}
-          <code>checkout.session.async_payment_succeeded</code>. En attendant, un règlement reçu
-          par virement s&apos;enregistre à la main dans la colonne « Règlement ».
+          <strong>Le paiement en ligne n&apos;est pas encore branché.</strong> La marche à suivre,
+          et la vérification de chaque étape, sont dans{" "}
+          <Link href="/admin/paiements">Paiements</Link>. En attendant, un règlement reçu par
+          virement s&apos;enregistre à la main dans la colonne « Règlement ».
         </div>
       )}
       {reglable && stripeEnEssai() && (

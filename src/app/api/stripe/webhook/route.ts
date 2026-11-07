@@ -57,7 +57,8 @@ export async function POST(req: Request) {
     // rejeu reprendra tout.
     await sql.begin(async (tx) => {
       const [neuf] = await tx<{ id: string }[]>`
-        INSERT INTO stripe_evenements (id, type) VALUES (${evenement.id}, ${evenement.type})
+        INSERT INTO stripe_evenements (id, type, livemode)
+        VALUES (${evenement.id}, ${evenement.type}, ${evenement.livemode})
         ON CONFLICT (id) DO NOTHING
         RETURNING id
       `;

@@ -372,6 +372,10 @@ async function ensureSchema(sql: postgres.Sql): Promise<void> {
       vu_le   TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
+  // Essai ou production : un appel reçu en essai ne prouve rien du secret de
+  // production. Sans cette colonne, le diagnostic restait vert au passage en
+  // production avec un mauvais secret — au moment exact où cela compte.
+  await sql`ALTER TABLE stripe_evenements ADD COLUMN IF NOT EXISTS livemode BOOLEAN`;
 
   // Les photos déposées depuis le tableau de bord. Identifiant tiré au sort :
   // deviner l'adresse d'une image ne doit pas se faire en incrémentant.

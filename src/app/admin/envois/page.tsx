@@ -3,6 +3,7 @@ import Cadre from "../Cadre";
 import { isDbConfigured } from "@/lib/crm/db";
 import { listerEnvois } from "@/lib/crm/sequences";
 import { exigerIdentite } from "@/lib/crm/session";
+import { SITE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,22 @@ export default async function EnvoisPage() {
         <div className="adm-alerte">
           <strong>La base de données n&apos;est pas encore branchée.</strong> Ajoutez la
           variable <code>DATABASE_URL</code> dans les réglages Vercel, puis redéployez.
+        </div>
+      )}
+
+      {/* Sans ce retour, « 0 % ouverts » ne mesure rien, et une adresse morte
+          ou une plainte pour spam ne désinscrit personne : la délivrabilité de
+          tous les envois s'abîme sans que l'écran le montre. */}
+      {!process.env.RESEND_WEBHOOK_SECRET && (
+        <div className="adm-alerte">
+          <strong>Le suivi des e-mails n&apos;est pas branché.</strong> Les taux d&apos;ouverture et de
+          clic restent à zéro quoi qu&apos;il arrive, et les adresses invalides ou les plaintes pour spam
+          ne désinscrivent personne. Dans Resend : Webhooks → Add endpoint →{" "}
+          <code>{`${SITE.url}/api/webhooks/resend`}</code>, événements{" "}
+          <code>email.delivered</code>, <code>email.opened</code>, <code>email.clicked</code>,{" "}
+          <code>email.bounced</code> et <code>email.complained</code>. Copiez le secret de signature
+          dans la variable Vercel <code>RESEND_WEBHOOK_SECRET</code>, redéployez, puis activez le suivi
+          des ouvertures et des clics dans les réglages du domaine.
         </div>
       )}
 

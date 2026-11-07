@@ -26,6 +26,13 @@ import { SITE } from "@/lib/site";
 /** La part demandée à la réservation quand on ne prend pas tout. */
 export const PART_ACOMPTE = 0.3;
 
+/** L'adresse que Stripe doit appeler, et les deux événements qui comptent. */
+export const ADRESSE_WEBHOOK = `${SITE.url}/api/stripe/webhook`;
+export const EVENEMENTS_WEBHOOK = [
+  "checkout.session.completed",
+  "checkout.session.async_payment_succeeded",
+] as const;
+
 export type GenrePaiement = "acompte" | "solde" | "integral";
 
 export type Paiement = {
@@ -47,7 +54,8 @@ export function stripeActif(): boolean {
 
 /** Les clés de test commencent par `sk_test_` : on le dit à l'écran. */
 export function stripeEnEssai(): boolean {
-  return (process.env.STRIPE_SECRET_KEY ?? "").startsWith("sk_test_");
+  const cle = process.env.STRIPE_SECRET_KEY ?? "";
+  return cle.startsWith("sk_test_") || cle.startsWith("rk_test_");
 }
 
 async function client() {
@@ -489,5 +497,385 @@ export async function relancerLesPaiements(): Promise<number> {
   } catch (e) {
     console.error("[crm] relancerLesPaiements:", e);
     return 0;
+  }
+}
+
+// ─── Le branchement, vérifié ────────────────────────────────────────────────
+//
+// Poser deux clés dans Vercel ne dit pas qu'elles marchent. Une clé publique
+// collée à la place de la secrète, une adresse de webhook déclarée sans le
+// « www », un seul des deux événements coché : tout cela échoue en silence, et
+// on ne le découvre qu'au premier paiement perdu. Le tableau de bord pose donc
+// les questions lui-même, à Stripe et à la base, et dit ce qui reste à faire.
+
+export type EtatEtape = "ok" | "a-faire" | "probleme";
+export type Etape = { titre: string; etat: EtatEtape; detail: string };
+
+type PointDAccueil = { url: string; status: string; enabled_events: string[] };
+
+/**
+ * Une adresse ramenée à sa forme comparable : l'origine en minuscules, le
+ * chemin tel quel — les routes distinguent les majuscules —, sans barre finale.
+ */
+function sansFin(url: string): string {
+  try {
+    const u = new URL(url.trim());
+    return `${u.protocol}//${u.host}`.toLowerCase() + u.pathname.replace(/\/+$/, "");
+  } catch {
+    return url.trim().replace(/\/+$/, "");
+  }
+}
+
+/**
+ * Juge la déclaration du webhook chez Stripe, à partir de la liste des
+ * adresses que Stripe connaît. Pure, pour être tenue par des tests.
+ */
+export function jugerWebhook(
+  points: PointDAccueil[],
+  adresse: string = ADRESSE_WEBHOOK,
+): { etat: EtatEtape; detail: string } {
+  const voulue = sansFin(adresse);
+  const exacts = points.filter((p) => sansFin(p.url) === voulue);
+
+  if (exacts.length === 0) {
+    // Une adresse presque juste est le piège le plus courant : sans « www »,
+    // en http, ou sur l'ancienne adresse Vercel. Stripe l'appelle, le site
+    // redirige, et la redirection fait échouer la livraison.
+    const chemin = "/api/stripe/webhook";
+    const proche = points.find((p) => sansFin(p.url).toLowerCase().endsWith(chemin));
+    if (proche) {
+      return {
+        etat: "probleme",
+        detail: `Une adresse proche est déclarée (${proche.url}), mais pas exactement ${adresse}. Corrigez-la chez Stripe : une redirection suffit à faire échouer l'appel.`,
+      };
+    }
+    return {
+      etat: "a-faire",
+      detail: `Aucune adresse n'est déclarée chez Stripe pour ce site. Ajoutez ${adresse}.`,
+    };
+  }
+
+  const actives = exacts.filter((p) => p.status === "enabled");
+  if (actives.length === 0) {
+    return { etat: "probleme", detail: "L'adresse est déclarée, mais désactivée chez Stripe." };
+  }
+  if (actives.length > 1) {
+    // Chaque déclaration a son propre secret, et le site n'en connaît qu'un :
+    // l'une des deux échoue à chaque paiement, sans qu'on sache laquelle.
+    return {
+      etat: "probleme",
+      detail: `L'adresse est déclarée ${actives.length} fois chez Stripe. Gardez-en une seule, et son secret dans Vercel.`,
+    };
+  }
+  const active = actives[0];
+
+  const recus = new Set(active.enabled_events);
+  const manquants = recus.has("*") ? [] : EVENEMENTS_WEBHOOK.filter((e) => !recus.has(e));
+  if (manquants.length > 0) {
+    return {
+      etat: "probleme",
+      detail: `L'adresse est déclarée, mais il lui manque : ${manquants.join(", ")}.`,
+    };
+  }
+
+  return { etat: "ok", detail: "L'adresse est déclarée, active, avec les deux événements." };
+}
+
+export type Diagnostic = {
+  mode: "essai" | "production" | null;
+  compte: string | null;
+  etapes: Etape[];
+};
+
+type ErreurStripe = { type?: string; code?: string; requestId?: string; message?: string };
+
+/** Ce qu'on garde d'une erreur Stripe pour les journaux : jamais la clé. */
+function trace(lieu: string, e: unknown): ErreurStripe {
+  const err = (e ?? {}) as ErreurStripe;
+  console.error(`[stripe] ${lieu}:`, err.type ?? "inconnue", err.code ?? "", err.requestId ?? "");
+  return err;
+}
+
+/** Interroge Stripe et la base, et rend l'état de chaque étape du branchement. */
+export async function diagnosticStripe(): Promise<Diagnostic> {
+  const etapes: Etape[] = [];
+  const brute = process.env.STRIPE_SECRET_KEY ?? "";
+  const secretBrut = process.env.STRIPE_WEBHOOK_SECRET ?? "";
+  const cle = brute.trim();
+  const secret = secretBrut.trim();
+  const mode =
+    cle.startsWith("sk_test_") || cle.startsWith("rk_test_")
+      ? "essai"
+      : cle.startsWith("sk_live_") || cle.startsWith("rk_live_")
+        ? "production"
+        : null;
+  let compte: string | null = null;
+
+  // 1. La clé secrète. Le paiement et le webhook la lisent telle quelle : un
+  // retour à la ligne collé avec elle la rend inutilisable, même si elle
+  // « ressemble » à une bonne clé.
+  let cleUtilisable = false;
+  if (!cle) {
+    etapes.push({
+      titre: "La clé secrète",
+      etat: "a-faire",
+      detail: "Ajoutez STRIPE_SECRET_KEY dans les réglages Vercel, puis redéployez.",
+    });
+  } else if (cle.startsWith("pk_")) {
+    etapes.push({
+      titre: "La clé secrète",
+      etat: "probleme",
+      detail: "C'est la clé publique (pk_…) qui est posée. Il faut la clé secrète, qui commence par sk_.",
+    });
+  } else if (!mode) {
+    etapes.push({
+      titre: "La clé secrète",
+      etat: "probleme",
+      detail: "Cette valeur ne ressemble pas à une clé Stripe : elle devrait commencer par sk_test_ ou sk_live_.",
+    });
+  } else if (brute !== cle) {
+    etapes.push({
+      titre: "La clé secrète",
+      etat: "probleme",
+      detail: "La clé a été collée avec un espace ou un retour à la ligne en trop. Recollez-la dans Vercel, sans rien autour.",
+    });
+  } else {
+    cleUtilisable = true;
+    etapes.push({
+      titre: "La clé secrète",
+      etat: "ok",
+      detail:
+        mode === "essai"
+          ? "Clé d'essai posée : les paiements ne débitent rien, la carte 4242 4242 4242 4242 est acceptée."
+          : "Clé de production posée : les paiements sont réels.",
+    });
+  }
+
+  // 2, 3 et 5. Le compte et les adresses déclarées, demandés en même temps :
+  // l'un après l'autre, la page pouvait attendre seize secondes.
+  let compteLu: import("stripe").Stripe.Account | null = null;
+  let erreurCompte: ErreurStripe | null = null;
+  let adresses: PointDAccueil[] | null = null;
+  let erreurAdresses: ErreurStripe | null = null;
+  if (cleUtilisable) {
+    const { default: Stripe } = await import("stripe");
+    const stripe = new Stripe(cle, { timeout: 8000, maxNetworkRetries: 0 });
+    const [c, w] = await Promise.allSettled([
+      stripe.accounts.retrieveCurrent(),
+      stripe.webhookEndpoints.list({ limit: 100 }),
+    ]);
+    if (c.status === "fulfilled") compteLu = c.value;
+    else erreurCompte = trace("compte", c.reason);
+    if (w.status === "fulfilled") {
+      adresses = w.value.data.map((p) => ({ url: p.url, status: p.status, enabled_events: p.enabled_events }));
+    } else erreurAdresses = trace("adresses", w.reason);
+  }
+
+  if (compteLu) {
+    const c = compteLu;
+    compte = c.settings?.dashboard?.display_name || c.business_profile?.name || c.email || c.id;
+    etapes.push({
+      titre: "Stripe accepte la clé",
+      etat: "ok",
+      detail: `Compte « ${compte} »${c.country ? ` (${c.country})` : ""}.`,
+    });
+    if (c.charges_enabled) {
+      etapes.push({
+        titre: "Le compte peut encaisser",
+        etat: "ok",
+        detail: c.payouts_enabled
+          ? "Paiements et virements vers votre banque sont activés."
+          : "Les paiements sont activés ; les virements vers votre banque attendent encore un IBAN ou une vérification.",
+      });
+    } else if (mode === "essai") {
+      // En essai, un compte non activé est l'état normal du début : rien ne
+      // bloque, et la ligne ne doit pas compter parmi les « points à régler ».
+      etapes.push({
+        titre: "Le compte peut encaisser",
+        etat: "ok",
+        detail:
+          "En essai, rien à faire : les paiements de test fonctionnent. Avant de passer en production, terminez l'activation du compte chez Stripe — activité, identité, IBAN.",
+      });
+    } else {
+      etapes.push({
+        titre: "Le compte peut encaisser",
+        etat: "a-faire",
+        detail:
+          "Stripe attend encore des informations (activité, identité, IBAN) avant d'autoriser les encaissements. Terminez l'activation dans votre compte Stripe.",
+      });
+    }
+  } else if (erreurCompte) {
+    etapes.push({
+      titre: "Stripe accepte la clé",
+      etat: "probleme",
+      detail:
+        erreurCompte.type === "StripeAuthenticationError"
+          ? "Stripe refuse cette clé : elle est fausse, incomplète ou révoquée. Recopiez-la depuis votre compte Stripe."
+          : erreurCompte.type === "StripePermissionError"
+            ? "Cette clé restreinte n'a pas le droit de lire le compte. Utilisez la clé secrète standard, ou donnez-lui ce droit chez Stripe."
+            : "Stripe n'a pas répondu. Rechargez la page dans un instant.",
+    });
+  }
+
+  // 4. Le secret de signature du webhook.
+  if (!secret) {
+    etapes.push({
+      titre: "Le secret du webhook",
+      etat: "a-faire",
+      detail: "Ajoutez STRIPE_WEBHOOK_SECRET dans les réglages Vercel : Stripe le donne quand on déclare l'adresse.",
+    });
+  } else if (!secret.startsWith("whsec_")) {
+    etapes.push({
+      titre: "Le secret du webhook",
+      etat: "probleme",
+      detail: "Cette valeur n'est pas un secret de signature : il commence par whsec_.",
+    });
+  } else if (secretBrut !== secret) {
+    etapes.push({
+      titre: "Le secret du webhook",
+      etat: "probleme",
+      detail: "Le secret a été collé avec un espace ou un retour à la ligne en trop : aucune signature ne pourra correspondre. Recollez-le dans Vercel.",
+    });
+  } else {
+    etapes.push({ titre: "Le secret du webhook", etat: "ok", detail: "Secret de signature posé." });
+  }
+
+  // 5. L'adresse déclarée chez Stripe, dans le mode de la clé.
+  if (adresses) {
+    const jugement = jugerWebhook(adresses);
+    etapes.push({
+      titre: "L'adresse déclarée chez Stripe",
+      etat: jugement.etat,
+      detail:
+        jugement.etat === "ok"
+          ? jugement.detail
+          : `${jugement.detail} (Les adresses se déclarent séparément en mode essai et en production.)`,
+    });
+  } else if (erreurAdresses) {
+    etapes.push({
+      titre: "L'adresse déclarée chez Stripe",
+      etat: "probleme",
+      detail:
+        erreurAdresses.type === "StripePermissionError"
+          ? "Cette clé n'a pas le droit de lire les adresses déclarées. Vérifiez-les directement chez Stripe."
+          : "Impossible de lire les adresses déclarées pour l'instant. Rechargez la page, ou vérifiez-les chez Stripe.",
+    });
+  }
+
+  // 6. Stripe a-t-il déjà réussi à appeler le site, dans ce mode ? Seule la
+  // preuve compte : un appel dont la signature est refusée n'est pas
+  // enregistré, et un appel d'essai ne dit rien du secret de production.
+  const appel = mode ? await dernierAppelStripe(mode === "production") : null;
+  etapes.push(
+    appel
+      ? {
+          titre: "Stripe appelle bien le site",
+          etat: "ok",
+          detail: `Dernier appel reçu et vérifié le ${appel.vu_le.toLocaleString("fr-FR", {
+            timeZone: "Europe/Paris",
+            dateStyle: "long",
+            timeStyle: "short",
+          })} (${appel.type}).`,
+        }
+      : {
+          titre: "Stripe appelle bien le site",
+          etat: "a-faire",
+          detail:
+            mode === "production"
+              ? "Aucun appel de production reçu pour l'instant. Au premier vrai paiement, cette ligne passera au vert. Si elle reste orange après un paiement, le secret du webhook ne correspond pas à l'adresse déclarée en production."
+              : "Aucun appel reçu pour l'instant. Faites un paiement d'essai : cette ligne passera au vert. S'il reste orange après un paiement, le secret du webhook ne correspond pas à l'adresse déclarée.",
+        },
+  );
+
+  return { mode, compte, etapes };
+}
+
+/** Le dernier événement Stripe reçu et vérifié, en essai ou en production. */
+export async function dernierAppelStripe(
+  production: boolean,
+): Promise<{ type: string; vu_le: Date } | null> {
+  const sql = await getDb();
+  if (!sql) return null;
+  try {
+    const [l] = await sql<{ type: string; vu_le: Date }[]>`
+      SELECT type, vu_le FROM stripe_evenements
+      WHERE livemode = ${production}
+      ORDER BY vu_le DESC LIMIT 1
+    `;
+    return l ?? null;
+  } catch (e) {
+    console.error("[crm] dernierAppelStripe:", e);
+    return null;
+  }
+}
+
+export type Bilan = {
+  mois: number;
+  total: number;
+  carte: number;
+  main: number;
+  ouverts: number;
+  montantOuvert: number;
+};
+
+/** Ce qui est encaissé — ce mois-ci, en tout, par carte, à la main — et ce qui attend. */
+export async function bilanPaiements(): Promise<Bilan | null> {
+  const sql = await getDb();
+  if (!sql) return null;
+  try {
+    // Le mois se compte à l'heure de Paris : un virement noté le 1er à 0 h 30
+    // appartient au mois qui commence, pas à celui qui finit en UTC.
+    const [b] = await sql<Bilan[]>`
+      SELECT
+        COALESCE(SUM(montant_cents) FILTER (
+          WHERE statut IN ('payee', 'manuelle')
+            AND paye_le >= (date_trunc('month', NOW() AT TIME ZONE 'Europe/Paris') AT TIME ZONE 'Europe/Paris')
+        ), 0)::int AS mois,
+        COALESCE(SUM(montant_cents) FILTER (WHERE statut IN ('payee', 'manuelle')), 0)::int AS total,
+        COALESCE(SUM(montant_cents) FILTER (WHERE statut = 'payee'), 0)::int AS carte,
+        COALESCE(SUM(montant_cents) FILTER (WHERE statut = 'manuelle'), 0)::int AS main,
+        COUNT(*) FILTER (WHERE statut = 'attente')::int AS ouverts,
+        COALESCE(SUM(montant_cents) FILTER (WHERE statut = 'attente'), 0)::int AS "montantOuvert"
+      FROM paiements
+    `;
+    return b ?? null;
+  } catch (e) {
+    console.error("[crm] bilanPaiements:", e);
+    return null;
+  }
+}
+
+export type LigneReglement = {
+  id: string;
+  montant: number;
+  genre: GenrePaiement;
+  statut: Paiement["statut"];
+  cree_le: Date;
+  paye_le: Date | null;
+  prenom: string | null;
+  nom: string | null;
+  email: string | null;
+  contact_id: string | null;
+  titre: string;
+};
+
+/** Les règlements les plus récents, tous stages confondus. */
+export async function derniersReglements(limite = 60): Promise<LigneReglement[]> {
+  const sql = await getDb();
+  if (!sql) return [];
+  try {
+    return await sql<LigneReglement[]>`
+      SELECT x.id, x.montant_cents::int AS montant, x.genre, x.statut, x.cree_le, x.paye_le,
+             c.prenom, c.nom, c.email, x.contact_id, s.titre
+      FROM paiements x
+      JOIN participations p ON p.id = x.participation_id
+      JOIN stages s         ON s.id = p.stage_id
+      LEFT JOIN contacts c  ON c.id = x.contact_id
+      ORDER BY COALESCE(x.paye_le, x.cree_le) DESC
+      LIMIT ${Math.min(200, Math.max(1, Math.trunc(limite) || 1))}
+    `;
+  } catch (e) {
+    console.error("[crm] derniersReglements:", e);
+    return [];
   }
 }

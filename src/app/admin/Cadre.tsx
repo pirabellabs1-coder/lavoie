@@ -22,6 +22,7 @@ type Icone =
   | "temoignages"
   | "parrainage"
   | "offres"
+  | "paiements"
   | "sequences"
   | "campagnes"
   | "envois"
@@ -73,6 +74,12 @@ function Trait({ nom }: { nom: Icone }) {
       <>
         <path d="M4 7.5h16v11H4z" />
         <path d="M8.5 7.5V6a3.5 3.5 0 0 1 7 0v1.5M9.5 13h5" />
+      </>
+    ),
+    paiements: (
+      <>
+        <rect x="3" y="5.5" width="18" height="13" rx="2.5" />
+        <path d="M3 10h18M7 15h4" />
       </>
     ),
     sequences: (
@@ -154,7 +161,10 @@ const GROUPES: { titre: string; entrees: Entree[] }[] = [
   },
   {
     titre: "Vendre",
-    entrees: [{ href: "/admin/offres", label: "Propositions", icone: "offres", droit: "offres" }],
+    entrees: [
+      { href: "/admin/offres", label: "Propositions", icone: "offres", droit: "offres" },
+      { href: "/admin/paiements", label: "Paiements", icone: "paiements", droit: "offres" },
+    ],
   },
   {
     titre: "Ce qu'on leur envoie",

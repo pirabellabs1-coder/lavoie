@@ -66,7 +66,11 @@ export function CourbeInscriptions({
   const aire = `${ligne} L${x(points.length - 1).toFixed(1)},${marge.haut + hauteur} L${x(0).toFixed(1)},${marge.haut + hauteur} Z`;
 
   const dernier = points[points.length - 1];
-  const graduations = [0, max / 2, max];
+  // Des graduations entières, distinctes, chacune à sa vraie hauteur. « max / 2 »
+  // affichait « 1 » à mi-hauteur quand le maximum valait 1 — deux « 1 » sur
+  // l'axe —, et un « 2 » placé à 1,5 quand il valait 3.
+  const milieu = Math.round(max / 2);
+  const graduations = milieu > 0 && milieu < max ? [0, milieu, max] : [0, max];
 
   return (
     <svg
@@ -79,7 +83,7 @@ export function CourbeInscriptions({
         <g key={g}>
           <line className="grille" x1={marge.gauche} x2={L - marge.droite} y1={y(g)} y2={y(g)} />
           <text className="axe" x={marge.gauche - 8} y={y(g) + 3.5} textAnchor="end">
-            {Math.round(g)}
+            {g}
           </text>
         </g>
       ))}

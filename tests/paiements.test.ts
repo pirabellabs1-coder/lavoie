@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
   acompteDe,
+  ADRESSE_WEBHOOK,
   euros,
+  jugerWebhook,
   montantAReclamer,
   PART_ACOMPTE,
   stripeActif,
@@ -114,5 +116,80 @@ describe("montantAReclamer", () => {
     // Un sur-encaissement ne produit pas un montant négatif.
     expect(montantAReclamer({ total: 50000, dejaPaye: 60000, genre: "solde" })).toBeNull();
     expect(montantAReclamer({ total: 0, dejaPaye: 0, genre: "integral" })).toBeNull();
+  });
+});
+
+describe("jugerWebhook", () => {
+  const deux = ["checkout.session.completed", "checkout.session.async_payment_succeeded"];
+
+  it("vise l'adresse canonique du site, avec le www", () => {
+    expect(ADRESSE_WEBHOOK).toBe("https://www.lavoie2laconscience.com/api/stripe/webhook");
+  });
+
+  it("dit ce qui reste à faire quand rien n'est déclaré", () => {
+    expect(jugerWebhook([]).etat).toBe("a-faire");
+  });
+
+  it("valide l'adresse exacte, active, avec les deux événements", () => {
+    const j = jugerWebhook([{ url: ADRESSE_WEBHOOK, status: "enabled", enabled_events: deux }]);
+    expect(j.etat).toBe("ok");
+  });
+
+  it("tolère une barre finale et les majuscules", () => {
+    const j = jugerWebhook([
+      { url: "https://WWW.lavoie2laconscience.com/api/stripe/webhook/", status: "enabled", enabled_events: deux },
+    ]);
+    expect(j.etat).toBe("ok");
+  });
+
+  it("accepte un abonnement à tous les événements", () => {
+    const j = jugerWebhook([{ url: ADRESSE_WEBHOOK, status: "enabled", enabled_events: ["*"] }]);
+    expect(j.etat).toBe("ok");
+  });
+
+  it("signale une adresse sans www comme une erreur, pas comme un oubli", () => {
+    // Le piège le plus courant : Stripe appelle, le site redirige, l'appel échoue.
+    const j = jugerWebhook([
+      { url: "https://lavoie2laconscience.com/api/stripe/webhook", status: "enabled", enabled_events: deux },
+    ]);
+    expect(j.etat).toBe("probleme");
+    expect(j.detail).toContain("lavoie2laconscience.com/api/stripe/webhook");
+  });
+
+  it("signale une adresse désactivée", () => {
+    const j = jugerWebhook([{ url: ADRESSE_WEBHOOK, status: "disabled", enabled_events: deux }]);
+    expect(j.etat).toBe("probleme");
+  });
+
+  it("nomme l'événement qui manque", () => {
+    const j = jugerWebhook([
+      { url: ADRESSE_WEBHOOK, status: "enabled", enabled_events: ["checkout.session.completed"] },
+    ]);
+    expect(j.etat).toBe("probleme");
+    expect(j.detail).toContain("checkout.session.async_payment_succeeded");
+  });
+
+  it("refuse deux déclarations actives de la même adresse", () => {
+    // Chacune a son secret, le site n'en connaît qu'un : l'une échoue toujours.
+    const j = jugerWebhook([
+      { url: ADRESSE_WEBHOOK, status: "enabled", enabled_events: deux },
+      { url: `${ADRESSE_WEBHOOK}/`, status: "enabled", enabled_events: deux },
+    ]);
+    expect(j.etat).toBe("probleme");
+  });
+
+  it("distingue les majuscules du chemin, que le site distingue aussi", () => {
+    const j = jugerWebhook([
+      { url: "https://www.lavoie2laconscience.com/API/stripe/webhook", status: "enabled", enabled_events: deux },
+    ]);
+    expect(j.etat).toBe("probleme");
+  });
+
+  it("retient l'adresse active quand il en existe une désactivée à côté", () => {
+    const j = jugerWebhook([
+      { url: ADRESSE_WEBHOOK, status: "disabled", enabled_events: deux },
+      { url: ADRESSE_WEBHOOK, status: "enabled", enabled_events: deux },
+    ]);
+    expect(j.etat).toBe("ok");
   });
 });
