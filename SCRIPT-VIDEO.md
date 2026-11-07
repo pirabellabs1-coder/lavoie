@@ -1,6 +1,11 @@
 # Script de la vidéo de présentation
 
-**Durée visée : 9 à 10 minutes.** Une version courte de 5 minutes est indiquée
+> **La vidéo se fait sans voix.** Le texte ci-dessous a été découpé et minuté en
+> sous-titres : voir [VIDEO-MONTAGE.md](VIDEO-MONTAGE.md) et le fichier
+> `SOUS-TITRES.srt`, prêt à déposer dans le logiciel de montage. Cette page
+> reste le texte intégral, utile pour relire ou réécrire une phrase.
+
+**Durée visée : 9 à 10 minutes.** Une version courte est indiquée
 à la fin : les chapitres marqués ✂ se coupent sans casser le fil.
 
 **À qui on parle :** Domoïna. Pas à un développeur. Aucun mot technique n'est
