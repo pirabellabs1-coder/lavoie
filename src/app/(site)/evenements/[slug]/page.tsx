@@ -148,6 +148,10 @@ export default async function EvenementPage({
   }
 
   const autres = EVENEMENTS.filter((x) => x.slug !== e.slug).slice(0, 3);
+  // Y a-t-il seulement une date à proposer ? Le panneau de réservation le
+  // redemande en direct ; ici il ne s'agit que de savoir s'il faut afficher
+  // le lien d'agenda.
+  const dateOuverte = (await datesOuvertes(e.slug)).length > 0;
 
   return (
     <div className="page-fade">
@@ -353,6 +357,19 @@ export default async function EvenementPage({
               prixTexte={e.prix}
               dateTexte={e.date}
             />
+            {/* Une date notée dans un e-mail se perd ; une date dans l'agenda
+                se tient. Le lien n'apparaît que s'il y a une date à y mettre :
+                sans cela il mènerait à une page absente. */}
+            {dateOuverte && (
+              <p style={{ textAlign: "center", margin: "20px 0 0" }}>
+                <a
+                  href={`/api/agenda/${e.slug}`}
+                  style={{ fontSize: 13.5, color: "var(--mute)", textDecoration: "underline", textUnderlineOffset: 3 }}
+                >
+                  Ajouter la date à mon agenda
+                </a>
+              </p>
+            )}
           </div>
         </div>
       </section>
